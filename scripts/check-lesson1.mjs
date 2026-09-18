@@ -2,7 +2,8 @@ import { readFileSync } from 'node:fs'
 
 const app = readFileSync('src/app/App.tsx', 'utf8')
 const lesson = readFileSync('src/lessons/LessonOne.tsx', 'utf8')
-const fullSource = `${app}\n${lesson}`
+const registry = readFileSync('src/lessons/registry.ts', 'utf8')
+const fullSource = `${app}\n${lesson}\n${registry}`
 const failures = []
 const requiredSource = [
   'الدرس الأول: أقسام الكلام',
@@ -75,12 +76,22 @@ for (let number = 1; number <= 20; number += 1) {
   if (!officialTestBlock.includes(`number: ${number}`)) failures.push(`Missing official question ${number}.`)
 }
 
-const expectedContact = 'href="https://wa.me/963930215022"'
-if (!lesson.includes(expectedContact)) failures.push('WhatsApp destination is incorrect or missing.')
-if ((lesson.match(/0930215022/g) ?? []).length !== 2) failures.push('The visible WhatsApp number must occur exactly twice in LessonOne.tsx.')
+// Course-wide rule: no WhatsApp/contact presentation may reappear in any lesson.
+const forbiddenContact = [
+  'تواصل عبر واتساب',
+  'للاستفسار أو متابعة الدرس، تواصل عبر الرقم التالي.',
+  'wa.me',
+  '0930215022',
+  'whatsapp',
+]
+for (const phrase of forbiddenContact) {
+  if (fullSource.toLowerCase().includes(phrase.toLowerCase())) {
+    failures.push(`Forbidden WhatsApp/contact content is still present: ${phrase}`)
+  }
+}
 
 if (failures.length) {
   console.error(failures.join('\n'))
   process.exit(1)
 }
-console.log(`Lesson 1 source audit passed: ${requiredSource.length} required phrases, 20 official questions, and the exact WhatsApp contact.`)
+console.log(`Lesson 1 source audit passed: ${requiredSource.length} required phrases, 20 official questions, and no WhatsApp/contact block.`)

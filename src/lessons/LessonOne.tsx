@@ -226,9 +226,7 @@ export function LessonOne({ onProgressChange }: LessonOneProps) {
 
   return (
     <div className="lesson-one" id="lesson-content">
-      <div className="lesson-contact lesson-contact--top" id="contact-top">
-        <WhatsAppContact />
-      </div>
+      <NarrativeMilestone step="١" kicker="تعال نكتشف الفكرة" title="ابدأ رحلتك" />
 
       <LessonSection
         id="lesson-overview"
@@ -253,6 +251,8 @@ export function LessonOne({ onProgressChange }: LessonOneProps) {
           </EducationalCard>
         </div>
       </LessonSection>
+
+      <NarrativeMilestone step="٢" kicker="لاحظ المثال ثم افهم القاعدة" title="ما هو الكلام؟" />
 
       <LessonSection
         id="speech"
@@ -289,6 +289,8 @@ export function LessonOne({ onProgressChange }: LessonOneProps) {
         </div>
         <p className="source-note">ويجب على الطالب أن يحفظ هذه الأقسام الثلاثة جيدًا، لأنها أساس معظم دروس النحو القادمة.</p>
       </LessonSection>
+
+      <NarrativeMilestone step="٣" kicker="افهم القاعدة ثم جرّب بنفسك" title="أقسام الكلام الثلاثة" />
 
       <LessonSection
         id="noun"
@@ -454,6 +456,8 @@ export function LessonOne({ onProgressChange }: LessonOneProps) {
         <DataTable caption="أمثلة على الحروف" headers={['الحرف', 'مثال في جملة']} rows={particleExamples} />
       </LessonSection>
 
+      <NarrativeMilestone step="٤" kicker="شاهد النتيجة ثم طبّق" title="ميّز الكلمات بنفسك" />
+
       <LessonSection
         id="classification"
         title="كيف أميز بين أقسام الكلام؟"
@@ -491,6 +495,8 @@ export function LessonOne({ onProgressChange }: LessonOneProps) {
         </details>
       </LessonSection>
 
+      <NarrativeMilestone step="٥" kicker="تحدَّ نفسك" title="نشاط وتحدٍّ" />
+
       <LessonSection
         id="activities"
         title="نشاط صفّي ممتع"
@@ -521,6 +527,8 @@ export function LessonOne({ onProgressChange }: LessonOneProps) {
         <div className="source-note source-note--large"><strong>القاعدة الجامعة:</strong> اسم – فعل – حرف.</div>
       </LessonSection>
 
+      <NarrativeMilestone step="٦" kicker="راجع ثم اختبر نفسك" title="المراجعة والاختبار" />
+
       <OfficialTest onComplete={() => completeActivity('test')} />
 
       <div id="teacher-space" className="lesson-teacher-space">
@@ -534,10 +542,6 @@ export function LessonOne({ onProgressChange }: LessonOneProps) {
         <TeacherSpace>
           <TeacherMaterial />
         </TeacherSpace>
-      </div>
-
-      <div className="lesson-contact lesson-contact--bottom" id="contact-bottom">
-        <WhatsAppContact />
       </div>
 
       <nav className="lesson-pager" aria-label="التنقل بين الدروس">
@@ -740,19 +744,14 @@ function TeacherMaterial() {
   )
 }
 
-function WhatsAppContact() {
+function NarrativeMilestone({ step, kicker, title }: { step: string; kicker: string; title: string }) {
   return (
-    <div className="whatsapp-card">
-      <div className="whatsapp-card__icon" aria-hidden="true">◔</div>
-      <div>
-        <p className="section-kicker">تواصل عبر واتساب</p>
-        <h3>المهندس سومر شاهين</h3>
-        <p>للاستفسار أو متابعة الدرس، تواصل عبر الرقم التالي.</p>
-      </div>
-      <a className="whatsapp-card__number" href="https://wa.me/963930215022" target="_blank" rel="noreferrer" aria-label="فتح واتساب على الرقم 0930215022">
-        <span>واتساب</span>
-        <bdi dir="ltr">0930215022</bdi>
-      </a>
+    <div className="narrative-milestone" aria-hidden="true">
+      <span className="narrative-milestone__step"><bdi>{step}</bdi></span>
+      <span className="narrative-milestone__text">
+        <span className="narrative-milestone__kicker">{kicker}</span>
+        <span className="narrative-milestone__title">{title}</span>
+      </span>
     </div>
   )
 }

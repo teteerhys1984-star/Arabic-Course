@@ -53,6 +53,7 @@ export function CourseHome() {
 
       <footer className="course-footer">
         <p>منصة مستقلة لتعلّم اللغة العربية <span aria-hidden="true">✦</span> دورة أساسيات النحو</p>
+        <p className="instructor-credit">المهندس سومر شاهين: 0930215022</p>
       </footer>
     </div>
   )

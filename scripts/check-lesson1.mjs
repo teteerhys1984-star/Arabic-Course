@@ -111,6 +111,10 @@ if (!lesson.includes('LessonFlow')) {
 }
 
 // Course-wide rule: no WhatsApp/contact presentation may reappear in any lesson.
+// The instructor attribution is the sole, narrowly scoped plain-text exception requested
+// by the course owner; it is never a link, button, or contact block.
+const instructorCredit = 'المهندس سومر شاهين: 0930215022'
+const sourceWithoutInstructorCredit = fullSource.split(instructorCredit).join('')
 const forbiddenContact = [
   'تواصل عبر واتساب',
   'للاستفسار أو متابعة الدرس، تواصل عبر الرقم التالي.',
@@ -119,7 +123,7 @@ const forbiddenContact = [
   'whatsapp',
 ]
 for (const phrase of forbiddenContact) {
-  if (fullSource.toLowerCase().includes(phrase.toLowerCase())) {
+  if (sourceWithoutInstructorCredit.toLowerCase().includes(phrase.toLowerCase())) {
     failures.push(`Forbidden WhatsApp/contact content is still present: ${phrase}`)
   }
 }

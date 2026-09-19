@@ -404,8 +404,7 @@ footer p { margin: 0; font-size: .8rem; }
 }
 
 /* ==========================================================================
-   Course-wide architecture: index homepage, reusable long-page lesson shell,
-   sticky scroll-anchor section navigation, and narrative milestones.
+   Course-wide architecture: index homepage and reusable sequential lesson shell.
    ========================================================================== */
 
 /* ---- Course index (homepage / lesson hub) ---- */

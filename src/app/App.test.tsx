@@ -22,6 +22,7 @@ describe('Course index (homepage / lesson hub)', () => {
     expect(screen.getByRole('heading', { name: 'دورة أساسيات اللغة العربية' })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'الاسم والفعل والحرف', level: 3 })).toBeInTheDocument()
     expect(screen.getByRole('button', { name: /ابدأ الدرس/ })).toBeInTheDocument()
+    expect(screen.getByText('المهندس سومر شاهين: 0930215022')).toBeInTheDocument()
 
     // The index must not embed the full lesson content.
     expect(screen.queryByTestId('official-test')).not.toBeInTheDocument()
@@ -73,16 +74,17 @@ describe('Lesson 1 as a sequential, one-step-at-a-time flow', () => {
     expect(screen.queryByRole('heading', { name: 'اختبار نهاية الدرس' })).not.toBeInTheDocument()
   })
 
-  it('has no WhatsApp/contact presentation anywhere', () => {
+  it('shows the plain-text instructor credit without contact presentation', () => {
     goToLesson()
     render(<App />)
 
+    expect(screen.getAllByText('المهندس سومر شاهين: 0930215022')).toHaveLength(1)
     expect(screen.queryByText('تواصل عبر واتساب')).not.toBeInTheDocument()
     expect(
       screen.queryByText('للاستفسار أو متابعة الدرس، تواصل عبر الرقم التالي.'),
     ).not.toBeInTheDocument()
-    expect(screen.queryByText('0930215022')).not.toBeInTheDocument()
     expect(document.querySelector('.whatsapp-card')).toBeNull()
+    expect(document.querySelector('a[href*="0930215022"], button[data-contact]')).toBeNull()
   })
 
   it('supports source-based interactive activities on their own steps', async () => {

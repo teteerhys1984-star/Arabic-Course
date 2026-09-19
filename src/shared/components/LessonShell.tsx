@@ -54,10 +54,13 @@ export function LessonShell({ lesson, children }: LessonShellProps) {
       <main className="lesson-main">{children}</main>
 
       <footer className="lesson-footer">
-        <p>
-          منصة مستقلة لتعلّم اللغة العربية <span aria-hidden="true">✦</span> الدرس{' '}
-          <bdi>{lesson.number}</bdi>: {lesson.eyebrow}
-        </p>
+        <div className="lesson-footer__copy">
+          <p>
+            منصة مستقلة لتعلّم اللغة العربية <span aria-hidden="true">✦</span> الدرس{' '}
+            <bdi>{lesson.number}</bdi>: {lesson.eyebrow}
+          </p>
+          <p className="instructor-credit">المهندس سومر شاهين: 0930215022</p>
+        </div>
         <a
           href="#/"
           className="lesson-footer__home"

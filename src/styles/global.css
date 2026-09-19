@@ -61,46 +61,7 @@ main { min-width: 0; }
 .progress__track { height: 8px; overflow: hidden; background: #dde5df; border-radius: 999px; }
 .progress__track span { display: block; height: 100%; background: var(--green); border-radius: inherit; transition: width .35s ease; }
 
-.hero {
-  position: relative;
-  isolation: isolate;
-  overflow: hidden;
-  background: var(--green-dark);
-  color: white;
-  border-radius: 32px 32px 10px 32px;
-  padding: clamp(2rem, 6vw, 5rem);
-  min-height: 480px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  box-shadow: 0 26px 70px rgb(18 77 64 / 18%);
-}
-.hero::after {
-  content: 'ع';
-  position: absolute;
-  z-index: -1;
-  inset-inline-end: -1rem;
-  inset-block-end: -7rem;
-  color: rgb(255 255 255 / 5%);
-  font: 700 28rem/1 'Noto Naskh Arabic', serif;
-}
-.hero__meta { display: flex; align-items: center; flex-wrap: wrap; gap: .55rem; color: #b8d8ce; font-size: .7rem; font-weight: 600; margin-block-end: 2rem; }
-.hero__eyebrow, .section-kicker, .card__eyebrow { color: var(--gold); font-size: .72rem; font-weight: 700; letter-spacing: .04em; }
-.hero h1 { max-width: 800px; font: 700 clamp(2.45rem, 6vw, 5.1rem)/1.28 'Noto Naskh Arabic', serif; margin-block-end: 1.25rem; }
-.hero > p:not(.hero__eyebrow) { max-width: 700px; color: #dceae5; margin-block-end: 2rem; }
-.hero__actions { display: flex; align-items: center; flex-wrap: wrap; gap: 1rem; }
-.hero__hint { color: #b8d8ce; font-size: .72rem; }
-.hero__letters {
-  direction: ltr;
-  display: flex;
-  align-items: center;
-  gap: .7rem;
-  color: rgb(255 255 255 / 18%);
-  font: 700 clamp(1.7rem, 5vw, 3.3rem)/1 'Noto Naskh Arabic', serif;
-  margin-block-start: 3.2rem;
-  unicode-bidi: isolate;
-}
-.hero__letters span { font-family: system-ui, sans-serif; font-size: .7em; }
+.section-kicker, .card__eyebrow { color: var(--gold); font-size: .72rem; font-weight: 700; letter-spacing: .04em; }
 
 .button {
   border: 0;
@@ -121,10 +82,11 @@ main { min-width: 0; }
 .button--secondary { background: var(--green); color: white; }
 .button--ghost { background: transparent; border: 1px solid currentColor; color: var(--green-dark); margin-block-start: 1rem; }
 
-.lesson-section { padding-block: clamp(3.5rem, 8vw, 6.5rem) 0; scroll-margin-block-start: 96px; }
-.section-heading { margin-block-end: 1.6rem; }
-.section-heading h2 { font: 700 clamp(2rem, 4vw, 3.2rem)/1.4 'Noto Naskh Arabic', serif; margin-block-end: .25rem; }
-.section-heading p { color: var(--muted); }
+.lesson-step { padding-block: 0; }
+.lesson-step__heading { margin-block-end: 1.6rem; }
+.lesson-step__heading h2 { font: 700 clamp(1.7rem, 4vw, 2.6rem)/1.4 'Noto Naskh Arabic', serif; margin-block-end: .25rem; }
+.lesson-step__heading p { color: var(--muted); }
+.lesson-step__heading h2:focus-visible { outline: 3px solid #e7b250; outline-offset: 6px; border-radius: 6px; }
 .lesson-intro-grid, .practice-layout { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 .card { min-width: 0; min-height: 250px; padding: clamp(1.3rem, 3vw, 2rem); border: 1px solid var(--line); border-radius: 22px; background: var(--paper); box-shadow: var(--shadow); }
 .card--accent { background: var(--green-dark); color: white; border-color: transparent; }
@@ -245,18 +207,11 @@ main { min-width: 0; }
 .teacher-space__note { color: var(--muted); font-size: .7rem; margin-block: .7rem 0; }
 .form-error { color: var(--error); font-size: .8rem; }
 
-.lesson-pager { display: flex; align-items: center; justify-content: space-between; gap: 1rem; margin-block-start: 3rem; padding-block-start: 1.2rem; border-block-start: 1px solid var(--line); color: var(--green); font-size: .78rem; }
-.lesson-pager a { text-underline-offset: .3rem; }
-.lesson-pager__disabled { color: #a9b4ae; }
 footer { background: #102f28; color: #d8e7e2; padding: 2rem; text-align: center; }
 footer p { margin: 0; font-size: .8rem; }
 
 @media (max-width: 620px) {
   .brand small { display: none; }
-  .hero { min-height: 0; padding: 2rem 1.3rem; border-radius: 22px 22px 7px 22px; }
-  .hero h1 { font-size: clamp(2.25rem, 13vw, 3.4rem); }
-  .hero__meta { margin-block-end: 1.5rem; }
-  .hero__letters { margin-block-start: 2.6rem; }
   .lesson-intro-grid, .practice-layout { grid-template-columns: 1fr; }
   .card { min-height: 0; }
   .reading-panel { grid-template-columns: 1fr; }
@@ -274,7 +229,6 @@ footer p { margin: 0; font-size: .8rem; }
   .quiz__score { width: fit-content; }
   .final-test-intro { align-items: start; }
   .teacher-intro { display: block; }
-  .lesson-pager { align-items: stretch; flex-direction: column; text-align: center; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -283,7 +237,6 @@ footer p { margin: 0; font-size: .8rem; }
 }
 
 /* Authoritative Lesson 1 source layer */
-.hero__letters { direction: rtl; }
 .source-lead-grid, .summary-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
 .source-lead-grid .card { min-height: 0; }
 .source-kicker { color: var(--green); font-size: .72rem; font-weight: 700; margin-block-end: .4rem; }
@@ -539,7 +492,8 @@ footer p { margin: 0; font-size: .8rem; }
   .lesson-index-card__action .button { width: 100%; }
 }
 
-/* ---- Reusable long-page lesson shell ---- */
+/* ---- Reusable sequential lesson shell ----
+   CourseHome → LessonShell → LessonFlow → LessonStep → current step content only. */
 .lesson-page { min-height: 100vh; overflow-x: clip; display: flex; flex-direction: column; }
 .lesson-topbar {
   position: sticky;
@@ -548,83 +502,53 @@ footer p { margin: 0; font-size: .8rem; }
   background: rgb(255 254 250 / 96%);
   border-block-end: 1px solid rgb(23 53 47 / 10%);
   backdrop-filter: blur(12px);
-  transition: box-shadow .25s ease;
 }
-.lesson-topbar--condensed { box-shadow: 0 10px 30px rgb(19 57 47 / 8%); }
 .lesson-topbar__inner {
   width: min(1180px, calc(100% - 2rem));
   margin-inline: auto;
   min-height: 72px;
   display: flex;
   align-items: center;
-  gap: clamp(1rem, 3vw, 2rem);
 }
-.lesson-topbar .brand { flex: 0 0 auto; }
-.lesson-topbar__progress { height: 3px; background: transparent; }
-.lesson-topbar__progress span { display: block; height: 100%; background: var(--gold); transition: width .3s ease; }
 
-/* ---- Sticky scroll-anchor section navigation (anchors, not tabs) ---- */
-.section-nav { flex: 1; min-width: 0; overflow-x: auto; scrollbar-width: thin; -webkit-overflow-scrolling: touch; }
-.section-nav ul { list-style: none; margin: 0; padding: .35rem 0; display: flex; gap: .35rem; justify-content: flex-end; }
-.section-nav__link {
-  display: inline-block;
-  white-space: nowrap;
-  padding: .45rem .85rem;
-  border-radius: 999px;
-  color: var(--ink-soft);
-  font-size: .8rem;
-  font-weight: 600;
-  text-decoration: none;
-  border: 1px solid transparent;
-  transition: background .18s ease, color .18s ease, border-color .18s ease;
-}
-.section-nav__link:hover { background: #eef7f2; color: var(--green-dark); }
-.section-nav__link--active { background: var(--green); color: white; border-color: var(--green); }
+.lesson-main { flex: 1; width: min(880px, calc(100% - 2rem)); margin-inline: auto; padding-block: clamp(1.5rem, 4vw, 3rem) 4rem; }
 
-.lesson-main { flex: 1; width: min(1180px, calc(100% - 2rem)); margin-inline: auto; padding-block: clamp(1.5rem, 4vw, 3rem) 4rem; }
-.lesson-main .hero { border-radius: 32px 32px 10px 32px; min-height: 0; padding: clamp(2rem, 6vw, 4.5rem); }
-.hero__back { display: inline-flex; align-items: center; gap: .4rem; color: #b8d8ce; font-size: .78rem; font-weight: 600; text-decoration: none; margin-block-end: 1.2rem; }
-.hero__back:hover { color: white; }
-.hero__lead { max-width: 700px; color: #dceae5; margin-block-end: 2rem; }
+.hero__letters { direction: ltr; display: flex; align-items: center; gap: .7rem; margin-block-start: 1.5rem; color: var(--green-dark); font: 700 clamp(1.3rem, 4vw, 2rem)/1 'Noto Naskh Arabic', serif; }
 .hero__letters-item { display: inline-flex; align-items: center; gap: .7rem; }
-.hero .progress { margin-block-start: 2.4rem; max-width: 420px; }
-.hero .progress__labels { color: #cfe4dd; }
-.hero .progress__labels bdi { color: var(--gold); }
-.hero .progress__track { background: rgb(255 255 255 / 18%); }
-.hero .progress__track span { background: var(--gold); }
 
-.lesson-body { min-width: 0; }
 .lesson-footer { display: flex; flex-wrap: wrap; gap: .8rem 1.5rem; align-items: center; justify-content: space-between; padding: 2rem clamp(1rem, 4vw, 4rem); border-block-start: 1px solid var(--line); color: var(--muted); font-size: .8rem; }
 .lesson-footer__home { color: var(--green); font-weight: 600; }
 
-/* ---- Narrative milestones (progression cues, not fiction) ---- */
-.narrative-milestone {
+/* ---- Sequential lesson flow: exactly one step visible at a time ---- */
+.lesson-flow { display: flex; flex-direction: column; gap: 1.5rem; }
+.lesson-flow__progress { align-self: flex-start; padding: .4rem .9rem; border-radius: 999px; color: var(--green-dark); background: var(--gold-soft); font-size: .78rem; font-weight: 700; }
+.lesson-flow__progress bdi { color: var(--green); }
+.lesson-flow__track { height: 6px; overflow: hidden; background: #dde5df; border-radius: 999px; }
+.lesson-flow__track-fill { display: block; height: 100%; background: var(--green); border-radius: inherit; transition: width .35s ease; }
+
+/* Subtle step transition: a fresh mount fades and lifts the new step into place. */
+.lesson-flow__stage { animation: lesson-step-in .32s ease; }
+@keyframes lesson-step-in {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .lesson-flow__stage { animation: none; }
+}
+
+.lesson-flow__pager {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1rem;
-  margin-block: clamp(2.5rem, 6vw, 4.5rem) 0;
-  padding-block: 1rem;
-  border-block-start: 1px dashed var(--cream-deep);
+  margin-block-start: 1rem;
+  padding-block-start: 1.2rem;
+  border-block-start: 1px solid var(--line);
 }
-.lesson-one > .narrative-milestone:first-child { border-block-start: 0; margin-block-start: clamp(1.5rem, 4vw, 3rem); }
-.narrative-milestone__step {
-  flex: 0 0 auto;
-  width: 46px;
-  height: 46px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-  background: var(--gold-soft);
-  color: var(--green-dark);
-  font: 700 1.4rem/1 'Noto Naskh Arabic', serif;
-}
-.narrative-milestone__text { display: grid; gap: .15rem; }
-.narrative-milestone__kicker { color: var(--gold); font-size: .72rem; font-weight: 700; letter-spacing: .03em; }
-.narrative-milestone__title { color: var(--green-dark); font: 700 1.25rem/1.3 'Noto Naskh Arabic', serif; }
+.lesson-flow__pager .button { min-height: 48px; min-width: 140px; }
 
-@media (max-width: 760px) {
-  .lesson-topbar__inner { flex-wrap: wrap; min-height: 0; padding-block: .5rem; gap: .5rem 1rem; }
-  .lesson-topbar .brand { min-height: 48px; }
-  .section-nav { order: 3; flex-basis: 100%; }
-  .section-nav ul { justify-content: flex-start; }
+@media (max-width: 620px) {
+  .lesson-main { width: calc(100% - 1.5rem); }
+  .lesson-flow__pager { flex-direction: column-reverse; align-items: stretch; }
+  .lesson-flow__pager .button { width: 100%; }
 }

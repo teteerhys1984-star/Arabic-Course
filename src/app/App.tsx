@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import { CourseHome } from './CourseHome'
 import { navigate, useHashRoute } from './useHashRoute'
 import { getLesson, type LessonMeta } from '../lessons/registry'
@@ -7,8 +6,10 @@ import { LessonOne } from '../lessons/LessonOne'
 
 /**
  * Root of the course. A tiny hash router keeps the permanent Arabic-Course URL and
- * switches between the course index (homepage / lesson hub) and one continuous long
- * lesson page. All lessons reuse the same shell, navigation, and visual language.
+ * switches between the course index (homepage / lesson hub) and the sequential lesson
+ * flow. All lessons reuse the same shell, flow, and visual language:
+ *
+ *   CourseHome → LessonShell → LessonFlow → LessonStep → current step content only
  */
 export function App() {
   const route = useHashRoute()
@@ -16,7 +17,7 @@ export function App() {
   if (route.name === 'lesson' && route.lessonId) {
     const lesson = getLesson(route.lessonId)
     if (lesson && lesson.id === 'lesson-1') {
-      // Keying by lesson id remounts the page (and resets progress) per lesson.
+      // Keying by lesson id remounts the page (and resets step progress) per lesson.
       return <LessonPage key={lesson.id} lesson={lesson} />
     }
     // Unknown or unavailable lesson id → send the student back to the index.
@@ -27,10 +28,9 @@ export function App() {
 }
 
 function LessonPage({ lesson }: { lesson: LessonMeta }) {
-  const [progress, setProgress] = useState(0)
   return (
-    <LessonShell lesson={lesson} progress={progress}>
-      <LessonOne onProgressChange={setProgress} />
+    <LessonShell lesson={lesson}>
+      <LessonOne onFinish={() => navigate({ name: 'home' })} />
     </LessonShell>
   )
 }

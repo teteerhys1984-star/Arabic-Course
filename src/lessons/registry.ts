@@ -1,17 +1,11 @@
 /**
  * The registry is the single source of truth for the course index and the reusable
- * lesson architecture. Every future lesson supplies its own authoritative content but
- * reuses the same homepage, routing, long-page shell, section-anchor navigation, visual
+ * sequential lesson architecture. Every future lesson supplies its own authoritative
+ * content but reuses the same homepage, routing, sequential lesson flow, visual
  * language, quiz-interaction model, and Teacher Space by adding an entry here.
+ *
+ *   CourseHome → LessonShell → LessonFlow → LessonStep → current step content only
  */
-
-/** A compact, scroll-anchor navigation entry. `id` must match a section id on the page. */
-export interface LessonNavItem {
-  /** The DOM id of the section the anchor scrolls to (never a route change). */
-  id: string
-  /** Short Arabic label shown in the sticky section navigation. */
-  label: string
-}
 
 export interface LessonMeta {
   /** Stable lesson id, also used as the hash-route slug: `#/lesson/<id>`. */
@@ -32,8 +26,6 @@ export interface LessonMeta {
   strand: string
   /** Whether the lesson is published and openable from the index. */
   available: boolean
-  /** Compact scroll-anchor navigation reflecting the lesson's real sections. */
-  nav: LessonNavItem[]
   /** Hero milestone chips, e.g. ["اسم", "فعل", "حرف"]. */
   parts: string[]
 }
@@ -51,19 +43,6 @@ export const lessonRegistry: LessonMeta[] = [
     strand: 'أساسيات النحو',
     available: true,
     parts: ['اسم', 'فعل', 'حرف'],
-    nav: [
-      { id: 'lesson-overview', label: 'التمهيد' },
-      { id: 'speech', label: 'الكلام' },
-      { id: 'parts', label: 'الأقسام' },
-      { id: 'noun', label: 'الاسم' },
-      { id: 'verb', label: 'الفعل' },
-      { id: 'particle', label: 'الحرف' },
-      { id: 'classification', label: 'التمييز' },
-      { id: 'activities', label: 'النشاط' },
-      { id: 'summary', label: 'المراجعة' },
-      { id: 'final-test', label: 'الاختبار' },
-      { id: 'teacher-space', label: 'المعلم' },
-    ],
   },
 ]
 

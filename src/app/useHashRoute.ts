@@ -8,10 +8,10 @@ import { useEffect, useState } from 'react'
  * server rewrites and deep links keep working:
  *
  *   #/            → the course index (lesson hub)
- *   #/lesson/<id> → one continuous long lesson page
+ *   #/lesson/<id> → the sequential lesson flow (one step visible at a time)
  *
- * In-page section anchors (`#<section-id>`) are handled separately by smooth scrolling
- * and never trigger a route change, so clicking a section scrolls within the same page.
+ * Progress through a lesson's steps is handled entirely by LessonFlow's internal state
+ * (السابق / التالي) and never changes the route or the URL hash.
  */
 export interface Route {
   name: 'home' | 'lesson'

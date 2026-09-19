@@ -76,6 +76,40 @@ for (let number = 1; number <= 20; number += 1) {
   if (!officialTestBlock.includes(`number: ${number}`)) failures.push(`Missing official question ${number}.`)
 }
 
+// Lesson 1 must remain exactly 19 sequential steps, delivered one at a time through
+// LessonFlow (never as one continuous long document).
+const requiredStepIds = [
+  'intro',
+  'lesson-overview',
+  'speech',
+  'parts',
+  'noun',
+  'noun-signs',
+  'verb',
+  'past',
+  'present',
+  'imperative',
+  'particle',
+  'classification',
+  'worked-examples',
+  'detective',
+  'challenge',
+  'summary',
+  'final-test',
+  'teacher-space',
+  'wrap-up',
+]
+const stepIdMatches = [...lesson.matchAll(/^\s+id:\s*'([a-z-]+)',/gm)].map((match) => match[1])
+if (stepIdMatches.length !== 19) {
+  failures.push(`Lesson 1 must define exactly 19 sequential steps; found ${stepIdMatches.length}.`)
+}
+for (const id of requiredStepIds) {
+  if (!stepIdMatches.includes(id)) failures.push(`Missing required Lesson 1 step: ${id}`)
+}
+if (!lesson.includes('LessonFlow')) {
+  failures.push('Lesson 1 must be delivered through LessonFlow (sequential steps), not a continuous document.')
+}
+
 // Course-wide rule: no WhatsApp/contact presentation may reappear in any lesson.
 const forbiddenContact = [
   'تواصل عبر واتساب',

@@ -29,36 +29,48 @@ describe('Course index (homepage / lesson hub)', () => {
   })
 })
 
-describe('Lesson 1 as one continuous long page', () => {
-  it('renders the authoritative lesson and exactly 20 official questions', () => {
+describe('Lesson 1 as a sequential, one-step-at-a-time flow', () => {
+  it('starts on step 1 of 19 and shows only the current step content', () => {
     goToLesson()
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'الاسم والفعل والحرف', level: 1 })).toBeInTheDocument()
-    expect(screen.getByText('ذهبَ الطالبُ إلى المدرسةِ.')).toBeInTheDocument()
-    expect(screen.getByText('في المدرسةِ...')).toBeInTheDocument()
-    expect(screen.getAllByText('أنيت')).toHaveLength(2)
-    expect(screen.getByLabelText('أحرف المضارعة: أ ن ي ت')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'مقدمة / ابدأ رحلتك', level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من 19')
 
-    const officialTest = screen.getByTestId('official-test')
-    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(20)
-    expect(within(officialTest).getByText(/أجب عن الأسئلة العشرين كلها/)).toBeInTheDocument()
+    // Later-step content must not be present until the student navigates there.
+    expect(screen.queryByTestId('official-test')).not.toBeInTheDocument()
+    expect(screen.queryByText('لعبة المحقق اللغوي')).not.toBeInTheDocument()
+
+    // Previous is disabled on the first step.
+    expect(screen.getByRole('button', { name: /السابق/ })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /التالي/ })).toBeEnabled()
   })
 
-  it('exposes a scroll-anchor section navigation (anchors, not tabs)', () => {
+  it('moves forward and backward through steps with السابق / التالي and tracks progress', async () => {
+    goToLesson()
+    const user = userEvent.setup()
+    render(<App />)
+
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من 19')
+
+    await user.click(screen.getByRole('button', { name: /التالي/ }))
+    expect(screen.getByRole('heading', { name: 'الهدف من الدرس', level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 2 من 19')
+    expect(screen.getByRole('button', { name: /السابق/ })).toBeEnabled()
+
+    await user.click(screen.getByRole('button', { name: /السابق/ }))
+    expect(screen.getByRole('heading', { name: 'مقدمة / ابدأ رحلتك', level: 2 })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /السابق/ })).toBeDisabled()
+  })
+
+  it('has no scroll-anchor section navigation and no continuous long document', () => {
     goToLesson()
     render(<App />)
 
-    const sectionNav = screen.getByRole('navigation', { name: 'أقسام الدرس' })
-    const links = within(sectionNav).getAllByRole('link')
-    expect(links.length).toBeGreaterThanOrEqual(7)
-    // Anchors reference in-page section ids, never separate routes.
-    for (const link of links) {
-      expect(link.getAttribute('href')).toMatch(/^#[a-z-]+$/)
-    }
-    // The whole lesson body stays present regardless of the active anchor.
-    expect(screen.getByTestId('official-test')).toBeInTheDocument()
-    expect(screen.getByText('لعبة المحقق اللغوي')).toBeInTheDocument()
+    expect(screen.queryByRole('navigation', { name: 'أقسام الدرس' })).not.toBeInTheDocument()
+    expect(document.querySelector('.section-nav')).toBeNull()
+    // Only one step's heading is rendered at a time.
+    expect(screen.queryByRole('heading', { name: 'اختبار نهاية الدرس' })).not.toBeInTheDocument()
   })
 
   it('has no WhatsApp/contact presentation anywhere', () => {
@@ -73,30 +85,84 @@ describe('Lesson 1 as one continuous long page', () => {
     expect(document.querySelector('.whatsapp-card')).toBeNull()
   })
 
-  it('supports source-based interactive activities', async () => {
+  it('supports source-based interactive activities on their own steps', async () => {
     goToLesson()
     const user = userEvent.setup()
     render(<App />)
+
+    // Step 6: noun signs.
+    for (let step = 0; step < 5; step += 1) {
+      await user.click(screen.getByRole('button', { name: /التالي/ }))
+    }
+    expect(screen.getByRole('heading', { name: 'علامات الاسم', level: 2 })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /دخول \(الـ\) التعريف/ }))
+    expect(screen.getByText('كتاب ← الكتاب.')).toBeInTheDocument()
+
+    // Step 9: الفعل المضارع (أحرف المضارعة activity).
+    await user.click(screen.getByRole('button', { name: /التالي/ }))
+    await user.click(screen.getByRole('button', { name: /التالي/ }))
+    await user.click(screen.getByRole('button', { name: /التالي/ }))
+    expect(screen.getByRole('heading', { name: 'الفعل المضارع', level: 2 })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /^أ$/ }))
+    expect(document.querySelector('.ayn-result')).toHaveTextContent('أكتب')
+  })
+
+  it('exposes exactly 20 official questions once the student reaches the test step', async () => {
+    goToLesson()
+    const user = userEvent.setup()
+    render(<App />)
+
+    for (let step = 0; step < 16; step += 1) {
+      await user.click(screen.getByRole('button', { name: /التالي/ }))
+    }
+    expect(screen.getByRole('heading', { name: 'اختبار نهاية الدرس', level: 2 })).toBeInTheDocument()
+    const officialTest = screen.getByTestId('official-test')
+    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(20)
+    expect(within(officialTest).getByText(/أجب عن الأسئلة العشرين كلها/)).toBeInTheDocument()
+  })
+
+  it('does not reveal correctness on selection, only after CHECK, and preserves answers when navigating away and back', async () => {
+    goToLesson()
+    const user = userEvent.setup()
+    render(<App />)
+
+    for (let step = 0; step < 16; step += 1) {
+      await user.click(screen.getByRole('button', { name: /التالي/ }))
+    }
+    const officialTest = screen.getByTestId('official-test')
+    const firstQuestion = officialTest.querySelector('.official-question')
+    expect(firstQuestion).not.toBeNull()
+
+    // Selecting an option must not reveal correctness by itself.
+    const options = within(firstQuestion as HTMLElement).getAllByRole('radio')
+    await user.click(options[1])
+    expect(within(firstQuestion as HTMLElement).queryByText('إجابة صحيحة.')).not.toBeInTheDocument()
+    expect(options[1]).toBeChecked()
+
+    // Navigate away (Previous) and back (Next): the selection must be preserved.
+    await user.click(screen.getByRole('button', { name: /السابق/ }))
+    expect(screen.getByRole('heading', { name: 'المراجعة: ملخص الدرس للحفظ', level: 2 })).toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /التالي/ }))
+    const testAgain = screen.getByTestId('official-test')
+    const firstQuestionAgain = testAgain.querySelector('.official-question')
+    const optionsAgain = within(firstQuestionAgain as HTMLElement).getAllByRole('radio')
+    expect(optionsAgain[1]).toBeChecked()
+  })
+
+  it('keeps complete teacher material behind the teacher gate on its own step', async () => {
+    goToLesson()
+    const user = userEvent.setup()
+    render(<App />)
+
+    for (let step = 0; step < 17; step += 1) {
+      await user.click(screen.getByRole('button', { name: /التالي/ }))
+    }
+    expect(screen.getByRole('heading', { name: 'منطقة المعلم', level: 2 })).toBeInTheDocument()
+    expect(screen.queryByText('الإجابات النموذجية')).not.toBeInTheDocument()
 
     await user.click(screen.getByRole('button', { name: /^دخول$/ }))
     expect(screen.getByText('كلمة المرور غير صحيحة.')).toBeInTheDocument()
 
-    await user.click(screen.getByRole('button', { name: /دخول \(الـ\) التعريف/ }))
-    expect(screen.getByText('كتاب ← الكتاب.')).toBeInTheDocument()
-
-    await user.click(screen.getByRole('button', { name: /^أ$/ }))
-    expect(document.querySelector('.ayn-result')).toHaveTextContent('أكتب')
-
-    await user.click(screen.getAllByRole('button', { name: /^حرف$/ })[0])
-    expect(screen.getByText('الصحيح: اسم')).toBeInTheDocument()
-  })
-
-  it('keeps complete teacher material behind the teacher gate on the same page', async () => {
-    goToLesson()
-    const user = userEvent.setup()
-    render(<App />)
-
-    expect(screen.queryByText('الإجابات النموذجية')).not.toBeInTheDocument()
     await user.type(screen.getByLabelText('كلمة المرور'), 'معلم')
     await user.click(screen.getByRole('button', { name: 'دخول' }))
 
@@ -105,5 +171,17 @@ describe('Lesson 1 as one continuous long page', () => {
     expect(screen.getByText('تصحيح السؤال 10')).toBeInTheDocument()
     expect(screen.getByText('الأخطاء المتوقعة عند الطالب')).toBeInTheDocument()
     expect(screen.getByText('معيار إتقان الدرس')).toBeInTheDocument()
+  })
+
+  it('shows إتمام الدرس on the final step', async () => {
+    goToLesson()
+    const user = userEvent.setup()
+    render(<App />)
+
+    for (let step = 0; step < 18; step += 1) {
+      await user.click(screen.getByRole('button', { name: /التالي|إتمام الدرس/ }))
+    }
+    expect(screen.getByRole('heading', { name: 'الخلاصة', level: 2 })).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'إتمام الدرس' })).toBeInTheDocument()
   })
 })

@@ -366,3 +366,72 @@ describe('Lesson 3 as a sequential, one-step-at-a-time flow', () => {
     expect(screen.getByRole('button', { name: 'إتمام الدرس' })).toBeInTheDocument()
   })
 })
+
+describe('Lesson Outline roadmap navigation across Lessons 1–3', () => {
+  it('navigates directly to any step when clicked in the sidebar outline and keeps flow synchronized', async () => {
+    goToLesson('lesson-1')
+    const user = userEvent.setup()
+    render(<App />)
+
+    // Initially on step 1
+    expect(screen.getByRole('heading', { name: 'مقدمة / ابدأ رحلتك', level: 2 })).toBeInTheDocument()
+
+    // Jump directly to علامات الاسم (step 6) via outline
+    const nounSignsButton = screen.getByRole('button', { name: /الخطوة 6: علامات الاسم/ })
+    await user.click(nounSignsButton)
+
+    // Active heading should now be علامات الاسم
+    expect(screen.getByRole('heading', { name: 'علامات الاسم', level: 2 })).toBeInTheDocument()
+    expect(nounSignsButton).toHaveAttribute('aria-current', 'step')
+    expect(nounSignsButton).toHaveClass('is-active')
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 6 من 19')
+
+    // Pressing التالي moves to step 7 (القسم الثاني: الفعل) and updates outline highlight
+    await user.click(screen.getByRole('button', { name: /التالي/ }))
+    expect(screen.getByRole('heading', { name: 'القسم الثاني: الفعل', level: 2 })).toBeInTheDocument()
+    const verbButton = screen.getByRole('button', { name: /الخطوة 7: القسم الثاني: الفعل/ })
+    expect(verbButton).toHaveAttribute('aria-current', 'step')
+  })
+
+  it('supports direct outline navigation in Lesson 2 with full synchronization', async () => {
+    goToLesson('lesson-2')
+    const user = userEvent.setup()
+    render(<App />)
+
+    // Jump directly to activity four (step 24)
+    const activity4Button = screen.getByRole('button', { name: /الخطوة 24: النشاط الرابع: كوّن جملة اسمية/ })
+    await user.click(activity4Button)
+
+    expect(screen.getByRole('heading', { name: 'النشاط الرابع: كوّن جملة اسمية', level: 2 })).toBeInTheDocument()
+    expect(activity4Button).toHaveAttribute('aria-current', 'step')
+
+    // Previous moves back to step 23
+    await user.click(screen.getByRole('button', { name: /السابق/ }))
+    expect(screen.getByRole('heading', { name: 'النشاط الثالث: أكمل الجملة', level: 2 })).toBeInTheDocument()
+  })
+
+  it('supports mobile drawer toggle, step selection, and dismissal in Lesson 3', async () => {
+    goToLesson('lesson-3')
+    const user = userEvent.setup()
+    render(<App />)
+
+    // Open mobile drawer
+    const mobileTrigger = screen.getByRole('button', { name: 'عرض فهرس خطوات الدرس' })
+    await user.click(mobileTrigger)
+
+    // Drawer dialog is open
+    const drawer = screen.getByRole('dialog', { name: 'محتويات الدرس' })
+    expect(drawer).toBeInTheDocument()
+
+    // Pick step in drawer: المثال المهم: اللاعب والكرة (step 13)
+    const playerBallButton = within(drawer).getByRole('button', {
+      name: /الخطوة 13: المثال المهم: اللاعب والكرة/,
+    })
+    await user.click(playerBallButton)
+
+    // Drawer closes and main content shows step 13
+    expect(screen.queryByRole('dialog', { name: 'محتويات الدرس' })).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'المثال المهم: اللاعب والكرة', level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 13 من 30')
+  })
+})

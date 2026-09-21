@@ -259,6 +259,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'intro',
       title: 'مقدمة / ابدأ رحلتك',
+      group: 'البداية',
+      icon: '🎯',
       description: 'رحلة تعلّم واحدة متصلة، خطوة بخطوة، من التمهيد حتى الاختبار.',
       render: () => (
         <EducationalCard title="أقسام الكلام" eyebrow="عنوان الدرس">
@@ -276,6 +278,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'lesson-overview',
       title: 'الهدف من الدرس',
+      group: 'البداية',
+      icon: '🎯',
       description: 'الاسم والفعل والحرف هي أساس معظم دروس النحو القادمة.',
       render: () => (
         <EducationalCard title="في نهاية هذا الدرس يجب أن يستطيع الطالب" eyebrow="أهداف الدرس" tone="accent">
@@ -292,6 +296,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'speech',
       title: 'أولاً: ما هو الكلام؟',
+      group: 'أقسام الكلام',
+      icon: '💡',
       description: 'الكلام هو مجموعة كلمات مرتبة تعطي معنى مفيدًا.',
       render: () => (
         <>
@@ -314,6 +320,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'parts',
       title: 'ثانيًا: أقسام الكلام',
+      group: 'أقسام الكلام',
+      icon: '🧭',
       description: 'الكلمة في اللغة العربية ثلاثة أقسام رئيسية.',
       render: () => (
         <>
@@ -334,6 +342,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'noun',
       title: 'القسم الأول: الاسم',
+      group: 'أقسام الكلام',
+      icon: '🏷️',
       description: 'الاسم كلمة تدل على شيء غير مرتبط بزمن معين.',
       render: () => (
         <>
@@ -357,6 +367,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'noun-signs',
       title: 'علامات الاسم',
+      group: 'أقسام الكلام',
+      icon: '🔍',
       description: 'هناك علامات تساعدنا على معرفة الاسم.',
       render: () => (
         <>
@@ -453,6 +465,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'verb',
       title: 'القسم الثاني: الفعل',
+      group: 'أقسام الكلام',
+      icon: '⚡',
       description: 'الفعل كلمة تدل على حدث مرتبط بزمن.',
       render: () => (
         <>
@@ -481,6 +495,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'past',
       title: 'الفعل الماضي',
+      group: 'أنواع الفعل',
+      icon: '⏳',
       render: () => (
         <div className="source-subsection">
           <Subheading>أولاً: الفعل الماضي</Subheading>
@@ -513,6 +529,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'present',
       title: 'الفعل المضارع',
+      group: 'أنواع الفعل',
+      icon: '⏱️',
       render: () => (
         <div className="source-subsection">
           <Subheading>ثانيًا: الفعل المضارع</Subheading>
@@ -561,6 +579,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'imperative',
       title: 'فعل الأمر',
+      group: 'أنواع الفعل',
+      icon: '👉',
       render: () => (
         <>
           <div className="source-subsection" id="imperative">
@@ -599,6 +619,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'particle',
       title: 'القسم الثالث: الحرف',
+      group: 'الحرف والتمييز',
+      icon: '🔗',
       description: 'الحرف كلمة لا يظهر معناها كاملًا إلا مع غيرها.',
       render: () => (
         <>
@@ -631,6 +653,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'classification',
       title: 'كيف أميز بين أقسام الكلام؟',
+      group: 'الحرف والتمييز',
+      icon: '⚖️',
       description: 'استخدم هذه الأسئلة الثلاثة عندما يعطيك المعلم كلمة.',
       render: () => (
         <div className="decision-flow">
@@ -643,6 +667,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'worked-examples',
       title: 'أمثلة تطبيقية محلولة',
+      group: 'الحرف والتمييز',
+      icon: '📖',
       render: () => (
         <>
           <details className="worked-example" open>
@@ -689,6 +715,9 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'detective',
       title: 'لعبة المحقق اللغوي',
+      shortTitle: 'المحقق اللغوي',
+      group: 'الأنشطة التفاعلية',
+      icon: '🕵️',
       description: 'طبّق ما تعلّمت في نشاط صفّي ممتع.',
       render: () => (
         <GrammarDetective
@@ -700,6 +729,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'challenge',
       title: 'تحدي 5 ثوانٍ',
+      group: 'الأنشطة التفاعلية',
+      icon: '⏱️',
       render: () => (
         <FiveSecondChallenge
           started={challengeStarted}
@@ -712,6 +743,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'summary',
       title: 'المراجعة: ملخص الدرس للحفظ',
+      group: 'المراجعة والتقييم',
+      icon: '⭐',
       description: 'أقسام الكلام ثلاثة: اسم – فعل – حرف.',
       render: () => (
         <>
@@ -746,6 +779,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'final-test',
       title: 'اختبار نهاية الدرس',
+      group: 'المراجعة والتقييم',
+      icon: '📝',
       description: 'الاختبار النهائي الرسمي المكون من 20 سؤالًا.',
       render: () => (
         <OfficialTest answers={testAnswers} checked={testChecked} onChange={updateTestAnswer} onCheck={checkTest} />
@@ -754,6 +789,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'teacher-space',
       title: 'منطقة المعلم',
+      group: 'المراجعة والتقييم',
+      icon: '👨‍🏫',
       render: () => (
         <>
           <div className="teacher-intro">
@@ -772,6 +809,8 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     {
       id: 'wrap-up',
       title: 'الخلاصة',
+      group: 'المراجعة والتقييم',
+      icon: '🏆',
       description: 'أحسنت! أنهيت رحلة تعلّم أقسام الكلام الثلاثة.',
       render: () => (
         <>
@@ -792,7 +831,16 @@ export function LessonOne({ onProgressChange, onFinish }: LessonOneProps) {
     },
   ]
 
-  return <LessonFlow steps={steps} onProgressChange={onProgressChange} onFinish={onFinish} />
+  return (
+    <LessonFlow
+      steps={steps}
+      onProgressChange={onProgressChange}
+      onFinish={onFinish}
+      lessonTitle="الاسم والفعل والحرف"
+      lessonNumber="١"
+      lessonEyebrow="أقسام الكلام"
+    />
+  )
 }
 
 function ExampleBox({ label, text, explanation, good = false }: { label: string; text: string; explanation?: string; good?: boolean }) {

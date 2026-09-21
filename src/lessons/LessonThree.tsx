@@ -293,6 +293,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'intro',
       title: 'مدخل الدرس: الجملة الفعلية',
+      group: 'البداية',
+      icon: '🎯',
       description: 'الدرس الثالث: الجملة الفعلية — الفعل والفاعل والمفعول به.',
       render: () => (
         <EducationalCard title="الدرس الثالث: الجملة الفعلية" eyebrow="عنوان الدرس" tone="accent">
@@ -320,6 +322,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'objectives',
       title: 'أهداف الدرس',
+      group: 'البداية',
+      icon: '🎯',
       description: 'في نهاية هذا الدرس، يُتوقع من الطالب أن يستطيع تنفيذ هذه المهارات.',
       render: () => (
         <EducationalCard title="في نهاية هذا الدرس، يُتوقع من الطالب أن يستطيع" eyebrow="أهداف الدرس">
@@ -345,6 +349,9 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'recap',
       title: 'أولًا: الشرح التفصيلي — تذكّر من الدرس السابق',
+      shortTitle: 'تذكّر من الدرس الماضي',
+      group: 'البداية',
+      icon: '🧠',
       description: 'الجملة قد تكون اسمية تبدأ باسم، أو فعلية تبدأ بفعل.',
       render: () => (
         <>
@@ -382,6 +389,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'verbal-sentence',
       title: 'ما الجملة الفعلية؟',
+      group: 'اكتشف الجملة الفعلية',
+      icon: '🚀',
       description: 'الجملة الفعلية هي الجملة التي تبدأ بفعل.',
       render: () => (
         <>
@@ -409,6 +418,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'what-is-verb',
       title: 'ما الفعل؟',
+      group: 'اكتشف الجملة الفعلية',
+      icon: '⭐',
       description: 'الفعل كلمة تدل على حدث أو عمل مرتبط بزمن.',
       render: () => (
         <>
@@ -439,6 +450,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'what-is-fael',
       title: 'ما الفاعل؟',
+      group: 'اكتشف الجملة الفعلية',
+      icon: '🧠',
       description: 'الفاعل هو الشخص أو الشيء الذي قام بالفعل.',
       render: () => (
         <>
@@ -464,6 +477,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'find-fael',
       title: 'الطريقة السهلة لاكتشاف الفاعل',
+      group: 'اكتشف الجملة الفعلية',
+      icon: '🔍',
       description: 'بعد أن تجد الفعل، اسأل: مَن الذي فعل؟',
       render: () => (
         <>
@@ -494,6 +509,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'fael-raised',
       title: 'الفاعل مرفوع',
+      group: 'اكتشف الجملة الفعلية',
+      icon: '⚖️',
       description: 'من القواعد المهمة: الفاعل مرفوع، وفي الجمل البسيطة يكون مرفوعًا بالضمة غالبًا.',
       render: () => (
         <>
@@ -518,6 +535,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'what-is-mafool',
       title: 'ما المفعول به؟',
+      group: 'الفعل والفاعل والمفعول به',
+      icon: '📦',
       description: 'عندما يوجد شخص أو شيء وقع عليه الفعل نسميه المفعول به.',
       render: () => (
         <>
@@ -553,6 +572,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'find-mafool',
       title: 'كيف أجد المفعول به؟',
+      group: 'الفعل والفاعل والمفعول به',
+      icon: '🔍',
       description: 'بعد الفعل والفاعل، اسأل: ماذا فعل الفاعل؟',
       render: () => (
         <>
@@ -577,6 +598,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'mafool-nasb',
       title: 'المفعول به منصوب',
+      group: 'الفعل والفاعل والمفعول به',
+      icon: '⚖️',
       description: 'قاعدة مهمة: المفعول به منصوب، وتظهر عليه الفتحة غالبًا.',
       render: () => (
         <>
@@ -601,6 +624,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'fael-vs-mafool',
       title: 'الفرق بين الفاعل والمفعول به',
+      group: 'الفعل والفاعل والمفعول به',
+      icon: '🔄',
       description: 'هذه من أهم النقاط في الدرس.',
       render: () => (
         <>
@@ -628,6 +653,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'player-ball',
       title: 'المثال المهم: اللاعب والكرة',
+      group: 'الفعل والفاعل والمفعول به',
+      icon: '⚽',
       description: 'مثال مهم جدًا: لا نحدد الفاعل والمفعول به بترتيب الكلمات فقط.',
       render: () => (
         <>
@@ -664,6 +691,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'no-object',
       title: 'ليس كل جملة فعلية فيها مفعول به',
+      group: 'الفعل والفاعل والمفعول به',
+      icon: '💡',
       description: 'الجملة الفعلية قد تحتوي على فعل وفاعل فقط.',
       render: () => (
         <>
@@ -695,6 +724,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'object-contrast',
       title: 'أمثلة بدون مفعول به وأمثلة فيها مفعول به',
+      group: 'الفعل والفاعل والمفعول به',
+      icon: '📊',
       description: 'قارن بين الجمل التي فيها فاعل فقط والجمل التي فيها مفعول به.',
       render: () => (
         <>
@@ -727,6 +758,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'object-types',
       title: 'المفعول به لا يعني دائمًا إنسانًا',
+      group: 'الفعل والفاعل والمفعول به',
+      icon: '🌱',
       description: 'يمكن أن يكون المفعول به إنسانًا أو حيوانًا أو نباتًا أو شيئًا.',
       render: () => (
         <>
@@ -751,6 +784,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'three-steps',
       title: 'كيف نحلل الجملة الفعلية؟ — الخطوات الثلاث',
+      group: 'التحليل والقواعد',
+      icon: '🪜',
       description: 'استخدم هذه الخطوات الثلاث في كل جملة فعلية.',
       render: () => (
         <>
@@ -772,6 +807,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'analysis-examples',
       title: 'أمثلة كاملة محلولة خطوة بخطوة',
+      group: 'التحليل والقواعد',
+      icon: '📝',
       description: 'مثال كامل، ومثال آخر، ومثال بدون مفعول به.',
       render: () => (
         <>
@@ -813,6 +850,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'haraka',
       title: 'انتبه إلى حركة آخر الكلمة',
+      group: 'التحليل والقواعد',
+      icon: '✨',
       description: 'الحركة تساعدنا أحيانًا، لكن لا تعتمد عليها وحدها.',
       render: () => (
         <>
@@ -840,6 +879,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'order-change',
       title: 'ماذا لو تغيّر ترتيب الجملة؟',
+      group: 'التحليل والقواعد',
+      icon: '🔀',
       description: 'في هذا الدرس نتدرب على الصورة السهلة: فعل + فاعل + مفعول به.',
       render: () => (
         <>
@@ -857,6 +898,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'lesson2-comparison',
       title: 'مقارنة مهمة بين الدرس الثاني والثالث',
+      group: 'التحليل والقواعد',
+      icon: '⚖️',
       description: 'لا تخلط بين المبتدأ والفاعل.',
       render: () => (
         <>
@@ -898,6 +941,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'memorize-rules',
       title: 'أهم القواعد للحفظ ⭐',
+      group: 'التحليل والقواعد',
+      icon: '⭐',
       description: 'احفظ هذه القواعد الثماني الأساسية.',
       render: () => (
         <EducationalCard title="احفظ هذه القواعد" eyebrow="أهم القواعد للحفظ ⭐" tone="soft">
@@ -931,24 +976,32 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'worked-examples',
       title: 'ثانيًا: أمثلة محلولة',
+      group: 'أمثلة محلولة',
+      icon: '📖',
       description: 'ستة أمثلة محلولة من المصدر، اكشف كل مثال وتابع طريقة الحل.',
       render: () => <WorkedExamples />,
     },
     {
       id: 'activity-one',
       title: 'ثالثًا: نشاط تطبيقي — النشاط الأول',
+      group: 'التطبيق والأنشطة',
+      icon: '🚀',
       description: 'حدّد الفعل والفاعل: استخرج الفعل والفاعل من الجمل.',
       render: () => <ActivityOne answers={activityOneAnswers} onChange={updateActivityOne} />,
     },
     {
       id: 'activity-two',
       title: 'النشاط الثاني: حدّد الفعل والفاعل والمفعول به',
+      group: 'التطبيق والأنشطة',
+      icon: '🚀',
       description: 'في الجمل الآتية، حدّد الفعل والفاعل والمفعول به.',
       render: () => <ActivityTwo answers={activityTwoAnswers} onChange={updateActivityTwo} />,
     },
     {
       id: 'activity-three',
       title: 'النشاط الثالث: هل يوجد مفعول به؟',
+      group: 'التطبيق والأنشطة',
+      icon: '🚀',
       description: 'ضع: يوجد مفعول به، أو: لا يوجد مفعول به.',
       render: () => (
         <ActivityThree
@@ -960,6 +1013,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'activity-four',
       title: 'النشاط الرابع: لعبة "المحقق اللغوي"',
+      group: 'التطبيق والأنشطة',
+      icon: '🕵️',
       description: 'اقرأ الجملة، ثم أجب عن الأسئلة الثلاثة.',
       render: () => (
         <ActivityFour
@@ -973,6 +1028,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'final-test',
       title: 'رابعًا: اختبار نهاية الدرس',
+      group: 'اختبر نفسك والمعلم',
+      icon: '📝',
       description: 'الاختبار النهائي الرسمي المكون من 20 سؤالًا.',
       render: () => (
         <OfficialTest answers={testAnswers} checked={testChecked} onChange={updateTestAnswer} onCheck={() => setTestChecked(true)} />
@@ -981,6 +1038,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'teacher-space',
       title: 'خامسًا: منطقة خاصة بالمعلم',
+      group: 'اختبر نفسك والمعلم',
+      icon: '👨‍🏫',
       description: 'الإجابات النموذجية، ملاحظات التصحيح، التدريب العلاجي، معيار الإتقان، والتوصية العلاجية.',
       render: () => (
         <>
@@ -1000,6 +1059,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     {
       id: 'summary',
       title: 'ملخص الدرس للحفظ',
+      group: 'اختبر نفسك والمعلم',
+      icon: '🏆',
       description: 'الخلاصة النهائية والقاعدة الذهبية التي ينتهي بها مصدر الدرس.',
       render: () => (
         <>
@@ -1040,7 +1101,16 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
     },
   ]
 
-  return <LessonFlow steps={steps} onProgressChange={onProgressChange} onFinish={onFinish} />
+  return (
+    <LessonFlow
+      steps={steps}
+      onProgressChange={onProgressChange}
+      onFinish={onFinish}
+      lessonTitle="الفعل والفاعل والمفعول به"
+      lessonNumber="٣"
+      lessonEyebrow="الجملة الفعلية"
+    />
+  )
 }
 
 function QuestionText({ text }: { text: string }) {

@@ -491,17 +491,17 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
           <GuidedReveal
             sentence="لعبَ الطفلُ بالكرة."
             intro="الفعل: لعبَ."
-            stages={[{ question: 'من الذي لعب؟', answer: '→ الطفلُ.', result: 'إذن: الطفلُ = فاعل.' }]}
+            stages={[{ question: 'من الذي لعب؟', answer: '→ الطفلُ.', result: 'الطفلُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.' }]}
           />
           <GuidedReveal
             sentence="طارَ العصفورُ."
             intro="الفعل: طارَ."
-            stages={[{ question: 'من الذي طار؟', answer: '→ العصفورُ.', result: 'إذن: العصفورُ = فاعل.' }]}
+            stages={[{ question: 'من الذي طار؟', answer: '→ العصفورُ.', result: 'العصفورُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.' }]}
           />
           <GuidedReveal
             sentence="نجحتِ الطالبةُ."
             intro="الفعل: نجحتْ."
-            stages={[{ question: 'من الذي نجح؟', answer: '→ الطالبةُ.', result: 'إذن: الطالبةُ = فاعل.' }]}
+            stages={[{ question: 'من الذي نجح؟', answer: '→ الطالبةُ.', result: 'الطالبةُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.' }]}
           />
         </>
       ),
@@ -521,13 +521,13 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
           </p>
           <VerbalSentence sentence="كتبَ الطالبُ." verb="كتبَ" fael="الطالبُ" />
           <ul className="solution-list">
-            <li>كتبَ: فعل ماضٍ.</li>
-            <li>الطالبُ: فاعل مرفوع وعلامة رفعه الضمة.</li>
+            <li>كتبَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.</li>
+            <li>الطالبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</li>
           </ul>
           <VerbalSentence sentence="قرأَ محمدٌ." verb="قرأَ" fael="محمدٌ" />
           <ul className="solution-list">
-            <li>قرأَ: فعل ماضٍ.</li>
-            <li>محمدٌ: فاعل مرفوع وعلامة رفعه الضمة.</li>
+            <li>قرأَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.</li>
+            <li>محمدٌ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</li>
           </ul>
         </>
       ),
@@ -610,8 +610,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
           </p>
           <VerbalSentence sentence="قرأَ الطالبُ الكتابَ." verb="قرأَ" fael="الطالبُ" mafool="الكتابَ" />
           <ul className="solution-list">
-            <li>الطالبُ: فاعل مرفوع بالضمة.</li>
-            <li>الكتابَ: مفعول به منصوب بالفتحة.</li>
+            <li>الطالبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</li>
+            <li>الكتابَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.</li>
           </ul>
           <p className="source-kicker">انتبه إلى الفرق:</p>
           <div className="ending-rules" aria-label="الفرق بين علامة الفاعل وعلامة المفعول به">
@@ -634,8 +634,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
           <GuidedReveal
             sentence="أكلَ الطفلُ التفاحةَ."
             stages={[
-              { question: 'من الذي أكل؟', answer: '→ الطفلُ.', result: 'إذن: الطفلُ = فاعل.' },
-              { question: 'ماذا أكل؟', answer: '→ التفاحةَ.', result: 'إذن: التفاحةَ = مفعول به.' },
+              { question: 'من الذي أكل؟', answer: '→ الطفلُ.', result: 'الطفلُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.' },
+              { question: 'ماذا أكل؟', answer: '→ التفاحةَ.', result: 'التفاحةَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.' },
             ]}
           />
           <blockquote className="grammar-quote">
@@ -701,8 +701,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
           <p className="source-kicker">انظر:</p>
           <VerbalSentence sentence="نامَ الطفلُ." verb="نامَ" fael="الطفلُ" showNoObject />
           <ul className="solution-list">
-            <li>نامَ: فعل.</li>
-            <li>الطفلُ: فاعل.</li>
+            <li>نامَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.</li>
+            <li>الطفلُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</li>
           </ul>
           <p>هل نقول: الطفلُ مفعول به؟</p>
           <p>
@@ -817,23 +817,23 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
             sentence="قرأَ خالدٌ القصةَ."
             stages={[
               { question: 'الخطوة الأولى: ما الفعل؟', answer: '→ قرأَ' },
-              { question: 'الخطوة الثانية: من الذي قرأ؟', answer: '→ خالدٌ', result: 'إذن خالدٌ = فاعل.' },
-              { question: 'الخطوة الثالثة: ماذا قرأ خالد؟', answer: '→ القصةَ', result: 'إذن القصةَ = مفعول به.' },
+              { question: 'الخطوة الثانية: من الذي قرأ؟', answer: '→ خالدٌ', result: 'خالدٌ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.' },
+              { question: 'الخطوة الثالثة: ماذا قرأ خالد؟', answer: '→ القصةَ', result: 'القصةَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.' },
             ]}
           />
           <p className="source-kicker">النتيجة:</p>
           <ul className="solution-list">
-            <li>قرأَ: فعل ماضٍ.</li>
-            <li>خالدٌ: فاعل مرفوع.</li>
-            <li>القصةَ: مفعول به منصوب.</li>
+            <li>قرأَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.</li>
+            <li>خالدٌ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</li>
+            <li>القصةَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.</li>
           </ul>
           <Subheading>18. مثال آخر</Subheading>
           <GuidedReveal
             sentence="زرعَ الفلاحُ القمحَ."
             stages={[
               { question: 'ما الفعل؟', answer: '→ زرعَ.' },
-              { question: 'من الذي زرع؟', answer: '→ الفلاحُ.', result: 'إذن: الفلاحُ = فاعل.' },
-              { question: 'ماذا زرع الفلاح؟', answer: '→ القمحَ.', result: 'إذن: القمحَ = مفعول به.' },
+              { question: 'من الذي زرع؟', answer: '→ الفلاحُ.', result: 'الفلاحُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.' },
+              { question: 'ماذا زرع الفلاح؟', answer: '→ القمحَ.', result: 'القمحَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.' },
             ]}
           />
           <Subheading>19. مثال بدون مفعول به</Subheading>
@@ -841,7 +841,7 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
             sentence="جلسَ الطالبُ."
             stages={[
               { question: 'ما الفعل؟', answer: '→ جلسَ.' },
-              { question: 'من الذي جلس؟', answer: '→ الطالبُ.', result: 'إذن: جلسَ: فعل. الطالبُ: فاعل. لا يوجد مفعول به.' },
+              { question: 'من الذي جلس؟', answer: '→ الطالبُ.', result: 'جلسَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره. الطالبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره. لا يوجد مفعول به.' },
             ]}
           />
         </>
@@ -921,9 +921,9 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
                 <bdi>قرأَ الطالبُ الكتابَ.</bdi>
               </p>
               <ul className="solution-list">
-                <li>قرأَ: فعل.</li>
-                <li>الطالبُ: فاعل.</li>
-                <li>الكتابَ: مفعول به.</li>
+                <li>قرأَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.</li>
+                <li>الطالبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</li>
+                <li>الكتابَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.</li>
               </ul>
             </article>
           </div>
@@ -1082,9 +1082,9 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
             <p className="source-kicker">مثال شامل:</p>
             <VerbalSentence sentence="قرأَ الطالبُ الكتابَ." verb="قرأَ" fael="الطالبُ" mafool="الكتابَ" />
             <ul className="solution-list">
-              <li>قرأَ → فعل.</li>
-              <li>الطالبُ → فاعل مرفوع.</li>
-              <li>الكتابَ → مفعول به منصوب.</li>
+              <li>قرأَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.</li>
+              <li>الطالبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</li>
+              <li>الكتابَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.</li>
             </ul>
           </EducationalCard>
           <blockquote className="grammar-quote golden-rule">
@@ -1426,53 +1426,53 @@ function WorkedExamples() {
         </ul>
         <p>الإجابة:</p>
         <p>
-          <strong>كتبَ: فعل ماضٍ.</strong>
+          <strong>كتبَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.</strong>
         </p>
         <p>
-          <strong>الطالبُ: فاعل.</strong>
+          <strong>الطالبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</strong>
         </p>
         <p>
-          <strong>الدرسَ: مفعول به.</strong>
+          <strong>الدرسَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.</strong>
         </p>
       </details>
       <details className="worked-example">
         <summary>المثال 2: شربَ الطفلُ الماءَ.</summary>
         <ul className="solution-list">
-          <li>شربَ: فعل.</li>
-          <li>الطفلُ: فاعل؛ لأنه الذي شرب.</li>
-          <li>الماءَ: مفعول به؛ لأنه الشيء الذي شربه الطفل.</li>
+          <li>شربَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.</li>
+          <li>الطفلُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره؛ لأنه الذي شرب.</li>
+          <li>الماءَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره؛ لأنه الشيء الذي شربه الطفل.</li>
         </ul>
       </details>
       <details className="worked-example">
         <summary>المثال 3: نامَ الطفلُ.</summary>
         <ul className="solution-list">
-          <li>نامَ: فعل.</li>
-          <li>الطفلُ: فاعل.</li>
+          <li>نامَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.</li>
+          <li>الطفلُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</li>
           <li>لا يوجد مفعول به.</li>
         </ul>
       </details>
       <details className="worked-example">
         <summary>المثال 4: فتحَ أحمدُ البابَ.</summary>
         <ul className="solution-list">
-          <li>فتحَ: فعل.</li>
-          <li>أحمدُ: فاعل.</li>
-          <li>البابَ: مفعول به.</li>
+          <li>فتحَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.</li>
+          <li>أحمدُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</li>
+          <li>البابَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.</li>
         </ul>
       </details>
       <details className="worked-example">
         <summary>المثال 5: ركضَ اللاعبُ.</summary>
         <ul className="solution-list">
-          <li>ركضَ: فعل.</li>
-          <li>اللاعبُ: فاعل.</li>
+          <li>ركضَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.</li>
+          <li>اللاعبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</li>
           <li>لا يوجد مفعول به.</li>
         </ul>
       </details>
       <details className="worked-example">
         <summary>المثال 6: زرعتْ سارةُ الوردةَ.</summary>
         <ul className="solution-list">
-          <li>زرعتْ: فعل ماضٍ.</li>
-          <li>سارةُ: فاعل.</li>
-          <li>الوردةَ: مفعول به.</li>
+          <li>زرعتْ: فعل ماضٍ مبني على الفتح الظاهر على آخره.</li>
+          <li>سارةُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</li>
+          <li>الوردةَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.</li>
         </ul>
       </details>
     </>

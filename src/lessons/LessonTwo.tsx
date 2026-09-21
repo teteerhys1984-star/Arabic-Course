@@ -505,8 +505,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
           </p>
           <SentenceStructure sentence="الطالبُ مجتهدٌ." mubtada="الطالبُ" khabar="مجتهدٌ" />
           <ul className="solution-list">
-            <li>الطالبُ: مبتدأ مرفوع، وعلامة رفعه الضمة.</li>
-            <li>مجتهدٌ: خبر مرفوع، وعلامة رفعه الضمة.</li>
+            <li>الطالبُ: مبتدأ مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.</li>
+            <li>مجتهدٌ: خبر مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.</li>
           </ul>
           <p className="source-note source-note--important">
             وفي هذا الدرس سنركّز بصورة أساسية على معرفة المبتدأ والخبر، أما علامات الإعراب بالتفصيل فسنتوسع فيها لاحقًا.

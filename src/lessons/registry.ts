@@ -44,6 +44,19 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['اسم', 'فعل', 'حرف'],
   },
+  {
+    id: 'lesson-2',
+    number: '٢',
+    eyebrow: 'الجملة الاسمية',
+    title: 'المبتدأ والخبر',
+    documentTitle: 'الدرس الثاني: الجملة الاسمية',
+    summary:
+      'تعلّم الجملة الاسمية، والمبتدأ والخبر، وطريقة التمييز بينها وبين الجملة الفعلية مع أنشطة واختبار نهائي.',
+    duration: '٧٥',
+    strand: 'أساسيات النحو',
+    available: true,
+    parts: ['جملة اسمية', 'مبتدأ', 'خبر'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

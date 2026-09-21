@@ -266,6 +266,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'intro',
       title: 'مدخل الدرس: الجملة الاسمية',
+      group: 'البداية',
+      icon: '🎯',
       description: 'الدرس الثاني: الجملة الاسمية — المبتدأ والخبر.',
       render: () => (
         <EducationalCard title="الدرس الثاني: الجملة الاسمية" eyebrow="عنوان الدرس" tone="accent">
@@ -286,6 +288,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'objectives',
       title: 'أهداف الدرس',
+      group: 'البداية',
+      icon: '🎯',
       description: 'في نهاية هذا الدرس، يُتوقع من الطالب أن يستطيع تنفيذ هذه المهارات.',
       render: () => (
         <EducationalCard title="في نهاية هذا الدرس، يُتوقع من الطالب أن يستطيع" eyebrow="أهداف الدرس">
@@ -307,6 +311,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'what-is-sentence',
       title: 'أولًا: الشرح التفصيلي — ما الجملة؟',
+      group: 'المفهوم الأساسي',
+      icon: '💡',
       description: 'نبدأ بتذكّر أقسام الكلام ثم نرتّب الكلمات لنحصل على معنى مفيد.',
       render: () => (
         <>
@@ -338,6 +344,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'nominal-sentence',
       title: 'ما الجملة الاسمية؟',
+      group: 'المفهوم الأساسي',
+      icon: '📘',
       description: 'الجملة الاسمية هي الجملة التي تبدأ باسم.',
       render: () => (
         <>
@@ -369,6 +377,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'mubtada',
       title: 'ما المبتدأ؟',
+      group: 'المبتدأ والخبر',
+      icon: '⭐',
       description: 'المبتدأ هو الاسم الذي تبدأ به الجملة الاسمية، ونتحدث عنه في الجملة.',
       render: () => (
         <>
@@ -399,6 +409,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'khabar',
       title: 'ما الخبر؟',
+      group: 'المبتدأ والخبر',
+      icon: '💬',
       description: 'الخبر هو الكلمة أو الكلمات التي تخبرنا بشيء عن المبتدأ وتُكمل معنى الجملة.',
       render: () => (
         <>
@@ -435,6 +447,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'easy-method',
       title: 'أسهل طريقة لاكتشاف المبتدأ والخبر',
+      group: 'المبتدأ والخبر',
+      icon: '🔍',
       description: 'خطوتان واضحتان: ابحث عن الاسم الأول، ثم اسأل ماذا نقول عنه؟',
       render: () => (
         <>
@@ -479,6 +493,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'raised',
       title: 'المبتدأ والخبر مرفوعان',
+      group: 'المبتدأ والخبر',
+      icon: '⚖️',
       description: 'من القواعد المهمة: المبتدأ مرفوع، والخبر مرفوع.',
       render: () => (
         <>
@@ -501,6 +517,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'names',
       title: 'لماذا نقول «مبتدأ» و«خبر»؟',
+      group: 'المبتدأ والخبر',
+      icon: '❓',
       description: 'المبتدأ هو عمّن أو عمّا نتحدث، والخبر هو ماذا نقول عنه.',
       render: () => (
         <>
@@ -534,6 +552,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'easy-examples',
       title: 'أمثلة سهلة جدًا',
+      group: 'الأمثلة والتوضيح',
+      icon: '📖',
       description: 'ثلاثة أمثلة قصيرة توضّح السؤالين: عن ماذا نتحدث؟ وماذا نقول عنه؟',
       render: () => (
         <>
@@ -557,6 +577,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'warning',
       title: 'انتبه: ليس كل جملة فيها اسم جملة اسمية',
+      group: 'الأمثلة والتوضيح',
+      icon: '⚠️',
       description: 'الجملة الاسمية تبدأ باسم، وليس المهم أن تحتوي على اسم فقط.',
       render: () => (
         <>
@@ -580,6 +602,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'comparison',
       title: 'الفرق بين الجملة الاسمية والجملة الفعلية',
+      group: 'الأمثلة والتوضيح',
+      icon: '🔄',
       description: 'انظر إلى أول كلمة في الجملة لتعرف نوعها.',
       render: () => (
         <>
@@ -596,6 +620,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'multiword-khabar',
       title: 'الخبر ليس دائمًا كلمة واحدة',
+      group: 'قواعد متقدمة',
+      icon: '🧩',
       description: 'قد يأتي الخبر كلمة واحدة أو أكثر من كلمة.',
       render: () => (
         <>
@@ -629,6 +655,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'varied-examples',
       title: 'أمثلة متنوعة على الجملة الاسمية',
+      group: 'قواعد متقدمة',
+      icon: '📚',
       description: 'المبتدأ قد يكون إنسانًا أو حيوانًا أو نباتًا أو شيئًا.',
       render: () => (
         <>
@@ -651,6 +679,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'agreement',
       title: 'التوافق بين المبتدأ والخبر',
+      group: 'قواعد متقدمة',
+      icon: '🤝',
       description: 'الخبر غالبًا يناسب المبتدأ في التذكير والتأنيث والعدد.',
       render: () => (
         <>
@@ -681,6 +711,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'needs-khabar',
       title: 'كيف أعرف أن الجملة تحتاج إلى خبر؟',
+      group: 'قواعد متقدمة',
+      icon: '💡',
       description: 'إذا لم يكتمل المعنى بعد المبتدأ فنحن ننتظر الخبر.',
       render: () => (
         <>
@@ -713,6 +745,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'who-what-game',
       title: 'لعبة «من؟ وماذا عنه؟»',
+      group: 'التطبيق والأخطاء',
+      icon: '🎮',
       description: 'استخدم السؤالين: من؟ أو ماذا؟ ثم ماذا عنه؟',
       render: () => (
         <>
@@ -757,6 +791,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'common-mistakes',
       title: 'أخطاء شائعة',
+      group: 'التطبيق والأخطاء',
+      icon: '🚫',
       description: 'أربع نقاط تساعد الطالب على تجنّب الخلط.',
       render: () => (
         <>
@@ -798,6 +834,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'memorize-rules',
       title: 'مهم للحفظ ⭐',
+      group: 'التطبيق والأخطاء',
+      icon: '⭐',
       description: 'احفظ هذه القواعد الخمس الأساسية.',
       render: () => (
         <EducationalCard title="احفظ هذه القواعد" eyebrow="مهم للحفظ ⭐" tone="soft">
@@ -816,12 +854,16 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'worked-examples',
       title: 'ثانيًا: أمثلة محلولة',
+      group: 'أمثلة محلولة',
+      icon: '✍️',
       description: 'سبعة أمثلة محلولة من المصدر، تعرض طريقة التفكير خطوة بخطوة.',
       render: () => <WorkedExamples />,
     },
     {
       id: 'activity-one',
       title: 'ثالثًا: نشاط تطبيقي — النشاط الأول',
+      group: 'الأنشطة التطبيقية',
+      icon: '🚀',
       description: 'اسمية أم فعلية؟ حدد نوع كل جملة.',
       render: () => (
         <ActivityOne
@@ -833,12 +875,16 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'activity-two',
       title: 'النشاط الثاني: استخرج المبتدأ والخبر',
+      group: 'الأنشطة التطبيقية',
+      icon: '🚀',
       description: 'في الجمل الآتية، حدّد المبتدأ والخبر.',
       render: () => <ActivityTwo answers={activityTwoAnswers} onChange={updateActivityTwo} />,
     },
     {
       id: 'activity-three',
       title: 'النشاط الثالث: أكمل الجملة',
+      group: 'الأنشطة التطبيقية',
+      icon: '🚀',
       description: 'أكمل كل جملة بكلمة مناسبة.',
       render: () => (
         <CompletionPractice
@@ -850,6 +896,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'activity-four',
       title: 'النشاط الرابع: كوّن جملة اسمية',
+      group: 'الأنشطة التطبيقية',
+      icon: '🚀',
       description: 'استخدم كل كلمة لتكوين جملة اسمية.',
       render: () => (
         <BuildSentencePractice
@@ -861,12 +909,16 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'final-test',
       title: 'رابعًا: اختبار نهاية الدرس',
+      group: 'التقييم والمعلم',
+      icon: '📝',
       description: 'الاختبار النهائي الرسمي المكون من 20 سؤالًا.',
       render: () => <OfficialTest answers={testAnswers} checked={testChecked} onChange={updateTestAnswer} onCheck={() => setTestChecked(true)} />,
     },
     {
       id: 'teacher-space',
       title: 'خامسًا: منطقة خاصة بالمعلم',
+      group: 'التقييم والمعلم',
+      icon: '👨‍🏫',
       description: 'الإجابات النموذجية، ملاحظات التصحيح، معيار الإتقان، والتوصية العلاجية.',
       render: () => (
         <>
@@ -886,6 +938,8 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     {
       id: 'summary',
       title: 'ملخص الدرس للحفظ',
+      group: 'التقييم والمعلم',
+      icon: '🏆',
       description: 'الخلاصة النهائية التي ينتهي بها مصدر الدرس.',
       render: () => (
         <>
@@ -910,7 +964,16 @@ export function LessonTwo({ onProgressChange, onFinish }: LessonTwoProps) {
     },
   ]
 
-  return <LessonFlow steps={steps} onProgressChange={onProgressChange} onFinish={onFinish} />
+  return (
+    <LessonFlow
+      steps={steps}
+      onProgressChange={onProgressChange}
+      onFinish={onFinish}
+      lessonTitle="المبتدأ والخبر"
+      lessonNumber="٢"
+      lessonEyebrow="الجملة الاسمية"
+    />
+  )
 }
 
 function QuestionText({ text }: { text: string }) {

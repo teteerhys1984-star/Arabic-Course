@@ -132,6 +132,43 @@ body {
 .letter-chip:hover, .sign-card:hover, .part-card:hover { transform: translateY(-3px); box-shadow: var(--shadow-lifted); }
 .letter-chip, .sign-card, .part-card { transition: transform .2s ease, box-shadow .2s ease; }
 
+.lesson-outline {
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 16px 45px rgb(19 57 47 / 8%);
+  background: linear-gradient(155deg, rgb(255 254 250 / 98%), rgb(246 242 232 / 94%));
+}
+.lesson-outline::after {
+  content: '';
+  position: absolute;
+  inset-inline-end: -3rem;
+  inset-block-start: -3rem;
+  width: 8rem;
+  height: 8rem;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgb(199 141 42 / 8%), transparent 70%);
+  pointer-events: none;
+}
+.lesson-outline__item.is-active {
+  background: linear-gradient(135deg, var(--green-dark), var(--green));
+  box-shadow: 0 8px 22px rgb(18 77 64 / 22%);
+}
+.lesson-outline__item.is-active .lesson-outline__badge {
+  background: linear-gradient(135deg, #e2a844, var(--gold));
+  color: #17352f;
+}
+.lesson-outline__progress-box {
+  background: linear-gradient(135deg, rgb(255 255 255 / 90%), rgb(247 243 234 / 70%));
+  box-shadow: 0 4px 14px rgb(19 57 47 / 4%);
+}
+.lesson-flow__mobile-trigger {
+  background: linear-gradient(135deg, rgb(255 254 250 / 98%), rgb(244 240 230 / 94%));
+  box-shadow: 0 8px 24px rgb(19 57 47 / 8%);
+}
+.lesson-mobile-drawer__content {
+  background: linear-gradient(180deg, #fffefa, #f9f6ef);
+}
+
 .instructor-credit {
   color: var(--gold-soft);
   font-weight: 600;

@@ -3,6 +3,7 @@ import { navigate, useHashRoute } from './useHashRoute'
 import { getLesson, type LessonMeta } from '../lessons/registry'
 import { LessonShell } from '../shared/components/LessonShell'
 import { LessonOne } from '../lessons/LessonOne'
+import { LessonTwo } from '../lessons/LessonTwo'
 
 /**
  * Root of the course. A tiny hash router keeps the permanent Arabic-Course URL and
@@ -16,7 +17,7 @@ export function App() {
 
   if (route.name === 'lesson' && route.lessonId) {
     const lesson = getLesson(route.lessonId)
-    if (lesson && lesson.id === 'lesson-1') {
+    if (lesson?.available) {
       // Keying by lesson id remounts the page (and resets step progress) per lesson.
       return <LessonPage key={lesson.id} lesson={lesson} />
     }
@@ -28,11 +29,13 @@ export function App() {
 }
 
 function LessonPage({ lesson }: { lesson: LessonMeta }) {
-  return (
-    <LessonShell lesson={lesson}>
-      <LessonOne onFinish={() => navigate({ name: 'home' })} />
-    </LessonShell>
+  const lessonContent = lesson.id === 'lesson-2' ? (
+    <LessonTwo onFinish={() => navigate({ name: 'home' })} />
+  ) : (
+    <LessonOne onFinish={() => navigate({ name: 'home' })} />
   )
+
+  return <LessonShell lesson={lesson}>{lessonContent}</LessonShell>
 }
 
 function MissingLesson() {

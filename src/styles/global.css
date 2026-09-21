@@ -26,13 +26,13 @@
 * { box-sizing: border-box; }
 html { scroll-behavior: smooth; }
 body { margin: 0; min-width: 320px; min-height: 100vh; overflow-x: hidden; }
-button, input { font: inherit; }
+button, input, textarea { font: inherit; }
 button, a { -webkit-tap-highlight-color: transparent; }
 a { color: inherit; }
 p { line-height: 1.9; }
 h1, h2, h3, p { margin-block-start: 0; }
 h1, h2, h3 { text-wrap: balance; }
-button:focus-visible, a:focus-visible, input:focus-visible, [tabindex='0']:focus-visible {
+button:focus-visible, a:focus-visible, input:focus-visible, textarea:focus-visible, [tabindex='0']:focus-visible {
   outline: 3px solid #e7b250;
   outline-offset: 3px;
 }
@@ -401,6 +401,213 @@ footer p { margin: 0; font-size: .8rem; }
 .detective-groups span { color: var(--muted); font-size: .75rem; }
 @media (max-width: 620px) {
   .detective-groups { grid-template-columns: 1fr; }
+}
+
+/* Authoritative Lesson 2 grammar layer */
+.grammar-hero {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .8rem;
+  margin-block: 1.2rem;
+  font: 700 clamp(1.5rem, 5vw, 3rem)/1.3 'Noto Naskh Arabic', serif;
+}
+.grammar-hero span:not([aria-hidden]) {
+  padding: .7rem 1rem;
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 18px 18px 6px 18px;
+  background: rgb(255 255 255 / 10%);
+}
+.grammar-hero span[aria-hidden] { color: var(--gold-soft); font-family: system-ui, sans-serif; }
+.grammar-hero__topic { color: var(--gold-soft); font-weight: 700; text-align: center; }
+.objective-list strong { color: var(--green-dark); }
+.grammar-parts { margin-block: 1rem; }
+.sentence-contrast, .agreement-grid, .formula-pair, .incomplete-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+  margin-block: 1rem;
+}
+.grammar-definition { margin-block-end: 1rem; }
+.grammar-definition--mubtada { border-inline-start-color: var(--green); background: #eaf4ef; }
+.grammar-definition--khabar { border-inline-start-color: var(--gold); background: #fff6e6; }
+.sentence-structure {
+  margin-block: 1rem;
+  padding: clamp(1rem, 3vw, 1.4rem);
+  border: 1px solid #d5e4dc;
+  border-radius: 20px;
+  background: linear-gradient(145deg, var(--paper), #f2f8f4);
+  box-shadow: var(--shadow);
+}
+.sentence-structure--multiword { background: linear-gradient(145deg, #fffefa, #fff6e6); border-color: #ead9b4; }
+.sentence-structure__sentence {
+  margin-block-end: 1rem;
+  color: var(--green-dark);
+  text-align: center;
+  font: 700 clamp(1.35rem, 4vw, 2rem)/1.6 'Noto Naskh Arabic', serif;
+}
+.sentence-structure__parts {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr);
+  align-items: stretch;
+  gap: .7rem;
+}
+.sentence-part {
+  min-width: 0;
+  display: grid;
+  place-items: center;
+  gap: .3rem;
+  padding: 1rem;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+.sentence-part bdi { color: var(--green-dark); font: 700 1.45rem/1.35 'Noto Naskh Arabic', serif; }
+.sentence-part small { color: var(--muted); font-weight: 700; }
+.sentence-part--mubtada { border-color: #b9dacb; background: #eef7f2; }
+.sentence-part--khabar { border-color: #ecd398; background: #fff7e6; }
+.sentence-structure__connector { align-self: center; color: var(--gold); font: 700 1.7rem/1 system-ui, sans-serif; }
+.qa-card {
+  margin-block: 1rem;
+  padding: 1.1rem 1.2rem;
+  border-radius: 18px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.qa-card--mubtada { border-inline-start: 5px solid var(--green); }
+.qa-card--khabar { border-inline-start: 5px solid var(--gold); }
+.qa-card__sentence { color: var(--green-dark); font: 700 1.45rem/1.6 'Noto Naskh Arabic', serif; }
+.qa-card p { margin-block-end: .35rem; }
+.qa-card strong { color: var(--green); }
+.grammar-decision { grid-template-columns: repeat(2, minmax(0, 1fr)); margin-block: 1rem; }
+.grammar-decision-card { box-shadow: var(--shadow); }
+.grammar-question-panel .button { margin-block: .7rem; }
+.activity-feedback-card {
+  margin-block-start: 1rem;
+  padding: 1rem;
+  border-radius: 14px;
+  background: var(--paper);
+  border: 1px solid #b9dacb;
+}
+.activity-feedback-card p { margin-block: .2rem; }
+.grammar-quote {
+  margin: 1.2rem 0 0;
+  padding: 1.1rem 1.3rem;
+  border-inline-start: 5px solid var(--gold);
+  border-radius: 14px;
+  background: var(--cream);
+}
+.grammar-quote p { margin-block: .2rem; color: var(--green-dark); }
+.grammar-reveal__body { padding: 0 1.1rem 1rem; }
+.grammar-reveal__body p { margin-block: .35rem; color: var(--ink-soft); }
+.grammar-warning { border-color: #e5c9a2; }
+.formula-pair { align-items: stretch; }
+.formula-pair--wide { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.grammar-formula-card {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: .65rem;
+  min-height: 84px;
+  padding: 1rem;
+  border: 1px solid #d5e4dc;
+  border-radius: 18px;
+  color: var(--green-dark);
+  background: linear-gradient(145deg, var(--paper), #eff7f2);
+  font-weight: 700;
+  box-shadow: var(--shadow);
+}
+.grammar-formula-card span { color: var(--gold); font-family: system-ui, sans-serif; }
+.grammar-formula-card strong { color: var(--green); font: 700 1.25rem/1.4 'Noto Naskh Arabic', serif; }
+.two-column-list { columns: 2; column-gap: 2rem; }
+.example-category-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1rem;
+}
+.example-category {
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.example-category h3 { color: var(--green-dark); font: 700 1.25rem/1.45 'Noto Naskh Arabic', serif; }
+.incomplete-card {
+  padding: 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.incomplete-card__phrase {
+  color: var(--green-dark);
+  font: 700 1.65rem/1.5 'Noto Naskh Arabic', serif;
+}
+.memory-rules li { padding-block: .4rem; }
+.sentence-classification-row {
+  grid-template-columns: auto minmax(120px, .8fr) minmax(180px, 1fr) minmax(80px, auto);
+}
+.extraction-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .9rem;
+}
+.extraction-card {
+  display: grid;
+  gap: .55rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+}
+.extraction-card__sentence { color: var(--green-dark); font: 700 1.25rem/1.5 'Noto Naskh Arabic', serif; }
+.extraction-card label, .completion-row {
+  display: grid;
+  gap: .35rem;
+  color: var(--ink-soft);
+  font-size: .82rem;
+}
+.extraction-card input, .completion-row input {
+  width: 100%;
+  min-height: 42px;
+  border: 1px solid var(--line);
+  border-radius: 11px;
+  background: #fcfdfb;
+  padding-inline: .75rem;
+}
+.completion-list { display: grid; gap: .75rem; }
+.completion-row {
+  grid-template-columns: minmax(160px, .45fr) minmax(0, 1fr);
+  align-items: center;
+  padding: .75rem;
+  border-radius: 13px;
+  background: var(--paper);
+}
+.summary-definition-list {
+  display: grid;
+  gap: .4rem;
+  margin-block-end: 1rem;
+}
+.summary-definition-list p { margin: 0; }
+.summary-ending { margin-block-start: 1rem; }
+.teacher-material--lesson2 .correction-box { border: 1px solid #ead9b4; }
+
+@media (max-width: 900px) {
+  .sentence-contrast, .agreement-grid, .formula-pair, .incomplete-grid,
+  .example-category-grid, .extraction-grid { grid-template-columns: 1fr; }
+  .grammar-decision { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 620px) {
+  .grammar-hero { gap: .45rem; }
+  .sentence-structure__parts { grid-template-columns: 1fr; }
+  .sentence-structure__connector { transform: rotate(-90deg); justify-self: center; }
+  .two-column-list { columns: 1; }
+  .sentence-classification-row { grid-template-columns: 1fr; }
+  .completion-row { grid-template-columns: 1fr; }
 }
 
 /* ==========================================================================

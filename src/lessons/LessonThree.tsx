@@ -491,17 +491,17 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
           <GuidedReveal
             sentence="لعبَ الطفلُ بالكرة."
             intro="الفعل: لعبَ."
-            stages={[{ question: 'من الذي لعب؟', answer: '→ الطفلُ.', result: 'إذن: الطفلُ = فاعل.' }]}
+            stages={[{ question: 'من الذي لعب؟', answer: '→ الطفلُ.', result: 'الطفلُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.' }]}
           />
           <GuidedReveal
             sentence="طارَ العصفورُ."
             intro="الفعل: طارَ."
-            stages={[{ question: 'من الذي طار؟', answer: '→ العصفورُ.', result: 'إذن: العصفورُ = فاعل.' }]}
+            stages={[{ question: 'من الذي طار؟', answer: '→ العصفورُ.', result: 'العصفورُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.' }]}
           />
           <GuidedReveal
             sentence="نجحتِ الطالبةُ."
             intro="الفعل: نجحتْ."
-            stages={[{ question: 'من الذي نجح؟', answer: '→ الطالبةُ.', result: 'إذن: الطالبةُ = فاعل.' }]}
+            stages={[{ question: 'من الذي نجح؟', answer: '→ الطالبةُ.', result: 'الطالبةُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.' }]}
           />
         </>
       ),
@@ -634,8 +634,8 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
           <GuidedReveal
             sentence="أكلَ الطفلُ التفاحةَ."
             stages={[
-              { question: 'من الذي أكل؟', answer: '→ الطفلُ.', result: 'إذن: الطفلُ = فاعل.' },
-              { question: 'ماذا أكل؟', answer: '→ التفاحةَ.', result: 'إذن: التفاحةَ = مفعول به.' },
+              { question: 'من الذي أكل؟', answer: '→ الطفلُ.', result: 'الطفلُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.' },
+              { question: 'ماذا أكل؟', answer: '→ التفاحةَ.', result: 'التفاحةَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.' },
             ]}
           />
           <blockquote className="grammar-quote">
@@ -841,7 +841,7 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
             sentence="جلسَ الطالبُ."
             stages={[
               { question: 'ما الفعل؟', answer: '→ جلسَ.' },
-              { question: 'من الذي جلس؟', answer: '→ الطالبُ.', result: 'إذن: جلسَ: فعل. الطالبُ: فاعل. لا يوجد مفعول به.' },
+              { question: 'من الذي جلس؟', answer: '→ الطالبُ.', result: 'جلسَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره. الطالبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره. لا يوجد مفعول به.' },
             ]}
           />
         </>
@@ -921,9 +921,9 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
                 <bdi>قرأَ الطالبُ الكتابَ.</bdi>
               </p>
               <ul className="solution-list">
-                <li>قرأَ: فعل.</li>
-                <li>الطالبُ: فاعل.</li>
-                <li>الكتابَ: مفعول به.</li>
+                <li>قرأَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.</li>
+                <li>الطالبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.</li>
+                <li>الكتابَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.</li>
               </ul>
             </article>
           </div>

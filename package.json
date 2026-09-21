@@ -12,8 +12,9 @@
     "check:rtl": "node scripts/check-rtl.mjs",
     "check:lesson1": "node scripts/check-lesson1.mjs",
     "check:lesson2": "node scripts/check-lesson2.mjs",
+    "check:lesson3": "node scripts/check-lesson3.mjs",
     "check:architecture": "node scripts/check-architecture.mjs",
-    "validate": "npm run lint && npm run check:rtl && npm run check:architecture && npm run check:lesson1 && npm run check:lesson2 && npm run test && npm run build"
+    "validate": "npm run lint && npm run check:rtl && npm run check:architecture && npm run check:lesson1 && npm run check:lesson2 && npm run check:lesson3 && npm run test && npm run build"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

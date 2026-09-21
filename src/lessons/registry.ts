@@ -57,6 +57,19 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['جملة اسمية', 'مبتدأ', 'خبر'],
   },
+  {
+    id: 'lesson-3',
+    number: '٣',
+    eyebrow: 'الجملة الفعلية',
+    title: 'الفعل والفاعل والمفعول به',
+    documentTitle: 'الدرس الثالث: الجملة الفعلية',
+    summary:
+      'تعلّم الجملة الفعلية، والفعل والفاعل والمفعول به، وطريقة اكتشافها بسؤالي "من قام بالفعل؟" و"ماذا فعل؟" مع أنشطة واختبار نهائي.',
+    duration: '٧٥',
+    strand: 'أساسيات النحو',
+    available: true,
+    parts: ['فعل', 'فاعل', 'مفعول به'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

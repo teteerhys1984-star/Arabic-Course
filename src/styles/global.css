@@ -610,6 +610,170 @@ footer p { margin: 0; font-size: .8rem; }
   .completion-row { grid-template-columns: 1fr; }
 }
 
+/* Authoritative Lesson 3 grammar layer: الفعل (coral) / الفاعل (green) / المفعول به (gold).
+   Every role keeps one consistent color so sentence analysis stays visually readable. */
+:root {
+  --verb-tint: #a8503a;
+  --verb-soft: #fdeee9;
+  --fael-tint: var(--green);
+  --fael-soft: #eaf4ef;
+  --mafool-tint: #a06f14;
+  --mafool-soft: #fff6e6;
+}
+.grammar-definition--verb { border-inline-start-color: var(--verb-tint); background: var(--verb-soft); }
+.grammar-definition--fael { border-inline-start-color: var(--fael-tint); background: var(--fael-soft); }
+.grammar-definition--mafool { border-inline-start-color: var(--gold); background: var(--mafool-soft); }
+
+.verb-word-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .65rem; margin-block: 1rem; unicode-bidi: isolate; }
+.verb-word-grid bdi {
+  padding: .7rem .5rem;
+  border-radius: 12px;
+  border: 1px solid #ecc9bc;
+  color: var(--verb-tint);
+  background: var(--verb-soft);
+  font-weight: 700;
+  text-align: center;
+}
+
+.verbal-structure__parts {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: stretch;
+  justify-content: center;
+  gap: .7rem;
+}
+.verbal-structure__parts .sentence-part { min-width: 130px; }
+.sentence-part--verb { border-color: #ecc9bc; background: var(--verb-soft); }
+.sentence-part--verb bdi { color: var(--verb-tint); }
+.sentence-part--fael { border-color: #b9dacb; background: var(--fael-soft); }
+.sentence-part--mafool { border-color: #ecd398; background: var(--mafool-soft); }
+.sentence-part--mafool bdi { color: var(--mafool-tint); }
+.sentence-part--none { border-style: dashed; color: var(--muted); background: var(--paper); }
+.sentence-part--none bdi { color: var(--muted); font-size: 1rem; }
+
+.qa-card--fael { border-inline-start: 5px solid var(--fael-tint); }
+.qa-card--fael > strong:last-child { color: var(--green); }
+.qa-card--mafool { border-inline-start: 5px solid var(--gold); }
+.qa-card--mafool > strong:last-child { color: var(--mafool-tint); }
+
+/* الفعل ↓ من قام بالفعل؟ ↓ الفاعل ↓ ماذا فعل الفاعل؟ ↓ المفعول به — إن وُجد */
+.discovery-chain {
+  display: grid;
+  justify-items: center;
+  gap: .45rem;
+  margin-block: 1.2rem;
+  padding: clamp(1.1rem, 3vw, 1.6rem);
+  border: 1px solid #d5e4dc;
+  border-radius: 22px;
+  background: linear-gradient(165deg, var(--paper), #f2f8f4);
+  box-shadow: var(--shadow);
+}
+.discovery-chain__node {
+  display: grid;
+  justify-items: center;
+  gap: .15rem;
+  min-width: min(280px, 100%);
+  padding: .7rem 1.4rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  font: 700 1.2rem/1.5 'Noto Naskh Arabic', serif;
+  text-align: center;
+}
+.discovery-chain__node em { font-style: normal; font-size: .82rem; color: var(--muted); }
+.discovery-chain__node--verb { border-color: #ecc9bc; background: var(--verb-soft); color: var(--verb-tint); }
+.discovery-chain__node--fael { border-color: #b9dacb; background: var(--fael-soft); color: var(--green-dark); }
+.discovery-chain__node--mafool { border-color: #ecd398; background: var(--mafool-soft); color: var(--mafool-tint); }
+.discovery-chain__arrow { color: var(--gold); font: 700 1.3rem/1 system-ui, sans-serif; }
+.discovery-chain__question { color: var(--ink-soft); font-size: .85rem; font-weight: 700; }
+.discovery-chain__caption { margin: .6rem 0 0; color: var(--green-dark); font-weight: 700; }
+
+/* Word ← mark ← role rows, e.g. الطالبُ ← ضمة ← فاعل. */
+.ending-rules { display: grid; gap: .7rem; margin-block: 1rem; }
+.ending-rule {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: .7rem;
+  padding: .9rem 1rem;
+  border-radius: 16px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font-weight: 700;
+  box-shadow: var(--shadow);
+}
+.ending-rule__word { font: 700 1.5rem/1.4 'Noto Naskh Arabic', serif; color: var(--green-dark); }
+.ending-rule__mark { padding: .25rem .8rem; border-radius: 999px; background: var(--cream); color: var(--ink-soft); font-size: .82rem; }
+.ending-rule span[aria-hidden] { color: var(--gold); font-family: system-ui, sans-serif; }
+.ending-rule--fael { border-inline-start: 5px solid var(--fael-tint); }
+.ending-rule--fael strong { color: var(--green); }
+.ending-rule--mafool { border-inline-start: 5px solid var(--gold); }
+.ending-rule--mafool strong { color: var(--mafool-tint); }
+
+/* Step-by-step guided reveal used for the analysis questions. */
+.guided-reveal {
+  margin-block: 1.1rem;
+  padding: clamp(1rem, 3vw, 1.4rem);
+  border: 1px solid #d5e4dc;
+  border-radius: 20px;
+  background: linear-gradient(150deg, var(--paper), #f2f8f4);
+  box-shadow: var(--shadow);
+}
+.guided-reveal__sentence {
+  margin-block-end: .8rem;
+  color: var(--green-dark);
+  text-align: center;
+  font: 700 clamp(1.35rem, 4vw, 1.9rem)/1.6 'Noto Naskh Arabic', serif;
+}
+.guided-reveal__intro { color: var(--ink-soft); font-weight: 600; }
+.guided-reveal__stages { list-style: none; margin: 0 0 .6rem; padding: 0; display: grid; gap: .55rem; }
+.guided-reveal__stage { padding: .75rem .9rem; border-radius: 13px; border: 1px dashed var(--line); background: rgb(255 254 250 / 70%); }
+.guided-reveal__stage--open { border-style: solid; border-color: #b9dacb; }
+.guided-reveal__question { margin: 0; color: var(--green-dark); font-weight: 700; }
+.guided-reveal__answer p { margin: .35rem 0 .15rem; color: var(--ink-soft); }
+.guided-reveal__answer strong { color: var(--green); }
+
+.player-ball-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.player-ball-grid .guided-reveal { margin-block: 0; }
+
+.object-contrast { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; }
+.object-contrast .source-subheading { margin-block-start: 0; font-size: 1.3rem; }
+.example-category--no-object { border-inline-start: 5px solid var(--fael-tint); background: var(--fael-soft); }
+.example-category--with-object { border-inline-start: 5px solid var(--gold); background: var(--mafool-soft); }
+
+.analysis-steps { grid-template-columns: repeat(3, minmax(0, 1fr)); margin-block: 1rem; }
+
+.lesson-comparison { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-block: 1rem; }
+.comparison-card {
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.comparison-card--nominal { border-block-start: 5px solid var(--violet, #6f5aa8); }
+.comparison-card--verbal { border-block-start: 5px solid var(--verb-tint); }
+
+.formula-triplet { flex-wrap: wrap; }
+.formula-triplet--wide { margin-block: 1rem; }
+.formula-triplet__group { display: inline-flex; align-items: center; gap: .65rem; }
+.formula-triplet small { color: var(--muted); font-weight: 700; }
+
+.golden-rule { border-inline-start-color: var(--gold); background: linear-gradient(150deg, var(--gold-soft), #fffdf5); box-shadow: var(--shadow); }
+.golden-rule p strong { color: var(--green-dark); }
+.teacher-material--lesson3 .correction-box { border: 1px solid #ead9b4; }
+
+@media (max-width: 900px) {
+  .player-ball-grid, .object-contrast, .lesson-comparison { grid-template-columns: 1fr; }
+  .analysis-steps { grid-template-columns: 1fr; }
+}
+
+@media (max-width: 620px) {
+  .verb-word-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .verbal-structure__parts { flex-direction: column; align-items: stretch; }
+  .verbal-structure__parts .sentence-structure__connector { transform: rotate(-90deg); align-self: center; }
+}
+
 /* ==========================================================================
    Course-wide architecture: index homepage and reusable sequential lesson shell.
    ========================================================================== */

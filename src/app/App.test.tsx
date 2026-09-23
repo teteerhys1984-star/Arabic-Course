@@ -23,7 +23,8 @@ describe('Course index (homepage / lesson hub)', () => {
     expect(screen.getByRole('heading', { name: 'الاسم والفعل والحرف', level: 3 })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'المبتدأ والخبر', level: 3 })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'الفعل والفاعل والمفعول به', level: 3 })).toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: /ابدأ الدرس/ })).toHaveLength(3)
+    expect(screen.getByRole('heading', { name: 'الفعل الماضي، والفعل المضارع، وفعل الأمر', level: 3 })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /ابدأ الدرس/ })).toHaveLength(4)
     expect(screen.getByText('المهندس سومر شاهين: 0930215022')).toBeInTheDocument()
 
     // The index must not embed the full lesson content.
@@ -433,5 +434,49 @@ describe('Lesson Outline roadmap navigation across Lessons 1–3', () => {
     expect(screen.queryByRole('dialog', { name: 'محتويات الدرس' })).not.toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'المثال المهم: اللاعب والكرة', level: 2 })).toBeInTheDocument()
     expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 13 من 30')
+  })
+})
+
+describe('Lesson 4 as a sequential, one-step-at-a-time flow', () => {
+  it('registers the lesson and renders its full official test on its own step', async () => {
+    goToLesson('lesson-4')
+    const user = userEvent.setup()
+    render(<App />)
+
+    expect(screen.getByRole('heading', { name: 'مدخل الدرس: أزمنة الفعل', level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من 39')
+
+    for (let step = 0; step < 36; step += 1) {
+      await user.click(screen.getByRole('button', { name: /التالي/ }))
+    }
+
+    expect(screen.getByRole('heading', { name: 'اختبار نهاية الدرس', level: 2 })).toBeInTheDocument()
+    const officialTest = screen.getByTestId('lesson4-official-test')
+    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(20)
+    expect(within(officialTest).getByText('أجب عن الأسئلة العشرين كلها. بعد التحقق تظهر التغذية الراجعة، والأسئلة المفتوحة تراجع معلمك.')).toBeInTheDocument()
+  })
+
+  it('keeps the teacher material gated and exposes the five activity steps in the outline', async () => {
+    goToLesson('lesson-4')
+    const user = userEvent.setup()
+    render(<App />)
+
+    const outline = screen.getByRole('navigation', { name: 'فهرس خطوات الدرس' })
+    expect(within(outline).getByRole('button', { name: /تصنيف الأفعال/ })).toBeInTheDocument()
+    expect(within(outline).getByRole('button', { name: /تحديد زمن الفعل/ })).toBeInTheDocument()
+    expect(within(outline).getByRole('button', { name: /اختيار الفعل المناسب/ })).toBeInTheDocument()
+    expect(within(outline).getByRole('button', { name: /التحويل/ })).toBeInTheDocument()
+    expect(within(outline).getByRole('button', { name: /المحقق اللغوي/ })).toBeInTheDocument()
+
+    for (let step = 0; step < 37; step += 1) {
+      await user.click(screen.getByRole('button', { name: /التالي/ }))
+    }
+    expect(screen.getByRole('heading', { name: 'منطقة المعلم', level: 2 })).toBeInTheDocument()
+    expect(screen.queryByText('الإجابات النموذجية لاختبار نهاية الدرس')).not.toBeInTheDocument()
+
+    await user.type(screen.getByLabelText('كلمة المرور'), 'معلم')
+    await user.click(screen.getByRole('button', { name: 'دخول' }))
+    expect(screen.getByText('الإجابات النموذجية لاختبار نهاية الدرس')).toBeInTheDocument()
+    expect(screen.getByText(/15\/20 فأكثر/)).toBeInTheDocument()
   })
 })

@@ -70,6 +70,19 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['فعل', 'فاعل', 'مفعول به'],
   },
+  {
+    id: 'lesson-4',
+    number: '٤',
+    eyebrow: 'أزمنة الفعل',
+    title: 'الفعل الماضي، والفعل المضارع، وفعل الأمر',
+    documentTitle: 'الدرس الرابع: أزمنة الفعل',
+    summary:
+      'تعلّم الماضي والمضارع والأمر، وأحرف المضارعة، والتمييز بين الخبر والطلب مع أنشطة واختبار نهائي.',
+    duration: '٧٥',
+    strand: 'أساسيات النحو',
+    available: true,
+    parts: ['ماضٍ', 'مضارع', 'أمر'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

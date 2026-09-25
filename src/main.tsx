@@ -4,6 +4,7 @@ import { App } from './app/App'
 import './styles/global.css'
 import './styles/visual-polish.css'
 import './styles/lesson-four.css'
+import './styles/lesson-five.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

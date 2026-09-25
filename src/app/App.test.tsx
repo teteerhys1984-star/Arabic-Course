@@ -24,7 +24,8 @@ describe('Course index (homepage / lesson hub)', () => {
     expect(screen.getByRole('heading', { name: 'المبتدأ والخبر', level: 3 })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'الفعل والفاعل والمفعول به', level: 3 })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'الفعل الماضي، والفعل المضارع، وفعل الأمر', level: 3 })).toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: /ابدأ الدرس/ })).toHaveLength(4)
+    expect(screen.getByRole('heading', { name: 'الضمائر المنفصلة والمتصلة', level: 3 })).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /ابدأ الدرس/ })).toHaveLength(5)
     expect(screen.getByText('المهندس سومر شاهين: 0930215022')).toBeInTheDocument()
 
     // The index must not embed the full lesson content.

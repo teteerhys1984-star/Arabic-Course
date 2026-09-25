@@ -6,6 +6,7 @@ import { LessonOne } from '../lessons/LessonOne'
 import { LessonTwo } from '../lessons/LessonTwo'
 import { LessonThree } from '../lessons/LessonThree'
 import { LessonFour } from '../lessons/LessonFour'
+import { LessonFive } from '../lessons/LessonFive'
 
 /**
  * Root of the course. A tiny hash router keeps the permanent Arabic-Course URL and
@@ -32,7 +33,9 @@ export function App() {
 
 function LessonPage({ lesson }: { lesson: LessonMeta }) {
   const lessonContent =
-    lesson.id === 'lesson-4' ? (
+    lesson.id === 'lesson-5' ? (
+      <LessonFive onFinish={() => navigate({ name: 'home' })} />
+    ) : lesson.id === 'lesson-4' ? (
       <LessonFour onFinish={() => navigate({ name: 'home' })} />
     ) : lesson.id === 'lesson-3' ? (
       <LessonThree onFinish={() => navigate({ name: 'home' })} />

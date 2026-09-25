@@ -83,6 +83,18 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['ماضٍ', 'مضارع', 'أمر'],
   },
+  {
+    id: 'lesson-5',
+    number: '٥',
+    eyebrow: 'الضمائر',
+    title: 'الضمائر المنفصلة والمتصلة',
+    documentTitle: 'الدرس الخامس: الضمائر المنفصلة والمتصلة',
+    summary: 'تعرّف إلى ضمائر المتكلم والمخاطب والغائب، والضمائر المنفصلة والمتصلة ومرجع الضمير والتوافق.',
+    duration: '٧٥',
+    strand: 'أساسيات النحو',
+    available: true,
+    parts: ['منفصل', 'متصل', 'مستتر'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

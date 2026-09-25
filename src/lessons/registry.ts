@@ -95,6 +95,18 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['منفصل', 'متصل', 'مستتر'],
   },
+  {
+    id: 'lesson-6',
+    number: '٦',
+    eyebrow: 'علامات الإعراب',
+    title: 'علامات الإعراب الأصلية والفرعية',
+    documentTitle: 'الدرس السادس: علامات الإعراب الأصلية والفرعية',
+    summary: 'تعلّم حالات الإعراب الأربع وعلاماتها الأصلية، ثم تعرّف تمهيديًا إلى العلامات الفرعية مع أمثلة وأنشطة واختبار شامل.',
+    duration: '٩٠',
+    strand: 'أساسيات النحو',
+    available: true,
+    parts: ['رفع', 'نصب', 'جر', 'جزم'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

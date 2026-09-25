@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 
-const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx'].map((name) => `src/lessons/${name}`)
+const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx'].map((name) => `src/lessons/${name}`)
 const sources = Object.fromEntries(lessonPaths.map((path) => [path, readFileSync(path, 'utf8')]))
 const failures = []
 
@@ -46,6 +46,10 @@ requirePhrase('src/lessons/LessonTwo.tsx', 'مجتهدٌ: خبر مرفوع، و
 requirePhrase('src/lessons/LessonThree.tsx', 'كتبَ: فعل ماضٍ مبني على الفتحة الظاهرة على آخره.')
 requirePhrase('src/lessons/LessonThree.tsx', 'الطالبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.')
 requirePhrase('src/lessons/LessonThree.tsx', 'الدرسَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.')
+requirePhrase('src/lessons/LessonSix.tsx', 'الطالبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.')
+requirePhrase('src/lessons/LessonSix.tsx', 'الواجبَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.')
+requirePhrase('src/lessons/LessonSix.tsx', 'المدرسةِ: اسم مجرور بإلى وعلامة جره الكسرة الظاهرة على آخره.')
+requirePhrase('src/lessons/LessonSix.tsx', 'يذهبْ: فعل مضارع مجزوم بـ(لم)، وعلامة جزمه السكون.')
 
 if (failures.length) {
   console.error(failures.join('\n'))

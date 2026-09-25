@@ -1,0 +1,87 @@
+/* Lesson 6: the original/secondary case-mark map and source-faithful practice. */
+.lesson-six-hero-topic { color: var(--gold-soft); font-weight: 700; text-align: center; }
+.lesson-six-state-map { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .7rem; margin-block: 1.3rem; }
+.lesson-six-state-map div { display: grid; gap: .3rem; min-width: 0; padding: .85rem .45rem; border: 1px solid rgb(255 255 255 / 22%); border-radius: 15px; background: rgb(255 255 255 / 9%); text-align: center; }
+.lesson-six-state-map strong { color: var(--gold-soft); font-size: 1.1rem; }
+.lesson-six-state-map span { color: #e4f0eb; font-size: .76rem; }
+.lesson-six-state-map--large { color: var(--ink); }
+.lesson-six-state-map--large div { border-color: var(--line); background: var(--paper); box-shadow: var(--shadow); }
+.lesson-six-state-map--large strong { color: var(--green-dark); }
+.lesson-six-state-map--large span { color: var(--muted); }
+.lesson-six-formula, .lesson-six-featured-sentence { margin-block: 1rem; color: var(--green-dark); text-align: center; font: 700 clamp(1.35rem, 4vw, 2rem)/1.6 'Noto Naskh Arabic', serif; }
+.lesson-six-example-pair { display: flex; flex-wrap: wrap; justify-content: center; gap: .7rem; margin-block: 1rem; }
+.lesson-six-example-pair span { padding: .65rem 1rem; border: 1px solid #c9ded3; border-radius: 999px; background: #eef7f2; color: var(--green-dark); font-weight: 700; }
+.lesson-six-sentence-list { display: grid; gap: .55rem; margin-block: 1rem; }
+.lesson-six-sentence-list bdi, .lesson-six-ending-grid bdi { display: block; padding: .85rem 1rem; border: 1px solid var(--line); border-radius: 13px; background: var(--paper); color: var(--green-dark); font: 700 1.25rem/1.5 'Noto Naskh Arabic', serif; text-align: center; }
+.lesson-six-ending-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin-block: 1rem; }
+.lesson-six-ending-grid bdi { border-block-end: 4px solid var(--gold); }
+.lesson-six-rule { margin-block: 1rem; padding: 1rem 1.2rem; border-inline-start: 5px solid var(--gold); border-radius: 15px; background: var(--cream); box-shadow: var(--shadow); }
+.lesson-six-rule strong { color: var(--green-dark); }
+.lesson-six-rule p { margin: .35rem 0 0; }
+.lesson-six-example-cards, .lesson-six-role-grid, .lesson-six-two-column { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-block: 1rem; }
+.lesson-six-example-cards article, .lesson-six-role-grid article, .lesson-six-two-column article { display: grid; align-content: start; gap: .35rem; min-width: 0; padding: 1rem; border: 1px solid var(--line); border-radius: 17px; background: var(--paper); box-shadow: var(--shadow); }
+.lesson-six-example-cards bdi, .lesson-six-role-grid bdi, .lesson-six-two-column bdi { color: var(--green-dark); font: 700 1.2rem/1.5 'Noto Naskh Arabic', serif; }
+.lesson-six-example-cards p, .lesson-six-role-grid span { color: var(--muted); font-size: .8rem; }
+.lesson-six-role-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.lesson-six-role-grid strong, .lesson-six-two-column h3 { color: var(--green); }
+.lesson-six-two-column { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.lesson-six-contrast { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-block: 1rem; }
+.lesson-six-contrast strong { display: grid; place-items: center; min-height: 80px; padding: 1rem; border: 1px solid #d7c68f; border-radius: 17px; background: var(--gold-soft); color: var(--green-dark); text-align: center; }
+.lesson-six-state-mark { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-block: 1rem; }
+.lesson-six-state-mark div { display: grid; gap: .3rem; padding: 1rem; border: 1px solid var(--line); border-radius: 15px; background: var(--paper); text-align: center; }
+.lesson-six-state-mark strong { color: var(--green); font: 700 1.4rem/1.4 'Noto Naskh Arabic', serif; }
+.lesson-six-state-mark span { color: var(--muted); font-size: .76rem; }
+.lesson-six-golden-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; margin-block: 1rem; }
+.lesson-six-golden-grid strong { display: grid; place-items: center; min-height: 58px; padding: .65rem .4rem; border: 1px solid #ead9a9; border-radius: 13px; background: linear-gradient(145deg, #fff9e9, var(--gold-soft)); color: var(--green-dark); font-size: .84rem; text-align: center; }
+.lesson-six-table { width: 100%; min-width: 560px; border-collapse: collapse; background: var(--paper); }
+.lesson-six-table th, .lesson-six-table td { padding: .85rem 1rem; border-block-start: 1px solid var(--line); text-align: start; vertical-align: top; }
+.lesson-six-table thead th { color: var(--green-dark); background: #eef4ef; font-weight: 700; }
+.lesson-six-table tbody th { color: var(--green); }
+.lesson-six-table td { color: var(--ink-soft); }
+.lesson-six-chip-grid { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: .55rem; margin-block: 1rem; }
+.lesson-six-chip-grid bdi { padding: .75rem .35rem; border: 1px solid #c8dfd2; border-radius: 13px; background: #eff7f2; color: var(--green-dark); font-weight: 700; text-align: center; }
+.lesson-six-parsing { margin-block: 1rem; padding: .8rem 1rem; border-inline-start: 4px solid var(--green); border-radius: 13px; background: #edf7f1; }
+.lesson-six-parsing p { margin: .35rem 0; color: var(--ink-soft); font-size: .88rem; }
+.lesson-six-steps-list { padding-inline-start: 1.3rem; }
+.lesson-six-steps-list li { padding-block: .35rem; line-height: 1.9; }
+.lesson-six-memory-list li { padding-block: .35rem; }
+.lesson-six-rule-list { display: grid; gap: .45rem; margin-block: 1rem; }
+.lesson-six-rule-list p { margin: 0; padding: .65rem .85rem; border-inline-start: 4px solid var(--gold); border-radius: 11px; background: var(--cream); }
+.lesson-six-error-list { display: grid; gap: .75rem; }
+.lesson-six-error { padding: .85rem 1rem; border: 1px solid #efd6ca; border-radius: 15px; background: #fff8f4; }
+.lesson-six-error p { margin: .2rem 0; font-size: .88rem; }
+.lesson-six-error p:last-child { color: var(--success); }
+.lesson-six-worked-list { display: grid; gap: .9rem; }
+.lesson-six-worked { padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); box-shadow: var(--shadow); }
+.lesson-six-worked h3 { margin-block-end: .25rem; color: var(--green-dark); font: 700 1.2rem/1.4 'Noto Naskh Arabic', serif; }
+.lesson-six-worked .button { margin-block-start: .25rem; }
+.lesson-six-note { color: var(--muted); font-size: .8rem; }
+.lesson-six-activity { padding: clamp(1rem, 3vw, 1.5rem); border: 1px solid #cce0d4; border-radius: 22px; background: linear-gradient(145deg, #f2f8f4, var(--sky)); box-shadow: var(--shadow); }
+.lesson-six-activity-heading { display: flex; align-items: center; gap: .8rem; margin-block-end: 1rem; }
+.lesson-six-activity-heading h3 { margin: 0; color: var(--green-dark); font: 700 1.35rem/1.4 'Noto Naskh Arabic', serif; }
+.lesson-six-activity-heading p { margin: .2rem 0 0; color: var(--muted); font-size: .78rem; }
+.lesson-six-activity-items { display: grid; gap: .7rem; margin-block-end: 1rem; }
+.lesson-six-activity-row { padding: .75rem; border: 1px solid rgb(23 108 86 / 16%); border-radius: 14px; background: rgb(255 254 250 / 72%); }
+.lesson-six-activity-row label { display: block; margin-block-end: .45rem; color: var(--ink-soft); font-weight: 600; }
+.lesson-six-activity-row input, .lesson-six-activity-row select { width: 100%; min-height: 42px; border: 1px solid #c9d7ce; border-radius: 10px; background: var(--paper); padding-inline: .7rem; }
+.lesson-six-feedback { margin: .5rem 0 0; padding: .5rem .7rem; border-radius: 9px; font-size: .78rem; }
+.lesson-six-feedback.is-good { color: var(--success); background: #e4f3ec; }
+.lesson-six-feedback.is-bad { color: var(--error); background: #fae9e8; }
+.lesson-six-test .official-question { margin-block: .7rem; }
+.lesson-six-official-question legend { line-height: 1.9; }
+.lesson-six-test .official-test__actions { margin-block-start: 1.2rem; }
+.lesson-six-test .lesson-six-feedback { text-align: start; }
+.teacher-material--lesson6 h4 { color: var(--green); font-size: 1rem; }
+.teacher-material--lesson6 .lesson-six-parsing { margin-block: .6rem; }
+
+@media (max-width: 900px) {
+  .lesson-six-example-cards, .lesson-six-role-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lesson-six-chip-grid { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+}
+@media (max-width: 620px) {
+  .lesson-six-state-map, .lesson-six-golden-grid, .lesson-six-example-cards, .lesson-six-role-grid, .lesson-six-two-column, .lesson-six-contrast, .lesson-six-state-mark { grid-template-columns: 1fr 1fr; }
+  .lesson-six-ending-grid { grid-template-columns: 1fr; }
+  .lesson-six-chip-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .lesson-six-state-map strong { font-size: .92rem; }
+  .lesson-six-golden-grid strong { font-size: .76rem; }
+}

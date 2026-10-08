@@ -1,0 +1,224 @@
+/* ==========================================================================
+   Course index — Premium Lesson Cards Grid.
+   Data-driven: lessonRegistry → LessonCard[] → .lesson-index__list (grid).
+   Built only on the existing design tokens (green / gold / paper / line),
+   typefaces (Kufi for UI, Naskh for titles) and the asymmetric radius language.
+   ========================================================================== */
+
+.lesson-index__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  /* 3 columns on desktop, 2 on tablet, 1 on mobile — driven by available width,
+     with a comfortable minimum so cards never become narrow. */
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 20.5rem), 1fr));
+  gap: clamp(1rem, 2.2vw, 1.5rem);
+}
+.lesson-index__list > li { display: flex; min-width: 0; }
+
+/* Equal-height rows once there is more than one column. */
+@media (min-width: 700px) {
+  .lesson-index__list { grid-auto-rows: 1fr; }
+}
+
+/* ---- Card ---- */
+.lesson-card {
+  position: relative;
+  isolation: isolate;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.35rem, 2.6vw, 1.75rem);
+  border: 1px solid var(--line);
+  border-radius: 24px 24px 8px 24px;
+  background: var(--paper);
+  box-shadow: 0 1px 2px rgb(19 57 47 / 4%), 0 10px 28px rgb(19 57 47 / 6%);
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+/* Quiet top accent that grows on interaction (shape change, not colour only). */
+.lesson-card::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: clamp(1.35rem, 2.6vw, 1.75rem);
+  width: 2.5rem;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--gold);
+  transition: width .25s ease;
+}
+
+/* Lesson number as the decorative element — large, light, never competing with the title. */
+.lesson-card__watermark {
+  position: absolute;
+  z-index: -1;
+  inset-inline-end: 1.1rem;
+  inset-block-start: -.6rem;
+  color: rgb(23 108 86 / 6%);
+  font: 700 7.5rem/1 'Noto Naskh Arabic', serif;
+  pointer-events: none;
+  user-select: none;
+  transition: color .25s ease;
+}
+
+/* ---- Hierarchy: number → title → CTA ---- */
+.lesson-card__header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .5rem .75rem;
+  margin-block-end: 1rem;
+}
+.lesson-card__number {
+  display: inline-flex;
+  align-items: baseline;
+  gap: .35rem;
+  margin: 0;
+  padding: .2rem .7rem;
+  border: 1px solid rgb(23 108 86 / 16%);
+  border-radius: 999px;
+  background: #eef4ef;
+  color: var(--green-dark);
+  font-size: .72rem;
+  font-weight: 600;
+  line-height: 1.8;
+}
+.lesson-card__number bdi { font-weight: 700; font-size: .85rem; color: var(--green); }
+.lesson-card__eyebrow {
+  margin: 0;
+  color: var(--gold);
+  font-size: .72rem;
+  font-weight: 700;
+  line-height: 1.8;
+  letter-spacing: .02em;
+}
+
+.lesson-card__title {
+  margin-block-end: .6rem;
+  color: var(--green-dark);
+  font: 700 clamp(1.35rem, 1.1rem + .6vw, 1.55rem)/1.55 'Noto Naskh Arabic', serif;
+  overflow-wrap: break-word;
+}
+.lesson-card__link { color: inherit; text-decoration: none; }
+/* Stretched link: the whole card is the click target of one real <a>. */
+.lesson-card__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+.lesson-card__link:focus-visible { outline: none; }
+.lesson-card__link:focus-visible::after {
+  border-radius: 24px 24px 8px 24px;
+  outline: 3px solid #e7b250;
+  outline-offset: -3px;
+  box-shadow: inset 0 0 0 5px var(--paper);
+}
+
+.lesson-card__summary {
+  margin-block-end: 1.25rem;
+  color: var(--muted);
+  font-size: .8rem;
+  line-height: 1.95;
+}
+
+.lesson-card__footer {
+  margin-block-start: auto;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+.lesson-card__duration {
+  display: inline-flex;
+  align-items: center;
+  gap: .4rem;
+  color: var(--muted);
+  font-size: .74rem;
+}
+.lesson-card__duration bdi { color: var(--green); font-weight: 700; }
+.lesson-card__clock {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* CTA: calm by default, fully highlighted on hover/focus (shared button radius/height). */
+.lesson-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 44px;
+  padding: .55rem 1.05rem;
+  border: 1px solid #edd9a9;
+  border-radius: 12px;
+  background: var(--gold-soft);
+  color: #3b2a0c;
+  font-size: .85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.lesson-card__arrow { display: inline-block; transition: transform .2s ease; }
+
+/* ---- Interaction (hover + keyboard focus share the same treatment) ---- */
+.lesson-card:hover,
+.lesson-card:focus-within {
+  transform: translateY(-3px);
+  border-color: #c7d8ce;
+  box-shadow: 0 2px 4px rgb(19 57 47 / 5%), 0 18px 40px rgb(19 57 47 / 10%);
+}
+.lesson-card:hover::before,
+.lesson-card:focus-within::before { width: 4.5rem; }
+.lesson-card:hover .lesson-card__watermark,
+.lesson-card:focus-within .lesson-card__watermark { color: rgb(199 141 42 / 13%); }
+.lesson-card:hover .lesson-card__cta,
+.lesson-card:focus-within .lesson-card__cta {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #251a08;
+  box-shadow: 0 6px 14px rgb(199 141 42 / 22%);
+}
+/* "←" points toward the reading direction's end in RTL; nudge it forward. */
+.lesson-card:hover .lesson-card__arrow,
+.lesson-card:focus-within .lesson-card__arrow { transform: translateX(-4px); }
+.lesson-card:hover .lesson-card__title,
+.lesson-card:focus-within .lesson-card__title { color: var(--green); }
+
+/* ---- Not-yet-published lessons (existing `available: false` state) ---- */
+.lesson-card--soon { background: #fbfaf5; box-shadow: none; }
+.lesson-card--soon::before { background: var(--line); }
+.lesson-card--soon:hover { transform: none; box-shadow: none; border-color: var(--line); }
+.lesson-card__soon {
+  display: inline-block;
+  padding: .4rem .9rem;
+  border-radius: 999px;
+  background: var(--cream);
+  color: var(--muted);
+  font-size: .74rem;
+  font-weight: 700;
+}
+
+@media (max-width: 420px) {
+  .lesson-card__watermark { font-size: 6rem; }
+  .lesson-card__footer { gap: .65rem; }
+  .lesson-card__cta { flex: 1 1 100%; justify-content: center; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .lesson-card, .lesson-card::before, .lesson-card__arrow, .lesson-card__cta, .lesson-card__watermark { transition: none; }
+  .lesson-card:hover, .lesson-card:focus-within { transform: none; }
+  .lesson-card:hover .lesson-card__arrow, .lesson-card:focus-within .lesson-card__arrow { transform: none; }
+}

@@ -31,12 +31,34 @@ describe('Course index (homepage / lesson hub)', () => {
         level: 3,
       }),
     ).toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: /ابدأ الدرس/ })).toHaveLength(7)
+    // Every lesson card is one real link to its unchanged hash route, in registry order.
+    const lessonLinks = within(screen.getByRole('list')).getAllByRole('link')
+    expect(lessonLinks.map((link) => link.getAttribute('href'))).toEqual([
+      '#/lesson/lesson-1',
+      '#/lesson/lesson-2',
+      '#/lesson/lesson-3',
+      '#/lesson/lesson-4',
+      '#/lesson/lesson-5',
+      '#/lesson/lesson-6',
+      '#/lesson/lesson-7',
+    ])
+    expect(screen.getByRole('link', { name: 'الاسم والفعل والحرف' })).toHaveAttribute('href', '#/lesson/lesson-1')
+    expect(screen.getAllByText(/ابدأ الدرس/)).toHaveLength(7)
     expect(screen.getByText('المهندس سومر شاهين: 0930215022')).toBeInTheDocument()
 
     // The index must not embed the full lesson content.
     expect(screen.queryByTestId('official-test')).not.toBeInTheDocument()
     expect(screen.queryByText('لعبة المحقق اللغوي')).not.toBeInTheDocument()
+  })
+})
+
+describe('Lesson cards navigation', () => {
+  it('opens the same lesson route when a lesson card is clicked', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('link', { name: 'المبتدأ والخبر' }))
+    expect(window.location.hash).toBe('#/lesson/lesson-2')
   })
 })
 

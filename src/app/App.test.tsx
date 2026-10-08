@@ -2071,4 +2071,34 @@ describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف
     expect(screen.getByText(/أجبت عن/)).toHaveTextContent('0')
     expect(screen.getByText(/أجبت عن/)).toHaveTextContent('45')
   })
+
+  it('grades a typed weight in the activity, treats a blank weight as not counted, and never silently accepts a wrong one', async () => {
+    goToLesson('morphology-lesson-01')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: /الكلمات ١–٥/ }))
+    const row = screen.getByTestId('morph-row-w01')
+    await user.type(within(row).getByLabelText('وزن كاتب'), 'مفعول')
+    await user.click(within(screen.getByTestId('morph-activity-0')).getByRole('button', { name: 'تحقّق من هذه المجموعة' }))
+    expect(within(row).getByRole('status')).toHaveTextContent('غير صحيح؛ الصحيح: فاعل')
+    expect(within(row).getByRole('status')).toHaveTextContent('راجع الحقول المعلَّمة')
+
+    await user.clear(within(row).getByLabelText('وزن كاتب'))
+    await user.click(within(screen.getByTestId('morph-activity-0')).getByRole('button', { name: 'تحقّق من هذه المجموعة' }))
+    expect(within(row).getByRole('status')).toHaveTextContent('لم يُكتب')
+    expect(within(row).getByRole('status')).toHaveTextContent('ولم يُحسب خطأً')
+  })
+
+  it('does not count tashdid in تعليم as present (written form has no shadda)', async () => {
+    goToLesson('morphology-lesson-01')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: /الكلمات ١–٥/ }))
+    const row = screen.getByTestId('morph-row-w04')
+    await user.selectOptions(within(row).getByLabelText('تضعيف في تعليم'), 'نعم')
+    await user.click(within(screen.getByTestId('morph-activity-0')).getByRole('button', { name: 'تحقّق من هذه المجموعة' }))
+    expect(within(row).getByRole('status')).toHaveTextContent('التضعيف: الصحيح: لا')
+  })
 })

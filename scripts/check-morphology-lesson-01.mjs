@@ -103,11 +103,42 @@ if (!/إعادة الاختبار/.test(lesson) || !/setTestAnswers\(\{\}\)/.tes
 }
 
 // --- Teacher Area ---------------------------------------------------------
-if (!/<TeacherSpace password="somer173">/.test(lesson)) {
-  failures.push('The Teacher Area must stay behind the approved teacher password.')
+// The password value lives only in the shared constant; the lesson imports it, never copies it.
+if (!/<TeacherSpace password=\{COURSE_TEACHER_PASSWORD\}>/.test(lesson)) {
+  failures.push('The Teacher Area must stay behind the approved teacher password (via COURSE_TEACHER_PASSWORD).')
+}
+const passwordValue = 'somer173'
+for (const [name, source] of [
+  ['lesson', lesson],
+  ['content', content],
+  ['grading', grading],
+  ['registry', registry],
+  ['morphology source inventory', read('docs/morphology-lesson-01-source-inventory.md')],
+  ['morphology source audit', read('docs/morphology-lesson-01-source-audit.md')],
+]) {
+  if (source.includes(passwordValue)) failures.push(`The teacher password must not appear in ${name}.`)
 }
 for (const heading of ['الإجابات النموذجية', 'حلول النشاط التطبيقي', 'نشاط علاجي', 'تحدٍّ للطلاب المتقدمين', 'بطاقة المراجعة']) {
   if (!lesson.includes(heading)) failures.push(`The Teacher Area must include «${heading}».`)
+}
+
+// --- Source-fidelity and grading regressions (see docs/morphology-lesson-01-source-audit.md) ---
+const requirePhrase = (source, phrase, label) => {
+  if (!source.includes(phrase)) failures.push(`Missing ${label}: «${phrase}».`)
+}
+requirePhrase(content, 'مدخل إلى علم الصرف', 'lesson title')
+requirePhrase(content, 'وغير ذلك من أبواب بنية الكلمة', 'topics sentence')
+requirePhrase(content, 'علم الصرف هو العلم الذي يبحث في بنية الكلمة العربية', 'definition')
+if (/اكْتَتَبَ|اكتتب/.test(content + lesson)) failures.push('The external Q43 example (اكتتب) must be removed.')
+// تعليم: the written form has no shadda, so the doubled flag must be false.
+if (!/word: 'تعليم'[^\n]*doubled: false/.test(content)) failures.push('تعليم must be analysed as not doubled (no shadda in the written form).')
+for (const family of ['يَكْتُبُ', 'مَكْتَبَة', 'يَعْلَمُ', 'تَعَلُّم']) {
+  requirePhrase(content, family, 'family member')
+}
+const toolsBlock = content.slice(content.indexOf('export const originalTools'), content.indexOf('export const originalLab'))
+if (/text:/.test(toolsBlock)) failures.push('The tools list must show the source titles only (no invented descriptions).')
+if (!/function checkWeight\(/.test(lesson) || !/checkWeight\(word, values\.weight\)/.test(lesson)) {
+  failures.push('The 15-word activity must grade the weight field.')
 }
 
 // --- Lesson 2 teaser: text only, no lesson, no test ------------------------

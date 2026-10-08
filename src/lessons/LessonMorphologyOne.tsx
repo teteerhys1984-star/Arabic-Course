@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { LessonFlow, type LessonStepDefinition } from '../shared/components/LessonFlow'
 import { TeacherSpace } from '../shared/teacher/TeacherSpace'
+import { COURSE_TEACHER_PASSWORD } from '../shared/teacher/teacherPassword'
 import * as C from './morphology-lesson-01/content'
 import {
   answerKey,
@@ -86,6 +87,9 @@ function SarfNahwLab() {
       <h3 id="lab-sarf-nahw">مختبر: الصرف أم النحو؟</h3>
       <p>
         اختر المنظور، وانظر كيف يحلّل كل علم الكلمة نفسها في الجملة نفسها.
+      </p>
+      <p className="morph-muted">
+        ملاحظة: التحليل المفصّل للكلمات في هذا المختبر توضيح تعليمي من إعداد المنصة، لا نص مقتبس من المصدر.
       </p>
       <div className="morph-toggle" role="group" aria-label="منظور التحليل">
         <button
@@ -490,6 +494,18 @@ function sameLetters(left: string, right: string[]): boolean {
   return a.length === b.length && a.every((item, index) => item === b[index])
 }
 
+/**
+ * الوزن يُصحَّح حين يُكتب: الفراغ لا يُحسب خطأً (يظهر «لم يُكتب» بلا حكم)، والكلمة التي
+ * لها وزن في المستوى تُقارن أحرف الوزن بعد إزالة الحركات. الكلمات بلا وزن معلن لا تُحسب.
+ */
+type WeightState = 'blank' | 'ok' | 'wrong' | 'not-required'
+
+function checkWeight(word: C.ActivityWord, value: string): WeightState {
+  if (!word.weight) return 'not-required'
+  if (looseKey(value) === '') return 'blank'
+  return looseKey(value) === looseKey(word.weight) ? 'ok' : 'wrong'
+}
+
 function checkActivityRow(word: C.ActivityWord, values: ActivityValues) {
   const extraOk =
     word.extra.length === 0
@@ -501,7 +517,15 @@ function checkActivityRow(word: C.ActivityWord, values: ActivityValues) {
     extra: extraOk,
     doubled: values.doubled === (word.doubled ? 'نعم' : 'لا'),
     changed: values.changed === (word.changed ? 'نعم' : 'لا'),
+    weight: checkWeight(word, values.weight),
   }
+}
+
+function rowIsCorrect(result: ReturnType<typeof checkActivityRow>): boolean {
+  return Object.entries(result).every(([key, value]) => {
+    if (key === 'weight') return value === 'ok' || value === 'not-required' || value === 'blank'
+    return value === true
+  })
 }
 
 function ActivityGroupStep({ from, to, title }: { from: number; to: number; title: string }) {
@@ -526,14 +550,14 @@ function ActivityGroupStep({ from, to, title }: { from: number; to: number; titl
   return (
     <section className="morph-activity" aria-label={title} data-testid={`morph-activity-${from}`}>
       <p className="morph-muted">
-        حلّل كل كلمة بنفسك أولًا. الجذر والعدد والحروف الزائدة والتضعيف والتغيير حقول مُصحَّحة، أما الوزن
-        والعائلة فاختياريان ويُكتفى فيهما بالتفكير.
+        حلّل كل كلمة بنفسك أولًا. الجذر والعدد والحروف الزائدة والتضعيف والتغيير والوزن (حين يُطلب) حقول مُصحَّحة.
+        أما كلمة العائلة فاختيارية ولا تُصحَّح آليًا.
       </p>
       <div className="morph-activity__rows">
         {words.map((word) => {
           const current = values[word.id] ?? emptyActivity
           const result = checked[word.id] ? checkActivityRow(word, current) : null
-          const rowOk = result ? Object.values(result).every(Boolean) : false
+          const rowOk = result ? rowIsCorrect(result) : false
           return (
             <article key={word.id} className="morph-row" data-testid={`morph-row-${word.id}`}>
               <p className="morph-row__word">
@@ -595,15 +619,16 @@ function ActivityGroupStep({ from, to, title }: { from: number; to: number; titl
                   </select>
                 </label>
                 <label>
-                  <span>الوزن (اختياري)</span>
+                  <span>{word.weight ? 'الوزن' : 'الوزن (لا يُطلب لهذه الكلمة)'}</span>
                   <input
                     value={current.weight}
-                    aria-label={`وزن ${word.word} اختياري`}
+                    aria-label={`وزن ${word.word}`}
+                    disabled={!word.weight}
                     onChange={(event) => update(word.id, 'weight', event.target.value)}
                   />
                 </label>
                 <label>
-                  <span>كلمة من العائلة (اختياري)</span>
+                  <span>كلمة من العائلة (اختياري، لا تُصحَّح آليًا)</span>
                   <input
                     value={current.family}
                     aria-label={`كلمة من عائلة ${word.word} اختياري`}
@@ -620,10 +645,16 @@ function ActivityGroupStep({ from, to, title }: { from: number; to: number; titl
                     <li>الحروف الزائدة: {result.extra ? 'صحيح' : `الصحيح: ${word.extra.join(' ، ') || 'لا توجد'}`}</li>
                     <li>التضعيف: {result.doubled ? 'صحيح' : `الصحيح: ${word.doubled ? 'نعم' : 'لا'}`}</li>
                     <li>التغيير: {result.changed ? 'صحيح' : `الصحيح: ${word.changed ? 'نعم' : 'لا'}`}</li>
+                    <li>
+                      الوزن:{' '}
+                      {result.weight === 'ok' && 'صحيح'}
+                      {result.weight === 'wrong' && `غير صحيح؛ الصحيح: ${word.weight}`}
+                      {result.weight === 'blank' && `لم يُكتب (الصحيح: ${word.weight}، ولم يُحسب خطأً)`}
+                      {result.weight === 'not-required' && 'لا يُطلب لهذه الكلمة'}
+                    </li>
                   </ul>
                   <p>
-                    الوزن: <bdi>{word.weight || 'لا يُطلب في هذا المستوى'}</bdi> — كلمة من العائلة:{' '}
-                    <bdi>{word.family}</bdi>
+                    كلمة من العائلة (مثال للمقارنة): <bdi>{word.family}</bdi>
                   </p>
                   <p>{word.explanation}</p>
                 </div>
@@ -873,15 +904,26 @@ function SolutionsStep({ result, answers }: { result: TestResult | null; answers
 
 function TeacherArea() {
   return (
-    <TeacherSpace password="somer173">
+    <TeacherSpace password={COURSE_TEACHER_PASSWORD}>
       <div className="teacher-material teacher-material--morphology1">
         <h3>أ. الإجابات النموذجية التفصيلية للاختبار (45 سؤالًا)</h3>
+        <p>
+          الأسئلة 1–30 تُصحَّح بالمفتاح المعتمد. الأسئلة 31–40 صيغت أجوبتها في المنصة ولم تُطابَق حرفيًا مع نص
+          المصدر في هذه المراجعة. الأسئلة 41–45 لم يرد لها جواب في المصدر، والإجابات الواردة لها هي إجابات نموذجية
+          من إعداد المنصة، ويُقبل أي جواب تعبيري صحيح.
+        </p>
         {C.testQuestions.map((question) => (
           <div key={question.id}>
             <p>
               <strong>السؤال {question.number}</strong> (<bdi>{question.type}</bdi>): <bdi>{question.prompt}</bdi>
             </p>
-            <p>{question.teacherAnswer}</p>
+            <p>
+              {question.number >= 41 && <strong>إجابة نموذجية من إعداد المنصة (لم ترد في المصدر): </strong>}
+              {question.number >= 31 && question.number <= 40 && (
+                <strong>جواب المنصة (لم يُطابَق حرفيًا مع المصدر): </strong>
+              )}
+              {question.teacherAnswer}
+            </p>
           </div>
         ))}
 
@@ -1280,7 +1322,7 @@ function ToolsStep() {
       <ol className="morph-tools">
         {C.originalTools.map((tool) => (
           <li key={tool.id}>
-            <strong>{tool.title}.</strong> {tool.text}
+            <strong>{tool.title}</strong>
           </li>
         ))}
       </ol>

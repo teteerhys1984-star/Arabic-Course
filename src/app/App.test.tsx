@@ -25,7 +25,13 @@ describe('Course index (homepage / lesson hub)', () => {
     expect(screen.getByRole('heading', { name: 'الفعل والفاعل والمفعول به', level: 3 })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'الفعل الماضي، والفعل المضارع، وفعل الأمر', level: 3 })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'الضمائر المنفصلة والمتصلة', level: 3 })).toBeInTheDocument()
-    expect(screen.getAllByRole('button', { name: /ابدأ الدرس/ })).toHaveLength(6)
+    expect(
+      screen.getByRole('heading', {
+        name: 'المثنى وجمع المذكر السالم وجمع المؤنث السالم',
+        level: 3,
+      }),
+    ).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: /ابدأ الدرس/ })).toHaveLength(7)
     expect(screen.getByText('المهندس سومر شاهين: 0930215022')).toBeInTheDocument()
 
     // The index must not embed the full lesson content.
@@ -479,5 +485,182 @@ describe('Lesson 4 as a sequential, one-step-at-a-time flow', () => {
     await user.click(screen.getByRole('button', { name: 'دخول' }))
     expect(screen.getByText('الإجابات النموذجية لاختبار نهاية الدرس')).toBeInTheDocument()
     expect(screen.getByText(/15\/20 فأكثر/)).toBeInTheDocument()
+  })
+})
+
+describe('Lesson 7 as a sequential, one-step-at-a-time flow', () => {
+  const lessonSevenTitle = 'الدرس السابع: المثنى وجمع المذكر السالم وجمع المؤنث السالم'
+
+  function openStep(name: string) {
+    return screen.getByRole('button', { name: new RegExp(`الخطوة \\d+: ${name}`) })
+  }
+
+  it('starts on step 1 of 59 and shows only the current step content', () => {
+    goToLesson('lesson-7')
+    render(<App />)
+
+    expect(screen.getByRole('heading', { name: lessonSevenTitle, level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من 59')
+    expect(screen.queryByTestId('lesson7-official-test')).not.toBeInTheDocument()
+    expect(screen.queryByRole('heading', { name: 'خامسًا: منطقة خاصة بالمعلم', level: 2 })).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /السابق/ })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /التالي/ })).toBeEnabled()
+  })
+
+  it('moves forward and backward with السابق / التالي and reaches the source sections', async () => {
+    goToLesson('lesson-7')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: /التالي/ }))
+    expect(screen.getByRole('heading', { name: 'أهداف الدرس', level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 2 من 59')
+
+    await user.click(openStep('9. جدول المثنى'))
+    expect(screen.getByRole('heading', { name: '9. جدول المثنى', level: 2 })).toBeInTheDocument()
+    expect(screen.getAllByText('طالبانِ').length).toBeGreaterThan(0)
+
+    await user.click(openStep('31. جدول الحفظ الأساسي'))
+    expect(screen.getByRole('heading', { name: '31. جدول الحفظ الأساسي', level: 2 })).toBeInTheDocument()
+    expect(screen.getByText('هذا الجدول من أهم جداول الكورس.')).toBeInTheDocument()
+    expect(screen.getByRole('row', { name: /جمع المؤنث السالم/ })).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /السابق/ }))
+    expect(screen.getByRole('heading', { name: '30. مقارنة الأنواع الثلاثة', level: 2 })).toBeInTheDocument()
+  })
+
+  it('exposes the five source activities with exactly 10 + 8 + 9 + 5 + 5 prompts', async () => {
+    goToLesson('lesson-7')
+    const user = userEvent.setup()
+    render(<App />)
+
+    const activityOne = openStep('النشاط الأول: حدد النوع')
+    await user.click(activityOne)
+    const groupOne = screen.getByTestId('lesson7-activity-one')
+    expect(groupOne.querySelectorAll('.lesson-seven-activity-row')).toHaveLength(10)
+
+    await user.click(openStep('النشاط الثاني: حدد نوع الجمع'))
+    expect(screen.getByTestId('lesson7-activity-two').querySelectorAll('.lesson-seven-activity-row')).toHaveLength(8)
+
+    await user.click(openStep('النشاط الثالث: حدد الحالة والعلامة'))
+    const groupThree = screen.getByTestId('lesson7-activity-three')
+    expect(groupThree.querySelectorAll('.lesson-seven-activity-row')).toHaveLength(9)
+    expect(within(groupThree).getAllByRole('combobox')).toHaveLength(18)
+
+    await user.click(openStep('النشاط الرابع: حوّل إلى المثنى'))
+    expect(screen.getByTestId('lesson7-activity-four').querySelectorAll('.lesson-seven-activity-row')).toHaveLength(5)
+
+    await user.click(openStep('النشاط الخامس: حوّل إلى الجمع المناسب'))
+    expect(screen.getByTestId('lesson7-activity-five').querySelectorAll('.lesson-seven-activity-row')).toHaveLength(5)
+  })
+
+  it('checks activity one interactively and reports the score only after checking', async () => {
+    goToLesson('lesson-7')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('النشاط الأول: حدد النوع'))
+    const activity = screen.getByTestId('lesson7-activity-one')
+    const answers = ['مفرد', 'مثنى', 'جمع', 'جمع', 'مفرد', 'مثنى', 'جمع', 'جمع', 'جمع', 'مفرد']
+
+    const rowGroups = activity.querySelectorAll('.lesson-seven-choice-group')
+    expect(rowGroups).toHaveLength(10)
+    rowGroups.forEach((row, index) => {
+      const option = within(row as HTMLElement).getByRole('button', { name: answers[index] })
+      option.click()
+    })
+
+    expect(within(activity).queryByText(/النتيجة:/)).not.toBeInTheDocument()
+    await user.click(within(activity).getByRole('button', { name: 'تحقق من النشاط' }))
+
+    expect(within(activity).getByText(/10 \/ 10/)).toBeInTheDocument()
+    expect(within(activity).queryByText(/الإجابة الصحيحة:/)).not.toBeInTheDocument()
+  })
+
+  it('keeps the 25-question official test unrevealed until submission and clears the draft on restart', async () => {
+    goToLesson('lesson-7')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('رابعًا: اختبار نهاية الدرس'))
+    const officialTest = screen.getByTestId('lesson7-official-test')
+    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(25)
+    expect(screen.getByRole('heading', { name: 'السؤال السابع: تحدٍّ إضافي', level: 3 })).toBeInTheDocument()
+    expect(within(officialTest).getByText('٢٥ سؤالًا')).toBeInTheDocument()
+    expect(within(officialTest).getByText(/مسلمان – مسلمين – معلمان – معلمين – معلمون – معلمات/)).toBeInTheDocument()
+
+    // Answering reveals nothing by itself.
+    const firstQuestion = officialTest.querySelector('.official-question') as HTMLElement
+    const firstOption = within(firstQuestion).getAllByRole('radio')[1]
+    await user.click(firstOption)
+    expect(within(officialTest).queryByText(/الإجابة النموذجية/)).not.toBeInTheDocument()
+    expect(within(officialTest).queryByText(/النتيجة الموضوعية/)).not.toBeInTheDocument()
+    expect(firstOption).toBeChecked()
+
+    await user.click(within(officialTest).getByRole('button', { name: 'تسليم الاختبار' }))
+    expect(within(officialTest).getByText(/النتيجة الموضوعية/)).toHaveTextContent('1 / 15')
+    expect(within(officialTest).getAllByText(/الإجابة النموذجية/).length).toBeGreaterThan(0)
+
+    // Restart clears the draft.
+    await user.click(within(officialTest).getByRole('button', { name: 'أعد الاختبار' }))
+    const restarted = screen.getByTestId('lesson7-official-test')
+    const firstAgain = restarted.querySelector('.official-question') as HTMLElement
+    expect(within(firstAgain).getAllByRole('radio')[1]).not.toBeChecked()
+    expect(within(restarted).queryByText(/النتيجة الموضوعية/)).not.toBeInTheDocument()
+    expect(within(restarted).queryByText(/الإجابة النموذجية/)).not.toBeInTheDocument()
+  })
+
+  it('keeps the teacher area gated and exposes the complete source answer material', async () => {
+    goToLesson('lesson-7')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('خامسًا: منطقة خاصة بالمعلم'))
+    expect(screen.getByRole('heading', { name: 'خامسًا: منطقة خاصة بالمعلم', level: 2 })).toBeInTheDocument()
+    expect(screen.queryByText('إجابات النشاط التطبيقي')).not.toBeInTheDocument()
+
+    await user.type(screen.getByLabelText('كلمة المرور'), 'معلم')
+    await user.click(screen.getByRole('button', { name: 'دخول' }))
+
+    expect(screen.getByText('إجابات النشاط التطبيقي')).toBeInTheDocument()
+    expect(screen.getByText('النشاط الأول: حدد النوع (١٠ مطالب)')).toBeInTheDocument()
+    expect(screen.getByText('النشاط الثالث: حدد الحالة والعلامة (٩ مطالب)')).toBeInTheDocument()
+    expect(screen.getByText('النشاط الخامس: حوّل إلى الجمع المناسب (٥ مطالب)')).toBeInTheDocument()
+    expect(screen.getByText('الإجابات النموذجية لاختبار نهاية الدرس')).toBeInTheDocument()
+    expect(screen.getByText('1. لا تختصر درس المثنى بقاعدة "ان/ين"')).toBeInTheDocument()
+    expect(screen.getByText('أخطاء متوقعة من الطالب')).toBeInTheDocument()
+    expect(screen.getByText('لأن جمع المؤنث السالم منصوب بالكسرة.')).toBeInTheDocument()
+    expect(
+      screen.getAllByText('الطالباتُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.').length,
+    ).toBeGreaterThan(0)
+    expect(
+      screen.getAllByText('الطالباتِ: اسم مجرور بـ"على"، وعلامة جره الكسرة الظاهرة على آخره.').length,
+    ).toBeGreaterThan(0)
+  })
+
+  it('ends with the homework, the advanced challenge, the one-page summary and the golden rules', async () => {
+    goToLesson('lesson-7')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('واجب منزلي'))
+    expect(screen.getByText('أولًا: صنّف الكلمات')).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'ثانيًا: أعرب الكلمات المحددة', level: 3 })).toBeInTheDocument()
+
+    await user.click(openStep('تحدي إضافي للطالب المتقدم'))
+    expect(
+      screen.getByText('جاءَ طالبانِ، ورأيتُ طالبينِ آخرينِ، ثم سلَّمتُ على المعلمينَ والمعلماتِ.'),
+    ).toBeInTheDocument()
+
+    await user.click(openStep('خلاصة الدرس في صفحة واحدة'))
+    expect(screen.getByText('واحد أو واحدة')).toBeInTheDocument()
+    expect(screen.getByText('ثلاثة فأكثر من المذكر وفق شروطه')).toBeInTheDocument()
+    expect(screen.getByText('ثلاثة فأكثر من المؤنث وفق شروطه')).toBeInTheDocument()
+
+    await user.click(openStep('قاعدة الحفظ الذهبية'))
+    expect(screen.getByText('المثنى: ألف في الرفع، ياء في النصب والجر.')).toBeInTheDocument()
+    expect(screen.getByText('جمع المذكر السالم: واو في الرفع، ياء في النصب والجر.')).toBeInTheDocument()
+    expect(screen.getByText('جمع المؤنث السالم: ضمة في الرفع، كسرة في النصب والجر.')).toBeInTheDocument()
+    expect(screen.getByRole('button', { name: 'إتمام الدرس' })).toBeInTheDocument()
   })
 })

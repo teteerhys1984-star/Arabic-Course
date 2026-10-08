@@ -1,0 +1,482 @@
+/* الدرس الثامن: الأسماء الخمسة
+   لغة بصرية واحدة: الواو ذهبية في الرفع، والألف خضراء في النصب، والياء بنفسجية في الجر،
+   مع تمييز واضح لـ«شرح المنصة» عن نص المصدر. */
+
+/* ---------- البداية والعنوان ---------- */
+.lesson-eight-hero-topic {
+  color: var(--gold-soft);
+  text-align: center;
+  font: 700 clamp(1.2rem, 3vw, 1.7rem)/1.7 'Noto Naskh Arabic', serif;
+}
+.lesson-eight-hero-topic--inline {
+  margin-block: 1.2rem .4rem;
+  padding: .8rem 1rem;
+  border: 1px solid #ead9a9;
+  border-radius: 18px;
+  color: var(--green-deep);
+  background: linear-gradient(145deg, #fff9e9, var(--gold-soft));
+  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+}
+.lesson-eight-hero-map {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: .7rem;
+  margin-block: 1.2rem;
+}
+.lesson-eight-hero-map div {
+  display: grid;
+  gap: .3rem;
+  min-width: 0;
+  padding: .85rem .6rem;
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 15px;
+  background: rgb(255 255 255 / 9%);
+  text-align: center;
+}
+.lesson-eight-hero-map strong { color: var(--gold-soft); font-size: 1rem; }
+.lesson-eight-hero-map span { color: #e4f0eb; font-size: .78rem; }
+
+/* ---------- نص المصدر المميز ---------- */
+.lesson-eight-featured {
+  margin-block: .9rem;
+  color: var(--green-dark);
+  text-align: center;
+  font: 700 clamp(1.2rem, 3.4vw, 1.75rem)/1.7 'Noto Naskh Arabic', serif;
+}
+.lesson-eight-featured--small { font-size: clamp(1.05rem, 2.6vw, 1.35rem); margin-block: .5rem; }
+.lesson-eight-quote {
+  margin-block: .8rem;
+  padding: .8rem 1.1rem;
+  border-inline-start: 5px solid var(--gold);
+  border-radius: 14px;
+  background: var(--cream);
+  color: var(--green-dark);
+  font: 700 1.02rem/1.9 'Noto Naskh Arabic', serif;
+}
+
+/* ---------- قاعدة ذهبية ---------- */
+.lesson-eight-rule {
+  margin-block: .9rem;
+  padding: 1rem 1.2rem;
+  border-inline-start: 5px solid var(--gold);
+  border-radius: 15px;
+  background: var(--cream);
+  box-shadow: var(--shadow);
+}
+.lesson-eight-rule strong { color: var(--green-dark); }
+.lesson-eight-rule p { margin: .35rem 0 0; }
+
+.lesson-eight-golden {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-block: 1.1rem;
+  padding: 1.1rem 1.3rem;
+  border: 1px solid #ead9a9;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #fff9e9, var(--gold-soft));
+  box-shadow: var(--shadow);
+}
+.lesson-eight-golden span { font-size: 1.4rem; }
+.lesson-eight-golden p {
+  margin: 0;
+  color: var(--green-deep);
+  font: 700 1.05rem/1.9 'Noto Naskh Arabic', serif;
+}
+.lesson-eight-golden-inline {
+  margin: 0;
+  font: 700 1.05rem/1.9 'Noto Naskh Arabic', serif;
+  color: var(--green-deep);
+}
+
+/* ---------- «شرح المنصة» ---------- */
+.lesson-eight-platform-note {
+  display: grid;
+  gap: .5rem;
+  margin-block: 1.1rem;
+  padding: .9rem 1.1rem;
+  border: 1px dashed #9dbfb1;
+  border-radius: 16px;
+  background: #f1f8f4;
+}
+.lesson-eight-platform-note__badge {
+  justify-self: start;
+  padding: .28rem .7rem;
+  border-radius: 999px;
+  background: var(--green);
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 700;
+}
+.lesson-eight-platform-note__body p { margin: .25rem 0; font-size: .86rem; color: var(--ink-soft); }
+
+/* ---------- مكوّنات النص ---------- */
+.lesson-eight-parsing {
+  display: grid;
+  gap: .3rem;
+  margin-block: .7rem;
+  padding: .85rem 1rem;
+  border-inline-start: 5px solid var(--green);
+  border-radius: 14px;
+  background: #eef7f3;
+}
+.lesson-eight-parsing p {
+  margin: 0;
+  color: var(--green-deep);
+  font: 600 .92rem/1.95 'Noto Naskh Arabic', serif;
+}
+
+.lesson-eight-chip-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: .6rem;
+  margin-block: 1rem;
+}
+.lesson-eight-chip-row bdi {
+  padding: .75rem .5rem;
+  border: 1px solid #c8dfd2;
+  border-radius: 14px;
+  background: #eff7f2;
+  color: var(--green-dark);
+  font: 700 1.05rem/1.6 'Noto Naskh Arabic', serif;
+  text-align: center;
+}
+.lesson-eight-chip-row--golden bdi { border-color: #e6d3a4; background: #fff9ec; }
+
+.lesson-eight-mapping { display: grid; gap: .5rem; margin-block: 1rem; }
+.lesson-eight-mapping p {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  gap: .6rem;
+  margin: 0;
+  padding: .6rem .9rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  font-size: .9rem;
+}
+.lesson-eight-mapping bdi { color: var(--green-dark); font-weight: 700; }
+.lesson-eight-mapping span { color: var(--gold); font-weight: 700; }
+
+.lesson-eight-note { color: var(--muted); font-size: .82rem; }
+.lesson-eight-teacher-note { margin: .3rem 0; color: var(--muted); font-size: .78rem; }
+
+/* ---------- الجداول ---------- */
+.lesson-eight-table {
+  width: 100%;
+  min-width: 460px;
+  border-collapse: collapse;
+  background: var(--paper);
+}
+.lesson-eight-table caption {
+  padding: .7rem 1rem;
+  color: var(--green-dark);
+  font-size: .82rem;
+  font-weight: 700;
+  text-align: start;
+}
+.lesson-eight-table th,
+.lesson-eight-table td {
+  padding: .7rem 1rem;
+  border-block-start: 1px solid var(--line);
+  text-align: start;
+  vertical-align: top;
+}
+.lesson-eight-table thead th { color: var(--green-dark); background: #eef4ef; font-weight: 700; }
+.lesson-eight-table tbody th { color: var(--green); }
+.lesson-eight-table td { color: var(--ink-soft); }
+.lesson-eight-table tbody tr td bdi { font: 700 1.02rem/1.7 'Noto Naskh Arabic', serif; color: var(--green-dark); }
+.lesson-eight-table--flagship { min-width: 520px; }
+.lesson-eight-table--flagship tbody tr:nth-child(1) th { border-inline-start: 5px solid var(--gold); }
+.lesson-eight-table--flagship tbody tr:nth-child(2) th { border-inline-start: 5px solid var(--green); }
+.lesson-eight-table--flagship tbody tr:nth-child(3) th { border-inline-start: 5px solid #6f5aa8; }
+.lesson-eight-table--flagship tbody tr:nth-child(4) th { border-inline-start: 5px solid #2f6f95; }
+.lesson-eight-table--flagship tbody tr:nth-child(5) th { border-inline-start: 5px solid #a4571f; }
+
+/* ---------- الصور الثلاث والمقارنات ---------- */
+.lesson-eight-triple {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .8rem;
+  margin-block: 1rem;
+}
+.lesson-eight-triple article {
+  display: grid;
+  align-content: start;
+  gap: .35rem;
+  min-width: 0;
+  padding: 1rem .85rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.lesson-eight-triple h3 { margin: 0; color: var(--green-dark); font: 700 1.3rem/1.5 'Noto Naskh Arabic', serif; }
+.lesson-eight-triple p { margin: 0; font-size: .82rem; color: var(--ink-soft); }
+.lesson-eight-triple article:nth-child(1) { border-block-start: 4px solid var(--gold); }
+.lesson-eight-triple article:nth-child(2) { border-block-start: 4px solid var(--green); }
+.lesson-eight-triple article:nth-child(3) { border-block-start: 4px solid #6f5aa8; }
+
+.lesson-eight-either { display: grid; gap: .5rem; margin-block: 1rem; }
+.lesson-eight-either p {
+  margin: 0;
+  padding: .7rem 1rem;
+  border-radius: 14px;
+  font: 700 1rem/1.9 'Noto Naskh Arabic', serif;
+}
+.lesson-eight-either .is-good { color: var(--success); background: #e4f3ec; border: 1px solid #b9dcc9; }
+.lesson-eight-either .is-bad { color: var(--error); background: #fae9e8; border: 1px solid #ecc7c4; }
+
+.lesson-eight-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .9rem;
+  margin-block: 1rem;
+}
+.lesson-eight-compare article {
+  display: grid;
+  align-content: start;
+  gap: .4rem;
+  min-width: 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lesson-eight-compare h3 { margin: 0; color: var(--green-dark); font: 700 1.05rem/1.8 'Noto Naskh Arabic', serif; }
+.lesson-eight-compare article:first-child { border-block-start: 4px solid var(--gold); }
+.lesson-eight-compare article:last-child { border-block-start: 4px solid var(--green); }
+
+/* ---------- الأمثلة المحلولة ---------- */
+.lesson-eight-worked {
+  margin-block: .9rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lesson-eight-worked h3 { margin-block-end: .2rem; color: var(--green-dark); font: 700 1.1rem/1.5 'Noto Naskh Arabic', serif; }
+.lesson-eight-worked-items { padding-inline-start: 1.2rem; margin-block: .3rem .6rem; }
+.lesson-eight-worked-items li { padding-block: .18rem; font-size: .87rem; line-height: 1.85; }
+
+/* ---------- الأنشطة التفاعلية ---------- */
+.lesson-eight-activity {
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid #cce0d4;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #f2f8f4, var(--sky, #eef4f7));
+  box-shadow: var(--shadow);
+}
+.lesson-eight-activity-heading { display: flex; align-items: center; gap: .8rem; margin-block-end: 1rem; }
+.lesson-eight-activity-heading h3 { margin: 0; color: var(--green-dark); font: 700 1.25rem/1.45 'Noto Naskh Arabic', serif; }
+.lesson-eight-activity-heading p { margin: .2rem 0 0; color: var(--ink-soft); font-size: .8rem; }
+.lesson-eight-activity-items { display: grid; gap: .7rem; margin-block-end: 1rem; }
+.lesson-eight-activity-row {
+  padding: .85rem;
+  border: 1px solid rgb(23 108 86 / 16%);
+  border-radius: 14px;
+  background: rgb(255 254 250 / 82%);
+}
+.lesson-eight-activity-prompt {
+  margin: 0;
+  color: var(--green-dark);
+  font: 700 1.08rem/1.9 'Noto Naskh Arabic', serif;
+}
+.lesson-eight-activity-hint { margin: .25rem 0 0; color: var(--muted); font-size: .76rem; }
+.lesson-eight-field-grid { display: grid; gap: .6rem; margin-block-start: .6rem; }
+.lesson-eight-field-grid--1 { grid-template-columns: minmax(0, 1fr); }
+.lesson-eight-field-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.lesson-eight-field-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.lesson-eight-field { display: grid; gap: .3rem; min-width: 0; }
+.lesson-eight-field > span { color: var(--muted); font-size: .74rem; font-weight: 600; }
+.lesson-eight-field select,
+.lesson-eight-field input {
+  width: 100%;
+  min-height: 42px;
+  padding: .5rem .7rem;
+  border: 1px solid #c9d7ce;
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+}
+.lesson-eight-feedback { margin: .6rem 0 0; padding: .6rem .8rem; border-radius: 12px; font-size: .82rem; }
+.lesson-eight-feedback p { margin: .25rem 0; }
+.lesson-eight-feedback strong { display: block; }
+.lesson-eight-feedback.is-good { color: var(--success); background: #e4f3ec; }
+.lesson-eight-feedback.is-bad { color: var(--error); background: #fae9e8; }
+.lesson-eight-activity-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .9rem; }
+.lesson-eight-activity-actions p { margin: 0; color: var(--muted); font-size: .78rem; }
+.lesson-eight-score { color: var(--success) !important; font-weight: 700; }
+
+.lesson-eight-conditions li { padding-block: .35rem; }
+.lesson-eight-challenge { display: grid; gap: .6rem; margin-block: .9rem; }
+.lesson-eight-challenge-item { display: grid; gap: .4rem; }
+.lesson-eight-memory-key {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  gap: .55rem;
+  margin-block: 1rem;
+}
+.lesson-eight-memory-key bdi {
+  padding: .7rem .6rem;
+  border: 1px solid #e6d3a4;
+  border-radius: 14px;
+  background: #fff9ec;
+  color: var(--green-deep);
+  font: 700 1rem/1.7 'Noto Naskh Arabic', serif;
+  text-align: center;
+}
+
+/* ---------- الأخطاء الشائعة ---------- */
+.lesson-eight-errors { display: grid; gap: .8rem; margin-block: 1rem; }
+.lesson-eight-error {
+  padding: .9rem 1.05rem;
+  border: 1px solid #efd6ca;
+  border-radius: 16px;
+  background: #fff8f4;
+}
+.lesson-eight-error h3 { margin: 0 0 .35rem; color: var(--green-dark); font-size: 1rem; }
+.lesson-eight-error p { margin: .2rem 0; font-size: .9rem; }
+.lesson-eight-error .is-bad { color: var(--error); }
+.lesson-eight-error .is-good { color: var(--success); }
+.lesson-eight-error-reason { color: var(--muted); font-size: .8rem !important; }
+
+/* ---------- مراجعة أسئلة المصدر ---------- */
+.lesson-eight-source-review {
+  padding: clamp(1rem, 3vw, 1.6rem);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lesson-eight-source-review__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .8rem;
+  margin-block-end: .5rem;
+}
+.lesson-eight-source-review__heading h3 { margin: 0; color: var(--green-dark); font: 700 1.2rem/1.5 'Noto Naskh Arabic', serif; }
+.lesson-eight-source-question legend { line-height: 1.95; }
+.lesson-eight-source-instruction { margin: .3rem 0 0; color: var(--muted); font-size: .8rem; }
+.lesson-eight-parts { display: grid; gap: .5rem; margin-block-start: .6rem; }
+.lesson-eight-parts label { display: grid; grid-template-columns: minmax(130px, .45fr) minmax(0, 1fr); align-items: center; gap: .6rem; }
+.lesson-eight-parts span { color: var(--ink-soft); font-size: .82rem; font-weight: 600; }
+.lesson-eight-parts input {
+  width: 100%;
+  min-height: 42px;
+  padding: .5rem .7rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fcfdfb;
+  color: var(--ink);
+}
+.lesson-eight-reveal { margin-block-start: .7rem; }
+
+/* ---------- اختبار المنصة ---------- */
+.lesson-eight-test-levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-block: .9rem;
+}
+.lesson-eight-test-levels span {
+  padding: .35rem .8rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--cream);
+  color: var(--green-dark);
+  font-size: .75rem;
+  font-weight: 700;
+}
+.lesson-eight-test-question legend { line-height: 1.95; }
+.lesson-eight-test-sentence {
+  margin: .4rem 0 0;
+  padding: .6rem .9rem;
+  border-radius: 12px;
+  background: var(--cream);
+  color: var(--green-deep);
+  font: 700 1.05rem/1.9 'Noto Naskh Arabic', serif;
+  text-align: center;
+}
+.lesson-eight-level {
+  display: inline-block;
+  margin-inline-start: .5rem;
+  padding: .18rem .6rem;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 700;
+}
+.lesson-eight-level--basic { color: #1d5c46; background: #dff1e7; }
+.lesson-eight-level--medium { color: #7a5410; background: #faefd2; }
+.lesson-eight-level--advanced { color: #4d3c7c; background: #eee9fa; }
+.lesson-eight-level--thinking { color: #1b4c6b; background: #e2eef6; }
+.lesson-eight-type {
+  display: inline-block;
+  margin-inline-start: .35rem;
+  color: var(--muted);
+  font-size: .7rem;
+}
+.lesson-eight-test-fields { display: grid; gap: .7rem; margin-block-start: .7rem; }
+.lesson-eight-field-label { margin: 0 0 .35rem; color: var(--muted); font-size: .76rem; font-weight: 600; }
+.lesson-eight-multi .official-options { margin-block-start: 0; }
+.lesson-eight-test-progress { margin: 0; color: var(--muted); font-size: .78rem; }
+
+/* ---------- حلول الاختبار ---------- */
+.lesson-eight-solutions-gate p { font-size: .9rem; }
+.lesson-eight-solutions-summary {
+  display: grid;
+  gap: .6rem;
+  margin-block: 1rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid #cce0d4;
+  border-radius: 18px;
+  background: #f2f8f4;
+}
+.lesson-eight-solutions-score { margin: 0; color: var(--green-dark); font: 700 1.2rem/1.6 'Noto Naskh Arabic', serif; }
+.lesson-eight-counts { display: flex; flex-wrap: wrap; gap: .8rem; margin: 0; padding: 0; list-style: none; }
+.lesson-eight-counts li { color: var(--ink-soft); font-size: .82rem; }
+.lesson-eight-counts--levels li { padding: .25rem .7rem; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); }
+.lesson-eight-solution-group { margin-block: 1.4rem; }
+.lesson-eight-solution-group h4 {
+  margin-block-end: .6rem;
+  padding-block-end: .3rem;
+  border-block-end: 2px solid var(--gold-soft);
+  color: var(--green-dark);
+  font: 700 1.1rem/1.5 'Noto Naskh Arabic', serif;
+}
+.lesson-eight-solution-list { display: grid; gap: .9rem; padding-inline-start: 1.3rem; }
+.lesson-eight-solution-list li { padding-block: .2rem; }
+.lesson-eight-solution-prompt { margin: 0 0 .3rem; font-size: .9rem; }
+.lesson-eight-solution-answer { margin: 0 0 .2rem; color: var(--success); font-size: .88rem; }
+.lesson-eight-solution-field { margin: 0; color: var(--ink-soft); font-size: .82rem; }
+.lesson-eight-solution-explain { margin: .3rem 0 0; color: var(--muted); font-size: .82rem; line-height: 1.85; }
+
+/* ---------- منطقة المعلم ---------- */
+.teacher-material--lesson8 h4 { color: var(--green); font-size: 1rem; }
+.teacher-material--lesson8 ol,
+.teacher-material--lesson8 ul { padding-inline-start: 1.3rem; }
+.teacher-material--lesson8 li { padding-block: .18rem; }
+.lesson-eight-corrections { display: grid; gap: .75rem; margin-block: 1rem; }
+.lesson-eight-correction { padding: .85rem 1rem; border: 1px solid #efd6ca; border-radius: 15px; background: #fff8f4; }
+.lesson-eight-correction p { margin: .2rem 0; font-size: .86rem; }
+.lesson-eight-correction .is-good,
+.lesson-eight-correction p:nth-of-type(2) { color: var(--success); }
+.lesson-eight-correction-reason { color: var(--muted); font-size: .78rem !important; }
+.lesson-eight-correction-label { margin: 0 0 .3rem; color: var(--green-dark); font-size: .92rem; }
+
+/* ---------- الاستجابة للشاشات الصغيرة ---------- */
+@media (max-width: 720px) {
+  .lesson-eight-triple,
+  .lesson-eight-compare { grid-template-columns: 1fr; }
+  .lesson-eight-field-grid--2,
+  .lesson-eight-field-grid--3 { grid-template-columns: 1fr; }
+  .lesson-eight-parts label { grid-template-columns: 1fr; }
+  .lesson-eight-source-review__heading { flex-direction: column; align-items: stretch; }
+}
+.lesson-eight-solutions-note { margin: 0 0 .3rem; color: var(--muted); font-size: .8rem; }

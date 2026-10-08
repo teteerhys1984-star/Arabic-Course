@@ -133,7 +133,8 @@ export function LessonFlow({
           <span className="lesson-flow__mobile-trigger-text">
             <strong>محتويات الدرس</strong>
             <small>
-              {current.shortTitle || current.title} (<bdi>{currentIndex + 1}</bdi> / <bdi>{total}</bdi>)
+              {/* عزل الرقمين في bdi واحد يحفظ ترتيبهما (الحالي / الكلي) داخل سياق RTL */}
+              {current.shortTitle || current.title} (<bdi>{currentIndex + 1} / {total}</bdi>)
             </small>
           </span>
           <span className="lesson-flow__mobile-trigger-action" aria-hidden="true">

@@ -92,7 +92,8 @@ export function LessonOutline({
           <div className="lesson-outline__progress-labels">
             <span className="lesson-outline__progress-title">مسار الدرس</span>
             <span className="lesson-outline__progress-count">
-              <bdi>{currentIndex + 1}</bdi> / <bdi>{total}</bdi>
+              {/* رقم واحد معزول داخل bdi حتى لا يعكس اتجاه RTL ترتيب (الحالي / الكلي) */}
+              <bdi>{currentIndex + 1} / {total}</bdi>
             </span>
           </div>
           <div className="lesson-outline__progress-bar" aria-hidden="true">

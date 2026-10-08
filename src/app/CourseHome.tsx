@@ -1,29 +1,36 @@
 import { lessonRegistry } from '../lessons/registry'
-import { LessonCard } from './LessonCard'
+import { getSections, toArabicDigits } from '../sections/sectionRegistry'
+import { SectionCard } from './SectionCard'
 import { InstructorContact } from '../shared/contact/InstructorContact'
 
 /**
- * The permanent course homepage / lesson hub.
+ * The permanent platform homepage.
  *
- * It functions as a COURSE INDEX: it lists the lessons and their titles only, never the
- * full content of any lesson. Clicking a lesson opens that lesson independently on the
- * same course URL (`#/lesson/<id>`). Future lessons appear here automatically by adding
- * an entry to the lesson registry — no separate website per lesson.
+ * The five platform sections are the first navigation level:
+ *
+ *   اللغة العربية → بطاقات الأقسام الخمسة → SectionPage → شبكة الدروس → LessonShell
+ *
+ * The home is a SECTION INDEX, fully data-driven by the section registry; it lists the
+ * sections and their scope only, never lesson content and never the lessons directly.
+ * Clicking a section opens its own page (`#/sections/<id>`), where that section's
+ * lessons are listed. Future lessons appear under the right section automatically via
+ * their `sectionId` in the lesson registry — the home page is never edited by hand.
  *
  * The header also carries the course's single official contact element
  * (`InstructorContact`), centered between the brand and the decorative ornament; the
- * lesson shell renders the very same component, so the instructor's WhatsApp link is
- * never duplicated anywhere.
+ * section page and the lesson shell render the very same component, so the instructor's
+ * WhatsApp link is never duplicated anywhere.
  *
- *   lessonRegistry → LessonCard[] → responsive lesson grid (`.lesson-index__list`)
+ *   sectionRegistry → SectionCard[] → responsive section grid (`.section-index__list`)
  */
 export function CourseHome() {
-  const available = lessonRegistry.filter((lesson) => lesson.available)
+  const sections = getSections()
+  const availableLessons = lessonRegistry.filter((lesson) => lesson.available).length
 
   return (
     <div className="course-home" dir="rtl" id="top">
       <header className="course-topbar">
-        <a className="brand" href="#/" aria-label="فهرس دروس العربية">
+        <a className="brand" href="#/" aria-label="الصفحة الرئيسية للمنصة">
           <span className="brand__mark" aria-hidden="true">ض</span>
           <span>
             <b>دروس العربية</b>
@@ -35,25 +42,31 @@ export function CourseHome() {
 
       <main className="course-main">
         <section className="course-hero" aria-labelledby="course-title">
-          <p className="course-hero__eyebrow">فهرس الدورة</p>
-          <h1 id="course-title">دورة أساسيات اللغة العربية</h1>
+          <p className="course-hero__eyebrow">منصة تعليمية تفاعلية</p>
+          <h1 id="course-title">اللغة العربية</h1>
           <p className="course-hero__lead">
-            رحلة متدرّجة في قواعد اللغة العربية. اختر درسًا لتبدأ رحلة تعلّم واحدة متصلة،
-            من التمهيد حتى الاختبار.
+            المنصة منظمة في أقسام رئيسية، وكل قسم يضم دروسه الخاصة. اختر قسمًا للوصول إلى
+            دروسه والبدء برحلة تعلّم متدرّجة، من التمهيد حتى الاختبار.
           </p>
-          <div className="course-hero__stats" aria-label="ملخص الدورة">
-            <span><bdi>{available.length}</bdi> درس متاح</span>
+          <div className="course-hero__stats" aria-label="ملخص المنصة">
+            <span>
+              أقسام المنصة: <bdi>{toArabicDigits(sections.length)}</bdi>
+            </span>
             <span aria-hidden="true">•</span>
-            <span>محتوى عربي كامل بالاتجاه الصحيح</span>
+            <span>
+              الدروس المتاحة: <bdi>{toArabicDigits(availableLessons)}</bdi>
+            </span>
           </div>
         </section>
 
-        <section className="lesson-index" aria-label="قائمة الدروس">
-          <h2 className="lesson-index__title">الدروس</h2>
-          <ol className="lesson-index__list" role="list">
-            {lessonRegistry.map((lesson) => (
-              <li key={lesson.id}>
-                <LessonCard lesson={lesson} />
+        <section className="section-index" aria-label="أقسام المنصة">
+          <h2 className="section-index__title" id="section-index-title">
+            أقسام المنصة
+          </h2>
+          <ol className="section-index__list" role="list" aria-labelledby="section-index-title">
+            {sections.map((section) => (
+              <li key={section.id}>
+                <SectionCard section={section} />
               </li>
             ))}
           </ol>
@@ -61,7 +74,9 @@ export function CourseHome() {
       </main>
 
       <footer className="course-footer">
-        <p>منصة مستقلة لتعلّم اللغة العربية <span aria-hidden="true">✦</span> دورة أساسيات النحو</p>
+        <p>
+          منصة مستقلة لتعلّم اللغة العربية <span aria-hidden="true">✦</span> خمسة أقسام رئيسية
+        </p>
       </footer>
     </div>
   )

@@ -19,26 +19,47 @@ afterEach(() => {
   window.location.hash = ''
 })
 
-describe('Course index (homepage / lesson hub)', () => {
-  it('shows a lesson index with lesson titles, not full lesson content', () => {
+describe('Platform home (section index) and section pages', () => {
+  it('shows the platform home with the five section cards, not the lessons directly', () => {
     render(<App />)
 
-    expect(screen.getByRole('heading', { name: 'دورة أساسيات اللغة العربية' })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'اللغة العربية', level: 1 })).toBeInTheDocument()
+    for (const title of ['الأساسيات والنحو', 'الصرف', 'الإملاء', 'البلاغة', 'القراءة والفهم والتعبير']) {
+      expect(screen.getByRole('heading', { name: title, level: 3 })).toBeInTheDocument()
+    }
+
+    // Every section card is one real link to its section route, in registry order.
+    const sectionLinks = within(screen.getByRole('list', { name: 'أقسام المنصة' })).getAllByRole('link')
+    expect(sectionLinks.map((link) => link.getAttribute('href'))).toEqual([
+      '#/sections/basics-grammar',
+      '#/sections/morphology',
+      '#/sections/spelling',
+      '#/sections/rhetoric',
+      '#/sections/reading-expression',
+    ])
+
+    // The official contact element lives once, in the shell header.
+    const contact = screen.getByRole('link', { name: CONTACT_LABEL })
+    expect(contact).toHaveAttribute('href', CONTACT_HREF)
+    expect(contact).toHaveTextContent('المهندس سومر شاهين: 0930215022')
+
+    // The home must not embed lesson content or list the lessons directly.
+    expect(screen.queryByTestId('official-test')).not.toBeInTheDocument()
+    expect(screen.queryByText('لعبة المحقق اللغوي')).not.toBeInTheDocument()
+    expect(screen.queryByRole('link', { name: 'الاسم والفعل والحرف' })).not.toBeInTheDocument()
+  })
+
+  it('lists the ten lesson cards, in registry order, inside the الأساسيات والنحو section', () => {
+    window.location.hash = '#/sections/basics-grammar'
+    render(<App />)
+
+    expect(screen.getByRole('heading', { name: 'الأساسيات والنحو', level: 1 })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'الاسم والفعل والحرف', level: 3 })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'المبتدأ والخبر', level: 3 })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'الفعل والفاعل والمفعول به', level: 3 })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'الفعل الماضي، والفعل المضارع، وفعل الأمر', level: 3 })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'الضمائر المنفصلة والمتصلة', level: 3 })).toBeInTheDocument()
-    expect(
-      screen.getByRole('heading', {
-        name: 'المثنى وجمع المذكر السالم وجمع المؤنث السالم',
-        level: 3,
-      }),
-    ).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'الأسماء الخمسة', level: 3 })).toBeInTheDocument()
-    expect(screen.getByRole('heading', { name: 'كان وأخواتها', level: 3 })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'إنَّ وأخواتها', level: 3 })).toBeInTheDocument()
+
     // Every lesson card is one real link to its unchanged hash route, in registry order.
-    const lessonLinks = within(screen.getByRole('list')).getAllByRole('link')
+    const lessonLinks = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
     expect(lessonLinks.map((link) => link.getAttribute('href'))).toEqual([
       '#/lesson/lesson-1',
       '#/lesson/lesson-2',
@@ -54,17 +75,33 @@ describe('Course index (homepage / lesson hub)', () => {
     expect(screen.getByRole('link', { name: 'الاسم والفعل والحرف' })).toHaveAttribute('href', '#/lesson/lesson-1')
     expect(screen.getByRole('link', { name: 'كان وأخواتها' })).toHaveAttribute('href', '#/lesson/lesson-9')
     expect(screen.getByRole('link', { name: 'إنَّ وأخواتها' })).toHaveAttribute('href', '#/lesson/lesson-10')
-    expect(screen.getByRole('heading', { name: 'إنَّ وأخواتها', level: 3 })).toBeInTheDocument()
     expect(screen.getAllByText(/ابدأ الدرس/)).toHaveLength(10)
 
-    // The official contact element lives once, in the shell header.
-    const contact = screen.getByRole('link', { name: CONTACT_LABEL })
-    expect(contact).toHaveAttribute('href', CONTACT_HREF)
-    expect(contact).toHaveTextContent('المهندس سومر شاهين: 0930215022')
+    // Breadcrumb trail: اللغة العربية ← الأساسيات والنحو.
+    const trail = screen.getByRole('navigation', { name: 'مسار التنقل' })
+    expect(within(trail).getByRole('link', { name: 'اللغة العربية' })).toHaveAttribute('href', '#/')
+    expect(within(trail).getByText('الأساسيات والنحو')).toBeInTheDocument()
 
-    // The index must not embed the full lesson content.
+    // The official contact element lives once here too, and no lesson content is embedded.
+    expect(screen.getAllByRole('link', { name: CONTACT_LABEL })).toHaveLength(1)
     expect(screen.queryByTestId('official-test')).not.toBeInTheDocument()
-    expect(screen.queryByText('لعبة المحقق اللغوي')).not.toBeInTheDocument()
+  })
+
+  it('shows an elegant empty state in every section without lessons — never a broken page', () => {
+    for (const sectionId of ['morphology', 'spelling', 'rhetoric', 'reading-expression']) {
+      window.location.hash = `#/sections/${sectionId}`
+      const { unmount } = render(<App />)
+
+      expect(
+        screen.getByRole('heading', { name: 'لا توجد دروس مضافة إلى هذا القسم بعد.', level: 2 }),
+      ).toBeInTheDocument()
+      // No lesson grid, no dead lesson links, and a real way back to the sections.
+      expect(screen.queryByRole('list', { name: 'دروس القسم' })).not.toBeInTheDocument()
+      expect(screen.getByRole('link', { name: 'العودة إلى الأقسام' })).toHaveAttribute('href', '#/')
+      expect(screen.getAllByRole('link', { name: CONTACT_LABEL })).toHaveLength(1)
+
+      unmount()
+    }
   })
 })
 
@@ -103,11 +140,17 @@ describe('Official contact element (shell header)', () => {
     expect(contact).toHaveAccessibleName(CONTACT_LABEL)
   })
 
-  it('exists exactly once on the index and once in a lesson shell, never inside a step', async () => {
+  it('exists exactly once on the index, once on a section page, and once in a lesson shell, never inside a step', async () => {
     const user = userEvent.setup()
     const { unmount } = render(<App />)
     expect(screen.getAllByRole('link', { name: CONTACT_LABEL })).toHaveLength(1)
     unmount()
+
+    window.location.hash = '#/sections/basics-grammar'
+    const sectionView = render(<App />)
+    expect(screen.getAllByRole('link', { name: CONTACT_LABEL })).toHaveLength(1)
+    sectionView.unmount()
+    window.location.hash = ''
 
     goToLesson()
     render(<App />)
@@ -121,18 +164,22 @@ describe('Official contact element (shell header)', () => {
   })
 })
 
-describe('Lesson cards navigation', () => {
-  it('opens the same lesson route when a lesson card is clicked', async () => {
+describe('Section and lesson cards navigation', () => {
+  it('opens the same lesson route when a lesson card is clicked inside its section', async () => {
     const user = userEvent.setup()
+    window.location.hash = '#/sections/basics-grammar'
     render(<App />)
 
     await user.click(screen.getByRole('link', { name: 'المبتدأ والخبر' }))
     expect(window.location.hash).toBe('#/lesson/lesson-2')
   })
 
-  it('opens the eighth lesson from its card on the index', async () => {
+  it('opens the section route from its card, then the eighth lesson from its card', async () => {
     const user = userEvent.setup()
     render(<App />)
+
+    await user.click(screen.getByRole('link', { name: 'الأساسيات والنحو' }))
+    expect(window.location.hash).toBe('#/sections/basics-grammar')
 
     await user.click(screen.getByRole('link', { name: 'الأسماء الخمسة' }))
     expect(window.location.hash).toBe('#/lesson/lesson-8')
@@ -1103,8 +1150,9 @@ describe('Lesson 8 as a native multi-step lesson (الأسماء الخمسة)',
   })
 
   it('does not regress Lessons 1–7 after adding the eighth lesson', () => {
+    window.location.hash = '#/sections/basics-grammar'
     const { unmount } = render(<App />)
-    expect(within(screen.getByRole('list')).getAllByRole('link')).toHaveLength(10)
+    expect(within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')).toHaveLength(10)
     unmount()
 
     goToLesson('lesson-1')
@@ -1136,6 +1184,7 @@ describe('Lesson 9 as a native multi-step lesson (كان وأخواتها)', () 
 
   it('opens from its index card and starts on step 1 of 41 showing only the current step', async () => {
     const user = userEvent.setup()
+    window.location.hash = '#/sections/basics-grammar'
     render(<App />)
 
     await user.click(screen.getByRole('link', { name: 'كان وأخواتها' }))
@@ -1667,8 +1716,9 @@ describe('Lesson 9 as a native multi-step lesson (كان وأخواتها)', () 
   })
 
   it('does not regress Lessons 1–9 after adding the tenth lesson', () => {
+    window.location.hash = '#/sections/basics-grammar'
     const { unmount } = render(<App />)
-    expect(within(screen.getByRole('list')).getAllByRole('link')).toHaveLength(10)
+    expect(within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')).toHaveLength(10)
     unmount()
 
     goToLesson('lesson-2')
@@ -1703,6 +1753,7 @@ describe('Lesson 10 as a native multi-step lesson (إنَّ وأخواتها)', 
 
   it('opens from its index card and starts on step 1 of 41 showing only the current step', async () => {
     const user = userEvent.setup()
+    window.location.hash = '#/sections/basics-grammar'
     render(<App />)
 
     await user.click(screen.getByRole('link', { name: 'إنَّ وأخواتها' }))

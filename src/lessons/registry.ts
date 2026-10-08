@@ -1,15 +1,24 @@
+import type { SectionId } from '../sections/sectionRegistry'
+
 /**
  * The registry is the single source of truth for the course index and the reusable
  * sequential lesson architecture. Every future lesson supplies its own authoritative
- * content but reuses the same homepage, routing, sequential lesson flow, visual
+ * content but reuses the same platform shell, routing, sequential lesson flow, visual
  * language, quiz-interaction model, and Teacher Space by adding an entry here.
  *
- *   CourseHome → LessonShell → LessonFlow → LessonStep → current step content only
+ *   Arabic Platform → Section → Lessons → LessonFlow
+ *   CourseHome (sections) → SectionPage (lesson grid) → LessonShell → LessonFlow → LessonStep
+ *
+ * Every lesson declares the one section it belongs to (`sectionId`, from the section
+ * registry), so it appears under that section automatically — the home page and the
+ * section pages are never edited by hand when a lesson is added.
  */
 
 export interface LessonMeta {
   /** Stable lesson id, also used as the hash-route slug: `#/lesson/<id>`. */
   id: string
+  /** The one platform section this lesson belongs to (drives Section → Lessons navigation). */
+  sectionId: SectionId
   /** Localized (Arabic-Indic) lesson number for display, e.g. "١". */
   number: string
   /** Display eyebrow above the lesson title, e.g. "أقسام الكلام". */
@@ -33,6 +42,7 @@ export interface LessonMeta {
 export const lessonRegistry: LessonMeta[] = [
   {
     id: 'lesson-1',
+    sectionId: 'basics-grammar',
     number: '١',
     eyebrow: 'أقسام الكلام',
     title: 'الاسم والفعل والحرف',
@@ -46,6 +56,7 @@ export const lessonRegistry: LessonMeta[] = [
   },
   {
     id: 'lesson-2',
+    sectionId: 'basics-grammar',
     number: '٢',
     eyebrow: 'الجملة الاسمية',
     title: 'المبتدأ والخبر',
@@ -59,6 +70,7 @@ export const lessonRegistry: LessonMeta[] = [
   },
   {
     id: 'lesson-3',
+    sectionId: 'basics-grammar',
     number: '٣',
     eyebrow: 'الجملة الفعلية',
     title: 'الفعل والفاعل والمفعول به',
@@ -72,6 +84,7 @@ export const lessonRegistry: LessonMeta[] = [
   },
   {
     id: 'lesson-4',
+    sectionId: 'basics-grammar',
     number: '٤',
     eyebrow: 'أزمنة الفعل',
     title: 'الفعل الماضي، والفعل المضارع، وفعل الأمر',
@@ -85,6 +98,7 @@ export const lessonRegistry: LessonMeta[] = [
   },
   {
     id: 'lesson-5',
+    sectionId: 'basics-grammar',
     number: '٥',
     eyebrow: 'الضمائر',
     title: 'الضمائر المنفصلة والمتصلة',
@@ -97,6 +111,7 @@ export const lessonRegistry: LessonMeta[] = [
   },
   {
     id: 'lesson-6',
+    sectionId: 'basics-grammar',
     number: '٦',
     eyebrow: 'علامات الإعراب',
     title: 'علامات الإعراب الأصلية والفرعية',
@@ -109,6 +124,7 @@ export const lessonRegistry: LessonMeta[] = [
   },
   {
     id: 'lesson-7',
+    sectionId: 'basics-grammar',
     number: '٧',
     eyebrow: 'المثنى والجمع',
     title: 'المثنى وجمع المذكر السالم وجمع المؤنث السالم',
@@ -122,6 +138,7 @@ export const lessonRegistry: LessonMeta[] = [
   },
   {
     id: 'lesson-8',
+    sectionId: 'basics-grammar',
     number: '٨',
     eyebrow: 'الأسماء الخمسة',
     title: 'الأسماء الخمسة',
@@ -135,6 +152,7 @@ export const lessonRegistry: LessonMeta[] = [
   },
   {
     id: 'lesson-9',
+    sectionId: 'basics-grammar',
     number: '٩',
     eyebrow: 'الأفعال الناسخة',
     title: 'كان وأخواتها',
@@ -148,6 +166,7 @@ export const lessonRegistry: LessonMeta[] = [
   },
   {
     id: 'lesson-10',
+    sectionId: 'basics-grammar',
     number: '١٠',
     eyebrow: 'الحروف الناسخة',
     title: 'إنَّ وأخواتها',

@@ -14,6 +14,7 @@ import { LessonSeven } from '../lessons/LessonSeven'
 import { LessonEight } from '../lessons/LessonEight'
 import { LessonNine } from '../lessons/LessonNine'
 import { LessonTen } from '../lessons/LessonTen'
+import { LessonMorphologyOne } from '../lessons/LessonMorphologyOne'
 
 /**
  * Root of the course. A tiny hash router keeps the permanent Arabic-Course URL and
@@ -60,7 +61,9 @@ function LessonPage({ lesson }: { lesson: LessonMeta }) {
   const finishLesson = () => navigate({ name: 'section', sectionId: lesson.sectionId })
 
   const lessonContent =
-    lesson.id === 'lesson-10' ? (
+    lesson.id === 'morphology-lesson-01' ? (
+      <LessonMorphologyOne onFinish={finishLesson} />
+    ) : lesson.id === 'lesson-10' ? (
       <LessonTen onFinish={finishLesson} />
     ) : lesson.id === 'lesson-9' ? (
       <LessonNine onFinish={finishLesson} />

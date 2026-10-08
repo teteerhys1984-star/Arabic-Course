@@ -88,7 +88,7 @@ describe('Platform home (section index) and section pages', () => {
   })
 
   it('shows an elegant empty state in every section without lessons — never a broken page', () => {
-    for (const sectionId of ['morphology', 'spelling', 'rhetoric', 'reading-expression']) {
+    for (const sectionId of ['spelling', 'rhetoric', 'reading-expression']) {
       window.location.hash = `#/sections/${sectionId}`
       const { unmount } = render(<App />)
 
@@ -2012,3 +2012,63 @@ describe('Lesson 10 as a native multi-step lesson (إنَّ وأخواتها)', 
   })
 })
 
+
+describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف', () => {
+  const morphTitle = 'الدرس الأول: مدخل إلى علم الصرف'
+
+  it('shows exactly one lesson card under الصرف, linking to its own route', () => {
+    window.location.hash = '#/sections/morphology'
+    render(<App />)
+
+    expect(screen.getByRole('heading', { name: 'الصرف', level: 1 })).toBeInTheDocument()
+    const lessonLinks = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
+    expect(lessonLinks.map((link) => link.getAttribute('href'))).toEqual(['#/lesson/morphology-lesson-01'])
+    expect(screen.getByRole('link', { name: 'مدخل إلى علم الصرف' })).toHaveAttribute(
+      'href',
+      '#/lesson/morphology-lesson-01',
+    )
+    expect(screen.queryByRole('heading', { name: 'لا توجد دروس مضافة إلى هذا القسم بعد.' })).not.toBeInTheDocument()
+  })
+
+  it('keeps the basics section at ten lessons and no morphology lesson in its list', () => {
+    window.location.hash = '#/sections/basics-grammar'
+    render(<App />)
+    const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
+    expect(links).toHaveLength(10)
+    expect(links.some((link) => link.getAttribute('href')?.includes('morphology'))).toBe(false)
+  })
+
+  it('opens the lesson through its deep link with the correct breadcrumb and first step', () => {
+    goToLesson('morphology-lesson-01')
+    render(<App />)
+
+    expect(screen.getByRole('heading', { name: morphTitle, level: 2 })).toBeInTheDocument()
+    const trail = screen.getByRole('navigation', { name: 'مسار التنقل' })
+    expect(within(trail).getByRole('link', { name: 'الصرف' })).toHaveAttribute('href', '#/sections/morphology')
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من')
+  })
+
+  it('keeps the exam unrevealed until submission, then grades and resets on restart', async () => {
+    goToLesson('morphology-lesson-01')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: /أولًا: اختيار من متعدد/ }))
+    const correct = 'علم يدرس بنية الكلمة وتصريفها واشتقاقها.'
+    await user.click(within(document.querySelector('[data-testid="morph-question-q01"]') as HTMLElement).getByText(correct))
+    // No correction or score is shown while the student answers.
+    expect(screen.queryByText(/النتيجة الآلية/)).not.toBeInTheDocument()
+    expect(screen.queryByText('إجابة صحيحة')).not.toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /حلول الاختبار/ }))
+    expect(screen.getByText(/تظهر الحلول بعد تسليم الاختبار/)).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /تسليم الاختبار والنتيجة/ }))
+    await user.click(screen.getByRole('button', { name: 'تسليم الاختبار وإظهار النتيجة' }))
+    expect(screen.getByText(/النتيجة الآلية:/)).toHaveTextContent('1 / 35')
+
+    await user.click(screen.getByRole('button', { name: 'إعادة الاختبار' }))
+    expect(screen.getByText(/أجبت عن/)).toHaveTextContent('0')
+    expect(screen.getByText(/أجبت عن/)).toHaveTextContent('45')
+  })
+})

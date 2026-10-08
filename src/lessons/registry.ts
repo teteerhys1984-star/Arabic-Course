@@ -178,6 +178,20 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['إنَّ', 'أنَّ', 'كأنَّ', 'لكنَّ', 'ليتَ', 'لعلَّ'],
   },
+  {
+    id: 'morphology-lesson-01',
+    sectionId: 'morphology',
+    number: '١',
+    eyebrow: 'مدخل إلى الصرف',
+    title: 'مدخل إلى علم الصرف',
+    documentTitle: 'الدرس الأول: مدخل إلى علم الصرف',
+    summary:
+      'الكلمة والجذر والأصل والزيادة والاشتقاق: تعرّف إلى علم الصرف وموضوعه، والفرق بينه وبين النحو، والجذر والحروف الأصلية والزائدة، والميزان الصرفي، مع مختبرات تفاعلية واختبار من ٤٥ سؤالًا وحلول.',
+    duration: '٩٠',
+    strand: 'الصرف',
+    available: true,
+    parts: ['جذر', 'وزن', 'اشتقاق'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

@@ -6,6 +6,7 @@ import './styles/visual-polish.css'
 import './styles/lesson-four.css'
 import './styles/lesson-five.css'
 import './styles/lesson-six.css'
+import './styles/lesson-seven.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

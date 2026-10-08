@@ -107,6 +107,19 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['رفع', 'نصب', 'جر', 'جزم'],
   },
+  {
+    id: 'lesson-7',
+    number: '٧',
+    eyebrow: 'المثنى والجمع',
+    title: 'المثنى وجمع المذكر السالم وجمع المؤنث السالم',
+    documentTitle: 'الدرس السابع: المثنى وجمع المذكر السالم وجمع المؤنث السالم',
+    summary:
+      'تعلّم المفرد والمثنى والجمع، وعلامات إعراب المثنى وجمع المذكر السالم وجمع المؤنث السالم، والتمييز بينها مع أنشطة وإعراب كامل واختبار نهائي.',
+    duration: '٩٠',
+    strand: 'أساسيات النحو',
+    available: true,
+    parts: ['مثنى', 'جمع مذكر سالم', 'جمع مؤنث سالم'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

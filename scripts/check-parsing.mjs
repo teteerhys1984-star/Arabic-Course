@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 
-const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx'].map((name) => `src/lessons/${name}`)
+const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx'].map((name) => `src/lessons/${name}`)
 const sources = Object.fromEntries(lessonPaths.map((path) => [path, readFileSync(path, 'utf8')]))
 const failures = []
 
@@ -15,7 +15,7 @@ for (const path of lessonPaths) {
   const source = sources[path]
   const parsingQuestions = [...source.matchAll(/prompt:\s*'([^']*أعرب[^']*)'[\s\S]*?answer:\s*'([^']*)'/g)]
   for (const [, prompt, answer] of parsingQuestions) {
-    if (!/(مبتدأ|خبر|فاعل|مفعول به)/.test(answer)) failures.push(`${path}: parsing answer has no grammatical role: ${prompt}`)
+    if (!/(مبتدأ|خبر|فاعل|مفعول به|اسم مجرور)/.test(answer)) failures.push(`${path}: parsing answer has no grammatical role: ${prompt}`)
     if (!/(مرفوع|منصوب|مجرور|مبني)/.test(answer)) failures.push(`${path}: parsing answer has no state or البناء: ${answer}`)
     if (!/(علامة|على آخره)/.test(answer)) failures.push(`${path}: parsing answer has no علامة/ending description: ${answer}`)
   }
@@ -50,6 +50,14 @@ requirePhrase('src/lessons/LessonSix.tsx', 'الطالبُ: فاعل مرفوع 
 requirePhrase('src/lessons/LessonSix.tsx', 'الواجبَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.')
 requirePhrase('src/lessons/LessonSix.tsx', 'المدرسةِ: اسم مجرور بإلى وعلامة جره الكسرة الظاهرة على آخره.')
 requirePhrase('src/lessons/LessonSix.tsx', 'يذهبْ: فعل مضارع مجزوم بـ(لم)، وعلامة جزمه السكون.')
+requirePhrase('src/lessons/LessonSeven.tsx', 'الطالبانِ: فاعل مرفوع وعلامة رفعه الألف؛ لأنه مثنى.')
+requirePhrase('src/lessons/LessonSeven.tsx', 'الطالبينِ: مفعول به منصوب وعلامة نصبه الياء؛ لأنه مثنى.')
+requirePhrase('src/lessons/LessonSeven.tsx', 'الطالبينِ: اسم مجرور بـ(على)، وعلامة جره الياء؛ لأنه مثنى.')
+requirePhrase('src/lessons/LessonSeven.tsx', 'المعلمونَ: فاعل مرفوع وعلامة رفعه الواو؛ لأنه جمع مذكر سالم.')
+requirePhrase('src/lessons/LessonSeven.tsx', 'المعلمينَ: مفعول به منصوب وعلامة نصبه الياء؛ لأنه جمع مذكر سالم.')
+requirePhrase('src/lessons/LessonSeven.tsx', 'الطالباتُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره؛ لأنه جمع مؤنث سالم.')
+requirePhrase('src/lessons/LessonSeven.tsx', 'الطالباتِ: مفعول به منصوب وعلامة نصبه الكسرة نيابةً عن الفتحة؛ لأنه جمع مؤنث سالم.')
+requirePhrase('src/lessons/LessonSeven.tsx', 'الطالباتِ: اسم مجرور بـ"على"، وعلامة جره الكسرة الظاهرة على آخره.')
 
 if (failures.length) {
   console.error(failures.join('\n'))

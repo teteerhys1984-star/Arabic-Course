@@ -820,47 +820,7 @@ footer p { margin: 0; font-size: .8rem; }
 
 .lesson-index { margin-block-start: clamp(2rem, 5vw, 3.5rem); }
 .lesson-index__title { font: 700 clamp(1.6rem, 3vw, 2.3rem)/1.4 'Noto Naskh Arabic', serif; color: var(--green-dark); margin-block-end: 1.2rem; }
-.lesson-index__list { list-style: none; margin: 0; padding: 0; display: grid; gap: 1.1rem; }
-.lesson-index-card {
-  display: grid;
-  grid-template-columns: auto minmax(0, 1fr) auto;
-  align-items: center;
-  gap: clamp(1rem, 3vw, 2rem);
-  padding: clamp(1.3rem, 3vw, 2rem);
-  border: 1px solid var(--line);
-  border-radius: 24px;
-  background: var(--paper);
-  box-shadow: var(--shadow);
-  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
-}
-.lesson-index-card:hover { transform: translateY(-3px); border-color: #c7d8ce; box-shadow: 0 24px 60px rgb(19 57 47 / 12%); }
-.lesson-index-card--soon { opacity: .72; }
-.lesson-index-card__badge {
-  width: 78px;
-  min-height: 78px;
-  display: grid;
-  place-items: center;
-  align-content: center;
-  border-radius: 20px 20px 6px 20px;
-  background: var(--green-dark);
-  color: white;
-  padding: .6rem;
-}
-.lesson-index-card__label { font-size: .6rem; color: #b8d8ce; font-weight: 600; }
-.lesson-index-card__badge bdi { font: 700 2.4rem/1 'Noto Naskh Arabic', serif; color: var(--gold-soft); }
-.lesson-index-card__eyebrow { color: var(--gold); font-size: .72rem; font-weight: 700; margin-block-end: .3rem; }
-.lesson-index-card__body h3 { font: 700 1.6rem/1.4 'Noto Naskh Arabic', serif; color: var(--green-dark); margin-block-end: .45rem; }
-.lesson-index-card__summary { color: var(--ink-soft); font-size: .86rem; margin-block-end: .7rem; }
-.lesson-index-card__meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; color: var(--muted); font-size: .74rem; }
-.lesson-index-card__meta bdi { color: var(--green); font-weight: 700; }
-.lesson-index-card__soon { display: inline-block; padding: .4rem .9rem; border-radius: 999px; background: var(--cream); color: var(--muted); font-size: .74rem; font-weight: 700; }
 .course-footer { padding: 2rem clamp(1rem, 4vw, 4rem); border-block-start: 1px solid var(--line); color: var(--muted); font-size: .8rem; text-align: center; }
-
-@media (max-width: 620px) {
-  .lesson-index-card { grid-template-columns: auto minmax(0, 1fr); }
-  .lesson-index-card__action { grid-column: 1 / -1; }
-  .lesson-index-card__action .button { width: 100%; }
-}
 
 /* ---- Reusable sequential lesson shell ----
    CourseHome → LessonShell → LessonFlow → LessonStep → current step content only. */

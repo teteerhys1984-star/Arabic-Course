@@ -1,5 +1,5 @@
-import { lessonRegistry, type LessonMeta } from '../lessons/registry'
-import { navigate } from './useHashRoute'
+import { lessonRegistry } from '../lessons/registry'
+import { LessonCard } from './LessonCard'
 
 /**
  * The permanent course homepage / lesson hub.
@@ -8,6 +8,8 @@ import { navigate } from './useHashRoute'
  * full content of any lesson. Clicking a lesson opens that lesson independently on the
  * same course URL (`#/lesson/<id>`). Future lessons appear here automatically by adding
  * an entry to the lesson registry — no separate website per lesson.
+ *
+ *   lessonRegistry → LessonCard[] → responsive lesson grid (`.lesson-index__list`)
  */
 export function CourseHome() {
   const available = lessonRegistry.filter((lesson) => lesson.available)
@@ -41,10 +43,10 @@ export function CourseHome() {
 
         <section className="lesson-index" aria-label="قائمة الدروس">
           <h2 className="lesson-index__title">الدروس</h2>
-          <ol className="lesson-index__list">
+          <ol className="lesson-index__list" role="list">
             {lessonRegistry.map((lesson) => (
               <li key={lesson.id}>
-                <LessonIndexCard lesson={lesson} />
+                <LessonCard lesson={lesson} />
               </li>
             ))}
           </ol>
@@ -56,40 +58,5 @@ export function CourseHome() {
         <p className="instructor-credit">المهندس سومر شاهين: 0930215022</p>
       </footer>
     </div>
-  )
-}
-
-function LessonIndexCard({ lesson }: { lesson: LessonMeta }) {
-  function open() {
-    if (!lesson.available) return
-    navigate({ name: 'lesson', lessonId: lesson.id })
-  }
-
-  return (
-    <article className={lesson.available ? 'lesson-index-card' : 'lesson-index-card lesson-index-card--soon'}>
-      <div className="lesson-index-card__badge" aria-hidden="true">
-        <span className="lesson-index-card__label">الدرس</span>
-        <bdi>{lesson.number}</bdi>
-      </div>
-      <div className="lesson-index-card__body">
-        <p className="lesson-index-card__eyebrow">{lesson.eyebrow}</p>
-        <h3>{lesson.title}</h3>
-        <p className="lesson-index-card__summary">{lesson.summary}</p>
-        <div className="lesson-index-card__meta">
-          <span>{lesson.strand}</span>
-          <span aria-hidden="true">•</span>
-          <span><bdi>{lesson.duration}</bdi> دقيقة</span>
-        </div>
-      </div>
-      <div className="lesson-index-card__action">
-        {lesson.available ? (
-          <button type="button" className="button button--primary" onClick={open}>
-            ابدأ الدرس <span aria-hidden="true">←</span>
-          </button>
-        ) : (
-          <span className="lesson-index-card__soon">قريبًا</span>
-        )}
-      </div>
-    </article>
   )
 }

@@ -107,7 +107,7 @@ if (!/إعادة الاختبار/.test(lesson) || !/setTestAnswers\(\{\}\)/.tes
 if (!/<TeacherSpace password=\{COURSE_TEACHER_PASSWORD\}>/.test(lesson)) {
   failures.push('The Teacher Area must stay behind the approved teacher password (via COURSE_TEACHER_PASSWORD).')
 }
-const passwordValue = 'somer173'
+const passwordValue = /COURSE_TEACHER_PASSWORD\s*=\s*'([^']+)'/.exec(read('src/shared/teacher/teacherPassword.ts'))?.[1] ?? ''
 for (const [name, source] of [
   ['lesson', lesson],
   ['content', content],
@@ -132,7 +132,7 @@ requirePhrase(content, 'علم الصرف هو العلم الذي يبحث في
 if (/اكْتَتَبَ|اكتتب/.test(content + lesson)) failures.push('The external Q43 example (اكتتب) must be removed.')
 // تعليم: the written form has no shadda, so the doubled flag must be false.
 if (!/word: 'تعليم'[^\n]*doubled: false/.test(content)) failures.push('تعليم must be analysed as not doubled (no shadda in the written form).')
-for (const family of ['يَكْتُبُ', 'مَكْتَبَة', 'يَعْلَمُ', 'تَعَلُّم']) {
+for (const family of ['يَكْتُبُ', 'مَكْتَبة', 'يَعْلَمُ', 'تَعَلُّم']) {
   requirePhrase(content, family, 'family member')
 }
 const toolsBlock = content.slice(content.indexOf('export const originalTools'), content.indexOf('export const originalLab'))

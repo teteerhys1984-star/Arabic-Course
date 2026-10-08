@@ -421,7 +421,7 @@ function MindMapLab() {
   return (
     <section className="morph-lab" aria-labelledby="lab-map">
       <h3 id="lab-map">الخريطة الذهنية: من الجذر إلى المعنى المقصود</h3>
-      <p>اقرأ الخريطة من اليمين إلى اليسار، ثم اضغط كل عقدة لترى ما تمثله.</p>
+      <p>اقرأ الخريطة من اليمين إلى اليسار، ثم اضغط كل عقدة لترى ما تمثله. أسماء العقد من المصدر، وشرح كل عقدة توضيح تعليمي من المنصة.</p>
       <ol className="morph-map" aria-label="الخريطة الذهنية">
         {C.mindMapNodes.map((node, index) => (
           <li key={node.id} className="morph-map__item">
@@ -656,7 +656,7 @@ function ActivityGroupStep({ from, to, title }: { from: number; to: number; titl
                   <p>
                     كلمة من العائلة (مثال للمقارنة): <bdi>{word.family}</bdi>
                   </p>
-                  <p>{word.explanation}</p>
+                  <p>توضيح تعليمي من المنصة: {word.explanation}</p>
                 </div>
               )}
             </article>
@@ -888,8 +888,13 @@ function SolutionsStep({ result, answers }: { result: TestResult | null; answers
                 </p>
               )
             })}
+            {question.number <= 40 && (
+              <p className="morph-solution__source">
+                <strong>الجواب المعتمد من المصدر:</strong> <bdi>{C.sourceAnswers[question.number]}</bdi>
+              </p>
+            )}
             <p className="morph-solution__why">
-              <strong>لماذا؟</strong> {question.explanation}
+              <strong>لماذا؟ (توضيح تعليمي من المنصة)</strong> {question.explanation}
             </p>
           </article>
         )
@@ -908,26 +913,34 @@ function TeacherArea() {
       <div className="teacher-material teacher-material--morphology1">
         <h3>أ. الإجابات النموذجية التفصيلية للاختبار (45 سؤالًا)</h3>
         <p>
-          الأسئلة 1–30 تُصحَّح بالمفتاح المعتمد. الأسئلة 31–40 صيغت أجوبتها في المنصة ولم تُطابَق حرفيًا مع نص
-          المصدر في هذه المراجعة. الأسئلة 41–45 لم يرد لها جواب في المصدر، والإجابات الواردة لها هي إجابات نموذجية
-          من إعداد المنصة، ويُقبل أي جواب تعبيري صحيح.
+          الأسئلة 1–40 لها جواب معتمد من المصدر، ويُعرض أولًا. ما يلي كل جواب من توضيح تعليمي من المنصة.
+          الأسئلة 41–45 لم يرد لها جواب في المصدر؛ والإجابات الواردة لها نماذج من إعداد المنصة، ويُقبل أي جواب
+          تعبيري صحيح.
         </p>
         {C.testQuestions.map((question) => (
           <div key={question.id}>
             <p>
               <strong>السؤال {question.number}</strong> (<bdi>{question.type}</bdi>): <bdi>{question.prompt}</bdi>
             </p>
+            {question.number <= 40 && (
+              <p>
+                <strong>الجواب المعتمد من المصدر: </strong>
+                <bdi>{C.sourceAnswers[question.number]}</bdi>
+              </p>
+            )}
             <p>
-              {question.number >= 41 && <strong>إجابة نموذجية من إعداد المنصة (لم ترد في المصدر): </strong>}
-              {question.number >= 31 && question.number <= 40 && (
-                <strong>جواب المنصة (لم يُطابَق حرفيًا مع المصدر): </strong>
+              {question.number > 40 ? (
+                <strong>إجابة نموذجية من إعداد المنصة (لم ترد في المصدر): </strong>
+              ) : (
+                <strong>توضيح تعليمي من المنصة: </strong>
               )}
               {question.teacherAnswer}
             </p>
           </div>
         ))}
 
-        <h3>ب. حلول النشاط التطبيقي (15 كلمة)</h3>
+        <h3>ب. حلول النشاط التطبيقي (15 كلمة): من إعداد المنصة</h3>
+        <p>لم يرد في المصدر حل لأسئلة النشاط التطبيقي؛ الحلول التالية توضيح تعليمي من المنصة.</p>
         {C.activityWords.map((word, index) => (
           <div key={word.id}>
             <p>
@@ -941,6 +954,7 @@ function TeacherArea() {
         ))}
 
         <h3>ج. حلول الأمثلة المحلولة (8)</h3>
+        <p>الشروح المعروضة هنا نص المصدر؛ والأوزان المعلَّمة «توضيح تعليمي» من المنصة.</p>
         {C.solvedExamples.map((example) => (
           <p key={example.id}>
             {example.id}. <bdi>{example.word}</bdi> — الجذر: <bdi>{example.root}</bdi> — الوزن:{' '}
@@ -1049,7 +1063,12 @@ export function LessonMorphologyOne({ onProgressChange, onFinish }: Props) {
 
   const steps: LessonStepDefinition[] = [
     step('intro', 'الدرس الأول: مدخل إلى علم الصرف', 'البداية', '📘', <IntroStep />),
-    step('objectives', 'أهداف الدرس', 'البداية', '🎯', <Bullets items={C.objectives} />),
+    step('objectives', 'أهداف الدرس', 'البداية', '🎯', (
+      <>
+        <p>بعد دراسة هذا الدرس دراسة متقنة، يُفترض أن يكون الطالب قادرًا على:</p>
+        <Bullets items={C.objectives} />
+      </>
+    )),
 
     step('definition', '1. ما علم الصرف؟', 'تعريف الصرف', '📖', <DefinitionStep />),
     step('topics', '2. ما موضوع علم الصرف؟', 'تعريف الصرف', '🧭', <TopicsStep />),
@@ -1135,12 +1154,15 @@ function IntroStep() {
         <span>{C.lessonFacts.type}</span>
       </p>
       <p>
-        <strong>الكلمة والجذر والأصل والزيادة والاشتقاق.</strong> هذا الدرس هو أول درس في قسم الصرف، وهو
-        مدخل إلى النظام الداخلي للكلمة العربية، وأساس لكل ما سيأتي بعده.
+        <strong>الكلمة والجذر والأصل والزيادة والاشتقاق.</strong>
+      </p>
+      <p className="morph-muted">
+        توضيح تعليمي من المنصة: هذا الدرس هو أول درس في قسم الصرف، وهو مدخل إلى النظام الداخلي للكلمة العربية،
+        وأساس لكل ما سيأتي بعده.
       </p>
       <Callout title="المتطلبات السابقة">{C.lessonFacts.prerequisites}</Callout>
       <p>
-        ستمر بخمس مراحل متتابعة: مدخل إلى الصرف، ثم الجذر والأصول والزوائد، ثم الحالات التي تتطلب انتباهًا،
+        توضيح تعليمي من المنصة: ستمر بخمس مراحل متتابعة: مدخل إلى الصرف، ثم الجذر والأصول والزوائد، ثم الحالات التي تتطلب انتباهًا،
         ثم الميزان الصرفي، ثم التحليل والتطبيق والاختبار.
       </p>
     </>

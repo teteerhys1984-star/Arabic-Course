@@ -22,8 +22,9 @@
     "check:morphology-lesson-01": "node scripts/check-morphology-lesson-01.mjs",
     "check:parsing": "node scripts/check-parsing.mjs",
     "check:architecture": "node scripts/check-architecture.mjs",
-    "validate": "npm run lint && npm run check:rtl && npm run check:architecture && npm run check:lesson1 && npm run check:lesson2 && npm run check:lesson3 && npm run check:lesson4 && npm run check:lesson5 && npm run check:lesson6 && npm run check:lesson7 && npm run check:lesson8 && npm run check:lesson9 && npm run check:lesson10 && npm run check:parsing && npm run check:morphology-lesson-01 && npm run test && npm run build",
-    "check:lesson7": "node scripts/check-lesson7.mjs"
+    "validate": "npm run lint && npm run check:rtl && npm run check:architecture && npm run check:lesson1 && npm run check:lesson2 && npm run check:lesson3 && npm run check:lesson4 && npm run check:lesson5 && npm run check:lesson6 && npm run check:lesson7 && npm run check:lesson8 && npm run check:lesson9 && npm run check:lesson10 && npm run check:parsing && npm run check:morphology-lesson-01 && npm run check:morphology-source && npm run test && npm run build",
+    "check:lesson7": "node scripts/check-lesson7.mjs",
+    "check:morphology-source": "node --experimental-strip-types --no-warnings scripts/check-morphology-source.mjs"
   },
   "dependencies": {
     "@vitejs/plugin-react": "latest",

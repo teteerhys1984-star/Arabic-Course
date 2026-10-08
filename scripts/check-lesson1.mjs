@@ -110,11 +110,11 @@ if (!lesson.includes('LessonFlow')) {
   failures.push('Lesson 1 must be delivered through LessonFlow (sequential steps), not a continuous document.')
 }
 
-// Course-wide rule: no WhatsApp/contact presentation may reappear in any lesson.
-// The instructor attribution is the sole, narrowly scoped plain-text exception requested
-// by the course owner; it is never a link, button, or contact block.
-const instructorCredit = 'المهندس سومر شاهين: 0930215022'
-const sourceWithoutInstructorCredit = fullSource.split(instructorCredit).join('')
+// Course-wide rule: lesson content never presents contact information of its own.
+// The one official contact element (the instructor's WhatsApp link) is owned by the
+// app shell and declared once in src/shared/contact/instructorDetails.ts —
+// scripts/check-architecture.mjs enforces that single source and that only the two
+// shells render it. Nothing contact-related may appear in the app or lesson sources.
 const forbiddenContact = [
   'تواصل عبر واتساب',
   'للاستفسار أو متابعة الدرس، تواصل عبر الرقم التالي.',
@@ -123,7 +123,7 @@ const forbiddenContact = [
   'whatsapp',
 ]
 for (const phrase of forbiddenContact) {
-  if (sourceWithoutInstructorCredit.toLowerCase().includes(phrase.toLowerCase())) {
+  if (fullSource.toLowerCase().includes(phrase.toLowerCase())) {
     failures.push(`Forbidden WhatsApp/contact content is still present: ${phrase}`)
   }
 }

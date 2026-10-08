@@ -9,6 +9,7 @@ import './styles/lesson-five.css'
 import './styles/lesson-six.css'
 import './styles/lesson-seven.css'
 import './styles/lesson-eight.css'
+import './styles/contact.css'
 
 createRoot(document.getElementById('root')!).render(
   <StrictMode>

@@ -36,6 +36,7 @@ describe('Course index (homepage / lesson hub)', () => {
       }),
     ).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'الأسماء الخمسة', level: 3 })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'كان وأخواتها', level: 3 })).toBeInTheDocument()
     // Every lesson card is one real link to its unchanged hash route, in registry order.
     const lessonLinks = within(screen.getByRole('list')).getAllByRole('link')
     expect(lessonLinks.map((link) => link.getAttribute('href'))).toEqual([
@@ -47,9 +48,11 @@ describe('Course index (homepage / lesson hub)', () => {
       '#/lesson/lesson-6',
       '#/lesson/lesson-7',
       '#/lesson/lesson-8',
+      '#/lesson/lesson-9',
     ])
     expect(screen.getByRole('link', { name: 'الاسم والفعل والحرف' })).toHaveAttribute('href', '#/lesson/lesson-1')
-    expect(screen.getAllByText(/ابدأ الدرس/)).toHaveLength(8)
+    expect(screen.getByRole('link', { name: 'كان وأخواتها' })).toHaveAttribute('href', '#/lesson/lesson-9')
+    expect(screen.getAllByText(/ابدأ الدرس/)).toHaveLength(9)
 
     // The official contact element lives once, in the shell header.
     const contact = screen.getByRole('link', { name: CONTACT_LABEL })
@@ -1098,7 +1101,7 @@ describe('Lesson 8 as a native multi-step lesson (الأسماء الخمسة)',
 
   it('does not regress Lessons 1–7 after adding the eighth lesson', () => {
     const { unmount } = render(<App />)
-    expect(within(screen.getByRole('list')).getAllByRole('link')).toHaveLength(8)
+    expect(within(screen.getByRole('list')).getAllByRole('link')).toHaveLength(9)
     unmount()
 
     goToLesson('lesson-1')
@@ -1117,5 +1120,564 @@ describe('Lesson 8 as a native multi-step lesson (الأسماء الخمسة)',
       }),
     ).toBeInTheDocument()
     expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من 59')
+  })
+})
+
+describe('Lesson 9 as a native multi-step lesson (كان وأخواتها)', () => {
+  const lessonNineTitle = 'الدرس التاسع: كان وأخواتها'
+
+  function openStep(name: string) {
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    return screen.getByRole('button', { name: new RegExp(`الخطوة \\d+: ${escaped}`) })
+  }
+
+  it('opens from its index card and starts on step 1 of 41 showing only the current step', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('link', { name: 'كان وأخواتها' }))
+    expect(window.location.hash).toBe('#/lesson/lesson-9')
+
+    expect(screen.getByRole('heading', { name: lessonNineTitle, level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من 41')
+    expect(screen.queryByTestId('lesson9-official-test')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('lesson9-solutions')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /السابق/ })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /التالي/ })).toBeEnabled()
+
+    // The eight sisters are announced on the hero, and so is the golden rule.
+    for (const verb of ['كانَ', 'أصبحَ', 'أمسى', 'أضحى', 'ظلَّ', 'باتَ', 'صارَ', 'ليسَ']) {
+      expect(screen.getAllByText(verb).length).toBeGreaterThan(0)
+    }
+    expect(screen.getAllByText('كان وأخواتها ترفع الاسم وتنصب الخبر.').length).toBeGreaterThan(0)
+  })
+
+  it('lists the nine objectives and the nominal-sentence review with complete parsing', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('أهداف الدرس'))
+    const items = screen.getAllByRole('listitem').map((item) => item.textContent)
+    for (const objective of [
+      'معرفة معنى كان وأخواتها.',
+      'معرفة تأثيرها في الجملة الاسمية.',
+      'التمييز بين اسم كان وخبر كان.',
+      'معرفة إعراب اسم كان وخبرها.',
+      'استخدام أشهر أخوات كان في جمل صحيحة.',
+      'التمييز بين الجملة الاسمية قبل دخول كان وبعد دخولها.',
+      'إعراب الجمل التي تحتوي على كان وأخواتها.',
+      'فهم الفرق بين اسم كان وخبر كان.',
+      'تجنب الأخطاء الشائعة في استعمالها.',
+    ]) {
+      expect(items).toContain(objective)
+    }
+
+    await user.click(openStep('1. مراجعة سريعة: الجملة الاسمية'))
+    expect(screen.getByText('مبتدأ + خبر')).toBeInTheDocument()
+    expect(screen.getByText('الجوُّ جميلٌ.')).toBeInTheDocument()
+    expect(screen.getByText('الجوُّ: مبتدأ مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')).toBeInTheDocument()
+    expect(screen.getByText('جميلٌ: خبر مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')).toBeInTheDocument()
+    expect(screen.getByText('المبتدأ مرفوع، والخبر مرفوع.')).toBeInTheDocument()
+  })
+
+  it('moves forward and backward with السابق / التالي and lists every outline group', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: /التالي/ }))
+    expect(screen.getByRole('heading', { name: 'أهداف الدرس', level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 2 من 41')
+
+    const outline = screen.getByRole('navigation', { name: 'فهرس خطوات الدرس' })
+    for (const group of [
+      'البداية',
+      'التمهيد والمراجعة',
+      'القاعدة الأساسية',
+      'أخوات كان',
+      'القاعدة الذهبية',
+      'طريقة الاكتشاف',
+      'الأمثلة السهلة',
+      'قبل كان وبعدها',
+      'الإعراب الكامل',
+      'الإعراب الفرعي',
+      'خبر كان',
+      'كان وليس وصار',
+      'الأخطاء الشائعة',
+      'المقارنة النهائية',
+      'الأمثلة المحلولة',
+      'الأنشطة التطبيقية',
+      'مراجعة أسئلة المصدر',
+      'التحدي المتقدم',
+      'الخلاصة',
+      'الاختبار الإلكتروني',
+      'منطقة المعلم',
+    ]) {
+      expect(within(outline).getByText(group)).toBeInTheDocument()
+    }
+
+    await user.click(openStep('7. جدول أشهر أخوات كان'))
+    expect(screen.getByRole('heading', { name: '7. جدول أشهر أخوات كان', level: 2 })).toBeInTheDocument()
+    expect(screen.getAllByRole('row')).toHaveLength(9)
+    expect(
+      screen.getByText('لا تحتاج إلى حفظ جميع التفاصيل الزمنية لكل فعل الآن؛ المهم أن تفهم عملها النحوي.'),
+    ).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /السابق/ }))
+    expect(screen.getByRole('heading', { name: '6. أشهر أخوات كان', level: 2 })).toBeInTheDocument()
+  })
+
+  it('teaches the rule through an interactive before/after transformation', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('2. ماذا يحدث إذا دخلت «كان»؟'))
+    const transform = screen.getByTestId('lesson9-transform-weather')
+    expect(within(transform).getByText('الجوُّ جميلٌ.')).toBeInTheDocument()
+    // The "after" side stays hidden until the student asks for the transformation.
+    expect(within(transform).queryByText('كانَ الجوُّ جميلًا.')).not.toBeInTheDocument()
+
+    await user.click(within(transform).getByRole('button', { name: /شاهد التحوّل/ }))
+    expect(within(transform).getByText('كانَ الجوُّ جميلًا.')).toBeInTheDocument()
+    expect(within(transform).getAllByText('جميلًا').length).toBeGreaterThan(0)
+    expect(within(transform).getByText('تغيّر إعراب الخبر')).toBeInTheDocument()
+    expect(
+      within(transform).queryByText('الجوُّ: اسم كان مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.'),
+    ).not.toBeInTheDocument()
+
+    await user.click(openStep('4. نفهم القاعدة من مثال بسيط'))
+    expect(screen.getByTestId('lesson9-transform-student')).toBeInTheDocument()
+    // The role-shift strip renders before → after as its own nodes (the arrow is decorative).
+    const shift = document.querySelector('.lesson-nine-shift') as HTMLElement
+    expect(within(shift).getByText('مبتدأ')).toBeInTheDocument()
+    expect(within(shift).getByText('اسم كان')).toBeInTheDocument()
+    expect(within(shift).getByText('خبر')).toBeInTheDocument()
+    expect(within(shift).getByText('خبر كان')).toBeInTheDocument()
+    expect(within(shift).getByText('مرفوع ← مرفوع')).toBeInTheDocument()
+    expect(within(shift).getByText('مرفوع ← منصوب')).toBeInTheDocument()
+
+    await user.click(openStep('5. لماذا نقول «اسم كان» و«خبر كان»؟'))
+    expect(screen.getByText('كانَ الطفلُ سعيدًا.')).toBeInTheDocument()
+    expect(screen.getByText('الطفلُ: اسم كان.')).toBeInTheDocument()
+    expect(screen.getByText('سعيدًا: خبر كان.')).toBeInTheDocument()
+  })
+
+  it('explores the eight sisters interactively with each meaning and example', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('6. أشهر أخوات كان'))
+    const explorer = screen.getByTestId('lesson9-sisters-explorer')
+    expect(within(explorer).getAllByRole('button')).toHaveLength(8)
+    // The first sister is open by default.
+    expect(within(explorer).getByText('اتصاف في الماضي.')).toBeInTheDocument()
+    expect(within(explorer).getByText('كانَ الجوُّ جميلًا.')).toBeInTheDocument()
+
+    await user.click(within(explorer).getByRole('button', { name: 'صارَ' }))
+    expect(within(explorer).getByText('التحول.')).toBeInTheDocument()
+    expect(within(explorer).getByText('تدل على التحول والانتقال من حالة إلى أخرى.')).toBeInTheDocument()
+    expect(within(explorer).getByText('صارَ الماءُ ثلجًا.')).toBeInTheDocument()
+    expect(within(explorer).getByText('أي أن الماء تحوّل إلى ثلج.')).toBeInTheDocument()
+
+    await user.click(within(explorer).getByRole('button', { name: 'ليسَ' }))
+    expect(within(explorer).getByText('النفي.')).toBeInTheDocument()
+    expect(within(explorer).getByText('ليسَ الطالبُ غائبًا.')).toBeInTheDocument()
+    expect(within(explorer).getByText('أي: الطالب ليس غائبًا.')).toBeInTheDocument()
+
+    await user.click(openStep('8. المعنى قبل الحفظ'))
+    const meaningCheck = screen.getByTestId('lesson9-meaning-check')
+    expect(within(meaningCheck).getAllByRole('combobox')).toHaveLength(6)
+    expect(within(meaningCheck).queryByText(/النتيجة:/)).not.toBeInTheDocument()
+  })
+
+  it('guides the three-step discovery method as a real interaction', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('10. كيف أتعرف على اسم كان وخبرها؟'))
+    expect(screen.getByText('ابحث عن كان أو إحدى أخواتها.')).toBeInTheDocument()
+    expect(screen.getAllByText('من أو ما الذي نتحدث عنه؟').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('ماذا نقول عنه؟').length).toBeGreaterThan(0)
+
+    await user.click(openStep('11. جرّب الطريقة الثلاثية'))
+    const discovery = screen.getByTestId('lesson9-discovery')
+    const selects = within(discovery).getAllByRole('combobox')
+    expect(selects).toHaveLength(3)
+    await user.selectOptions(selects[0], 'كانَ')
+    await user.selectOptions(selects[1], 'الجوُّ')
+    await user.selectOptions(selects[2], 'جميلًا')
+    expect(within(discovery).queryByText(/النتيجة:/)).not.toBeInTheDocument()
+
+    await user.click(within(discovery).getByRole('button', { name: 'تحقق من الإجابة' }))
+    expect(within(discovery).getByText(/1 \/ 1/)).toBeInTheDocument()
+    expect(within(discovery).getByText('الجوُّ ← اسم كان. جميلًا ← خبر كان.')).toBeInTheDocument()
+    expect(
+      within(discovery).getByText('الجوُّ: اسم كان مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.'),
+    ).toBeInTheDocument()
+  })
+
+  it('applies the sub-signs of the dual, both plurals and the five names', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('16. كان وأخواتها مع المثنى'))
+    expect(screen.getByText('كانَ الطالبانِ مجتهدَينِ.')).toBeInTheDocument()
+    expect(screen.getByText('الطالبانِ: اسم كان مرفوع، وعلامة رفعه الألف لأنه مثنى.')).toBeInTheDocument()
+    expect(screen.getByText('مجتهدَينِ: خبر كان منصوب، وعلامة نصبه الياء لأنه مثنى.')).toBeInTheDocument()
+    expect(screen.getByText('كان وأخواتها لا تلغي قواعد الإعراب الفرعية، بل نطبق القواعد معًا.')).toBeInTheDocument()
+
+    await user.click(openStep('17. كان وأخواتها مع جمع المذكر السالم'))
+    expect(screen.getByText('كانَ المعلمونَ حاضرينَ.')).toBeInTheDocument()
+    expect(screen.getByText('المعلمونَ: اسم كان مرفوع، وعلامة رفعه الواو لأنه جمع مذكر سالم.')).toBeInTheDocument()
+
+    await user.click(openStep('18. كان وأخواتها مع جمع المؤنث السالم'))
+    expect(screen.getByText('كانتِ الطالباتُ مجتهداتٍ.')).toBeInTheDocument()
+    expect(
+      screen.getByText('مجتهداتٍ: خبر كان منصوب، وعلامة نصبه الكسرة نيابة عن الفتحة لأنه جمع مؤنث سالم.'),
+    ).toBeInTheDocument()
+
+    await user.click(openStep('19. كان وأخواتها مع الأسماء الخمسة'))
+    expect(screen.getByText('كانَ أبوك كريمًا.')).toBeInTheDocument()
+    expect(
+      screen.getByText('أبوك: اسم كان مرفوع، وعلامة رفعه الواو نيابة عن الضمة؛ لأنه من الأسماء الخمسة، وهو مضاف.'),
+    ).toBeInTheDocument()
+
+    await user.click(openStep('20. خبر كان ليس دائمًا كلمة واحدة'))
+    expect(screen.getByText('كانَ الطالبُ في المدرسةِ.')).toBeInTheDocument()
+    expect(screen.getAllByText('شبه جملة').length).toBeGreaterThan(0)
+    expect(screen.getByText('وسنتوسع في أنواع الخبر لاحقًا.')).toBeInTheDocument()
+    // The advanced predicate topics stay out of the student's lesson.
+    expect(screen.queryByText(/كان التامة/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/حذف خبر كان/)).not.toBeInTheDocument()
+  })
+
+  it('separates كان from ليس and from صار, then corrects the four common errors', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('21. كان وأخواتها مع النفي'))
+    expect(screen.getByTestId('lesson9-transform-lazy')).toBeInTheDocument()
+    expect(screen.getByText('الطالبُ: اسم ليس مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')).toBeInTheDocument()
+
+    await user.click(openStep('22. الفرق بين «كان» و«ليس»'))
+    expect(screen.getByText('كانَ الطفلُ صغيرًا.')).toBeInTheDocument()
+    expect(screen.getByText('ليسَ الطفلُ صغيرًا.')).toBeInTheDocument()
+
+    await user.click(openStep('23. الفرق بين «كان» و«صار»'))
+    expect(screen.getByText('كانَ الماءُ باردًا.')).toBeInTheDocument()
+    expect(screen.getByText('صارَ الماءُ باردًا.')).toBeInTheDocument()
+    expect(screen.getByText('اتصاف أو حالة').textContent).toContain('كان')
+    expect(screen.getByText('تحوّل').textContent).toContain('صار')
+    expect(screen.getByTestId('lesson9-meaning-activity')).toBeInTheDocument()
+
+    await user.click(openStep('24. أخطاء شائعة جدًا'))
+    expect(screen.getByText('كانَ الطالبُ مجتهدٌ.')).toBeInTheDocument()
+    expect(screen.getByText('صارَ الماءُ ثلجٌ.')).toBeInTheDocument()
+    expect(screen.getByText('لأن خبر كان منصوب.')).toBeInTheDocument()
+
+    await user.click(openStep('25. صحّح الخطأ بنفسك'))
+    const errors = screen.getByTestId('lesson9-errors-activity')
+    expect(within(errors).getAllByRole('combobox')).toHaveLength(8)
+    expect(within(errors).queryByText(/إجابة صحيحة/)).not.toBeInTheDocument()
+    const firstRow = within(errors).getAllByRole('combobox')
+    await user.selectOptions(firstRow[0], 'كانَ الطالبُ مجتهدًا.')
+    await user.selectOptions(firstRow[1], 'لأن خبر كان منصوب')
+    await user.click(within(errors).getByRole('button', { name: 'تحقق من الإجابة' }))
+    expect(within(errors).getByText(/النتيجة:/)).toBeInTheDocument()
+    expect(within(errors).getAllByText('إجابة صحيحة').length).toBe(1)
+  })
+
+  it('runs the two source activities as real interactions that grade only after التحقق', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('29. النشاط التطبيقي الأول: أدخل كان على الجملة'))
+    for (const sentence of [
+      'الجوُّ جميلٌ.',
+      'الطالبُ نشيطٌ.',
+      'الطريقُ طويلٌ.',
+      'السماءُ صافيةٌ.',
+      'الطفلانِ سعيدانِ.',
+      'المعلمونَ حاضرونَ.',
+      'الطالباتُ مجتهداتٌ.',
+    ]) {
+      // Each sentence appears in the printed list and again as an interactive row.
+      expect(screen.getAllByText(sentence)).toHaveLength(2)
+    }
+    const activityOne = screen.getByTestId('lesson9-activity-1')
+    const selects = within(activityOne).getAllByRole('combobox')
+    expect(selects).toHaveLength(21)
+    expect(within(activityOne).queryByText(/النتيجة:/)).not.toBeInTheDocument()
+
+    // First row: الجوُّ جميلٌ → كانَ الجوُّ جميلًا.
+    await user.selectOptions(selects[0], 'كانَ')
+    await user.selectOptions(selects[1], 'الجوُّ')
+    await user.selectOptions(selects[2], 'جميلًا')
+    // Fourth row: السماءُ صافيةٌ → كانتِ السماءُ صافيةً.
+    await user.selectOptions(selects[9], 'كانتِ')
+    await user.selectOptions(selects[10], 'السماءُ')
+    await user.selectOptions(selects[11], 'صافيةً')
+    await user.click(within(activityOne).getByRole('button', { name: 'تحقق من الإجابة' }))
+    expect(within(activityOne).getByText(/2 \/ 7/)).toBeInTheDocument()
+    expect(within(activityOne).getByText('الجملة بعد التحويل: كانَ الجوُّ جميلًا.')).toBeInTheDocument()
+
+    await user.click(openStep('30. النشاط التطبيقي الثاني: حدد عناصر الجملة'))
+    const activityTwo = screen.getByTestId('lesson9-activity-2')
+    expect(within(activityTwo).getAllByRole('combobox')).toHaveLength(15)
+    expect(screen.getAllByText('كانَ الأبُ متعبًا.')).toHaveLength(2)
+    expect(screen.getAllByText('ظلَّ الطالبُ مجتهدًا.')).toHaveLength(2)
+  })
+
+  it('offers the advanced challenge with six requirements per sentence and a revealable solution', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('34. تحدي للطالب المتقدم'))
+    expect(screen.getByText('أعرب الجمل الآتية إعرابًا كاملًا:')).toBeInTheDocument()
+    for (const sentence of [
+      'كانَ أبو خالدٍ كريمًا.',
+      'أصبحَ الطالبانِ مستعدَّينِ.',
+      'صارَ المعلمونَ محبوبينَ.',
+      'كانتِ الطالباتُ نشيطاتٍ.',
+      'ليسَ أخو الطالبِ غائبًا.',
+    ]) {
+      expect(screen.getAllByText(sentence).length).toBeGreaterThan(0)
+    }
+    const challenge = screen.getByTestId('lesson9-challenge')
+    expect(within(challenge).getAllByRole('combobox')).toHaveLength(30)
+
+    // The complete parsing of the first sentence stays hidden until it is requested.
+    expect(
+      screen.queryByText('أبو: اسم كان مرفوع، وعلامة رفعه الواو نيابة عن الضمة؛ لأنه من الأسماء الخمسة، وهو مضاف.'),
+    ).not.toBeInTheDocument()
+    await user.click(screen.getByRole('button', { name: /أظهر الحل النهائي: كانَ أبو خالدٍ كريمًا/ }))
+    expect(
+      screen.getByText('أبو: اسم كان مرفوع، وعلامة رفعه الواو نيابة عن الضمة؛ لأنه من الأسماء الخمسة، وهو مضاف.'),
+    ).toBeInTheDocument()
+    expect(screen.getByText('خالدٍ: مضاف إليه مجرور، وعلامة جره الكسرة الظاهرة على آخره.')).toBeInTheDocument()
+  })
+
+  it('reveals the four easy examples and the five worked examples with complete parsing', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('12. أمثلة سهلة جدًا'))
+    expect(screen.getByText('كانَ الطالبُ نشيطًا.')).toBeInTheDocument()
+    expect(screen.getByText('ليسَ الطريقُ طويلًا.')).toBeInTheDocument()
+    expect(screen.getAllByRole('button', { name: 'أظهر الإعراب الكامل' })).toHaveLength(4)
+
+    await user.click(openStep('27. أمثلة محلولة: 1–3'))
+    const reveals = screen.getAllByRole('button', { name: 'أظهر الإعراب الكامل' })
+    expect(reveals).toHaveLength(3)
+    expect(screen.queryByText(/الجوُّ: اسم كان مرفوع، وعلامة رفعه الضمة الظاهرة على آخره./)).not.toBeInTheDocument()
+    await user.click(reveals[0])
+    expect(screen.getByText('كانَ الجوُّ جميلًا.')).toBeInTheDocument()
+    expect(screen.getByText('الجوُّ: اسم كان مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')).toBeInTheDocument()
+    expect(screen.getByText('جميلًا: خبر كان منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.')).toBeInTheDocument()
+
+    await user.click(openStep('28. أمثلة محلولة: 4–5'))
+    expect(screen.getByText('ظلَّ المعلمونَ حاضرينَ.')).toBeInTheDocument()
+    expect(screen.getByText('كانتِ الطالباتُ سعيداتٍ.')).toBeInTheDocument()
+    await user.click(screen.getAllByRole('button', { name: 'أظهر الإعراب الكامل' })[1])
+    expect(
+      screen.getByText('سعيداتٍ: خبر كان منصوب، وعلامة نصبه الكسرة نيابة عن الفتحة لأنه جمع مؤنث سالم.'),
+    ).toBeInTheDocument()
+  })
+
+  it('represents all 27 source end-of-lesson questions across three review steps', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('31. مراجعة أسئلة المصدر 1–15'))
+    const first = screen.getByTestId('lesson9-source-review-1')
+    for (let number = 1; number <= 15; number += 1) {
+      expect(within(first).getByTestId(`lesson9-source-q${number}`)).toBeInTheDocument()
+    }
+    expect(within(first).queryByText(/إجابة صحيحة/)).not.toBeInTheDocument()
+    expect(
+      within(first).getByText('هذه أسئلة المصدر للمراجعة، وليست اختبار المنصة النهائي؛ فاختبار الدرس التاسع خطوة مستقلة بأسئلة جديدة.'),
+    ).toBeInTheDocument()
+
+    const questionOne = within(first).getByTestId('lesson9-source-q1')
+    expect(within(questionOne).getAllByRole('radio')).toHaveLength(4)
+    await user.click(within(questionOne).getByRole('button', { name: 'أظهر الإجابة النموذجية' }))
+    expect(within(questionOne).getByText('ب) ترفع الاسم وتنصب الخبر.')).toBeInTheDocument()
+
+    await user.click(openStep('32. مراجعة أسئلة المصدر 16–20'))
+    const second = screen.getByTestId('lesson9-source-review-16')
+    for (let number = 16; number <= 20; number += 1) {
+      expect(within(second).getByTestId(`lesson9-source-q${number}`)).toBeInTheDocument()
+    }
+    await user.click(within(second).getByRole('button', { name: 'أظهر الإجابات النموذجية' }))
+    expect(
+      within(second).getAllByText(/مجتهداتٍ: خبر كان منصوب، وعلامة نصبه الكسرة نيابة عن الفتحة لأنه جمع مؤنث سالم./)
+        .length,
+    ).toBeGreaterThan(0)
+
+    await user.click(openStep('33. مراجعة أسئلة المصدر 21–27'))
+    const third = screen.getByTestId('lesson9-source-review-21')
+    for (let number = 21; number <= 27; number += 1) {
+      expect(within(third).getByTestId(`lesson9-source-q${number}`)).toBeInTheDocument()
+    }
+    const thinking = within(third).getByTestId('lesson9-source-q27')
+    await user.type(
+      within(thinking).getByLabelText('إجابة السؤال 27'),
+      'كان تفيد اتصاف الماء بالبرودة، أما صار فتفيد تحوّله إلى البرودة',
+    )
+    await user.click(within(thinking).getByRole('button', { name: 'أظهر الإجابة النموذجية' }))
+    expect(within(thinking).getByText(/الماء تحوّل وأصبح باردًا/)).toBeInTheDocument()
+  })
+
+  it('keeps the 20-question platform test unrevealed until submission and clears the draft on restart', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('37. اختبار الدرس التاسع (٢٠ سؤالًا)'))
+    const officialTest = screen.getByTestId('lesson9-official-test')
+    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(20)
+    expect(within(officialTest).getByText('أساسي: ٦')).toBeInTheDocument()
+    expect(within(officialTest).getByText('متوسط: ٧')).toBeInTheDocument()
+    expect(within(officialTest).getByText('متقدم: ٤')).toBeInTheDocument()
+    expect(within(officialTest).getByText('تفكير: ٣')).toBeInTheDocument()
+
+    // Answering reveals nothing by itself.
+    await user.selectOptions(within(screen.getByTestId('lesson9-test-q1')).getByRole('combobox'), 'إنَّ')
+    await user.selectOptions(within(screen.getByTestId('lesson9-test-q2')).getByRole('combobox'), 'صح')
+    expect(within(officialTest).queryByText(/النتيجة:/)).not.toBeInTheDocument()
+    expect(within(officialTest).queryByText(/الإجابة الصحيحة/)).not.toBeInTheDocument()
+
+    await user.click(within(officialTest).getByRole('button', { name: 'تسليم الاختبار' }))
+    expect(within(officialTest).getByText(/2 \/ 20/)).toBeInTheDocument()
+    expect(within(officialTest).getByText(/إجابات صحيحة:/)).toBeInTheDocument()
+
+    // Restart clears the draft and the previous result.
+    await user.click(within(officialTest).getByRole('button', { name: 'أعد الاختبار' }))
+    const restarted = screen.getByTestId('lesson9-official-test')
+    expect(within(restarted).queryByText(/النتيجة:/)).not.toBeInTheDocument()
+    expect(within(screen.getByTestId('lesson9-test-q1')).getByRole('combobox')).toHaveValue('')
+  })
+
+  it('gates the explanatory solutions area behind the submitted test in four groups of five', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('38. حلول الاختبار'))
+    expect(screen.getByTestId('lesson9-solutions')).toBeInTheDocument()
+    expect(screen.getByText(/أكمل «اختبار الدرس التاسع» وسلّمه أولًا/)).toBeInTheDocument()
+    expect(screen.queryByText('التفسير:')).not.toBeInTheDocument()
+
+    await user.click(openStep('37. اختبار الدرس التاسع (٢٠ سؤالًا)'))
+    const officialTest = screen.getByTestId('lesson9-official-test')
+    await user.selectOptions(within(screen.getByTestId('lesson9-test-q1')).getByRole('combobox'), 'إنَّ')
+    await user.click(within(officialTest).getByRole('button', { name: 'تسليم الاختبار' }))
+
+    await user.click(openStep('38. حلول الاختبار'))
+    expect(screen.getByText('المجموعة الأولى: الأسئلة 1–5')).toBeInTheDocument()
+    expect(screen.getByText('المجموعة الثانية: الأسئلة 6–10')).toBeInTheDocument()
+    expect(screen.getByText('المجموعة الثالثة: الأسئلة 11–15')).toBeInTheDocument()
+    expect(screen.getByText('المجموعة الرابعة: الأسئلة 16–20')).toBeInTheDocument()
+    expect(screen.getAllByText(/الإجابة الصحيحة:/).length).toBe(20)
+    expect(screen.getAllByText(/التفسير:/).length).toBe(20)
+    expect(screen.getByText(/1 \/ 20/)).toBeInTheDocument()
+  })
+
+  it('keeps the Teacher Area behind somer173 with the complete answer material', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('39. منطقة خاصة بالمعلم'))
+    expect(screen.getByRole('heading', { name: '39. منطقة خاصة بالمعلم', level: 2 })).toBeInTheDocument()
+    expect(screen.queryByText('د. حلول أسئلة نهاية الدرس في المصدر (١–٢٧)')).not.toBeInTheDocument()
+
+    await user.type(screen.getByLabelText('كلمة المرور'), 'somer173')
+    await user.click(screen.getByRole('button', { name: 'دخول' }))
+
+    for (const heading of [
+      'أ. شرح الدرس للمعلم',
+      'ب. حلول أنشطة الدرس',
+      'ج. حلول الأمثلة المحلولة (٥ أمثلة)',
+      'د. حلول أسئلة نهاية الدرس في المصدر (١–٢٧)',
+      'هـ. حلول التحدي المتقدم (٥ جمل)',
+      'و. ملاحظات المعلم',
+      'ز. ملخص الدرس',
+      'النشاط الأول: أدخل كان على الجملة (٧ جمل)',
+      'النشاط الثاني: حدد عناصر الجملة (٥ جمل)',
+      'حلول تفاعلات الدرس',
+    ]) {
+      expect(screen.getByText(heading)).toBeInTheDocument()
+    }
+
+    // Complete parsing, the eight sisters, and all 27 model answers are inside the gate.
+    expect(
+      screen.getAllByText('الطالبُ: اسم كان مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.').length,
+    ).toBeGreaterThan(0)
+    expect(
+      screen.getAllByText('أبوك: اسم كان مرفوع، وعلامة رفعه الواو نيابة عن الضمة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+        .length,
+    ).toBeGreaterThan(0)
+    expect(screen.getByText('1. لا تجعل الطالب يحفظ قائمة الأخوات فقط')).toBeInTheDocument()
+    expect(screen.getByText('2. اربط الدرس بالدروس السابقة')).toBeInTheDocument()
+    expect(screen.getByText('3. وضّح أن قواعد الإعراب الفرعية ما زالت تعمل')).toBeInTheDocument()
+    expect(screen.getByText('4. لا تدخل في التفاصيل المتقدمة الآن')).toBeInTheDocument()
+    expect(screen.getAllByText('ب) ترفع الاسم وتنصب الخبر.').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('خطأ؛ خبر كان منصوب في الأصل.').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('كانَ الولدُ سعيدًا.').length).toBeGreaterThan(0)
+    expect(screen.getByText('13. خبر كان شبه الجملة (مثال تمهيدي فقط)')).toBeInTheDocument()
+    expect(screen.getByText('6. اختبار المنصة وحلوله')).toBeInTheDocument()
+  })
+
+  it('ends with the summary, the memorization key and the teaser of إنَّ وأخواتها', async () => {
+    goToLesson('lesson-9')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('35. ملخص الدرس'))
+    expect(screen.getByRole('heading', { name: 'ملخص الدرس', level: 3 })).toBeInTheDocument()
+    expect(screen.getByText('كان – أصبح – أمسى – أضحى – ظل – بات – صار – ليس')).toBeInTheDocument()
+    expect(screen.getByText('كان ← اتصاف في الماضي.')).toBeInTheDocument()
+    expect(screen.getByText('ليس ← النفي.')).toBeInTheDocument()
+    expect(screen.getAllByText('كان وأخواتها ترفع الاسم وتنصب الخبر.').length).toBeGreaterThan(0)
+    expect(screen.getAllByText(/إنَّ وأخواتها/).length).toBeGreaterThan(0)
+    expect(screen.getByTestId('lesson9-transform-student')).toBeInTheDocument()
+
+    await user.click(openStep('36. قاعدة سريعة للحفظ ومفتاح الحفظ'))
+    expect(screen.getByText('قاعدة سريعة للحفظ')).toBeInTheDocument()
+    expect(screen.getByText('مفتاح الحفظ')).toBeInTheDocument()
+    expect(screen.getAllByText('اسم كان = مرفوع').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('خبر كان = منصوب').length).toBeGreaterThan(0)
+
+    // Lesson 10 is never started: the teaser is one sentence only.
+    expect(screen.queryByRole('heading', { name: /الدرس العاشر/ })).not.toBeInTheDocument()
+  })
+
+  it('does not regress Lessons 1–8 after adding the ninth lesson', () => {
+    const { unmount } = render(<App />)
+    expect(within(screen.getByRole('list')).getAllByRole('link')).toHaveLength(9)
+    unmount()
+
+    goToLesson('lesson-2')
+    const two = render(<App />)
+    expect(screen.getByRole('heading', { name: 'مدخل الدرس: الجملة الاسمية', level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من 27')
+    two.unmount()
+    window.location.hash = ''
+
+    goToLesson('lesson-8')
+    render(<App />)
+    expect(screen.getByRole('heading', { name: 'الدرس الثامن: الأسماء الخمسة', level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من 43')
   })
 })

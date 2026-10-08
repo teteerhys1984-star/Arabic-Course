@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 
-const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx', 'LessonEight.tsx'].map((name) => `src/lessons/${name}`)
+const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx', 'LessonEight.tsx', 'LessonNine.tsx'].map((name) => `src/lessons/${name}`)
 const sources = Object.fromEntries(lessonPaths.map((path) => [path, readFileSync(path, 'utf8')]))
 const failures = []
 
@@ -68,6 +68,32 @@ requirePhrase('src/lessons/LessonEight.tsx', 'ذو: نعت مرفوع، وعلا
 requirePhrase('src/lessons/LessonEight.tsx', 'ذا: نعت منصوب، وعلامة نصبه الألف نيابة عن الفتحة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
 requirePhrase('src/lessons/LessonEight.tsx', 'ذي: نعت مجرور، وعلامة جره الياء نيابة عن الكسرة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
 requirePhrase('src/lessons/LessonEight.tsx', 'أبي: فاعل مرفوع، وعلامة رفعه ضمة مقدرة.')
+requirePhrase('src/lessons/LessonNine.tsx', 'الطالبُ: اسم كان مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')
+requirePhrase('src/lessons/LessonNine.tsx', 'مجتهدًا: خبر كان منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.')
+requirePhrase('src/lessons/LessonNine.tsx', 'الجوُّ: مبتدأ مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')
+requirePhrase('src/lessons/LessonNine.tsx', 'جميلٌ: خبر مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')
+requirePhrase('src/lessons/LessonNine.tsx', 'الطالبانِ: اسم كان مرفوع، وعلامة رفعه الألف لأنه مثنى.')
+requirePhrase('src/lessons/LessonNine.tsx', 'مجتهدَينِ: خبر كان منصوب، وعلامة نصبه الياء لأنه مثنى.')
+requirePhrase('src/lessons/LessonNine.tsx', 'المعلمونَ: اسم كان مرفوع، وعلامة رفعه الواو لأنه جمع مذكر سالم.')
+requirePhrase('src/lessons/LessonNine.tsx', 'حاضرينَ: خبر كان منصوب، وعلامة نصبه الياء لأنه جمع مذكر سالم.')
+requirePhrase('src/lessons/LessonNine.tsx', 'الطالباتُ: اسم كان مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')
+requirePhrase('src/lessons/LessonNine.tsx', 'مجتهداتٍ: خبر كان منصوب، وعلامة نصبه الكسرة نيابة عن الفتحة لأنه جمع مؤنث سالم.')
+requirePhrase('src/lessons/LessonNine.tsx', 'أبوك: اسم كان مرفوع، وعلامة رفعه الواو نيابة عن الضمة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+requirePhrase('src/lessons/LessonNine.tsx', 'كريمًا: خبر كان منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.')
+requirePhrase('src/lessons/LessonNine.tsx', 'كانَ: فعل ماضٍ ناسخ مبني على الفتحة الظاهرة على آخره.')
+
+// Lesson 9 must never display an abbreviated parsing: the sign always carries its
+// description or its reason, except inside the warning that forbids the abbreviation.
+const lessonNine = sources['src/lessons/LessonNine.tsx']
+const shorthand = /(مرفوع|منصوب|مجرور) بال(ضمة|فتحة|كسرة|ألف|ياء|واو)(?!\s*(الظاهرة|نيابة|مقدرة|ظاهرة))/g
+lessonNine.split('\n').forEach((line, index) => {
+  if (line.includes('لا يُقبل')) return
+  shorthand.lastIndex = 0
+  const match = shorthand.exec(line)
+  if (match && !/(لأنه|لأنها|نيابة|الظاهرة|على آخره|على آخرها)/.test(line.slice(match.index))) {
+    failures.push(`src/lessons/LessonNine.tsx line ${index + 1}: abbreviated parsing "${match[0]}".`)
+  }
+})
 
 if (failures.length) {
   console.error(failures.join('\n'))

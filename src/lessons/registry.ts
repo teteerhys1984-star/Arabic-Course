@@ -133,6 +133,19 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['أب', 'أخ', 'حم', 'فو', 'ذو'],
   },
+  {
+    id: 'lesson-9',
+    number: '٩',
+    eyebrow: 'الأفعال الناسخة',
+    title: 'كان وأخواتها',
+    documentTitle: 'الدرس التاسع: كان وأخواتها',
+    summary:
+      'تعلّم كان وأخواتها: كان وأصبح وأمسى وأضحى وظلّ وبات وصار وليس، وعملها في الجملة الاسمية برفع الاسم ونصب الخبر، والتمييز بين اسم كان وخبرها قبل وبعد دخولها، مع الإعراب الكامل والأنشطة واختبار نهائي وحلول.',
+    duration: '٩٠',
+    strand: 'أساسيات النحو',
+    available: true,
+    parts: ['كان', 'أصبح', 'صار', 'ليس'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

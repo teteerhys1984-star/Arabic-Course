@@ -1,0 +1,686 @@
+/* الدرس التاسع: كان وأخواتها
+   لغة بصرية واحدة هادئة: الذهبي للرفع (اسم كان)، والأخضر للنصب (خبر كان)،
+   مع تمييز واضح لـ«شرح المنصة» عن نص المصدر، ومقارنات قبل/بعد قابلة للتحويل. */
+
+/* ---------- البداية والعنوان ---------- */
+.lesson-nine-hero-topic {
+  color: var(--gold-soft);
+  text-align: center;
+  font: 700 clamp(1.2rem, 3vw, 1.7rem)/1.7 'Noto Naskh Arabic', serif;
+}
+.lesson-nine-hero-topic--inline {
+  margin-block: 1.2rem .4rem;
+  padding: .8rem 1rem;
+  border: 1px solid #ead9a9;
+  border-radius: 18px;
+  color: var(--green-deep);
+  background: linear-gradient(145deg, #fff9e9, var(--gold-soft));
+  font-size: clamp(1.05rem, 2.4vw, 1.35rem);
+}
+.lesson-nine-hero-map {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: .7rem;
+  margin-block: 1.2rem;
+}
+.lesson-nine-hero-map div {
+  display: grid;
+  gap: .3rem;
+  min-width: 0;
+  padding: .85rem .6rem;
+  border: 1px solid rgb(255 255 255 / 22%);
+  border-radius: 15px;
+  background: rgb(255 255 255 / 9%);
+  text-align: center;
+}
+.lesson-nine-hero-map strong { color: var(--gold-soft); font-size: 1.05rem; }
+.lesson-nine-hero-map span { color: #e4f0eb; font-size: .74rem; line-height: 1.7; }
+
+/* ---------- نص المصدر المميز ---------- */
+.lesson-nine-featured {
+  margin-block: .9rem;
+  color: var(--green-dark);
+  text-align: center;
+  font: 700 clamp(1.2rem, 3.4vw, 1.75rem)/1.7 'Noto Naskh Arabic', serif;
+}
+.lesson-nine-featured--small { font-size: clamp(1.05rem, 2.6vw, 1.35rem); margin-block: .5rem; }
+.lesson-nine-quote {
+  margin-block: .8rem;
+  padding: .8rem 1.1rem;
+  border-inline-start: 5px solid var(--gold);
+  border-radius: 14px;
+  background: var(--cream);
+  color: var(--green-dark);
+  font: 700 1.02rem/1.9 'Noto Naskh Arabic', serif;
+}
+.lesson-nine-note { color: var(--muted); font-size: .82rem; }
+.lesson-nine-teacher-note { margin: .3rem 0; color: var(--muted); font-size: .78rem; }
+
+/* ---------- قاعدة ذهبية ---------- */
+.lesson-nine-rule {
+  margin-block: .9rem;
+  padding: 1rem 1.2rem;
+  border-inline-start: 5px solid var(--gold);
+  border-radius: 15px;
+  background: var(--cream);
+  box-shadow: var(--shadow);
+}
+.lesson-nine-rule strong { color: var(--green-dark); }
+.lesson-nine-rule p { margin: .35rem 0 0; }
+
+.lesson-nine-golden {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-block: 1.1rem;
+  padding: 1.1rem 1.3rem;
+  border: 1px solid #ead9a9;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #fff9e9, var(--gold-soft));
+  box-shadow: var(--shadow);
+}
+.lesson-nine-golden span { font-size: 1.4rem; }
+.lesson-nine-golden p {
+  margin: 0;
+  color: var(--green-deep);
+  font: 700 1.05rem/1.9 'Noto Naskh Arabic', serif;
+}
+.lesson-nine-golden-inline {
+  margin: 0;
+  font: 700 1.05rem/1.9 'Noto Naskh Arabic', serif;
+  color: var(--green-deep);
+}
+
+/* ---------- «شرح المنصة» ---------- */
+.lesson-nine-platform-note {
+  display: grid;
+  gap: .5rem;
+  margin-block: 1.1rem;
+  padding: .9rem 1.1rem;
+  border: 1px dashed #9dbfb1;
+  border-radius: 16px;
+  background: #f1f8f4;
+}
+.lesson-nine-platform-note__badge {
+  justify-self: start;
+  padding: .28rem .7rem;
+  border-radius: 999px;
+  background: var(--green);
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 700;
+}
+.lesson-nine-platform-note__body p { margin: .25rem 0; font-size: .86rem; color: var(--ink-soft); }
+
+/* ---------- مكوّنات النص ---------- */
+.lesson-nine-parsing {
+  display: grid;
+  gap: .3rem;
+  margin-block: .7rem;
+  padding: .85rem 1rem;
+  border-inline-start: 5px solid var(--green);
+  border-radius: 14px;
+  background: #eef7f3;
+}
+.lesson-nine-parsing p {
+  margin: 0;
+  color: var(--green-deep);
+  font: 600 .92rem/1.95 'Noto Naskh Arabic', serif;
+}
+
+.lesson-nine-chip-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: .6rem;
+  margin-block: 1rem;
+}
+.lesson-nine-chip-row bdi {
+  padding: .75rem .5rem;
+  border: 1px solid #c8dfd2;
+  border-radius: 14px;
+  background: #eff7f2;
+  color: var(--green-dark);
+  font: 700 1rem/1.6 'Noto Naskh Arabic', serif;
+  text-align: center;
+}
+.lesson-nine-chip-row--golden bdi { border-color: #e6d3a4; background: #fff9ec; }
+
+.lesson-nine-mapping { display: grid; gap: .5rem; margin-block: 1rem; }
+.lesson-nine-mapping p {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin: 0;
+  padding: .6rem .9rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+  font-size: .9rem;
+}
+.lesson-nine-mapping bdi { color: var(--green-dark); font-weight: 700; }
+.lesson-nine-mapping span { color: var(--gold); font-weight: 700; }
+
+.lesson-nine-memory-key {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: .55rem;
+  margin-block: 1rem;
+}
+.lesson-nine-memory-key bdi {
+  padding: .7rem .6rem;
+  border: 1px solid #e6d3a4;
+  border-radius: 14px;
+  background: #fff9ec;
+  color: var(--green-deep);
+  font: 700 1rem/1.7 'Noto Naskh Arabic', serif;
+  text-align: center;
+}
+
+/* ---------- الجداول ---------- */
+.lesson-nine-table {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  background: var(--paper);
+}
+.lesson-nine-table caption {
+  padding: .7rem 1rem;
+  color: var(--green-dark);
+  font-size: .82rem;
+  font-weight: 700;
+  text-align: start;
+}
+.lesson-nine-table th,
+.lesson-nine-table td {
+  padding: .7rem 1rem;
+  border-block-start: 1px solid var(--line);
+  text-align: start;
+  vertical-align: top;
+}
+.lesson-nine-table thead th { color: var(--green-dark); background: #eef4ef; font-weight: 700; }
+.lesson-nine-table tbody th { color: var(--green); }
+.lesson-nine-table tbody th bdi { font: 700 1.05rem/1.7 'Noto Naskh Arabic', serif; }
+.lesson-nine-table td { color: var(--ink-soft); font-size: .86rem; }
+.lesson-nine-table td bdi { font: 700 1rem/1.7 'Noto Naskh Arabic', serif; color: var(--green-dark); }
+.lesson-nine-table--flagship tbody tr:nth-child(odd) th { border-inline-start: 5px solid var(--gold); }
+.lesson-nine-table--flagship tbody tr:nth-child(even) th { border-inline-start: 5px solid var(--green); }
+
+/* ---------- مستكشف أخوات كان ---------- */
+.lesson-nine-explorer {
+  display: grid;
+  gap: .8rem;
+  margin-block: 1rem;
+}
+.lesson-nine-explorer__verbs {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(88px, 1fr));
+  gap: .5rem;
+}
+.lesson-nine-verb {
+  min-width: 0;
+  padding: .7rem .4rem;
+  border: 1px solid #c8dfd2;
+  border-radius: 14px;
+  background: var(--paper);
+  color: var(--green-dark);
+  cursor: pointer;
+  font: 700 1.1rem/1.5 'Noto Naskh Arabic', serif;
+  transition: background .2s ease, border-color .2s ease, transform .2s ease;
+}
+.lesson-nine-verb:hover { border-color: var(--green); background: #eef7f2; }
+.lesson-nine-verb.is-open {
+  border-color: var(--gold);
+  background: linear-gradient(145deg, #fff9e9, var(--gold-soft));
+  transform: translateY(-2px);
+}
+.lesson-nine-explorer__panel {
+  display: grid;
+  gap: .45rem;
+  min-width: 0;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  animation: lesson-step-in .32s ease;
+}
+.lesson-nine-explorer__panel h3 {
+  margin: 0;
+  color: var(--green-dark);
+  font: 700 1.5rem/1.5 'Noto Naskh Arabic', serif;
+}
+.lesson-nine-explorer__meaning { margin: 0; color: var(--green); font-size: .88rem; }
+.lesson-nine-explorer__detail { margin: 0; color: var(--ink-soft); font-size: .88rem; }
+.lesson-nine-explorer__note { margin: 0; color: var(--muted); font-size: .8rem; }
+.lesson-nine-explorer__parts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .6rem;
+  margin-block-start: .3rem;
+}
+.lesson-nine-explorer__parts p {
+  display: grid;
+  gap: .15rem;
+  margin: 0;
+  padding: .7rem .8rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fcfdfb;
+  text-align: center;
+}
+.lesson-nine-explorer__parts span { color: var(--muted); font-size: .74rem; font-weight: 600; }
+.lesson-nine-explorer__parts strong { font: 700 1.2rem/1.6 'Noto Naskh Arabic', serif; }
+.lesson-nine-explorer__parts small { color: var(--muted); font-size: .72rem; }
+.lesson-nine-explorer__parts .is-raised { color: #8a5c10; }
+.lesson-nine-explorer__parts .is-installed { color: var(--green); }
+
+/* ---------- التحوّل البصري: قبل / بعد ---------- */
+.lesson-nine-transform {
+  display: grid;
+  gap: .7rem;
+  margin-block: 1.1rem;
+}
+.lesson-nine-transform__side {
+  min-width: 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lesson-nine-transform__side--before { border-inline-start: 5px solid var(--gold); }
+.lesson-nine-transform__side--after {
+  border-inline-start: 5px solid var(--green);
+  animation: lesson-step-in .32s ease;
+}
+.lesson-nine-transform__label {
+  margin: 0;
+  color: var(--muted);
+  font-size: .74rem;
+  font-weight: 700;
+  letter-spacing: .03em;
+}
+.lesson-nine-transform__sentence {
+  margin: .2rem 0 .5rem;
+  color: var(--green-dark);
+  text-align: center;
+  font: 700 clamp(1.15rem, 3.2vw, 1.6rem)/1.8 'Noto Naskh Arabic', serif;
+}
+.lesson-nine-transform__parts {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .6rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.lesson-nine-transform__parts li {
+  display: grid;
+  gap: .15rem;
+  min-width: 0;
+  padding: .65rem .7rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: #fcfdfb;
+  text-align: center;
+}
+.lesson-nine-transform__parts bdi { font: 700 1.15rem/1.6 'Noto Naskh Arabic', serif; color: var(--ink); }
+.lesson-nine-transform__parts span { color: var(--muted); font-size: .74rem; }
+.lesson-nine-transform__parts em { font-size: .76rem; font-style: normal; font-weight: 700; }
+.lesson-nine-transform__parts .is-raised { color: #8a5c10; }
+.lesson-nine-transform__parts .is-installed { color: var(--green); }
+.lesson-nine-transform__parts .is-changed {
+  padding: .05rem .35rem;
+  border-radius: 8px;
+  background: #fff4d9;
+  color: #7a5410;
+}
+.lesson-nine-transform__change {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-wrap: wrap;
+  gap: .6rem;
+  margin: .8rem 0 0;
+  padding: .6rem .8rem;
+  border-radius: 14px;
+  background: var(--cream);
+  font: 700 1.05rem/1.8 'Noto Naskh Arabic', serif;
+}
+.lesson-nine-transform__change del { color: var(--error); }
+.lesson-nine-transform__change strong { color: var(--success); }
+.lesson-nine-transform__change span { color: var(--gold); }
+.lesson-nine-transform__arrow { display: grid; justify-items: center; gap: .3rem; }
+.lesson-nine-transform__arrow .button { min-height: 44px; }
+
+/* ---------- تغيّر المصطلحات ---------- */
+.lesson-nine-shift {
+  display: grid;
+  gap: .7rem;
+  margin-block: 1rem;
+}
+.lesson-nine-shift article {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) minmax(0, 1.2fr);
+  align-items: center;
+  gap: .6rem;
+  min-width: 0;
+  padding: .8rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lesson-nine-shift p { margin: 0; text-align: center; font: 700 1rem/1.8 'Noto Naskh Arabic', serif; }
+.lesson-nine-shift span { color: var(--gold); font-weight: 700; }
+.lesson-nine-shift__from bdi { color: #8a5c10; }
+.lesson-nine-shift__to bdi { color: var(--green-dark); }
+.lesson-nine-shift__state bdi { color: var(--muted); font-size: .84rem; }
+
+.lesson-nine-terms {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .8rem;
+  margin-block: 1rem;
+}
+.lesson-nine-terms article {
+  min-width: 0;
+  padding: .9rem 1rem;
+  border: 1px solid #efd6ca;
+  border-radius: 16px;
+  background: #fff8f4;
+}
+.lesson-nine-terms p { margin: .25rem 0; font-size: .9rem; }
+.lesson-nine-terms del { color: var(--error); }
+.lesson-nine-terms strong { color: var(--success); font-size: 1rem; }
+.lesson-nine-terms__label { color: var(--muted); font-size: .74rem !important; font-weight: 700; }
+.lesson-nine-terms__but { color: var(--muted); font-size: .78rem !important; }
+
+/* ---------- سلّم الطريقة الثلاثية ---------- */
+.lesson-nine-ladder {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .8rem;
+  margin-block: 1rem;
+}
+.lesson-nine-ladder article {
+  display: grid;
+  align-content: start;
+  gap: .35rem;
+  min-width: 0;
+  padding: 1rem .85rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+  text-align: center;
+}
+.lesson-nine-ladder article > span {
+  width: 34px;
+  height: 34px;
+  justify-self: center;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--green);
+  color: #fff;
+  font-weight: 700;
+}
+.lesson-nine-ladder h3 { margin: 0; color: var(--green-dark); font: 700 1.02rem/1.7 'Noto Naskh Arabic', serif; }
+.lesson-nine-ladder p { margin: 0; font-size: .82rem; color: var(--ink-soft); }
+.lesson-nine-ladder article:nth-child(1) { border-block-start: 4px solid var(--gold); }
+.lesson-nine-ladder article:nth-child(2) { border-block-start: 4px solid var(--green); }
+.lesson-nine-ladder article:nth-child(3) { border-block-start: 4px solid #6f5aa8; }
+
+/* ---------- الإعراب الفرعي والمقارنات ---------- */
+.lesson-nine-subsign {
+  min-width: 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lesson-nine-subsign__kind {
+  display: inline-block;
+  margin: 0 0 .3rem;
+  padding: .3rem .8rem;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--green-dark);
+  font-size: .76rem;
+  font-weight: 700;
+}
+
+.lesson-nine-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .9rem;
+  margin-block: 1rem;
+}
+.lesson-nine-compare article {
+  display: grid;
+  align-content: start;
+  gap: .4rem;
+  min-width: 0;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lesson-nine-compare h3 { margin: 0; color: var(--green-dark); font: 700 1.05rem/1.8 'Noto Naskh Arabic', serif; }
+.lesson-nine-compare p { margin: 0; font-size: .88rem; color: var(--ink-soft); }
+.lesson-nine-compare article:first-child { border-block-start: 4px solid var(--gold); }
+.lesson-nine-compare article:last-child { border-block-start: 4px solid var(--green); }
+
+/* ---------- الأمثلة ---------- */
+.lesson-nine-worked {
+  margin-block: .9rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lesson-nine-worked h3 { margin-block-end: .2rem; color: var(--green-dark); font: 700 1.1rem/1.5 'Noto Naskh Arabic', serif; }
+.lesson-nine-worked-items { padding-inline-start: 1.2rem; margin-block: .3rem .6rem; }
+.lesson-nine-worked-items li { padding-block: .18rem; font-size: .87rem; line-height: 1.85; }
+
+/* ---------- الأنشطة التفاعلية ---------- */
+.lesson-nine-activity {
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid #cce0d4;
+  border-radius: 22px;
+  background: linear-gradient(145deg, #f2f8f4, #eef4f7);
+  box-shadow: var(--shadow);
+}
+.lesson-nine-activity-heading { display: flex; align-items: center; gap: .8rem; margin-block-end: 1rem; }
+.lesson-nine-activity-heading h3 { margin: 0; color: var(--green-dark); font: 700 1.25rem/1.45 'Noto Naskh Arabic', serif; }
+.lesson-nine-activity-heading p { margin: .2rem 0 0; color: var(--ink-soft); font-size: .8rem; }
+.lesson-nine-activity-items { display: grid; gap: .7rem; margin-block-end: 1rem; }
+.lesson-nine-activity-row {
+  padding: .85rem;
+  border: 1px solid rgb(23 108 86 / 16%);
+  border-radius: 14px;
+  background: rgb(255 254 250 / 82%);
+}
+.lesson-nine-activity-prompt {
+  margin: 0;
+  color: var(--green-dark);
+  font: 700 1.08rem/1.9 'Noto Naskh Arabic', serif;
+}
+.lesson-nine-activity-hint { margin: .25rem 0 0; color: var(--muted); font-size: .76rem; }
+.lesson-nine-field-grid { display: grid; gap: .6rem; margin-block-start: .6rem; }
+.lesson-nine-field-grid--1 { grid-template-columns: minmax(0, 1fr); }
+.lesson-nine-field-grid--2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.lesson-nine-field-grid--3 { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.lesson-nine-field { display: grid; gap: .3rem; min-width: 0; }
+.lesson-nine-field > span { color: var(--muted); font-size: .74rem; font-weight: 600; }
+.lesson-nine-field select,
+.lesson-nine-field input {
+  width: 100%;
+  min-height: 42px;
+  padding: .5rem .7rem;
+  border: 1px solid #c9d7ce;
+  border-radius: 10px;
+  background: var(--paper);
+  color: var(--ink);
+}
+.lesson-nine-feedback { margin: .6rem 0 0; padding: .6rem .8rem; border-radius: 12px; font-size: .82rem; }
+.lesson-nine-feedback p { margin: .25rem 0; }
+.lesson-nine-feedback strong { display: block; }
+.lesson-nine-feedback.is-good { color: var(--success); background: #e4f3ec; }
+.lesson-nine-feedback.is-bad { color: var(--error); background: #fae9e8; }
+.lesson-nine-activity-actions { display: flex; align-items: center; flex-wrap: wrap; gap: .9rem; }
+.lesson-nine-activity-actions p { margin: 0; color: var(--muted); font-size: .78rem; }
+.lesson-nine-score { color: var(--success) !important; font-weight: 700; }
+
+.lesson-nine-challenge { display: grid; gap: .6rem; margin-block: .9rem; }
+.lesson-nine-challenge-item { display: grid; gap: .4rem; }
+
+/* ---------- الأخطاء الشائعة ---------- */
+.lesson-nine-errors { display: grid; gap: .8rem; margin-block: 1rem; }
+.lesson-nine-error {
+  padding: .9rem 1.05rem;
+  border: 1px solid #efd6ca;
+  border-radius: 16px;
+  background: #fff8f4;
+}
+.lesson-nine-error h3 { margin: 0 0 .35rem; color: var(--green-dark); font-size: 1rem; }
+.lesson-nine-error p { margin: .2rem 0; font-size: .9rem; }
+.lesson-nine-error .is-bad { color: var(--error); }
+.lesson-nine-error .is-good { color: var(--success); }
+.lesson-nine-error-reason { color: var(--muted); font-size: .8rem !important; }
+
+/* ---------- مراجعة أسئلة المصدر ---------- */
+.lesson-nine-source-review {
+  padding: clamp(1rem, 3vw, 1.6rem);
+  border: 1px solid var(--line);
+  border-radius: 24px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lesson-nine-source-review__heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: .8rem;
+  margin-block-end: .5rem;
+}
+.lesson-nine-source-review__heading h3 { margin: 0; color: var(--green-dark); font: 700 1.2rem/1.5 'Noto Naskh Arabic', serif; }
+.lesson-nine-source-question legend { line-height: 1.95; }
+.lesson-nine-source-instruction { margin: .3rem 0 0; color: var(--muted); font-size: .8rem; }
+.lesson-nine-reveal { margin-block-start: .7rem; }
+
+/* ---------- اختبار المنصة ---------- */
+.lesson-nine-test-levels {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+  margin-block: .9rem;
+}
+.lesson-nine-test-levels span {
+  padding: .35rem .8rem;
+  border-radius: 999px;
+  border: 1px solid var(--line);
+  background: var(--cream);
+  color: var(--green-dark);
+  font-size: .75rem;
+  font-weight: 700;
+}
+.lesson-nine-test-question legend { line-height: 1.95; }
+.lesson-nine-test-sentence {
+  margin: .4rem 0 0;
+  padding: .6rem .9rem;
+  border-radius: 12px;
+  background: var(--cream);
+  color: var(--green-deep);
+  font: 700 1.05rem/1.9 'Noto Naskh Arabic', serif;
+  text-align: center;
+}
+.lesson-nine-level {
+  display: inline-block;
+  margin-inline-start: .5rem;
+  padding: .18rem .6rem;
+  border-radius: 999px;
+  font-size: .68rem;
+  font-weight: 700;
+}
+.lesson-nine-level--basic { color: #1d5c46; background: #dff1e7; }
+.lesson-nine-level--medium { color: #7a5410; background: #faefd2; }
+.lesson-nine-level--advanced { color: #4d3c7c; background: #eee9fa; }
+.lesson-nine-level--thinking { color: #1b4c6b; background: #e2eef6; }
+.lesson-nine-type {
+  display: inline-block;
+  margin-inline-start: .35rem;
+  color: var(--muted);
+  font-size: .7rem;
+}
+.lesson-nine-test-fields { display: grid; gap: .7rem; margin-block-start: .7rem; }
+.lesson-nine-field-label { margin: 0 0 .35rem; color: var(--muted); font-size: .76rem; font-weight: 600; }
+.lesson-nine-multi .official-options { margin-block-start: 0; }
+.lesson-nine-test-progress { margin: 0; color: var(--muted); font-size: .78rem; }
+
+/* ---------- حلول الاختبار ---------- */
+.lesson-nine-solutions-gate p { font-size: .9rem; }
+.lesson-nine-solutions-summary {
+  display: grid;
+  gap: .6rem;
+  margin-block: 1rem;
+  padding: 1rem 1.2rem;
+  border: 1px solid #cce0d4;
+  border-radius: 18px;
+  background: #f2f8f4;
+}
+.lesson-nine-solutions-score { margin: 0; color: var(--green-dark); font: 700 1.2rem/1.6 'Noto Naskh Arabic', serif; }
+.lesson-nine-counts { display: flex; flex-wrap: wrap; gap: .8rem; margin: 0; padding: 0; list-style: none; }
+.lesson-nine-counts li { color: var(--ink-soft); font-size: .82rem; }
+.lesson-nine-counts--levels li { padding: .25rem .7rem; border-radius: 999px; background: var(--paper); border: 1px solid var(--line); }
+.lesson-nine-solution-group { margin-block: 1.4rem; }
+.lesson-nine-solution-group h4 {
+  margin-block-end: .6rem;
+  padding-block-end: .3rem;
+  border-block-end: 2px solid var(--gold-soft);
+  color: var(--green-dark);
+  font: 700 1.1rem/1.5 'Noto Naskh Arabic', serif;
+}
+.lesson-nine-solution-list { display: grid; gap: .9rem; padding-inline-start: 1.3rem; }
+.lesson-nine-solution-list li { padding-block: .2rem; }
+.lesson-nine-solution-prompt { margin: 0 0 .3rem; font-size: .9rem; }
+.lesson-nine-solution-answer { margin: 0 0 .2rem; color: var(--success); font-size: .88rem; }
+.lesson-nine-solution-field { margin: 0; color: var(--ink-soft); font-size: .82rem; }
+.lesson-nine-solution-explain { margin: .3rem 0 0; color: var(--muted); font-size: .82rem; line-height: 1.85; }
+.lesson-nine-solutions-note { margin: 0 0 .3rem; color: var(--muted); font-size: .8rem; }
+
+/* ---------- منطقة المعلم ---------- */
+.teacher-material--lesson9 h4 { color: var(--green); font-size: 1rem; }
+.teacher-material--lesson9 ol,
+.teacher-material--lesson9 ul { padding-inline-start: 1.3rem; }
+.teacher-material--lesson9 li { padding-block: .18rem; }
+.lesson-nine-corrections { display: grid; gap: .75rem; margin-block: 1rem; }
+.lesson-nine-correction { padding: .85rem 1rem; border: 1px solid #efd6ca; border-radius: 15px; background: #fff8f4; }
+.lesson-nine-correction p { margin: .2rem 0; font-size: .86rem; }
+.lesson-nine-correction p:nth-of-type(2) { color: var(--success); }
+.lesson-nine-correction-reason { color: var(--muted); font-size: .78rem !important; }
+.lesson-nine-correction-label { margin: 0 0 .3rem; color: var(--green-dark); font-size: .92rem; }
+
+/* ---------- الاستجابة للشاشات الصغيرة ---------- */
+@media (max-width: 900px) {
+  .lesson-nine-ladder { grid-template-columns: 1fr; }
+  .lesson-nine-shift article { grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr); }
+  .lesson-nine-shift__state { grid-column: 1 / -1; }
+}
+@media (max-width: 720px) {
+  .lesson-nine-compare,
+  .lesson-nine-terms,
+  .lesson-nine-transform__parts,
+  .lesson-nine-explorer__parts { grid-template-columns: 1fr; }
+  .lesson-nine-field-grid--2,
+  .lesson-nine-field-grid--3 { grid-template-columns: 1fr; }
+  .lesson-nine-source-review__heading { flex-direction: column; align-items: stretch; }
+  .lesson-nine-hero-map { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}

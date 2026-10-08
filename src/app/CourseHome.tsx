@@ -1,5 +1,6 @@
 import { lessonRegistry } from '../lessons/registry'
 import { LessonCard } from './LessonCard'
+import { InstructorContact } from '../shared/contact/InstructorContact'
 
 /**
  * The permanent course homepage / lesson hub.
@@ -8,6 +9,11 @@ import { LessonCard } from './LessonCard'
  * full content of any lesson. Clicking a lesson opens that lesson independently on the
  * same course URL (`#/lesson/<id>`). Future lessons appear here automatically by adding
  * an entry to the lesson registry — no separate website per lesson.
+ *
+ * The header also carries the course's single official contact element
+ * (`InstructorContact`), centered between the brand and the decorative ornament; the
+ * lesson shell renders the very same component, so the instructor's WhatsApp link is
+ * never duplicated anywhere.
  *
  *   lessonRegistry → LessonCard[] → responsive lesson grid (`.lesson-index__list`)
  */
@@ -24,6 +30,7 @@ export function CourseHome() {
             <small>منصة مستقلة لتعلّم اللغة العربية</small>
           </span>
         </a>
+        <InstructorContact />
       </header>
 
       <main className="course-main">
@@ -55,7 +62,6 @@ export function CourseHome() {
 
       <footer className="course-footer">
         <p>منصة مستقلة لتعلّم اللغة العربية <span aria-hidden="true">✦</span> دورة أساسيات النحو</p>
-        <p className="instructor-credit">المهندس سومر شاهين: 0930215022</p>
       </footer>
     </div>
   )

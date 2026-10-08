@@ -149,12 +149,9 @@ body {
   background: linear-gradient(180deg, #fffefa, #f9f6ef);
 }
 
-.instructor-credit {
-  color: var(--gold-soft);
-  font-weight: 600;
-  letter-spacing: .01em;
-}
-.course-footer .instructor-credit { margin-block-start: .65rem; color: var(--green-dark); }
+/* The instructor credit now lives once, as the shared contact element in the top bar
+   (src/shared/contact/InstructorContact.tsx + src/styles/contact.css). */
+
 .lesson-footer__copy { display: grid; gap: .2rem; }
 .lesson-footer__copy p { margin: 0; }
 

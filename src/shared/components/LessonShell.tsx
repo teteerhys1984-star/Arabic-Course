@@ -1,6 +1,7 @@
 import { useEffect, type ReactNode } from 'react'
 import type { LessonMeta } from '../../lessons/registry'
 import { navigate } from '../../app/useHashRoute'
+import { InstructorContact } from '../contact/InstructorContact'
 
 interface LessonShellProps {
   lesson: LessonMeta
@@ -13,10 +14,12 @@ interface LessonShellProps {
  *
  *   LessonShell → LessonFlow → LessonStep → current step content only
  *
- * The shell owns the page chrome only: the brand header and a light hero identifying the
- * lesson. It never renders lesson content itself and never provides scroll-anchor
- * navigation — the student's only way through a lesson is the sequential
- * السابق / التالي pager driven by LessonFlow. Future lessons reuse this shell unchanged.
+ * The shell owns the page chrome only: the brand header, the official contact element
+ * (one shared `InstructorContact`, centered in the top bar — never inside lesson
+ * content), and a light hero identifying the lesson. It never renders lesson content
+ * itself and never provides scroll-anchor navigation — the student's only way through a
+ * lesson is the sequential السابق / التالي pager driven by LessonFlow. Future lessons
+ * reuse this shell unchanged.
  */
 export function LessonShell({ lesson, children }: LessonShellProps) {
   useEffect(() => {
@@ -48,6 +51,7 @@ export function LessonShell({ lesson, children }: LessonShellProps) {
               </small>
             </span>
           </a>
+          <InstructorContact />
         </div>
       </header>
 
@@ -59,7 +63,6 @@ export function LessonShell({ lesson, children }: LessonShellProps) {
             منصة مستقلة لتعلّم اللغة العربية <span aria-hidden="true">✦</span> الدرس{' '}
             <bdi>{lesson.number}</bdi>: {lesson.eyebrow}
           </p>
-          <p className="instructor-credit">المهندس سومر شاهين: 0930215022</p>
         </div>
         <a
           href="#/"

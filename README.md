@@ -19,7 +19,7 @@ The app includes:
 - the official 20-question end-of-lesson test with student interaction (SELECT → change → CHECK → reveal); and
 - a clearly labelled front-end-only Teacher's Space containing the complete answer key, corrections, teacher notes, expected mistakes, and mastery criterion.
 
-Lessons no longer display any WhatsApp/contact block; this is a permanent course-wide rule for all future lessons.
+Lesson content never displays a WhatsApp/contact block; this is a permanent course-wide rule for all future lessons. The course has exactly **one** official contact element — **المهندس سومر شاهين** with a real WhatsApp link (`wa.me/963930215022`) — declared once in `src/shared/contact/instructorDetails.ts` and rendered by the shared shells, centered in the top bar of the index and of every lesson. It is never duplicated inside lesson content.
 
 ## Permanent, reusable lesson architecture
 
@@ -35,8 +35,9 @@ Every future lesson reuses the same presentation model and only supplies new aut
 
 - `src/app/` — course router, homepage index, and app shell
 - `src/lessons/` — lesson modules and the lesson registry
-- `src/shared/` — reusable shell, section navigation, educational, quiz, direction, and teacher components
-- `src/styles/` — RTL-first responsive presentation styles
+- `src/shared/` — reusable shell, educational, quiz, direction, teacher, and contact components
+- `src/shared/contact/` — the single source of truth for the instructor's phone number and the shared, centered WhatsApp contact element
+- `src/styles/` — RTL-first responsive presentation styles (`contact.css` carries the contact element's layout and states)
 - `scripts/check-rtl.mjs` — static RTL foundation validation
 - `scripts/check-architecture.mjs` — reusable-architecture validation (index homepage, routing, long-page shell, scroll-anchor nav)
 - `scripts/check-lesson1.mjs` — Lesson 1 source-fidelity audit and WhatsApp-removal guard

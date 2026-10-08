@@ -1,4 +1,5 @@
-import { readFileSync, existsSync } from 'node:fs'
+import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs'
+import { join } from 'node:path'
 
 /**
  * Validates the permanent, reusable sequential lesson architecture:
@@ -12,7 +13,9 @@ import { readFileSync, existsSync } from 'node:fs'
  *  - a reusable lesson shell with no scroll-anchor navigation and no long-page body;
  *  - a lesson flow that renders exactly one step at a time with Previous/Next controls;
  *  - a lesson registry that drives the index;
- *  - no WhatsApp/contact presentation anywhere in the app;
+ *  - exactly ONE official contact element (the instructor's WhatsApp link), declared in
+ *    a single data module and rendered by both shells; lesson content never presents
+ *    contact information of its own;
  *  - no leftover long-page primitives (SectionNav, scrollIntoView, IntersectionObserver
  *    based scroll-spy, or anchor-based in-page navigation).
  */
@@ -88,12 +91,99 @@ if (existsSync('src/shared/components/SectionNav.tsx')) {
   failures.push('src/shared/components/SectionNav.tsx must be deleted; the course uses sequential lesson steps.')
 }
 
+// ---------------------------------------------------------------------------
+// The one official contact element (instructor WhatsApp link).
+//
+// Rules:
+//   - the phone number and the WhatsApp URL exist in exactly ONE data module;
+//   - the element is defined once and rendered by the two shells only;
+//   - lesson content never presents contact information of its own.
+// ---------------------------------------------------------------------------
+function filesUnder(directory) {
+  return readdirSync(directory).flatMap((name) => {
+    const path = join(directory, name)
+    return statSync(path).isDirectory() ? filesUnder(path) : [path]
+  })
+}
+
+const contactDataPath = 'src/shared/contact/instructorDetails.ts'
+const contactElementPath = 'src/shared/contact/InstructorContact.tsx'
+const codeFiles = filesUnder('src').filter((path) => /\.(ts|tsx)$/.test(path) && !/\.test\./.test(path))
+const code = Object.fromEntries(codeFiles.map((path) => [path, readFileSync(path, 'utf8')]))
+
+const contactData = code[contactDataPath] ?? read(contactDataPath)
+if (!/phoneDisplay:\s*'0930215022'/.test(contactData)) {
+  failures.push(`${contactDataPath} must declare the instructor's display number 0930215022.`)
+}
+if (!/phoneInternational:\s*'963930215022'/.test(contactData)) {
+  failures.push(`${contactDataPath} must declare the international number 963930215022.`)
+}
+if (!/https:\/\/wa\.me\//.test(contactData)) {
+  failures.push(`${contactDataPath} must build the WhatsApp deep link.`)
+}
+
+// One source for the data: no other code file may repeat the number or the link.
+for (const path of codeFiles) {
+  if (path === contactDataPath) continue
+  if (/0930215022|963930215022|wa\.me/i.test(code[path])) {
+    failures.push(`Contact data must live only in ${contactDataPath}; ${path} repeats it.`)
+  }
+}
+
+const contactElement = code[contactElementPath] ?? read(contactElementPath)
+if (!/export function InstructorContact\b/.test(contactElement)) {
+  failures.push(`${contactElementPath} must export the shared InstructorContact element.`)
+}
+if (!/href={instructorWhatsAppUrl}/.test(contactElement)) {
+  failures.push('The contact element must link to the shared WhatsApp URL.')
+}
+if (!/target="_blank"/.test(contactElement) || !/rel="noopener noreferrer"/.test(contactElement)) {
+  failures.push('The contact element must open WhatsApp in a new tab with rel="noopener noreferrer".')
+}
+if (!/aria-label={instructorContactLabel}/.test(contactElement)) {
+  failures.push('The contact element must expose an accessible name through its aria-label.')
+}
+if (!/bdi dir="ltr"/.test(contactElement)) {
+  failures.push('The contact element must isolate the number with <bdi dir="ltr"> so RTL cannot reorder it.')
+}
+
+// Exactly one definition, exactly one render site per shell, and no other user.
+const shells = ['src/app/CourseHome.tsx', 'src/shared/components/LessonShell.tsx']
+const definitions = codeFiles.filter((path) => /export function InstructorContact\b/.test(code[path]))
+if (definitions.length !== 1 || definitions[0] !== contactElementPath) {
+  failures.push(`InstructorContact must be defined once, in ${contactElementPath}.`)
+}
+const renderSites = codeFiles
+  .flatMap((path) => (code[path].match(/<InstructorContact\s*\/>/g) ?? []).map(() => path))
+  .sort()
+if (renderSites.length !== shells.length || renderSites.some((path, index) => path !== [...shells].sort()[index])) {
+  failures.push(
+    'The contact element must be rendered exactly once by each shell (CourseHome and LessonShell) ' +
+      `and nowhere else; found: ${renderSites.join(', ') || 'none'}.`,
+  )
+}
+const importers = codeFiles.filter((path) => /from '[^']*InstructorContact'/.test(code[path])).sort()
+if (importers.length !== shells.length || importers.some((path, index) => path !== [...shells].sort()[index])) {
+  failures.push(
+    `InstructorContact may only be imported by the two shells; found: ${importers.join(', ') || 'none'}.`,
+  )
+}
+
+// Lesson content never presents contact information of its own.
+const forbiddenLessonContact = ['تواصل عبر واتساب', 'للاستفسار أو متابعة الدرس، تواصل عبر الرقم التالي.']
+for (const path of filesUnder('src/lessons')) {
+  const text = readFileSync(path, 'utf8')
+  for (const phrase of forbiddenLessonContact) {
+    if (text.includes(phrase)) failures.push(`${path} still presents a contact block: ${phrase}`)
+  }
+}
+
 if (failures.length) {
   console.error(failures.join('\n'))
   process.exit(1)
 }
 console.log(
-  'Course architecture check passed: index homepage, hash routing, and the reusable ' +
-    'sequential lesson flow (LessonShell → LessonFlow → LessonStep) with no long-page ' +
-    'or scroll-anchor navigation.',
+  'Course architecture check passed: index homepage, hash routing, the reusable ' +
+    'sequential lesson flow (LessonShell → LessonFlow → LessonStep), and the single ' +
+    'shared contact element (one data source, shell-owned, absent from lesson content).',
 )

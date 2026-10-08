@@ -3,6 +3,10 @@ import userEvent from '@testing-library/user-event'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { App } from './App'
 
+/** The one official contact element: exact spec, not a mirror of the implementation. */
+const CONTACT_HREF = 'https://wa.me/963930215022'
+const CONTACT_LABEL = 'التواصل عبر واتساب مع المهندس سومر شاهين على الرقم 0930215022'
+
 function goToLesson(id = 'lesson-1') {
   window.location.hash = `#/lesson/${id}`
 }
@@ -46,11 +50,68 @@ describe('Course index (homepage / lesson hub)', () => {
     ])
     expect(screen.getByRole('link', { name: 'الاسم والفعل والحرف' })).toHaveAttribute('href', '#/lesson/lesson-1')
     expect(screen.getAllByText(/ابدأ الدرس/)).toHaveLength(8)
-    expect(screen.getByText('المهندس سومر شاهين: 0930215022')).toBeInTheDocument()
+
+    // The official contact element lives once, in the shell header.
+    const contact = screen.getByRole('link', { name: CONTACT_LABEL })
+    expect(contact).toHaveAttribute('href', CONTACT_HREF)
+    expect(contact).toHaveTextContent('المهندس سومر شاهين: 0930215022')
 
     // The index must not embed the full lesson content.
     expect(screen.queryByTestId('official-test')).not.toBeInTheDocument()
     expect(screen.queryByText('لعبة المحقق اللغوي')).not.toBeInTheDocument()
+  })
+})
+
+describe('Official contact element (shell header)', () => {
+  it('is one real, keyboard-reachable WhatsApp link for the instructor', () => {
+    render(<App />)
+
+    const contact = screen.getByRole('link', { name: CONTACT_LABEL })
+    expect(contact.tagName).toBe('A')
+    expect(contact).toHaveAttribute('href', CONTACT_HREF)
+    expect(contact).toHaveAttribute('target', '_blank')
+    expect(contact).toHaveAttribute('rel', 'noopener noreferrer')
+    expect(contact).toHaveTextContent('المهندس سومر شاهين: 0930215022')
+
+    // Keyboard navigation reaches it and focus is visible (focus-visible styling is
+    // declared in src/styles/contact.css on top of the project-wide outline).
+    contact.focus()
+    expect(contact).toHaveFocus()
+  })
+
+  it('isolates the displayed number so RTL cannot reorder its digits', () => {
+    render(<App />)
+
+    const number = document.querySelector('.instructor-contact__number')
+    expect(number).not.toBeNull()
+    expect(number?.tagName).toBe('BDI')
+    expect(number).toHaveAttribute('dir', 'ltr')
+    expect(number).toHaveTextContent('0930215022')
+  })
+
+  it('keeps the WhatsApp mark decorative so it is never announced twice', () => {
+    render(<App />)
+
+    const contact = screen.getByRole('link', { name: CONTACT_LABEL })
+    expect(contact.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
+    expect(contact).toHaveAccessibleName(CONTACT_LABEL)
+  })
+
+  it('exists exactly once on the index and once in a lesson shell, never inside a step', async () => {
+    const user = userEvent.setup()
+    const { unmount } = render(<App />)
+    expect(screen.getAllByRole('link', { name: CONTACT_LABEL })).toHaveLength(1)
+    unmount()
+
+    goToLesson()
+    render(<App />)
+    expect(screen.getAllByRole('link', { name: CONTACT_LABEL })).toHaveLength(1)
+
+    // Walking through the lesson steps never adds a second contact element.
+    await user.click(screen.getByRole('button', { name: /التالي/ }))
+    await user.click(screen.getByRole('button', { name: /التالي/ }))
+    expect(screen.getAllByRole('link', { name: CONTACT_LABEL })).toHaveLength(1)
+    expect(document.querySelectorAll('.instructor-contact')).toHaveLength(1)
   })
 })
 
@@ -116,17 +177,24 @@ describe('Lesson 1 as a sequential, one-step-at-a-time flow', () => {
     expect(screen.queryByRole('heading', { name: 'اختبار نهاية الدرس' })).not.toBeInTheDocument()
   })
 
-  it('shows the plain-text instructor credit without contact presentation', () => {
+  it('shows the single official contact element and no contact block in lesson content', () => {
     goToLesson()
     render(<App />)
 
-    expect(screen.getAllByText('المهندس سومر شاهين: 0930215022')).toHaveLength(1)
+    // Exactly one contact element on the page: the shared one in the lesson shell.
+    const contacts = screen.getAllByRole('link', { name: CONTACT_LABEL })
+    expect(contacts).toHaveLength(1)
+    expect(document.querySelectorAll('.instructor-contact')).toHaveLength(1)
+    expect(contacts[0]).toHaveAttribute('href', CONTACT_HREF)
+    expect(contacts[0]).toHaveTextContent('المهندس سومر شاهين: 0930215022')
+
+    // Lesson content itself still carries no contact block and no raw contact data.
     expect(screen.queryByText('تواصل عبر واتساب')).not.toBeInTheDocument()
     expect(
       screen.queryByText('للاستفسار أو متابعة الدرس، تواصل عبر الرقم التالي.'),
     ).not.toBeInTheDocument()
     expect(document.querySelector('.whatsapp-card')).toBeNull()
-    expect(document.querySelector('a[href*="0930215022"], button[data-contact]')).toBeNull()
+    expect(document.querySelector('button[data-contact]')).toBeNull()
   })
 
   it('supports source-based interactive activities on their own steps', async () => {

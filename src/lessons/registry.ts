@@ -120,6 +120,19 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['مثنى', 'جمع مذكر سالم', 'جمع مؤنث سالم'],
   },
+  {
+    id: 'lesson-8',
+    number: '٨',
+    eyebrow: 'الأسماء الخمسة',
+    title: 'الأسماء الخمسة',
+    documentTitle: 'الدرس الثامن: الأسماء الخمسة',
+    summary:
+      'تعلّم الأسماء الخمسة: أب وأخ وحم وفو وذو، وإعرابها بالواو والألف والياء نيابة عن الحركات، وشروط إعرابها بالحروف، والفرق بينها وبين المثنى، مع أنشطة واختبار نهائي وحلول.',
+    duration: '٩٠',
+    strand: 'أساسيات النحو',
+    available: true,
+    parts: ['أب', 'أخ', 'حم', 'فو', 'ذو'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

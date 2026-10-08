@@ -95,6 +95,8 @@ body {
   background: linear-gradient(135deg, var(--violet), var(--green));
   box-shadow: 0 8px 18px rgb(111 90 168 / 18%);
 }
+/* أرقام الخطوة تقرأ بالأبيض فوق التدرج الداكن (تصحيح تباين ظهر في الفحص البصري) */
+.lesson-flow__progress bdi { color: #ffffff; }
 .lesson-flow__track { height: 9px; background: rgb(23 53 47 / 10%); }
 .lesson-flow__track-fill { background: linear-gradient(90deg, var(--coral), var(--gold), var(--green)); }
 .lesson-flow__pager { padding: 1.3rem; border: 1px solid var(--line); border-radius: 20px; background: rgb(255 254 250 / 76%); }

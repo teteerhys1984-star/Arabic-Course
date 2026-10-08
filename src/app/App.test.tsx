@@ -31,6 +31,7 @@ describe('Course index (homepage / lesson hub)', () => {
         level: 3,
       }),
     ).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'الأسماء الخمسة', level: 3 })).toBeInTheDocument()
     // Every lesson card is one real link to its unchanged hash route, in registry order.
     const lessonLinks = within(screen.getByRole('list')).getAllByRole('link')
     expect(lessonLinks.map((link) => link.getAttribute('href'))).toEqual([
@@ -41,9 +42,10 @@ describe('Course index (homepage / lesson hub)', () => {
       '#/lesson/lesson-5',
       '#/lesson/lesson-6',
       '#/lesson/lesson-7',
+      '#/lesson/lesson-8',
     ])
     expect(screen.getByRole('link', { name: 'الاسم والفعل والحرف' })).toHaveAttribute('href', '#/lesson/lesson-1')
-    expect(screen.getAllByText(/ابدأ الدرس/)).toHaveLength(7)
+    expect(screen.getAllByText(/ابدأ الدرس/)).toHaveLength(8)
     expect(screen.getByText('المهندس سومر شاهين: 0930215022')).toBeInTheDocument()
 
     // The index must not embed the full lesson content.
@@ -59,6 +61,14 @@ describe('Lesson cards navigation', () => {
 
     await user.click(screen.getByRole('link', { name: 'المبتدأ والخبر' }))
     expect(window.location.hash).toBe('#/lesson/lesson-2')
+  })
+
+  it('opens the eighth lesson from its card on the index', async () => {
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('link', { name: 'الأسماء الخمسة' }))
+    expect(window.location.hash).toBe('#/lesson/lesson-8')
   })
 })
 
@@ -684,5 +694,360 @@ describe('Lesson 7 as a sequential, one-step-at-a-time flow', () => {
     expect(screen.getByText('جمع المذكر السالم: واو في الرفع، ياء في النصب والجر.')).toBeInTheDocument()
     expect(screen.getByText('جمع المؤنث السالم: ضمة في الرفع، كسرة في النصب والجر.')).toBeInTheDocument()
     expect(screen.getByRole('button', { name: 'إتمام الدرس' })).toBeInTheDocument()
+  })
+})
+
+describe('Lesson 8 as a native multi-step lesson (الأسماء الخمسة)', () => {
+  const lessonEightTitle = 'الدرس الثامن: الأسماء الخمسة'
+
+  function openStep(name: string) {
+    const escaped = name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
+    return screen.getByRole('button', { name: new RegExp(`الخطوة \\d+: ${escaped}`) })
+  }
+
+  function expectListItems(texts: string[]) {
+    const items = screen.getAllByRole('listitem').map((item) => item.textContent)
+    for (const text of texts) expect(items).toContain(text)
+  }
+
+  it('starts on step 1 of 43 and shows only the current step content', () => {
+    goToLesson('lesson-8')
+    render(<App />)
+
+    expect(screen.getByRole('heading', { name: lessonEightTitle, level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من 43')
+    expect(screen.queryByTestId('lesson8-official-test')).not.toBeInTheDocument()
+    expect(screen.queryByTestId('lesson8-solutions')).not.toBeInTheDocument()
+    expect(screen.getByRole('button', { name: /السابق/ })).toBeDisabled()
+    expect(screen.getByRole('button', { name: /التالي/ })).toBeEnabled()
+  })
+
+  it('moves forward and backward with السابق / التالي and lists the source sections in the outline', async () => {
+    goToLesson('lesson-8')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(screen.getByRole('button', { name: /التالي/ }))
+    expect(screen.getByRole('heading', { name: 'أهداف الدرس', level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 2 من 43')
+
+    const outline = screen.getByRole('navigation', { name: 'فهرس خطوات الدرس' })
+    for (const group of [
+      'التمهيد والربط',
+      'التعرف إلى الأسماء الخمسة',
+      'القاعدة الأساسية',
+      'الأسماء واحدًا واحدًا',
+      'الجدول الجامع',
+      'الشروط',
+      'المقارنات',
+      'الأمثلة المحلولة',
+      'النشاط التطبيقي',
+      'مراجعة أسئلة المصدر',
+      'الأخطاء الشائعة',
+      'الخلاصة',
+      'التحدي والواجب',
+      'الاختبار الإلكتروني',
+      'منطقة المعلم',
+    ]) {
+      expect(within(outline).getByText(group)).toBeInTheDocument()
+    }
+
+    await user.click(openStep('14. جدول الأسماء الخمسة'))
+    expect(screen.getByRole('heading', { name: '14. جدول الأسماء الخمسة', level: 2 })).toBeInTheDocument()
+    expect(screen.getByText('احفظ هذا الجدول جيدًا:')).toBeInTheDocument()
+    expect(screen.getByRole('row', { name: /ذو/ })).toBeInTheDocument()
+    expect(screen.getByRole('row', { name: /حم/ })).toBeInTheDocument()
+    expect(screen.getByText('واو = رفع')).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /السابق/ }))
+    expect(screen.getByRole('heading', { name: '13. الاسم الخامس: «ذو»', level: 2 })).toBeInTheDocument()
+  })
+
+  it('teaches the five names with their three forms and meanings, and the dual comparison', async () => {
+    goToLesson('lesson-8')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('4. لماذا سُمّيت الأسماء الخمسة؟'))
+    for (const meaning of [
+      'الوالد',
+      'الأخ',
+      'قريب الزوج أو الزوجة من أهلها، ويُستعمل في ألفاظ القرابة',
+      'الفم',
+      'صاحب',
+    ]) {
+      expect(screen.getByText(meaning)).toBeInTheDocument()
+    }
+    for (const form of ['أبو', 'أبا', 'أبي', 'أخو', 'أخا', 'أخي', 'حمو', 'حما', 'حمي', 'ذو', 'ذا', 'ذي']) {
+      expect(screen.getAllByText(form).length).toBeGreaterThan(0)
+    }
+
+    await user.click(openStep('24. مقارنة مهمة جدًا: الأسماء الخمسة والمثنى'))
+    expect(screen.getByText('جاءَ أبوانِ.')).toBeInTheDocument()
+    expect(screen.getByText('جاءَ أبو الطالبِ.')).toBeInTheDocument()
+    expect(screen.getByTestId('lesson8-interaction-6')).toBeInTheDocument()
+
+    await user.click(openStep('11. الاسم الثالث: «حم»'))
+    expect(screen.getAllByText(/حمو العروسِ/).length).toBeGreaterThan(0)
+
+    await user.click(openStep('12. الاسم الرابع: «فو»'))
+    expect(screen.getByText('هذا فمُ الطفلِ.')).toBeInTheDocument()
+    expect(screen.getByText('هذا فو الطفلِ.')).toBeInTheDocument()
+    expect(screen.getByTestId('lesson8-interaction-4')).toBeInTheDocument()
+  })
+
+  it('keeps the five conditions explicit with a counter-example for each', async () => {
+    goToLesson('lesson-8')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('16. شروط إعراب الأسماء الخمسة'))
+    expectListItems([
+      'أن تكون مفردة.',
+      'أن تكون مضافة.',
+      'ألا تكون مضافة إلى ياء المتكلم.',
+      'في «فو»: حذف الميم.',
+      '«ذو» تكون بمعنى صاحب.',
+    ])
+
+    await user.click(openStep('17. الشرط الأول: أن تكون مفردة'))
+    expect(screen.getByText('جاءَ أبوانِ.')).toBeInTheDocument()
+
+    await user.click(openStep('20. الشرط الثالث: ألا تكون مضافة إلى ياء المتكلم'))
+    expect(screen.getByText('أبي: فاعل مرفوع، وعلامة رفعه ضمة مقدرة.')).toBeInTheDocument()
+  })
+
+  it('provides real interactive activities that check answers only after pressing التحقق', async () => {
+    goToLesson('lesson-8')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('5. الصور الثلاث مع الحالات'))
+    expect(screen.getByTestId('lesson8-interaction-1')).toBeInTheDocument()
+    expect(within(screen.getByTestId('lesson8-interaction-1')).getAllByRole('combobox')).toHaveLength(3)
+
+    await user.click(openStep('6. القاعدة الأساسية'))
+    const signs = screen.getByTestId('lesson8-interaction-3')
+    const selects = within(signs).getAllByRole('combobox')
+    expect(selects).toHaveLength(3)
+    await user.selectOptions(selects[0], 'الواو')
+    await user.selectOptions(selects[1], 'الألف')
+    await user.selectOptions(selects[2], 'الياء')
+
+    // Nothing is graded before the student presses the check button.
+    expect(within(signs).queryByText(/النتيجة:/)).not.toBeInTheDocument()
+    await user.click(within(signs).getByRole('button', { name: 'تحقق من الإجابة' }))
+    expect(within(signs).getByText(/3 \/ 3/)).toBeInTheDocument()
+
+    await user.click(openStep('7. نفهمها بطريقة سهلة'))
+    expect(screen.getAllByText('أبو').length).toBeGreaterThan(0)
+    expect(screen.getByText('رأيتُ أبا خالدٍ.')).toBeInTheDocument()
+    expect(screen.getByText('سلّمتُ على أبي خالدٍ.')).toBeInTheDocument()
+
+    await user.click(openStep('8. لماذا تتغير الكلمة؟'))
+    expect(screen.getByText('أبو ← أبا ← أبي')).toBeInTheDocument()
+
+    await user.click(openStep('29. النشاط التطبيقي'))
+    const application = screen.getByTestId('lesson8-application')
+    expect(within(application).getAllByRole('combobox')).toHaveLength(27)
+  })
+
+  it('reveals the nine worked examples with complete parsing on demand', async () => {
+    goToLesson('lesson-8')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('26. أمثلة محلولة: 1–3'))
+    const reveals = screen.getAllByRole('button', { name: 'أظهر الإعراب الكامل' })
+    expect(reveals).toHaveLength(3)
+    expect(screen.queryByText(/أبو: فاعل مرفوع، وعلامة رفعه الواو نيابة عن الضمة/)).not.toBeInTheDocument()
+
+    await user.click(reveals[0])
+    expect(
+      screen.getByText('أبو: فاعل مرفوع، وعلامة رفعه الواو نيابة عن الضمة؛ لأنه من الأسماء الخمسة، وهو مضاف.'),
+    ).toBeInTheDocument()
+
+    await user.click(openStep('28. أمثلة محلولة: 7–9'))
+    expect(screen.getByText('رجلٌ ذو أدبٍ.')).toBeInTheDocument()
+    expect(screen.getByText('مررتُ برجلٍ ذي أدبٍ.')).toBeInTheDocument()
+  })
+
+  it('represents the 25 source end-of-lesson questions across three review steps', async () => {
+    goToLesson('lesson-8')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('30. مراجعة أسئلة المصدر 1–13'))
+    const first = screen.getByTestId('lesson8-source-review-1')
+    for (let number = 1; number <= 13; number += 1) {
+      expect(within(first).getByTestId(`lesson8-source-q${number}`)).toBeInTheDocument()
+    }
+    expect(within(first).queryByText(/إجابة صحيحة/)).not.toBeInTheDocument()
+
+    const questionOne = within(first).getByTestId('lesson8-source-q1')
+    expect(within(questionOne).getAllByRole('radio')).toHaveLength(4)
+    await user.click(within(questionOne).getByRole('button', { name: 'أظهر الإجابة النموذجية' }))
+    expect(within(questionOne).getByText('ب) أب.')).toBeInTheDocument()
+
+    await user.click(openStep('31. مراجعة أسئلة المصدر 14–18'))
+    const second = screen.getByTestId('lesson8-source-review-14')
+    for (let number = 14; number <= 18; number += 1) {
+      expect(within(second).getByTestId(`lesson8-source-q${number}`)).toBeInTheDocument()
+    }
+    await user.click(within(second).getByRole('button', { name: 'أظهر الإجابات النموذجية' }))
+    expect(
+      within(second).getAllByText(/مفعول به منصوب، وعلامة نصبه الألف نيابة عن الفتحة/).length,
+    ).toBeGreaterThan(0)
+
+    await user.click(openStep('32. مراجعة أسئلة المصدر 19–25'))
+    const third = screen.getByTestId('lesson8-source-review-19')
+    for (let number = 19; number <= 25; number += 1) {
+      expect(within(third).getByTestId(`lesson8-source-q${number}`)).toBeInTheDocument()
+    }
+    const thinking = within(third).getByTestId('lesson8-source-q24')
+    await user.type(within(thinking).getByLabelText('إجابة السؤال 24'), 'أبو مرفوع بالواو، وأبوان مثنى مرفوع بالألف')
+    await user.click(within(thinking).getByRole('button', { name: 'أظهر الإجابة النموذجية' }))
+    expect(within(thinking).getByText(/مثنى، مرفوع بالألف/)).toBeInTheDocument()
+  })
+
+  it('keeps the 20-question platform test unrevealed until submission and clears the draft on restart', async () => {
+    goToLesson('lesson-8')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('39. اختبار الدرس الثامن (٢٠ سؤالًا)'))
+    const officialTest = screen.getByTestId('lesson8-official-test')
+    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(20)
+    expect(within(officialTest).getByText('أساسي: ٦')).toBeInTheDocument()
+    expect(within(officialTest).getByText('متوسط: ٧')).toBeInTheDocument()
+    expect(within(officialTest).getByText('متقدم: ٤')).toBeInTheDocument()
+    expect(within(officialTest).getByText('تفكير: ٣')).toBeInTheDocument()
+
+    // Answering reveals nothing by itself.
+    const questionOne = screen.getByTestId('lesson8-test-q1')
+    await user.selectOptions(within(questionOne).getByRole('combobox'), 'جد')
+    await user.selectOptions(within(screen.getByTestId('lesson8-test-q2')).getByRole('combobox'), 'صح')
+    expect(within(officialTest).queryByText(/النتيجة:/)).not.toBeInTheDocument()
+    expect(within(officialTest).queryByText(/الإجابة الصحيحة/)).not.toBeInTheDocument()
+
+    await user.click(within(officialTest).getByRole('button', { name: 'تسليم الاختبار' }))
+    expect(within(officialTest).getByText(/2 \/ 20/)).toBeInTheDocument()
+    expect(within(officialTest).getByText(/إجابات صحيحة:/)).toBeInTheDocument()
+
+    // Restart clears the draft and the previous result.
+    await user.click(within(officialTest).getByRole('button', { name: 'أعد الاختبار' }))
+    const restarted = screen.getByTestId('lesson8-official-test')
+    expect(within(restarted).queryByText(/النتيجة:/)).not.toBeInTheDocument()
+    expect(within(screen.getByTestId('lesson8-test-q1')).getByRole('combobox')).toHaveValue('')
+  })
+
+  it('gates the explanatory solutions area behind the submitted test', async () => {
+    goToLesson('lesson-8')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('40. حلول الاختبار'))
+    expect(screen.getByTestId('lesson8-solutions')).toBeInTheDocument()
+    expect(screen.getByText(/أكمل «اختبار الدرس الثامن» وسلّمه أولًا/)).toBeInTheDocument()
+    expect(screen.queryByText('التفسير:')).not.toBeInTheDocument()
+
+    await user.click(openStep('39. اختبار الدرس الثامن (٢٠ سؤالًا)'))
+    const officialTest = screen.getByTestId('lesson8-official-test')
+    await user.selectOptions(within(screen.getByTestId('lesson8-test-q1')).getByRole('combobox'), 'جد')
+    await user.click(within(officialTest).getByRole('button', { name: 'تسليم الاختبار' }))
+
+    await user.click(openStep('40. حلول الاختبار'))
+    expect(screen.getByText('المجموعة الأولى: الأسئلة 1–5')).toBeInTheDocument()
+    expect(screen.getByText('المجموعة الثانية: الأسئلة 6–10')).toBeInTheDocument()
+    expect(screen.getByText('المجموعة الثالثة: الأسئلة 11–15')).toBeInTheDocument()
+    expect(screen.getByText('المجموعة الرابعة: الأسئلة 16–20')).toBeInTheDocument()
+    expect(screen.getAllByText(/الإجابة الصحيحة:/).length).toBe(20)
+    expect(screen.getAllByText(/التفسير:/).length).toBe(20)
+    expect(screen.getByText(/1 \/ 20/)).toBeInTheDocument()
+  })
+
+  it('keeps the Teacher Area behind somer173 with the complete answer material', async () => {
+    goToLesson('lesson-8')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('41. منطقة خاصة بالمعلم'))
+    expect(screen.getByRole('heading', { name: '41. منطقة خاصة بالمعلم', level: 2 })).toBeInTheDocument()
+    expect(screen.queryByText('د. حلول أسئلة نهاية الدرس في المصدر (١–٢٥)')).not.toBeInTheDocument()
+
+    await user.type(screen.getByLabelText('كلمة المرور'), 'somer173')
+    await user.click(screen.getByRole('button', { name: 'دخول' }))
+
+    for (const heading of [
+      'أ. شرح الدرس للمعلم',
+      'ب. حلول أنشطة الدرس',
+      'ج. حلول الأمثلة المحلولة (٩ أمثلة)',
+      'د. حلول أسئلة نهاية الدرس في المصدر (١–٢٥)',
+      'هـ. الواجب: نموذج الإجابة',
+      'و. ملاحظات تدريسية',
+    ]) {
+      expect(screen.getByText(heading)).toBeInTheDocument()
+    }
+
+    expect(
+      screen.getAllByText('أخا: مفعول به منصوب، وعلامة نصبه الألف نيابة عن الفتحة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+        .length,
+    ).toBeGreaterThan(0)
+    expect(screen.getAllByText('ذي: نعت مجرور، وعلامة جره الياء نيابة عن الكسرة؛ لأنه من الأسماء الخمسة، وهو مضاف.').length)
+      .toBeGreaterThan(0)
+    expect(screen.getAllByText(/الفرق بين الأسماء الخمسة والمثنى/).length).toBeGreaterThan(0)
+    expect(screen.getByText(/فو وفم/)).toBeInTheDocument()
+    expect(screen.getByText(/ذو بمعنى صاحب/)).toBeInTheDocument()
+    expect(screen.getByText('حلول التفاعلات السبعة')).toBeInTheDocument()
+    expect(screen.getByText(/الربط بالدرس السابق: علامات الإعراب الفرعية/)).toBeInTheDocument()
+    expect(screen.getAllByText('ب) أب.').length).toBeGreaterThan(0)
+  })
+
+  it('ends with the challenge, the homework, the summary and the memorization key', async () => {
+    goToLesson('lesson-8')
+    const user = userEvent.setup()
+    render(<App />)
+
+    await user.click(openStep('37. تحدي إضافي للطالب المتقدم'))
+    expect(screen.getByText('أعرب الجمل الآتية إعرابًا كاملًا:')).toBeInTheDocument()
+    expect(screen.getByText('جاءَ أبو صديقي.')).toBeInTheDocument()
+    expect(screen.getByText('مررتُ برجلٍ ذي خبرةٍ.')).toBeInTheDocument()
+
+    await user.click(openStep('38. واجب الدرس'))
+    expect(screen.getByText('اكتب ثلاث جمل باستخدام كلمة «أب»:')).toBeInTheDocument()
+    expect(screen.getByText('ثم اكتب ثلاث جمل باستخدام كلمة «ذو» بمعنى صاحب:')).toBeInTheDocument()
+
+    await user.click(openStep('35. الخلاصة'))
+    expect(screen.getByText('ذو = صاحب')).toBeInTheDocument()
+    expect(screen.getByText('الأسماء الخمسة: واو في الرفع، ألف في النصب، ياء في الجر.')).toBeInTheDocument()
+
+    await user.click(openStep('36. قاعدة سريعة للحفظ ومفتاح الحفظ'))
+    expect(screen.getByText('الأسماء الخمسة ترفع بالواو، وتنصب بالألف، وتجر بالياء.')).toBeInTheDocument()
+    expect(screen.getAllByText('واو = رفع').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('ألف = نصب').length).toBeGreaterThan(0)
+    expect(screen.getAllByText('ياء = جر').length).toBeGreaterThan(0)
+  })
+
+  it('does not regress Lessons 1–7 after adding the eighth lesson', () => {
+    const { unmount } = render(<App />)
+    expect(within(screen.getByRole('list')).getAllByRole('link')).toHaveLength(8)
+    unmount()
+
+    goToLesson('lesson-1')
+    const one = render(<App />)
+    expect(screen.getByRole('heading', { name: 'مقدمة / ابدأ رحلتك', level: 2 })).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من 19')
+    one.unmount()
+    window.location.hash = ''
+
+    goToLesson('lesson-7')
+    render(<App />)
+    expect(
+      screen.getByRole('heading', {
+        name: 'الدرس السابع: المثنى وجمع المذكر السالم وجمع المؤنث السالم',
+        level: 2,
+      }),
+    ).toBeInTheDocument()
+    expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من 59')
   })
 })

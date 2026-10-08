@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 
-const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx'].map((name) => `src/lessons/${name}`)
+const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx', 'LessonEight.tsx'].map((name) => `src/lessons/${name}`)
 const sources = Object.fromEntries(lessonPaths.map((path) => [path, readFileSync(path, 'utf8')]))
 const failures = []
 
@@ -58,6 +58,16 @@ requirePhrase('src/lessons/LessonSeven.tsx', 'المعلمينَ: مفعول ب�
 requirePhrase('src/lessons/LessonSeven.tsx', 'الطالباتُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره؛ لأنه جمع مؤنث سالم.')
 requirePhrase('src/lessons/LessonSeven.tsx', 'الطالباتِ: مفعول به منصوب وعلامة نصبه الكسرة نيابةً عن الفتحة؛ لأنه جمع مؤنث سالم.')
 requirePhrase('src/lessons/LessonSeven.tsx', 'الطالباتِ: اسم مجرور بـ"على"، وعلامة جره الكسرة الظاهرة على آخره.')
+requirePhrase('src/lessons/LessonEight.tsx', 'أبو: فاعل مرفوع، وعلامة رفعه الواو نيابة عن الضمة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+requirePhrase('src/lessons/LessonEight.tsx', 'أبا: مفعول به منصوب، وعلامة نصبه الألف نيابة عن الفتحة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+requirePhrase('src/lessons/LessonEight.tsx', 'أبي: اسم مجرور بـ"على"، وعلامة جره الياء نيابة عن الكسرة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+requirePhrase('src/lessons/LessonEight.tsx', 'أخو: فاعل مرفوع، وعلامة رفعه الواو نيابة عن الضمة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+requirePhrase('src/lessons/LessonEight.tsx', 'أخا: مفعول به منصوب، وعلامة نصبه الألف نيابة عن الفتحة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+requirePhrase('src/lessons/LessonEight.tsx', 'أخي: اسم مجرور بـ"مع"، وعلامة جره الياء نيابة عن الكسرة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+requirePhrase('src/lessons/LessonEight.tsx', 'ذو: نعت مرفوع، وعلامة رفعه الواو نيابة عن الضمة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+requirePhrase('src/lessons/LessonEight.tsx', 'ذا: نعت منصوب، وعلامة نصبه الألف نيابة عن الفتحة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+requirePhrase('src/lessons/LessonEight.tsx', 'ذي: نعت مجرور، وعلامة جره الياء نيابة عن الكسرة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+requirePhrase('src/lessons/LessonEight.tsx', 'أبي: فاعل مرفوع، وعلامة رفعه ضمة مقدرة.')
 
 if (failures.length) {
   console.error(failures.join('\n'))

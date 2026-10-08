@@ -1,6 +1,8 @@
 import { useEffect, type ReactNode } from 'react'
 import type { LessonMeta } from '../../lessons/registry'
+import { getSectionForLesson } from '../../sections/sectionRegistry'
 import { navigate } from '../../app/useHashRoute'
+import { Breadcrumbs } from '../../app/Breadcrumbs'
 import { InstructorContact } from '../contact/InstructorContact'
 
 interface LessonShellProps {
@@ -16,12 +18,15 @@ interface LessonShellProps {
  *
  * The shell owns the page chrome only: the brand header, the official contact element
  * (one shared `InstructorContact`, centered in the top bar — never inside lesson
- * content), and a light hero identifying the lesson. It never renders lesson content
- * itself and never provides scroll-anchor navigation — the student's only way through a
- * lesson is the sequential السابق / التالي pager driven by LessonFlow. Future lessons
- * reuse this shell unchanged.
+ * content), the hierarchical breadcrumb trail of the platform's information
+ * architecture (اللغة العربية ← القسم ← الدرس), and a light hero identifying the
+ * lesson. It never renders lesson content itself and never provides scroll-anchor
+ * navigation — the student's only way through a lesson is the sequential
+ * السابق / التالي pager driven by LessonFlow. Future lessons reuse this shell unchanged.
  */
 export function LessonShell({ lesson, children }: LessonShellProps) {
+  const section = getSectionForLesson(lesson)
+
   useEffect(() => {
     const previous = document.title
     document.title = `${lesson.documentTitle} · دروس العربية`
@@ -55,7 +60,30 @@ export function LessonShell({ lesson, children }: LessonShellProps) {
         </div>
       </header>
 
-      <main className="lesson-main">{children}</main>
+      <main className="lesson-main">
+        <Breadcrumbs
+          crumbs={[
+            { label: 'اللغة العربية', route: { name: 'home' } },
+            ...(section
+              ? [
+                  {
+                    label: section.title,
+                    route: { name: 'section' as const, sectionId: section.id },
+                  },
+                ]
+              : []),
+            {
+              label: (
+                <>
+                  الدرس <bdi>{lesson.number}</bdi>
+                </>
+              ),
+              current: true,
+            },
+          ]}
+        />
+        {children}
+      </main>
 
       <footer className="lesson-footer">
         <div className="lesson-footer__copy">

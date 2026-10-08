@@ -1,0 +1,414 @@
+/* ==========================================================================
+   Platform sections — the first navigation level of the information
+   architecture:  Arabic Platform → Section → Lessons → LessonFlow.
+
+   Data-driven layers styled here:
+     sectionRegistry → SectionCard[]  → .section-index__list (home grid)
+     section         → SectionPage    → .section-hero + lesson grid / .section-empty
+     hierarchy       → Breadcrumbs    → .breadcrumbs
+
+   Built only on the existing design tokens (green / gold / coral / violet / sky /
+   paper / cream / line), typefaces (Kufi for UI, Naskh for titles) and the
+   asymmetric radius language of the lesson cards. RTL-first: logical properties
+   only, and "←" arrows point forward in the RTL reading direction.
+   ========================================================================== */
+
+/* ---- Per-section accents (derived from the existing palette, never random) ---- */
+.section-card--green,
+.section-hero--green,
+.section-empty--green {
+  --section-accent: var(--green);
+  --section-accent-strong: var(--green);
+  --section-accent-soft: #eaf4ef;
+  --section-accent-line: #b9dacb;
+}
+.section-card--gold,
+.section-hero--gold,
+.section-empty--gold {
+  --section-accent: var(--gold);
+  --section-accent-strong: #8a5f14;
+  --section-accent-soft: #fff6e6;
+  --section-accent-line: #ecd398;
+}
+.section-card--coral,
+.section-hero--coral,
+.section-empty--coral {
+  --section-accent: var(--coral, #d96f52);
+  --section-accent-strong: #b04e33;
+  --section-accent-soft: #fdeee9;
+  --section-accent-line: #ecc9bc;
+}
+.section-card--violet,
+.section-hero--violet,
+.section-empty--violet {
+  --section-accent: var(--violet, #6f5aa8);
+  --section-accent-strong: #5b4993;
+  --section-accent-soft: #f1eefa;
+  --section-accent-line: #d8cfeb;
+}
+.section-card--teal,
+.section-hero--teal,
+.section-empty--teal {
+  --section-accent: #35707e;
+  --section-accent-strong: #2c5f6b;
+  --section-accent-soft: #e7f3f4;
+  --section-accent-line: #bcdde0;
+}
+
+/* ---- Breadcrumbs: اللغة العربية ← القسم ← الدرس ---- */
+.breadcrumbs { margin-block-end: 1.3rem; }
+.breadcrumbs__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .3rem .15rem;
+  font-size: .8rem;
+}
+.breadcrumbs__item { display: inline-flex; align-items: center; gap: .5rem; min-width: 0; }
+.breadcrumbs__link {
+  padding: .2rem .45rem;
+  margin: -.2rem -.45rem;
+  border-radius: 9px;
+  color: var(--green);
+  font-weight: 600;
+  text-decoration: none;
+}
+.breadcrumbs__link:hover { color: var(--green-dark); text-decoration: underline; text-underline-offset: 4px; }
+.breadcrumbs__current {
+  padding-block: .2rem;
+  color: var(--ink-soft);
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+.breadcrumbs__separator { color: var(--gold); font: 700 .8rem/1 system-ui, sans-serif; }
+
+/* ---- Section index (platform home) ---- */
+.section-index { margin-block-start: clamp(2rem, 5vw, 3.5rem); }
+.section-index__title {
+  font: 700 clamp(1.6rem, 3vw, 2.3rem)/1.4 'Noto Naskh Arabic', serif;
+  color: var(--green-dark);
+  margin-block-end: 1.2rem;
+}
+.section-index__list {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: clamp(1rem, 2.2vw, 1.5rem);
+}
+.section-index__list > li { display: flex; min-width: 0; flex: 1 1 20rem; max-width: 24rem; }
+
+/* ---- Section card ---- */
+.section-card {
+  position: relative;
+  isolation: isolate;
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  padding: clamp(1.35rem, 2.6vw, 1.75rem);
+  border: 1px solid var(--line);
+  border-radius: 24px 24px 8px 24px;
+  background: var(--paper);
+  box-shadow: 0 1px 2px rgb(19 57 47 / 4%), 0 10px 28px rgb(19 57 47 / 6%);
+  overflow: hidden;
+  transition: transform .2s ease, box-shadow .2s ease, border-color .2s ease;
+}
+
+/* Quiet top accent in the section's own colour; grows on interaction (shape, not colour only). */
+.section-card::before {
+  content: '';
+  position: absolute;
+  inset-block-start: 0;
+  inset-inline-start: clamp(1.35rem, 2.6vw, 1.75rem);
+  width: 2.5rem;
+  height: 3px;
+  border-radius: 0 0 3px 3px;
+  background: var(--section-accent, var(--gold));
+  transition: width .25s ease;
+}
+
+/* Section glyph as the decorative element — large, faint, never competing with the title. */
+.section-card__watermark {
+  position: absolute;
+  z-index: -1;
+  inset-inline-end: .9rem;
+  inset-block-end: -1.6rem;
+  color: var(--section-accent, var(--green));
+  opacity: .08;
+  font: 700 8rem/1 'Noto Naskh Arabic', serif;
+  pointer-events: none;
+  user-select: none;
+  transition: opacity .25s ease;
+}
+
+.section-card__header {
+  display: flex;
+  align-items: center;
+  gap: .85rem;
+  margin-block-end: 1.05rem;
+}
+.section-card__mark {
+  width: 52px;
+  height: 52px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--section-accent-line, var(--line));
+  border-radius: 16px 16px 6px 16px;
+  background: var(--section-accent-soft, var(--cream));
+  color: var(--section-accent-strong, var(--green-dark));
+  font: 700 1.9rem/1 'Noto Naskh Arabic', serif;
+}
+.section-card__order {
+  margin: 0;
+  color: var(--muted);
+  font-size: .72rem;
+  font-weight: 700;
+  letter-spacing: .02em;
+}
+.section-card__order bdi { color: var(--section-accent-strong, var(--green)); font-size: .85rem; }
+
+.section-card__title {
+  margin-block-end: .55rem;
+  color: var(--green-dark);
+  font: 700 clamp(1.3rem, 1.1rem + .5vw, 1.5rem)/1.55 'Noto Naskh Arabic', serif;
+  overflow-wrap: break-word;
+}
+.section-card__link { color: inherit; text-decoration: none; }
+/* Stretched link: the whole card is the click target of one real <a>. */
+.section-card__link::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  border-radius: inherit;
+}
+.section-card__link:focus-visible { outline: none; }
+.section-card__link:focus-visible::after {
+  border-radius: 24px 24px 8px 24px;
+  outline: 3px solid #e7b250;
+  outline-offset: -3px;
+  box-shadow: inset 0 0 0 5px var(--paper);
+}
+
+.section-card__description {
+  margin-block-end: 1.25rem;
+  color: var(--muted);
+  font-size: .8rem;
+  line-height: 1.95;
+}
+
+.section-card__footer {
+  margin-block-start: auto;
+  padding-block-start: 1rem;
+  border-block-start: 1px solid var(--line);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+.section-card__count {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  color: var(--ink-soft);
+  font-size: .74rem;
+  font-weight: 700;
+}
+.section-card__book,
+.section-hero__book {
+  width: 1rem;
+  height: 1rem;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.8;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+/* Empty sections state their count calmly — factual, never broken-looking. */
+.section-card__count--empty {
+  padding: .3rem .8rem;
+  border: 1px dashed var(--cream-deep);
+  border-radius: 999px;
+  background: var(--cream);
+  color: var(--muted);
+  font-weight: 600;
+}
+
+/* CTA: calm by default, fully highlighted on hover/focus (shared language with lesson cards). */
+.section-card__cta {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  min-height: 44px;
+  padding: .55rem 1.05rem;
+  border: 1px solid #edd9a9;
+  border-radius: 12px;
+  background: var(--gold-soft);
+  color: #3b2a0c;
+  font-size: .85rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transition: background-color .2s ease, border-color .2s ease, box-shadow .2s ease;
+}
+.section-card__arrow { display: inline-block; transition: transform .2s ease; }
+
+/* ---- Interaction (hover + keyboard focus share the same treatment) ---- */
+.section-card:hover,
+.section-card:focus-within {
+  transform: translateY(-3px);
+  border-color: #c7d8ce;
+  box-shadow: 0 2px 4px rgb(19 57 47 / 5%), 0 18px 40px rgb(19 57 47 / 10%);
+}
+.section-card:hover::before,
+.section-card:focus-within::before { width: 4.5rem; }
+.section-card:hover .section-card__watermark,
+.section-card:focus-within .section-card__watermark { opacity: .14; }
+.section-card:hover .section-card__cta,
+.section-card:focus-within .section-card__cta {
+  background: var(--gold);
+  border-color: var(--gold);
+  color: #251a08;
+  box-shadow: 0 6px 14px rgb(199 141 42 / 22%);
+}
+.section-card:hover .section-card__arrow,
+.section-card:focus-within .section-card__arrow { transform: translateX(-4px); }
+.section-card:hover .section-card__title,
+.section-card:focus-within .section-card__title { color: var(--green); }
+
+/* ---- Section hero (light, one step below the platform's dark hero) ---- */
+.section-hero {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  padding: clamp(1.6rem, 4.5vw, 2.9rem);
+  border: 1px solid var(--line);
+  border-inline-start: 5px solid var(--section-accent, var(--green));
+  border-radius: 28px 28px 10px 28px;
+  background: linear-gradient(150deg, var(--paper) 20%, var(--section-accent-soft, #eef4ef));
+  box-shadow: var(--shadow);
+}
+.section-hero__watermark {
+  position: absolute;
+  z-index: -1;
+  inset-inline-end: -.5rem;
+  inset-block-end: -4.5rem;
+  color: var(--section-accent, var(--green));
+  opacity: .09;
+  font: 700 clamp(9rem, 22vw, 14rem)/1 'Noto Naskh Arabic', serif;
+  pointer-events: none;
+  user-select: none;
+}
+.section-hero__mark {
+  width: 60px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  margin-block-end: 1.1rem;
+  border: 1px solid var(--section-accent-line, var(--line));
+  border-radius: 18px 18px 6px 18px;
+  background: var(--paper);
+  color: var(--section-accent-strong, var(--green-dark));
+  font: 700 2.1rem/1 'Noto Naskh Arabic', serif;
+  box-shadow: 0 6px 18px rgb(19 57 47 / 8%);
+}
+.section-hero__eyebrow {
+  color: var(--section-accent-strong, var(--gold));
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .04em;
+  margin-block-end: .45rem;
+}
+.section-hero h1 {
+  max-width: 760px;
+  color: var(--green-dark);
+  font: 700 clamp(1.9rem, 4.5vw, 3rem)/1.35 'Noto Naskh Arabic', serif;
+  margin-block-end: .7rem;
+}
+.section-hero__lead {
+  max-width: 640px;
+  color: var(--ink-soft);
+  margin-block-end: 1.15rem;
+}
+.section-hero__meta {
+  display: inline-flex;
+  align-items: center;
+  gap: .5rem;
+  margin: 0;
+  padding: .45rem .95rem;
+  border: 1px solid var(--section-accent-line, var(--line));
+  border-radius: 999px;
+  background: rgb(255 255 255 / 74%);
+  color: var(--ink-soft);
+  font-size: .78rem;
+  font-weight: 700;
+}
+.section-hero__meta .section-hero__book { color: var(--section-accent-strong, var(--green)); }
+
+/* ---- Empty state: honest, elegant, never broken-looking ---- */
+.section-empty { margin-block-start: clamp(2rem, 5vw, 3.5rem); }
+.section-empty__panel {
+  display: grid;
+  justify-items: center;
+  padding: clamp(2.6rem, 7vw, 4.5rem) clamp(1.5rem, 5vw, 3rem);
+  border: 1px dashed var(--cream-deep);
+  border-radius: 28px;
+  background: linear-gradient(160deg, var(--paper), var(--cream));
+  text-align: center;
+}
+.section-empty__mark {
+  width: 76px;
+  height: 76px;
+  display: grid;
+  place-items: center;
+  margin-block-end: 1.2rem;
+  border: 1px solid var(--section-accent-line, var(--line));
+  border-radius: 50%;
+  background: var(--paper);
+  color: var(--section-accent-strong, var(--green));
+  font: 700 2.3rem/1 'Noto Naskh Arabic', serif;
+  box-shadow: var(--shadow);
+}
+.section-empty__title {
+  color: var(--green-dark);
+  font: 700 clamp(1.35rem, 3vw, 1.9rem)/1.55 'Noto Naskh Arabic', serif;
+  margin-block-end: .55rem;
+}
+.section-empty__text {
+  max-width: 500px;
+  color: var(--muted);
+  font-size: .88rem;
+  margin-block-end: 1rem;
+}
+.section-empty__ornament { color: var(--gold); font-size: 1rem; margin-block-end: 1.1rem; }
+.section-empty__back { margin: 0; }
+
+/* ---- Responsive: desktop 3-across (3+2 centered), tablet 2, mobile 1 ---- */
+@media (max-width: 700px) {
+  .section-index__list > li { flex-basis: 100%; max-width: none; }
+  .breadcrumbs { font-size: .75rem; margin-block-end: 1.1rem; }
+  .section-hero { border-radius: 22px 22px 8px 22px; }
+  .section-card__cta { flex: 1 1 100%; justify-content: center; }
+}
+
+@media (max-width: 420px) {
+  .section-card__watermark { font-size: 6rem; }
+  .section-card__footer { gap: .65rem; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .section-card,
+  .section-card::before,
+  .section-card__arrow,
+  .section-card__cta,
+  .section-card__watermark { transition: none; }
+  .section-card:hover, .section-card:focus-within { transform: none; }
+  .section-card:hover .section-card__arrow, .section-card:focus-within .section-card__arrow { transform: none; }
+}

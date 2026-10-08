@@ -10,6 +10,7 @@ import './styles/lesson-six.css'
 import './styles/lesson-seven.css'
 import './styles/lesson-eight.css'
 import './styles/lesson-nine.css'
+import './styles/lesson-ten.css'
 import './styles/contact.css'
 
 createRoot(document.getElementById('root')!).render(

@@ -1,0 +1,404 @@
+/* الدرس العاشر: إنَّ وأخواتها
+   لغة بصرية واحدة مع الدرس التاسع: الذهبي للرفع (خبر إنَّ)، والأخضر للنصب (اسم إنَّ)،
+   مع نص تسمية واضح دائمًا: لا تُعرف الحالة باللون وحده. */
+
+/* ---------- البداية والعناوين ---------- */
+.lesson-ten-hero-topic {
+  color: var(--gold-soft);
+  text-align: center;
+  font: 700 clamp(1.2rem, 3vw, 1.7rem)/1.7 'Noto Naskh Arabic', serif;
+}
+.lesson-ten-featured {
+  margin-block: .9rem;
+  color: var(--green-dark);
+  text-align: center;
+  font: 700 clamp(1.2rem, 3.4vw, 1.75rem)/1.7 'Noto Naskh Arabic', serif;
+}
+.lesson-ten-featured--small { font-size: clamp(1.05rem, 2.6vw, 1.35rem); margin-block: .5rem; }
+.lesson-ten-note { color: var(--muted); font-size: .82rem; line-height: 1.8; }
+.lesson-ten-objectives {
+  display: grid;
+  gap: .6rem;
+  margin: 0;
+  padding-inline-start: 1.4rem;
+  font: 600 1rem/1.9 'Noto Naskh Arabic', serif;
+}
+.lesson-ten-list { display: grid; gap: .45rem; padding-inline-start: 1.2rem; line-height: 1.9; }
+.lesson-ten-steps { display: grid; gap: .55rem; margin-block: .8rem; padding-inline-start: 1.4rem; line-height: 1.9; }
+.lesson-ten-compare { display: grid; gap: .4rem; margin-block: .9rem; padding: .9rem 1.1rem; border-radius: 14px; background: var(--cream); }
+.lesson-ten-compare p { margin: 0; font: 600 1rem/1.8 'Noto Naskh Arabic', serif; }
+
+/* ---------- القواعد والنص المميز ---------- */
+.lesson-ten-rule {
+  margin-block: .9rem;
+  padding: 1rem 1.2rem;
+  border-inline-start: 5px solid var(--gold);
+  border-radius: 15px;
+  background: var(--cream);
+  box-shadow: var(--shadow);
+}
+.lesson-ten-rule strong { color: var(--green-dark); }
+.lesson-ten-rule p { margin: .35rem 0 0; }
+.lesson-ten-golden {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-block: 1.1rem;
+  padding: 1.1rem 1.3rem;
+  border: 1px solid #ead9a9;
+  border-radius: 18px;
+  background: linear-gradient(145deg, #fff9e9, var(--gold-soft));
+  box-shadow: var(--shadow);
+}
+.lesson-ten-golden span { font-size: 1.4rem; }
+.lesson-ten-golden p { margin: 0; color: var(--green-deep); font: 700 1.05rem/1.9 'Noto Naskh Arabic', serif; }
+
+/* ---------- «شرح المنصة» ---------- */
+.lesson-ten-platform-note {
+  display: grid;
+  gap: .5rem;
+  margin-block: 1.1rem;
+  padding: .9rem 1.1rem;
+  border: 1px dashed #9dbfb1;
+  border-radius: 16px;
+  background: #f1f8f4;
+}
+.lesson-ten-platform-note__badge {
+  justify-self: start;
+  padding: .28rem .7rem;
+  border-radius: 999px;
+  background: var(--green);
+  color: #fff;
+  font-size: .7rem;
+  font-weight: 700;
+}
+.lesson-ten-platform-note__body p { margin: .25rem 0; font-size: .86rem; color: var(--ink-soft); }
+
+/* ---------- الإعراب الكامل ---------- */
+.lesson-ten-parsing {
+  display: grid;
+  gap: .3rem;
+  margin-block: .7rem;
+  padding: .85rem 1rem;
+  border-inline-start: 5px solid var(--green);
+  border-radius: 14px;
+  background: #eef7f3;
+}
+.lesson-ten-parsing p {
+  margin: 0;
+  color: var(--green-deep);
+  font: 600 .92rem/1.95 'Noto Naskh Arabic', serif;
+}
+.lesson-ten-reveal { margin-block: .4rem; }
+.lesson-ten-solution-reveal {
+  display: grid;
+  gap: .4rem;
+  margin-block: .8rem;
+  padding: .9rem 1.1rem;
+  border-radius: 14px;
+  background: var(--cream);
+}
+.lesson-ten-solution-reveal p { margin: 0; line-height: 1.9; }
+
+/* ---------- الحالات الإعرابية: نص دائمًا، واللون إضافة ---------- */
+.lesson-ten-state {
+  display: inline-block;
+  padding: .08rem .5rem;
+  border-radius: 999px;
+  font-size: .72rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+.lesson-ten-state--accusative { background: #dcefe5; color: var(--green-deep); }
+.lesson-ten-state--nominative { background: var(--gold-soft); color: #5b4208; }
+.lesson-ten-mapping { display: grid; gap: .5rem; margin-block: 1rem; }
+.lesson-ten-mapping > div {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: .4rem .9rem;
+  padding: .75rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 14px;
+  background: var(--paper);
+}
+.lesson-ten-mapping span { color: var(--muted); font-size: .8rem; flex: 1 1 140px; }
+.lesson-ten-mapping strong { font: 700 1.05rem/1.6 'Noto Naskh Arabic', serif; color: var(--ink); }
+
+.lesson-ten-chip-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  gap: .6rem;
+  margin-block: 1rem;
+}
+.lesson-ten-chip-row bdi {
+  padding: .75rem .5rem;
+  border: 1px solid #c8dfd2;
+  border-radius: 14px;
+  background: #eff7f2;
+  color: var(--green-dark);
+  font: 700 1rem/1.6 'Noto Naskh Arabic', serif;
+  text-align: center;
+}
+.lesson-ten-chip-row--golden bdi { border-color: #e6d3a4; background: #fff9ec; }
+
+/* ---------- التحويل قبل إنَّ وبعدها ---------- */
+.lesson-ten-transform {
+  display: grid;
+  gap: .7rem;
+  margin-block: 1rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+}
+.lesson-ten-transform__line {
+  display: grid;
+  gap: .3rem;
+  padding: .75rem .9rem;
+  border-radius: 14px;
+  background: #fbfaf6;
+}
+.lesson-ten-transform__line--after { background: #eef7f3; min-height: 4.5rem; }
+.lesson-ten-transform__line p { margin: 0; font: 700 1.2rem/1.8 'Noto Naskh Arabic', serif; color: var(--green-dark); }
+.lesson-ten-transform__label { color: var(--muted); font-size: .75rem; font-weight: 700; }
+.lesson-ten-transform__line p.lesson-ten-transform__hidden { color: var(--muted); font-size: .9rem; font-weight: 500; line-height: 1.7; }
+.lesson-ten-transform .button { justify-self: start; }
+
+/* ---------- مستكشف أخوات إنَّ ---------- */
+.lesson-ten-explorer { display: grid; gap: 1rem; margin-block: 1rem; }
+.lesson-ten-explorer__tabs { display: flex; flex-wrap: wrap; gap: .5rem; }
+.lesson-ten-explorer__tab {
+  min-height: 44px;
+  min-width: 64px;
+  padding: .4rem .9rem;
+  border: 1px solid #c8dfd2;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--green-dark);
+  font: 700 1.1rem/1.5 'Noto Naskh Arabic', serif;
+  cursor: pointer;
+}
+.lesson-ten-explorer__tab[aria-pressed='true'] {
+  border-color: var(--green);
+  background: var(--green);
+  color: #fff;
+}
+.lesson-ten-explorer__panel {
+  display: grid;
+  gap: .6rem;
+  padding: 1.1rem 1.2rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lesson-ten-explorer__panel h3 { margin: 0; font: 700 1.35rem/1.5 'Noto Naskh Arabic', serif; color: var(--green-dark); }
+.lesson-ten-explorer__panel p { margin: 0; line-height: 1.9; }
+
+/* ---------- الجداول ---------- */
+.lesson-ten-table { width: 100%; border-collapse: collapse; min-width: 560px; font-size: .9rem; }
+.lesson-ten-table th,
+.lesson-ten-table td {
+  padding: .7rem .8rem;
+  border-block-end: 1px solid var(--line);
+  text-align: start;
+  vertical-align: top;
+  line-height: 1.7;
+}
+.lesson-ten-table thead th { color: var(--green-dark); background: var(--cream); font-weight: 700; }
+.lesson-ten-table td bdi { font: 700 1rem/1.6 'Noto Naskh Arabic', serif; }
+
+/* ---------- نشاط التفاعل ---------- */
+.lesson-ten-activity {
+  display: grid;
+  gap: 1rem;
+  margin-block: 1.2rem;
+  padding: clamp(1rem, 3vw, 1.5rem);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lesson-ten-activity-heading { display: flex; align-items: start; gap: .9rem; }
+.lesson-ten-activity-heading h3 { margin: 0 0 .25rem; font: 700 1.3rem/1.5 'Noto Naskh Arabic', serif; }
+.lesson-ten-activity-heading p { margin: 0; color: var(--muted); font-size: .86rem; }
+.lesson-ten-activity-items { display: grid; gap: .9rem; }
+.lesson-ten-activity-row {
+  display: grid;
+  gap: .6rem;
+  padding: .9rem 1rem;
+  border: 1px solid #e6e1d1;
+  border-radius: 16px;
+  background: #fcfcf9;
+}
+.lesson-ten-activity-prompt { margin: 0; font: 700 1.12rem/1.7 'Noto Naskh Arabic', serif; color: var(--ink); }
+.lesson-ten-field-grid { display: grid; gap: .6rem; grid-template-columns: repeat(auto-fit, minmax(170px, 1fr)); }
+.lesson-ten-field-grid--1 { grid-template-columns: minmax(0, 1fr); }
+.lesson-ten-field { display: grid; gap: .3rem; min-width: 0; }
+.lesson-ten-field > span { color: var(--muted); font-size: .76rem; font-weight: 700; }
+.lesson-ten-field select,
+.lesson-ten-field input,
+.lesson-ten-field textarea {
+  width: 100%;
+  min-height: 44px;
+  padding: .45rem .6rem;
+  border: 1px solid #cdd7cf;
+  border-radius: 11px;
+  background: #fff;
+  color: var(--ink);
+  font: inherit;
+}
+.lesson-ten-field textarea { min-height: 84px; resize: vertical; }
+.lesson-ten-field--wide { grid-column: 1 / -1; }
+.lesson-ten-feedback {
+  display: grid;
+  gap: .4rem;
+  padding: .85rem 1rem;
+  border-radius: 14px;
+  border: 1px solid transparent;
+}
+.lesson-ten-feedback p { margin: 0; line-height: 1.8; font-size: .9rem; }
+.lesson-ten-feedback__list { margin: 0; padding-inline-start: 1.2rem; font-size: .9rem; }
+.lesson-ten-feedback.is-good { background: #e4f3ec; border-color: #b9dcc9; color: var(--success); }
+.lesson-ten-feedback.is-bad { background: #fae9e8; border-color: #f0c2bd; color: var(--error); }
+.lesson-ten-feedback .lesson-ten-parsing { margin-block: .2rem; }
+.lesson-ten-activity-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .9rem; }
+.lesson-ten-activity-actions p { margin: 0; color: var(--muted); font-size: .8rem; }
+.lesson-ten-activity-actions .button:disabled { cursor: not-allowed; }
+.lesson-ten-score { margin: 0; padding: .45rem .9rem; border-radius: 999px; background: #e0efe9; color: var(--success); font-weight: 700; }
+
+/* ---------- الأمثلة والبطاقات ---------- */
+.lesson-ten-worked {
+  display: grid;
+  gap: .4rem;
+  margin-block: .9rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.lesson-ten-worked h3 { margin: 0; font: 700 1.1rem/1.5 'Noto Naskh Arabic', serif; color: var(--green-dark); }
+.lesson-ten-worked-items { display: grid; gap: .3rem; margin: 0; padding-inline-start: 1.2rem; font-size: .92rem; }
+.lesson-ten-pair { display: grid; gap: .9rem; grid-template-columns: repeat(2, minmax(0, 1fr)); margin-block: 1rem; }
+.lesson-ten-pair__card {
+  display: grid;
+  gap: .4rem;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  min-width: 0;
+}
+.lesson-ten-subsign { display: grid; gap: .3rem; margin-block: 1.1rem; }
+.lesson-ten-letter-example { display: grid; gap: .2rem; margin-block: .6rem; }
+.lesson-ten-warnings { display: grid; gap: .8rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+.lesson-ten-warning {
+  display: grid;
+  gap: .4rem;
+  padding: 1rem 1.1rem;
+  border: 1px solid #f0c2bd;
+  border-inline-start: 5px solid var(--error);
+  border-radius: 16px;
+  background: #fff7f6;
+}
+.lesson-ten-warning h3 { margin: 0; font: 700 1.05rem/1.6 'Noto Naskh Arabic', serif; color: var(--error); }
+.lesson-ten-warning p { margin: 0; line-height: 1.8; font-size: .9rem; }
+.lesson-ten-challenge-why {
+  display: grid;
+  gap: .5rem;
+  margin-block: 1.2rem;
+  padding: 1rem 1.2rem;
+  border: 1px dashed #c8b98a;
+  border-radius: 16px;
+  background: #fffdf5;
+}
+.lesson-ten-challenge-why h3 { margin: 0; font: 700 1.2rem/1.5 'Noto Naskh Arabic', serif; color: var(--green-dark); }
+.lesson-ten-challenge-why p { margin: 0; line-height: 1.9; }
+.lesson-ten-summary-list { display: grid; gap: .6rem; margin: 0; padding: 0; list-style: none; }
+.lesson-ten-summary-list li {
+  display: grid;
+  gap: .2rem;
+  padding: .7rem .9rem;
+  border-inline-start: 4px solid var(--gold);
+  border-radius: 12px;
+  background: var(--paper);
+  line-height: 1.8;
+}
+.lesson-ten-summary-list strong { color: var(--green-dark); }
+
+/* ---------- مراجعة أسئلة المصدر ---------- */
+.lesson-ten-source-review { display: grid; gap: .3rem; }
+.lesson-ten-source-review__heading { display: flex; flex-wrap: wrap; align-items: center; justify-content: space-between; gap: 1rem; }
+.lesson-ten-source-review__heading h3 { margin: 0; font: 700 1.3rem/1.5 'Noto Naskh Arabic', serif; color: var(--green-dark); }
+.lesson-ten-source-question legend { width: 100%; padding-block: .4rem; color: var(--ink); font-weight: 600; line-height: 1.8; }
+.lesson-ten-source-question .official-options label { min-height: 44px; }
+
+/* ---------- اختبار المنصة ---------- */
+.lesson-ten-test-levels { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .9rem; }
+.lesson-ten-test-levels span {
+  padding: .3rem .8rem;
+  border-radius: 999px;
+  background: var(--cream);
+  color: var(--green-dark);
+  font-size: .8rem;
+  font-weight: 700;
+}
+.lesson-ten-test-question legend { line-height: 1.9; }
+.lesson-ten-test-sentence { margin: .3rem 0 .6rem; font: 700 1.15rem/1.8 'Noto Naskh Arabic', serif; color: var(--green-dark); }
+.lesson-ten-level {
+  display: inline-block;
+  margin-inline-start: .5rem;
+  padding: .12rem .55rem;
+  border-radius: 999px;
+  font-size: .7rem;
+  font-weight: 700;
+  vertical-align: middle;
+}
+.lesson-ten-level--basic { background: #e0efe9; color: var(--green-deep); }
+.lesson-ten-level--medium { background: var(--gold-soft); color: #5b4208; }
+.lesson-ten-level--advanced { background: #e6e9f6; color: #2f3c7a; }
+.lesson-ten-level--thinking { background: #f6e6f1; color: #6d2c5b; }
+.lesson-ten-type { display: inline-block; margin-inline-start: .4rem; color: var(--muted); font-size: .74rem; font-weight: 600; }
+.lesson-ten-test-fields { display: grid; gap: .6rem; margin-block-start: .7rem; }
+.lesson-ten-test-fields .lesson-ten-field { max-width: 560px; }
+.lesson-ten-field-label { margin: 0 0 .35rem; color: var(--muted); font-size: .76rem; font-weight: 700; }
+.lesson-ten-multi { display: grid; gap: .3rem; }
+.lesson-ten-test-progress { margin: 0; color: var(--muted); font-size: .8rem; line-height: 1.8; }
+
+/* ---------- الحلول ---------- */
+.lesson-ten-solutions-gate p { margin: .4rem 0; }
+.lesson-ten-solutions-note { font-weight: 700; }
+.lesson-ten-solutions-score { margin: 0; font: 700 1.3rem/1.5 'Noto Naskh Arabic', serif; }
+.lesson-ten-solutions-summary { display: grid; gap: .5rem; margin-block: .8rem; padding: .9rem 1rem; border-radius: 16px; background: var(--paper); }
+.lesson-ten-counts { display: flex; flex-wrap: wrap; gap: .5rem .9rem; margin: 0; padding: 0; list-style: none; font-size: .9rem; }
+.lesson-ten-counts--levels li { padding: .25rem .65rem; border-radius: 999px; background: var(--cream); }
+.lesson-ten-solution-group { display: grid; gap: .6rem; margin-block: 1.4rem; }
+.lesson-ten-solution-group h4 { margin: 0; color: var(--green-dark); font: 700 1.1rem/1.5 'Noto Naskh Arabic', serif; }
+.lesson-ten-solution-list { display: grid; gap: .8rem; margin: 0; padding-inline-start: 1.3rem; }
+.lesson-ten-solution-list li { padding-inline-start: .3rem; line-height: 1.85; }
+.lesson-ten-solution-list p { margin: .25rem 0; font-size: .92rem; }
+.lesson-ten-solution-prompt { font-weight: 600; }
+.lesson-ten-solution-status { display: inline-block; padding: .1rem .6rem; border-radius: 999px; font-size: .78rem; font-weight: 700; }
+.lesson-ten-solution-status--correct { background: #e4f3ec; color: var(--success); }
+.lesson-ten-solution-status--wrong { background: #fae9e8; color: var(--error); }
+.lesson-ten-solution-status--unanswered { background: #efefea; color: var(--ink-soft); }
+.lesson-ten-solution-answer { color: var(--green-dark); }
+
+/* ---------- الاستجابة للشاشات الصغيرة ---------- */
+@media (max-width: 900px) {
+  .lesson-ten-pair { grid-template-columns: minmax(0, 1fr); }
+  .lesson-ten-warnings { grid-template-columns: minmax(0, 1fr); }
+}
+
+@media (max-width: 720px) {
+  .lesson-ten-activity-heading { flex-direction: column; }
+  .lesson-ten-field-grid { grid-template-columns: minmax(0, 1fr); }
+  .lesson-ten-explorer__tab { min-width: 56px; flex: 1 1 56px; }
+  .lesson-ten-mapping > div { flex-direction: column; align-items: start; }
+  .lesson-ten-mapping span { flex-basis: auto; }
+  .lesson-ten-chip-row { grid-template-columns: repeat(auto-fit, minmax(96px, 1fr)); }
+  .lesson-ten-golden { align-items: start; }
+  .lesson-ten-table { min-width: 480px; }
+}

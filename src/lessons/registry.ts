@@ -146,6 +146,19 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['كان', 'أصبح', 'صار', 'ليس'],
   },
+  {
+    id: 'lesson-10',
+    number: '١٠',
+    eyebrow: 'الحروف الناسخة',
+    title: 'إنَّ وأخواتها',
+    documentTitle: 'الدرس العاشر: إنَّ وأخواتها',
+    summary:
+      'تعلّم إنَّ وأخواتها: إنَّ وأنَّ وكأنَّ ولكنَّ وليتَ ولعلَّ، وعملها في الجملة الاسمية بنصب الاسم ورفع الخبر، والتمييز بين اسمها وخبرها، والإعراب الفرعي، والمقارنة مع كان، مع الأنشطة واختبار مستقل وحلول.',
+    duration: '٩٠',
+    strand: 'أساسيات النحو',
+    available: true,
+    parts: ['إنَّ', 'أنَّ', 'كأنَّ', 'لكنَّ', 'ليتَ', 'لعلَّ'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

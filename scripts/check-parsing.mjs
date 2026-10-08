@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 
-const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx', 'LessonEight.tsx', 'LessonNine.tsx'].map((name) => `src/lessons/${name}`)
+const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx', 'LessonEight.tsx', 'LessonNine.tsx', 'LessonTen.tsx', 'lesson-ten/content.ts'].map((name) => `src/lessons/${name}`)
 const sources = Object.fromEntries(lessonPaths.map((path) => [path, readFileSync(path, 'utf8')]))
 const failures = []
 
@@ -78,6 +78,27 @@ requirePhrase('src/lessons/LessonNine.tsx', 'المعلمونَ: اسم كان �
 requirePhrase('src/lessons/LessonNine.tsx', 'حاضرينَ: خبر كان منصوب، وعلامة نصبه الياء لأنه جمع مذكر سالم.')
 requirePhrase('src/lessons/LessonNine.tsx', 'الطالباتُ: اسم كان مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')
 requirePhrase('src/lessons/LessonNine.tsx', 'مجتهداتٍ: خبر كان منصوب، وعلامة نصبه الكسرة نيابة عن الفتحة لأنه جمع مؤنث سالم.')
+
+// Lesson 10 (إنَّ وأخواتها): every displayed parsing names the role, the state, the sign and
+// its reason. The phrases below are the canonical forms used in the lesson's content.
+requirePhrase('src/lessons/lesson-ten/content.ts', 'إنَّ: حرف توكيد ونصب مبني على الفتح لا محل له من الإعراب.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'العلمَ: اسم إنَّ منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'نافعٌ: خبر إنَّ مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'الطالبينِ: اسم إنَّ منصوب، وعلامة نصبه الياء لأنه مثنى.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'مجتهدانِ: خبر إنَّ مرفوع، وعلامة رفعه الألف لأنه مثنى.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'المعلمينَ: اسم إنَّ منصوب، وعلامة نصبه الياء لأنه جمع مذكر سالم.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'حاضرونَ: خبر إنَّ مرفوع، وعلامة رفعه الواو لأنه جمع مذكر سالم.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'الطالباتِ: اسم إنَّ منصوب، وعلامة نصبه الكسرة نيابة عن الفتحة لأنه جمع مؤنث سالم.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'مجتهداتٌ: خبر إنَّ مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'أباكَ: اسم إنَّ منصوب، وعلامة نصبه الألف نيابة عن الفتحة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'كريمٌ: خبر إنَّ مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'ليتَ: حرف تمنٍّ ونصب مبني على الفتح لا محل له من الإعراب.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'لعلَّ: حرف ترجٍّ ونصب مبني على الفتح لا محل له من الإعراب.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'كأنَّ: حرف تشبيه ونصب مبني على الفتح لا محل له من الإعراب.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'لكنَّ: حرف استدراك ونصب مبني على الفتح لا محل له من الإعراب.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'النجاحَ: اسم ليتَ منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.')
+requirePhrase('src/lessons/lesson-ten/content.ts', 'قريبٌ: خبر ليتَ مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')
+
 requirePhrase('src/lessons/LessonNine.tsx', 'أبوك: اسم كان مرفوع، وعلامة رفعه الواو نيابة عن الضمة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
 requirePhrase('src/lessons/LessonNine.tsx', 'كريمًا: خبر كان منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.')
 requirePhrase('src/lessons/LessonNine.tsx', 'كانَ: فعل ماضٍ ناسخ مبني على الفتحة الظاهرة على آخره.')

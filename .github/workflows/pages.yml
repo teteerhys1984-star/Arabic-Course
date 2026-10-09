@@ -3,6 +3,8 @@ name: Deploy Arabic Course to GitHub Pages
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
   workflow_dispatch:
 
 permissions:
@@ -10,11 +12,17 @@ permissions:
   pages: write
   id-token: write
 
+# Per-ref concurrency: successive pushes to the same branch replace its own
+# in-progress run, but a PR build can never cancel the main deployment
+# (or vice versa) the way a single shared group would.
 concurrency:
-  group: pages
+  group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
 jobs:
+  # Runs for pushes to main, for PRs targeting main, and for manual dispatch:
+  # lint + architecture/lesson/test-ux checks + the full vitest suite + tsc/vite
+  # build (`npm run validate`). A broken build is caught on the PR, before merge.
   build:
     runs-on: ubuntu-latest
     steps:
@@ -29,14 +37,20 @@ jobs:
         run: npm ci
       - name: Validate
         run: npm run validate
+      # Pages packaging happens only for real deployments — never on a PR event.
       - name: Configure Pages
+        if: github.event_name != 'pull_request'
         uses: actions/configure-pages@v5
       - name: Upload production artifact
+        if: github.event_name != 'pull_request'
         uses: actions/upload-pages-artifact@v3
         with:
           path: ./dist
 
   deploy:
+    # Publishing to the live site stays exclusive to pushes on main and manual
+    # dispatch; PR events build and validate only.
+    if: github.event_name != 'pull_request'
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}

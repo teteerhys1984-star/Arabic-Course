@@ -104,7 +104,7 @@ if (!/available:\s*true/.test(registry)) failures.push('Lesson registry must exp
 if (!/import type \{ SectionId \}/.test(registry)) {
   failures.push('LessonMeta must type its sectionId with the section registry\'s SectionId.')
 }
-const lessonCount = (registry.match(/id: 'lesson-/g) ?? []).length
+const lessonCount = (registry.match(/^\s+id: '[^']+',/gm) ?? []).length
 const sectionRefCount = (registry.match(/sectionId: '/g) ?? []).length
 if (lessonCount === 0) failures.push('Lesson registry must register lessons.')
 if (sectionRefCount !== lessonCount) {

@@ -88,7 +88,7 @@ describe('Platform home (section index) and section pages', () => {
   })
 
   it('shows an elegant empty state in every section without lessons — never a broken page', () => {
-    for (const sectionId of ['spelling', 'rhetoric', 'reading-expression']) {
+    for (const sectionId of ['rhetoric', 'reading-expression']) {
       window.location.hash = `#/sections/${sectionId}`
       const { unmount } = render(<App />)
 

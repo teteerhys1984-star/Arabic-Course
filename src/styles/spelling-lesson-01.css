@@ -1,0 +1,13 @@
+.spell-panel,.spell-item,.spell-note {border:1px solid #d9ded9;border-radius:14px;padding:1rem;margin:1rem 0;background:#fff;overflow-wrap:anywhere}
+.spell-note{background:#f5f6ef;border-inline-start:4px solid #8d7042}
+.spell-list li{margin:.55rem 0;line-height:1.9}
+.spell-table-wrap{width:100%;overflow-x:auto;margin:1rem 0}
+.spell-table{width:100%;border-collapse:collapse;table-layout:fixed;text-align:right;line-height:1.8}
+.spell-table th,.spell-table td{border:1px solid #d9ded9;padding:.6rem;overflow-wrap:anywhere;vertical-align:top}
+.spell-table th{background:#f5f4ef}
+.spell-table input{width:100%;min-width:0;box-sizing:border-box;padding:.5rem}
+.spell-table small{display:block}
+.spell-item textarea{display:block;width:100%;box-sizing:border-box;margin:.6rem 0;padding:.7rem;min-height:5rem}
+.spell-options{display:flex;flex-wrap:wrap;gap:.5rem 1rem;margin:.7rem 0}
+.spell-options label{display:inline-flex;align-items:center;gap:.3rem;cursor:pointer}
+@media(max-width:640px){.spell-table{font-size:.85rem}.spell-table td,.spell-table th{padding:.3rem}}

@@ -6,7 +6,7 @@ import { classify, corrections, distinguish, objectives, testDefinition, teacher
 describe('spelling lesson source inventory and approved keys', () => {
  it('is registered once in section three and preserves the source inventory', () => {
   expect(getLesson('spelling-lesson-01')?.sectionId).toBe('spelling')
-  expect(getSectionLessons('spelling').map(x=>x.id)).toEqual(['spelling-lesson-01'])
+  expect(getSectionLessons('spelling').map(x=>x.id)).toContain('spelling-lesson-01')
   expect(objectives).toHaveLength(10)
   expect(classify).toHaveLength(10)
   expect(distinguish).toHaveLength(5)

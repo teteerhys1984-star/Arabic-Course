@@ -216,6 +216,20 @@ export const lessonRegistry: LessonMeta[] = [
     parts: ['حروف', 'حركات', 'مد', 'رسم'],
   },
   {
+    id: 'spelling-lesson-02',
+    sectionId: 'spelling',
+    number: '٢',
+    eyebrow: 'همزتا الوصل والقطع',
+    title: 'همزة الوصل وهمزة القطع',
+    documentTitle: 'الدرس الثاني: همزة الوصل وهمزة القطع',
+    summary:
+      'قواعد همزة الوصل وهمزة القطع في الأسماء والأفعال والحروف، والأسماء السماعية، وأمر الثلاثي، ومصادر الخماسي والسداسي، مع أنشطة واختبار من ٢٥ سؤالًا (٣٠ درجة) وحلول.',
+    duration: '٩٠',
+    strand: 'الإملاء',
+    available: true,
+    parts: ['وصل', 'قطع', 'أسماء سماعية', 'أفعال ومصادر'],
+  },
+  {
     id: 'morphology-lesson-01',
     sectionId: 'morphology',
     number: '١',

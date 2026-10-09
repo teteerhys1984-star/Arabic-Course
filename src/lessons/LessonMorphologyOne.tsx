@@ -109,6 +109,9 @@ function SarfNahwLab() {
           منظور النحو
         </button>
       </div>
+      <p>
+        <strong>مثال يجمع العلمين:</strong> في:
+      </p>
       <p className="morph-sentence" aria-label="الجملة">
         <bdi>{C.sentence.tokens.join(' ')}</bdi>
       </p>
@@ -191,6 +194,9 @@ function FamilyLab() {
           </dl>
           <p className="morph-muted">
             يشترك الجميع في الحروف الأصلية <bdi>{family.label}</bdi>، والذي يختلف هو الصيغة والمعنى الصرفي.
+          </p>
+          <p className="morph-muted">
+            توضيح تعليمي من المنصة: الصيغة والوزن وشرح العلاقة بالجذر في هذا المختبر من إعداد المنصة، وليست نصًا مقتبسًا من المصدر.
           </p>
         </div>
       </div>
@@ -277,6 +283,16 @@ function WeakRootLab() {
       <p>
         في كل كلمة ترى الصورة الظاهرة، ثم اختر الحرف الأصلي الذي لم يظهر بصورته. هذا تمهيد لمفهوم الإعلال.
       </p>
+      <p>
+        مثال آخر: «باع». قد توحي حروفها الظاهرة بأن أصلها: ب ـ ا ـ ع، لكن جذرها: ب ـ ي ـ ع. والألف الظاهرة مرتبطة
+        بالتغير الصرفي الذي طرأ على الياء. إذن: باع ← ب ي ع، وليس: ب ا ع.
+      </p>
+      <p>
+        مثال: «دعا». الجذر: د ـ ع ـ و. والكلمة الظاهرة: دعا. فالألف في آخر الكلمة ليست هي الحرف الأصلي الثالث في
+        الجذر، بل طرأ تغيير صرفي على الواو.
+      </p>
+      <p>وهذه الأمثلة مهمة جدًا لأنها تعلمنا قاعدة عميقة:</p>
+      <Golden text="لا نستخرج الجذر دائمًا من ظاهر الكلمة فقط." />
       <div className="morph-stack">
         {C.weakRoots.map((item) => (
           <WeakRow key={item.word} item={item} />
@@ -350,6 +366,14 @@ function WeightLab() {
           <WeightRow key={item.id} item={item} />
         ))}
       </div>
+      {C.weightWorked.map((block) => (
+        <article key={block.heading} className="morph-case">
+          <h4>{block.heading}</h4>
+          {block.lines.map((line) => (
+            <p key={line}>{line}</p>
+          ))}
+        </article>
+      ))}
     </section>
   )
 }
@@ -421,6 +445,7 @@ function MindMapLab() {
   return (
     <section className="morph-lab" aria-labelledby="lab-map">
       <h3 id="lab-map">الخريطة الذهنية: من الجذر إلى المعنى المقصود</h3>
+      <p>احفظ العلاقة الآتية:</p>
       <p>اقرأ الخريطة من اليمين إلى اليسار، ثم اضغط كل عقدة لترى ما تمثله. أسماء العقد من المصدر، وشرح كل عقدة توضيح تعليمي من المنصة.</p>
       <ol className="morph-map" aria-label="الخريطة الذهنية">
         {C.mindMapNodes.map((node, index) => (
@@ -450,6 +475,7 @@ function MindMapLab() {
           </li>
         ))}
       </ol>
+      <p>وهذه الخريطة سترافقنا في دراسة الصرف كله.</p>
     </section>
   )
 }
@@ -549,9 +575,13 @@ function ActivityGroupStep({ from, to, title }: { from: number; to: number; titl
 
   return (
     <section className="morph-activity" aria-label={title} data-testid={`morph-activity-${from}`}>
+      <p>{C.activityInstructions.start}</p>
+      <p>{C.activityInstructions.request}</p>
+      <Bullets items={C.activityInstructions.items} />
+      <p className="morph-muted">{C.activityInstructions.platformNote}</p>
       <p className="morph-muted">
-        حلّل كل كلمة بنفسك أولًا. الجذر والعدد والحروف الزائدة والتضعيف والتغيير والوزن (حين يُطلب) حقول مُصحَّحة.
-        أما كلمة العائلة فاختيارية ولا تُصحَّح آليًا.
+        توضيح تعليمي من المنصة: حلّل كل كلمة بنفسك أولًا. الجذر والعدد والحروف الزائدة والتضعيف والتغيير والوزن (حين
+        يُطلب) حقول مُصحَّحة. أما كلمة العائلة فاختيارية ولا تُصحَّح آليًا.
       </p>
       <div className="morph-activity__rows">
         {words.map((word) => {
@@ -1173,7 +1203,7 @@ function DefinitionStep() {
   return (
     <>
       <Golden text={C.definitionText} />
-      <p>ومن أمثلته أن ندرس العلاقة بين الصيغ التالية:</p>
+      <p>ومن أمثلته أن ندرس العلاقة بين:</p>
       <Chips items={C.definitionFamily} />
       <p>{C.definitionFamilyNote}</p>
     </>
@@ -1183,7 +1213,7 @@ function DefinitionStep() {
 function TopicsStep() {
   return (
     <>
-      <p>يهتم علم الصرف، من بين أمور أخرى، بالموضوعات التالية:</p>
+      <p>يهتم علم الصرف، من بين أمور أخرى، بـ:</p>
       <Chips items={C.sarfTopics} />
       <p>{C.topicsNote}</p>
     </>
@@ -1197,7 +1227,9 @@ function SarfNahwStep() {
       <Callout title="الصرف يدرس الكلمة من داخلها">
         <p>مثلًا: «كَتَبَ» نسأل صرفيًا:</p>
         <Bullets items={C.sarfQuestionsList} />
+        <p>هذه أسئلة صرفية.</p>
       </Callout>
+      <p>أما النحو فيدرس الكلمة داخل الجملة</p>
       <Callout title="النحو يدرس الكلمة داخل الجملة">
         <p>مثلًا: «كَتَبَ الطالبُ الدرسَ.» نسأل نحويًا:</p>
         <Bullets items={C.nahwQuestionsList} />
@@ -1212,8 +1244,14 @@ function StructureStep() {
   return (
     <>
       <p>
-        الكلمات التالية بينها صلة واضحة، لكن بنيتها ليست واحدة، وهذا الاختلاف في البنية يرتبط باختلاف في المعنى:
+        عندما نقول إن الصرف يدرس <strong>بنية الكلمة</strong>، فنحن نقصد الصورة التي تتكوّن منها الكلمة، والعلاقات بين
+        حروفها الأصلية والزوائد والصيغة التي جاءت عليها.
       </p>
+      <p>قارن:</p>
+      <p>
+        نلاحظ أن بينها صلة واضحة، لكن بنيتها ليست واحدة.
+      </p>
+      <p>مثلًا:</p>
       <div className="morph-forms" role="list">
         {C.structureForms.map((item) => (
           <div key={item.word} className="morph-form" role="listitem">
@@ -1224,6 +1262,7 @@ function StructureStep() {
           </div>
         ))}
       </div>
+      <p>وهذا الاختلاف في البنية يرتبط باختلافات في المعنى.</p>
       <Golden text="تغيير البنية الصرفية قد يؤدي إلى تغيير المعنى، وهذه من أهم الأفكار التي سيُبنى عليها قسم الصرف كله." />
     </>
   )
@@ -1234,6 +1273,7 @@ function RootStep() {
     <>
       <p>{C.rootDefinition}</p>
       <p>ومن أشهر أنواع الجذور في العربية: الجذر الثلاثي والجذر الرباعي.</p>
+      <p>ومن الكلمات المرتبطة به:</p>
       <div className="morph-diagram" aria-label="عائلة الجذر ك ت ب">
         <p className="morph-diagram__root">
           <RootLetters letters={C.kataba.root} />
@@ -1255,21 +1295,22 @@ function RootStep() {
 function RootWordStep() {
   return (
     <>
-      <p>لا، الجذر ليس هو الكلمة نفسها.</p>
+      <p>لا.</p>
+      <p>وهذه نقطة أساسية.</p>
       <div className="morph-compare">
         <div>
           <span className="morph-muted">الجذر</span>
           <p className="morph-big">
             <bdi>{C.rootVsWord.root}</bdi>
           </p>
-          <p>حروف أصلية، ليست كلمة مستقلة في هذا الاستعمال.</p>
+          <p>ليس كلمة مستقلة في هذا الاستعمال، وإنما هو تمثيل للحروف الأصلية التي تقوم عليها مجموعة من الكلمات.</p>
         </div>
         <div>
           <span className="morph-muted">الكلمة</span>
           <p className="morph-big">
             <bdi>{C.rootVsWord.word}</bdi>
           </p>
-          <p>صيغة صرفية كاملة.</p>
+          <p>فهي كلمة وصيغة صرفية كاملة.</p>
         </div>
       </div>
       <Golden text={C.rootVsWord.rule} />
@@ -1289,11 +1330,11 @@ function RootTypesStep() {
         <Chips items={C.rootTypes.quadriliteral.examples} />
       </Callout>
       <Callout title="تنبيه مهم">
-        <p>
-          ليس كل فعل مكوّن من أربعة أحرف في الكتابة يكون جذره رباعيًا؛ فالكلمة <bdi>{C.quadWarning.word}</bdi> عدد
-          حروفها الظاهرة أربعة، لكن جذرها <bdi>{C.quadWarning.root}</bdi>.
-        </p>
         <p>{C.quadWarning.text}</p>
+        <p>
+          {C.quadWarning.example} <bdi>{C.quadWarning.root}</bdi>.
+        </p>
+        <p>{C.quadWarning.reason}</p>
       </Callout>
       <Golden text={C.quadWarning.rule} />
     </>
@@ -1311,6 +1352,9 @@ function OriginalExtraStep() {
       <p>
         في <bdi>{C.originalExtra.example2.word}</bdi>: {C.originalExtra.example2.text}
       </p>
+      <p>
+        <strong>تنبيه بالغ الأهمية</strong>
+      </p>
       <Clarification>{C.originalExtra.warning}</Clarification>
     </>
   )
@@ -1319,7 +1363,10 @@ function OriginalExtraStep() {
 function SaalaStep() {
   return (
     <>
-      <Golden text={C.saalaTamoonihaa.rule} />
+      <p>
+        <strong>هل كل حرف من حروف «سألتمونيها» زائد؟</strong>
+      </p>
+      <p>{C.saalaTamoonihaa.rule}</p>
       <div className="morph-chips morph-chips--letters" aria-label="حروف سألتمونيها">
         {C.saalaTamoonihaa.letters.map((letter, index) => (
           <span key={`${letter}-${index}`} className="morph-root__letter">
@@ -1327,6 +1374,9 @@ function SaalaStep() {
           </span>
         ))}
       </div>
+      <p>{C.saalaTamoonihaa.caution}</p>
+      <Golden text={C.saalaTamoonihaa.misread} />
+      <p>مثلًا:</p>
       {C.saalaTamoonihaa.cases.map((item) => (
         <p key={item.word}>
           <bdi>{item.word}</bdi>: {item.text}
@@ -1340,7 +1390,11 @@ function SaalaStep() {
 function ToolsStep() {
   return (
     <>
-      <p>لا توجد طريقة واحدة تعتمد على النظر السريع إلى الكلمة، بل نعتمد على مجموعة أدوات صرفية:</p>
+      <p>
+        <strong>كيف نعرف الحروف الأصلية؟</strong>
+      </p>
+      <p>لا توجد طريقة صحيحة واحدة تعتمد على النظر السريع إلى الكلمة.</p>
+      <p>بل نعتمد على مجموعة من الأدوات الصرفية، أهمها:</p>
       <ol className="morph-tools">
         {C.originalTools.map((tool) => (
           <li key={tool.id}>
@@ -1356,10 +1410,17 @@ function FamilyStep() {
   return (
     <>
       <p>
-        من أفضل الطرق لفهم الجذر أن ننظر إلى <strong>عائلة الكلمة</strong>. الكلمات ليست متطابقة في الصيغة، لكن
-        بينها صلة اشتقاقية، وتعود مجموعة منها إلى المادة نفسها. ما الذي تغيّر؟ الجذر بقي، لكن الصيغ اختلفت، وهذا
-        يؤدي إلى اختلاف المعنى.
+        من أفضل الطرق لفهم الجذر أن ننظر إلى <strong>عائلة الكلمة</strong>.
       </p>
+      <p>
+        خذ الجذر: <RootLetters letters={['ع', 'ل', 'م']} /> ومنه:
+      </p>
+      <p>هذه الكلمات ليست متطابقة في الصيغة، ولكن بينها صلة اشتقاقية أو صرفية، وتعود مجموعة منها إلى المادة نفسها.</p>
+      <p>ما الذي تغيّر؟</p>
+      <p>
+        الجذر بقي: <RootLetters letters={['ع', 'ل', 'م']} />
+      </p>
+      <p>لكن الصيغ اختلفت. وهذا يؤدي إلى اختلاف المعنى.</p>
       <FamilyLab />
     </>
   )
@@ -1373,6 +1434,7 @@ function WhyNotEnoughStep() {
         الجذر يعطيك نواة دلالية أو صلة بالمادة اللغوية، لكن الصيغة والسياق لهما دور أساسي. فـ«عَلِمَ» و«عَلَّمَ»
         و«تَعَلَّمَ» و«اسْتَعْلَمَ» تشترك في الجذر، وتختلف في المعنى.
       </p>
+      <p>لذلك يجب أن نفكر بهذه الصورة:</p>
       <Golden text="الجذر + الصيغة + السياق = فهم أدق للمعنى." />
     </>
   )
@@ -1381,6 +1443,7 @@ function WhyNotEnoughStep() {
 function WeakStep() {
   return (
     <>
+      <p>هذه من أهم النقاط التي يجب أن يتعلمها الطالب المتقدم.</p>
       <p>
         قد ينظر المبتدئ إلى <bdi>قال</bdi> فيظن أن حروفها الأصلية: <bdi>ق ـ ا ـ ل</bdi>. لكن الجذر هو{' '}
         <bdi>ق ـ و ـ ل</bdi>. فأين ذهبت الواو؟
@@ -1397,11 +1460,14 @@ function WeakStep() {
 function ChangingStep() {
   return (
     <>
-      <p>{C.changingLetters}</p>
+      <p>هذه قاعدة متقدمة يجب أن يعرفها الطالب منذ البداية:</p>
+      <p>قد يحدث للحرف الأصلي:</p>
       <Bullets items={['إعلال.', 'إبدال.', 'حذف.', 'قلب.', 'إدغام.']} />
+      <p>ولذلك قد تختلف صورة الجذر في بعض الكلمات عن صورته الظاهرة.</p>
       <p>
         <bdi>قال ← ق و ل</bdi> — <bdi>باع ← ب ي ع</bdi> — <bdi>دعا ← د ع و</bdi>
       </p>
+      <p>وسندرس أسباب هذه التغيرات في أبواب مستقلة.</p>
     </>
   )
 }
@@ -1409,7 +1475,7 @@ function ChangingStep() {
 function TermsStep() {
   return (
     <>
-      <p>يجب التفريق بين ثلاثة مفاهيم قبل أن تتداخل في الدروس القادمة:</p>
+      <p>يجب التفريق بين ثلاثة مفاهيم:</p>
       <div className="morph-terms">
         {C.termsCompare.map((term) => (
           <article key={term.title} className="morph-term">
@@ -1421,6 +1487,7 @@ function TermsStep() {
           </article>
         ))}
       </div>
+      <p>وهذه المفاهيم ستتداخل في الدروس القادمة، ولذلك يجب تأسيس الفرق بينها من الآن.</p>
     </>
   )
 }
@@ -1429,9 +1496,10 @@ function ShaddaStep() {
   return (
     <>
       <p>
-        انظر إلى <bdi>{C.shaddaNote.word}</bdi>: {C.shaddaNote.text}
+        ماذا عن التضعيف؟ انظر إلى <bdi>{C.shaddaNote.word}</bdi>: {C.shaddaNote.text}
       </p>
       <Golden text="الشدة قد تخفي حرفين متماثلين، ولا يعني ذلك بالضرورة أن الجذر رباعي." />
+      <p>{C.shaddaNote.after}</p>
     </>
   )
 }
@@ -1439,6 +1507,9 @@ function ShaddaStep() {
 function HamzaStep() {
   return (
     <>
+      <p>
+        <strong>ماذا عن الهمزة؟</strong>
+      </p>
       <p>
         الهمزة قد تكون حرفًا أصليًا في الجذر، أو جزءًا من صيغة صرفية، لذلك لا يجوز اعتبار كل همزة حرفًا زائدًا.
       </p>
@@ -1456,6 +1527,7 @@ function HamzaStep() {
           <p>جذرها <bdi>{C.hamzaNote.zaid.root}</bdi>: {C.hamzaNote.zaid.text}</p>
         </div>
       </div>
+      <p>إذن يجب أن نسأل دائمًا:</p>
       <Golden text={C.hamzaNote.question} />
     </>
   )
@@ -1465,7 +1537,9 @@ function MaterialStep() {
   return (
     <>
       <Callout title="تنبيه علمي: الجذر والمادة">
-        <p>{C.rootMaterialNote}</p>
+        {C.rootMaterialNote.map((line) => (
+          <p key={line}>{line}</p>
+        ))}
       </Callout>
       <p>
         <strong>حالات لا يجوز فيها التسرع في استخراج الجذر:</strong>
@@ -1495,8 +1569,11 @@ function WeightDefStep() {
         <span className="morph-root__letter">ع</span>
         <span className="morph-root__letter">ل</span>
       </div>
+      <p>فنقابل:</p>
+      <Bullets items={C.weightIntro.mapping} />
+      <p>نضع مقابل كل حرف أصلي حرفًا من «فعل»:</p>
       <p>
-        مثال: «كتب» ← ك ↔ ف، ت ↔ ع، ب ↔ ل، فيكون الوزن <bdi>فَعَلَ</bdi>.
+        ك ← ف، ت ← ع، ب ← ل. إذن: <bdi>كَتَبَ ← فَعَلَ</bdi>
       </p>
     </>
   )
@@ -1505,11 +1582,17 @@ function WeightDefStep() {
 function WeightImportanceStep() {
   return (
     <>
-      <p>الميزان يساعدنا على:</p>
+      <p>
+        <strong>لماذا نحتاج إلى الميزان الصرفي؟</strong>
+      </p>
+      <p>لأن الوزن يساعدنا على:</p>
       <Bullets items={C.weightImportance} />
       <Chips items={C.weightExamples} />
+      <p>وهذه الأوزان ستصبح لغة أساسية في قسم الصرف.</p>
       <Callout title="الوزن ليس مجرد حفظ">
-        <p>{C.weightNotMemorize}</p>
+        {C.weightNotMemorize.map((line) => (
+          <p key={line}>{line}</p>
+        ))}
       </Callout>
     </>
   )
@@ -1518,16 +1601,18 @@ function WeightImportanceStep() {
 function AnalysisStep() {
   return (
     <>
-      <p>نحلل أربع كلمات تحليلًا متقدمًا، نبحث فيها عن العائلة قبل الحكم على الجذر:</p>
+      <p>توضيح تعليمي من المنصة: نحلل أربع كلمات تحليلًا متقدمًا، ونبحث فيها عن العائلة قبل الحكم على الجذر.</p>
+      <p>نبحث عن عائلة الكلمة:</p>
       <div className="morph-cases">
         {C.analysisExamples.map((item) => (
           <article key={item.word} className="morph-case">
             <h4>
               <bdi>{item.word}</bdi>
             </h4>
-            <p>
-              العائلة: <Chips items={item.family} />
-            </p>
+            <div>
+              <span>العائلة: </span>
+              <Chips items={item.family} />
+            </div>
             <p>
               الجذر: <RootLetters letters={item.root} />
             </p>
@@ -1544,6 +1629,8 @@ function GoldenStep() {
     <>
       <p>عندما تريد استخراج جذر كلمة، لا تسأل: «ما أول ثلاثة أحرف فيها؟» بل اسأل:</p>
       <Golden text="ما الحروف التي تمثل أصل المادة، بعد أن أراعي الصيغة والتصريف وما قد يكون طرأ على الكلمة من تغيير؟" />
+      <p>وهذه النقلة في التفكير هي بداية الانتقال من الصرف المدرسي البسيط إلى الصرف المتقدم.</p>
+      <p>احفظ هذه القواعد:</p>
       <ol className="morph-rules">
         {C.goldenRules.map((rule) => (
           <li key={rule}>{rule}</li>
@@ -1573,7 +1660,7 @@ function SolvedStep({ from, to }: { from: number; to: number }) {
       ))}
       {from === 0 && (
         <p className="morph-muted">
-          حاول أن تحلل كل كلمة قبل قراءة ما بعدها، ثم انتقل إلى المثال التالي.
+          توضيح تعليمي من المنصة: حاول أن تحلل كل كلمة قبل قراءة ما بعدها، ثم انتقل إلى المثال التالي.
         </p>
       )}
     </div>
@@ -1588,7 +1675,7 @@ function ReviewCardStep() {
         <thead>
           <tr>
             <th scope="col">المفهوم</th>
-            <th scope="col">معناه في الصرف</th>
+            <th scope="col">معناه الصرفي</th>
           </tr>
         </thead>
         <tbody>
@@ -1607,15 +1694,16 @@ function ReviewCardStep() {
 function SummaryStep() {
   return (
     <>
-      {C.summaryText.map((line) => (
-        <p key={line}>{line}</p>
-      ))}
+      <p>{C.summaryText[0]}</p>
       <p>ولفهم الكلمة فهمًا صرفيًا متينًا، ينبغي أن نسأل:</p>
       <ol className="morph-summary-questions">
         {C.summaryQuestions.map((question) => (
           <li key={question}>{question}</li>
         ))}
       </ol>
+      {C.summaryText.slice(1).map((line) => (
+        <p key={line}>{line}</p>
+      ))}
     </>
   )
 }

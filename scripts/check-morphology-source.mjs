@@ -31,6 +31,8 @@ const norm = (t) =>
     .trim()
 const tokens = (t) => norm(t).split(/[\s.،؛:؟!«»"()\-—–]+/).filter(Boolean)
 const sameTokens = (a, b) => tokens(a).join(' ') === tokens(b).join(' ')
+// key for verbatim comparison: letters only (punctuation, spacing and markers ignored)
+const keyOf = (t) => norm(t).replace(/[\s.،,:؛;!؟?()\[\]{}\-–—_→←↔↓↑<>=+*«»"'“”‘’|…]/g, '')
 const eq = (label, a, b) => {
   if (norm(a) !== norm(b)) fail(`${label}: expected «${norm(b)}» but found «${norm(a)}»`)
 }
@@ -294,9 +296,13 @@ srcQ.forEach((sq) => {
 for (let n = 1; n <= 40; n++) {
   if (C.sourceAnswers[n] === undefined) fail(`sourceAnswers is missing question ${n}`)
 }
-for (let n = 11; n <= 30; n++) {
+for (let n = 1; n <= 10; n++) {
   if (!sameTokens(C.sourceAnswers[n] ?? '', srcKey[n] ?? '')) fail(`sourceAnswers[${n}] differs from the source answer key`)
 }
+for (let n = 21; n <= 30; n++) {
+  if (!sameTokens(C.sourceAnswers[n] ?? '', srcKey[n] ?? '')) fail(`sourceAnswers[${n}] differs from the source answer key`)
+}
+// 11–20: the full source sentence is checked in section 13
 for (let n = 31; n <= 35; n++) {
   if (!sameTokens(C.sourceAnswers[n] ?? '', srcKey[n] ?? '')) fail(`sourceAnswers[${n}] differs from the source answer`)
 }
@@ -357,6 +363,174 @@ for (const [name, text] of [
 ]) {
   if (text.includes(password)) fail(`The teacher password must not appear in ${name}`)
 }
+
+// ================================================================
+// 11. Activity: source spelling, source test keys and morphology of the fifteen words
+// ================================================================
+// Words whose root letters changed (إعلال): §14–15 and §23 name these three as the examples.
+const CHANGED_WORDS = ['قال', 'باع', 'دعا']
+CHANGED_WORDS.forEach((w) => { if (!src.includes(w)) fail(`Changed-root example «${w}» is missing from the source`) })
+const letterList = (t) => Array.from(norm(t).replace(/\s+/g, ''))
+C.activityWords.forEach((w, i) => {
+  const raw = activitySource[i] ?? ''
+  // doubled: the written form of the word in the source carries a shadda (U+0651)
+  if (w.doubled !== raw.includes('\u0651')) {
+    fail(`Activity word ${i + 1} «${w.word}»: doubled=${w.doubled}, but the source spelling ${raw.includes('\u0651') ? 'has' : 'has no'} shadda`)
+  }
+  const changed = CHANGED_WORDS.includes(norm(w.word))
+  if (w.changed !== changed) fail(`Activity word ${i + 1} «${w.word}»: changed=${w.changed}, expected ${changed}`)
+  if (!changed) {
+    // extra letters = letters of the word minus the root letters (pattern letters), as a multiset
+    const rem = letterList(w.word)
+    for (const ch of letterList(w.root)) {
+      const j = rem.indexOf(ch)
+      if (j < 0) { fail(`Activity word ${i + 1} «${w.word}»: root letter «${ch}» is not in the word`); break }
+      rem.splice(j, 1)
+    }
+    const want = rem.slice().sort().join('')
+    const got = letterList(w.extra.join('')).sort().join('')
+    if (want !== got) fail(`Activity word ${i + 1} «${w.word}»: extra letters should be «${rem.join(' ')}», found «${w.extra.join(' ')}»`)
+  }
+})
+// Root and weight agree with the source answer keys wherever the same word is a test item (21–30, 36–40)
+C.activityWords.forEach((w) => {
+  const q = C.testQuestions.find((qq) => ((qq.number >= 21 && qq.number <= 30) || (qq.number >= 36 && qq.number <= 40)) &&
+    tokens(qq.prompt)[0] === tokens(w.word)[0])
+  if (!q) return
+  const key = srcKey[q.number] ?? ''
+  const rootPart = q.number <= 30 ? key : (key.match(/الجذر: (.+?)(?: الوزن:| والهمزة| والشدة| الواو| الحرف|$)/) ?? [])[1] ?? ''
+  if (letterList(w.root).join('') !== letterList(rootPart).join('')) {
+    fail(`Activity word «${w.word}» root «${w.root}» differs from source answer ${q.number} «${rootPart}»`)
+  }
+  const weightPart = (key.match(/الوزن: (.+)$/) ?? [])[1]
+  if (weightPart) {
+    if (tokens(w.weight).join(' ') !== tokens(weightPart).join(' ')) {
+      fail(`Activity word «${w.word}» weight «${w.weight}» differs from source answer ${q.number} «${weightPart}»`)
+    }
+    const field = q.fields.find((f) => f.kind === 'text' && f.label === 'الوزن')
+    if (!field || !(field.accept ?? []).some((a) => tokens(a).join(' ') === tokens(weightPart).join(' '))) {
+      fail(`Question ${q.number}: the weight field must accept «${weightPart}»`)
+    }
+  }
+})
+// The seven source instructions for each word, verbatim
+const requestItems = listAfter(iRequest, /^- (.+)$/)
+if (requestItems.length !== 7) fail(`Source activity instructions must list 7 items (found ${requestItems.length})`)
+requestItems.forEach((t, i) => eq(`Activity instruction ${i + 1}`, C.activityInstructions.items[i] ?? '', t))
+eq('Activity instruction start', C.activityInstructions.start, L[find('حلّل الكلمات الآتية:')])
+eq('Activity instruction request', C.activityInstructions.request, L[iRequest])
+
+// ================================================================
+// 12. Worked examples: source notes and source weight lines
+// ================================================================
+for (let i = iSolved; i < iActivity; i++) {
+  const head = L[i].match(/^\*\*الكلمة: (.+)\*\*$/)
+  if (!head) continue
+  const exNo = solvedSource.findIndex((e) => e.word === head[1].trim())
+  const impl = C.solvedExamples[exNo]
+  if (!impl) { fail(`Worked example «${head[1]}» is missing`); continue }
+  for (let k = i + 1; k < iActivity && !L[k].match(/^\*\*الكلمة: /) && L[k].trim() !== 'النشاط التطبيقي'; k++) {
+    const t = L[k].trim()
+    if (!t || t.startsWith('الجذر:') || t.startsWith('مثال ')) continue
+    if (t.startsWith('الوزن:')) {
+      if (tokens(impl.weight).join(' ') !== tokens(t.replace('الوزن:', '')).join(' ')) {
+        fail(`Worked example ${exNo + 1}: weight «${impl.weight}» differs from source «${t}»`)
+      }
+      continue
+    }
+    if (!keyOf(impl.note).includes(keyOf(t))) fail(`Worked example ${exNo + 1}: source note «${t}» is missing from the implementation note`)
+  }
+}
+
+// ================================================================
+// 13. Teacher answers 11–20 are the full source sentences; mind-map nodes have text
+// ================================================================
+for (let n = 11; n <= 20; n++) {
+  const at = L.findIndex((l, idx) => idx > iTeacherAnswers && new RegExp(`^${n}\\. \\*\\*`).test(l))
+  const full = (L[at] ?? '').replace(/\*\*/g, '').replace(/^\d+\.\s*/, '')
+  if (!sameTokens(C.sourceAnswers[n] ?? '', full)) fail(`sourceAnswers[${n}] must be the source answer «${full}»`)
+}
+C.mindMapNodes.forEach((n) => { if (!n.text || n.text.trim().length < 10) fail(`Mind-map node «${n.label}» has no explanation text`) })
+
+// ================================================================
+// 14. Verbatim coverage of the source prose (every substantive line must be in the implementation)
+// ================================================================
+// Headings and labels that the implementation shows under another title. Each target must exist.
+const HEADING_MAP = {
+  'التعريف': 'تعريف الصرف',
+  'ما الفرق بين الصرف والنحو؟': '3. الفرق بين الصرف والنحو',
+  'ما الجذر الصرفي؟': '5. الجذر الصرفي والمادة',
+  'التعريف المبسط': '5. الجذر الصرفي والمادة',
+  'مثال الجذر الثلاثي': 'الجذر الثلاثي',
+  'هل الجذر هو الكلمة نفسها؟': '6. الجذر والكلمة: الفرق',
+  'الجذر لا يحدد المعنى الكامل وحده': '13. لماذا لا يحدد الجذر المعنى وحده؟',
+  'ما الوزن الصرفي؟': '20. تعريف الميزان الصرفي',
+  'الحروف الأصلية ليست دائمًا ثابتة في صورتها الظاهرة': '23. الحروف الأصلية التي تتغير صورتها',
+  'خريطة ذهنية أساسية': '25. الخريطة الذهنية',
+  'أمثلة تحليلية متقدمة': '24. الأمثلة التحليلية الأربعة',
+  'قاعدة ذهبية': '26. القواعد الذهبية',
+  'خلاصة القواعد': '26. القواعد الذهبية',
+  'القاعدة الأولى': 'القواعد الذهبية', 'القاعدة الثانية': 'القواعد الذهبية', 'القاعدة الثالثة': 'القواعد الذهبية',
+  'القاعدة الرابعة': 'القواعد الذهبية', 'القاعدة الخامسة': 'القواعد الذهبية', 'القاعدة السادسة': 'القواعد الذهبية',
+  'القاعدة السابعة': 'القواعد الذهبية', 'القاعدة الثامنة': 'القواعد الذهبية', 'القاعدة التاسعة': 'القواعد الذهبية',
+  'القاعدة العاشرة': 'القواعد الذهبية',
+  'أمثلة محلولة': '27. الأمثلة المحلولة',
+  'الاختيار من متعدد': 'أولًا: اختيار من متعدد',
+  'إجابات استخراج الجذر': 'الجواب المعتمد من المصدر',
+  'إجابات التعليل': 'الجواب المعتمد من المصدر',
+  'إجابات التحليل': 'الجواب المعتمد من المصدر',
+  'ملاحظات تصحيحية مهمة للمعلم': 'ملاحظات تصحيحية للمعلم',
+  'بطاقة مراجعة سريعة': 'بطاقة المراجعة السريعة',
+  'خلاصة الدرس الكبرى': '33. خلاصة الدرس',
+  'تمهيد للدرس التالي': 'تمهيد الدرس الثاني',
+  'مثال مهم: «قال»': '14. «قال» وجذرها ق ـ و ـ ل',
+  'المثال الأول: «معلّم»': '24. الأمثلة التحليلية الأربعة',
+  'نبحث عن عائلة الكلمة:': 'نبحث عن عائلة الكلمة:',
+  'الكلمة: كاتب': '27. الأمثلة المحلولة (1–4)',
+  'الكلمة: مكتوب': '27. الأمثلة المحلولة (1–4)',
+  'الكلمة: أكرم': '27. الأمثلة المحلولة (1–4)',
+  'الكلمة: علّم': '27. الأمثلة المحلولة (1–4)',
+  'الكلمة: قال': '28. الأمثلة المحلولة (5–8)',
+  'الكلمة: باع': '28. الأمثلة المحلولة (5–8)',
+  'الكلمة: دعا': '28. الأمثلة المحلولة (5–8)',
+  'الكلمة: استغفار': '28. الأمثلة المحلولة (5–8)',
+}
+const implKey = keyOf(
+  (lesson + '\n' + content).replace(/<[^>]*>/g, (m) => ` ${(m.match(/"[^"]*"/g) ?? []).join(' ')} `),
+)
+const headerEnd = src.indexOf('-->')
+let coverageChecked = 0
+let coverageHeadings = 0
+const unverified = []
+src.slice(headerEnd + 3).split('\n').forEach((raw) => {
+  const line = raw.trim()
+  if (!line || line.startsWith('|---') || line === '↓') return
+  const pieces = line.startsWith('|')
+    ? line.split('|').map((c) => c.trim()).filter((c) => c && !/^-+$/.test(c))
+    : [line.replace(/^>\s*/, '').replace(/^[-*]\s+/, '').replace(/^\d+\.\s+/, '').replace(/^[أبجد]\.\s+/, '')]
+  pieces.forEach((piece) => {
+    const p = piece.replace(/^\d+\.\s+/, '').replace(/^[أبجد]\.\s+/, '')
+    const k = keyOf(p)
+    if (k.length < 6) return
+    const candidates = [k]
+    if (p.includes(':')) {
+      const v = keyOf(p.split(':').slice(1).join(':'))
+      if (v.length >= 6) candidates.push(v)
+    }
+    coverageChecked++
+    if (candidates.some((c) => implKey.includes(c))) return
+    const mapped = HEADING_MAP[p.replace(/\*\*/g, '').trim()] ?? HEADING_MAP[p]
+    if (mapped !== undefined) {
+      coverageHeadings++
+      if (!implKey.includes(keyOf(mapped))) fail(`Heading «${p}» maps to «${mapped}», which is not in the implementation`)
+      return
+    }
+    unverified.push(p)
+  })
+})
+unverified.forEach((p) => fail(`Source text not found verbatim in the implementation: «${p}»`))
+
+console.log(`Verbatim prose check: ${coverageChecked} substantive lines/cells checked, ${coverageHeadings} headings mapped to implementation titles.`)
 
 if (failures.length) {
   console.error(`Morphology source audit FAILED (${failures.length} issue(s)):\n- ${failures.join('\n- ')}`)

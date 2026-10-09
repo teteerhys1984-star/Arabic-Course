@@ -184,7 +184,7 @@
 .morph-family__members { display: flex; flex-wrap: wrap; gap: .5rem; align-content: flex-start; }
 .morph-family__detail { padding: 1rem 1.2rem; border-radius: 16px; background: var(--cream); }
 .morph-family__word { font: 700 2rem/1.6 'Noto Naskh Arabic', serif; margin: 0; color: var(--green-dark); }
-.morph-dl { display: grid; grid-template-columns: max-content 1fr; gap: .5rem 1rem; margin: .6rem 0; }
+.morph-dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: .5rem 1rem; margin: .6rem 0; }
 .morph-dl dt { color: var(--muted); font-weight: 700; font-size: .85rem; }
 .morph-dl dd { margin: 0; }
 .morph-diagram { display: grid; gap: 1rem; margin-block: 1rem; padding: 1rem; border-radius: 18px; background: var(--cream); }
@@ -284,7 +284,7 @@
 .morph-sentence bdi { letter-spacing: 0; }
 
 @media (max-width: 760px) {
-  .morph-family { grid-template-columns: 1fr; }
+  .morph-family { grid-template-columns: minmax(0, 1fr); }
   .morph-map__arrow { display: none; }
   .morph-map__node { width: 100%; justify-content: start; }
   .morph-root__letter { min-width: 1.8rem; height: 1.8rem; font-size: 1rem; }

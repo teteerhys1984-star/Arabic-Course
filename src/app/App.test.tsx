@@ -345,7 +345,7 @@ describe('Lesson 1 as a sequential, one-step-at-a-time flow', () => {
     await user.click(screen.getByRole('button', { name: /^دخول$/ }))
     expect(screen.getByText('كلمة المرور غير صحيحة.')).toBeInTheDocument()
 
-    await user.type(screen.getByLabelText('كلمة المرور'), 'معلم')
+    await user.type(screen.getByLabelText('كلمة المرور'), 'somer173')
     await user.click(screen.getByRole('button', { name: 'دخول' }))
 
     expect(screen.getByText('الإجابات النموذجية')).toBeInTheDocument()
@@ -428,7 +428,7 @@ describe('Lesson 2 as a sequential, one-step-at-a-time flow', () => {
     expect(screen.getByRole('heading', { name: 'خامسًا: منطقة خاصة بالمعلم', level: 2 })).toBeInTheDocument()
     expect(screen.queryByText('الإجابات النموذجية للنشاط التطبيقي')).not.toBeInTheDocument()
 
-    await user.type(screen.getByLabelText('كلمة المرور'), 'معلم')
+    await user.type(screen.getByLabelText('كلمة المرور'), 'somer173')
     await user.click(screen.getByRole('button', { name: 'دخول' }))
 
     expect(screen.getByText('الإجابات النموذجية للنشاط التطبيقي')).toBeInTheDocument()
@@ -532,7 +532,7 @@ describe('Lesson 3 as a sequential, one-step-at-a-time flow', () => {
     expect(screen.getByRole('heading', { name: 'خامسًا: منطقة خاصة بالمعلم', level: 2 })).toBeInTheDocument()
     expect(screen.queryByText('الإجابات النموذجية للنشاط التطبيقي')).not.toBeInTheDocument()
 
-    await user.type(screen.getByLabelText('كلمة المرور'), 'معلم')
+    await user.type(screen.getByLabelText('كلمة المرور'), 'somer173')
     await user.click(screen.getByRole('button', { name: 'دخول' }))
 
     expect(screen.getByText('الإجابات النموذجية للنشاط التطبيقي')).toBeInTheDocument()
@@ -675,7 +675,7 @@ describe('Lesson 4 as a sequential, one-step-at-a-time flow', () => {
     expect(screen.getByRole('heading', { name: 'منطقة المعلم', level: 2 })).toBeInTheDocument()
     expect(screen.queryByText('الإجابات النموذجية لاختبار نهاية الدرس')).not.toBeInTheDocument()
 
-    await user.type(screen.getByLabelText('كلمة المرور'), 'معلم')
+    await user.type(screen.getByLabelText('كلمة المرور'), 'somer173')
     await user.click(screen.getByRole('button', { name: 'دخول' }))
     expect(screen.getByText('الإجابات النموذجية لاختبار نهاية الدرس')).toBeInTheDocument()
     expect(screen.getByText(/15\/20 فأكثر/)).toBeInTheDocument()
@@ -831,7 +831,7 @@ describe('Lesson 7 as a sequential, one-step-at-a-time flow', () => {
     expect(screen.getByRole('heading', { name: 'خامسًا: منطقة خاصة بالمعلم', level: 2 })).toBeInTheDocument()
     expect(screen.queryByText('إجابات النشاط التطبيقي')).not.toBeInTheDocument()
 
-    await user.type(screen.getByLabelText('كلمة المرور'), 'معلم')
+    await user.type(screen.getByLabelText('كلمة المرور'), 'somer173')
     await user.click(screen.getByRole('button', { name: 'دخول' }))
 
     expect(screen.getByText('إجابات النشاط التطبيقي')).toBeInTheDocument()

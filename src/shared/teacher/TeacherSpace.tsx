@@ -1,11 +1,18 @@
 import { type FormEvent, type ReactNode, useState } from 'react'
+import { COURSE_TEACHER_PASSWORD } from './teacherPassword'
 
 interface TeacherSpaceProps {
   children: ReactNode
   password?: string
 }
 
-export function TeacherSpace({ children, password = 'معلم' }: TeacherSpaceProps) {
+/**
+ * بوابة منطقة المعلم. كلمة المرور الافتراضية هي كلمة مرور المشروع الموحدة
+ * (COURSE_TEACHER_PASSWORD)، فتُوحَّد جميع مناطق المعلم الحالية والمستقبلية
+ * تلقائيًا، مع إمكانية تجاوزها صراحةً عبر خاصية `password` عند الحاجة.
+ * الرفض يبقى على حاله: أي إدخال غير مطابق يُظهر «كلمة المرور غير صحيحة.».
+ */
+export function TeacherSpace({ children, password = COURSE_TEACHER_PASSWORD }: TeacherSpaceProps) {
   const [entry, setEntry] = useState('')
   const [open, setOpen] = useState(false)
   const [error, setError] = useState('')

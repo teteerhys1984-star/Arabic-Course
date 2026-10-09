@@ -230,6 +230,20 @@ export const lessonRegistry: LessonMeta[] = [
     parts: ['وصل', 'قطع', 'أسماء سماعية', 'أفعال ومصادر'],
   },
   {
+    id: 'spelling-lesson-03',
+    sectionId: 'spelling',
+    number: '٣',
+    eyebrow: 'الهمزة المتوسطة',
+    title: 'الهمزة المتوسطة — قواعد كتابتها على الألف والواو والياء والسطر',
+    documentTitle: 'الدرس الثالث: الهمزة المتوسطة',
+    summary:
+      'قاعدة أقوى الحركات، وكرسي الهمزة على الألف والواو والنبرة والسطر، والحالات الخاصة، مع أنشطة واختبار (٣٠ درجة) وحلول.',
+    duration: '٩٠',
+    strand: 'الإملاء',
+    available: true,
+    parts: ['ألف', 'واو', 'نبرة', 'سطر'],
+  },
+  {
     id: 'morphology-lesson-01',
     sectionId: 'morphology',
     number: '١',

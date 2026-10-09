@@ -36,7 +36,8 @@ const packageJson = read('package.json')
 const parsingCheck = read('scripts/check-parsing.mjs')
 const styles = read('src/styles/lesson-nine.css')
 const main = read('src/main.tsx')
-const fullSource = `${lesson}\n${registry}\n${app}`
+const sharedSolutions = read('src/shared/test/components/SolutionsArea.tsx')
+const fullSource = `${lesson}\n${registry}\n${app}\n${sharedSolutions}`
 
 function requirePhrase(phrase, label = phrase, haystack = fullSource) {
   if (!haystack.includes(phrase)) failures.push(`Missing Lesson 9 source phrase: ${label}`)
@@ -477,7 +478,7 @@ requirePhrase('هذه أسئلة المصدر للمراجعة، وليست اخ
 requirePhrase('حلول أسئلة نهاية الدرس في المصدر (١–٢٧)', 'teacher answer key heading', lesson)
 
 /* 19. the platform test: exactly 20 new questions with the required blueprint */
-const quizBlock = lesson.slice(lesson.indexOf('const quizQuestions'), lesson.indexOf('interface TestResult'))
+const quizBlock = lesson.slice(lesson.indexOf('const quizQuestions'), lesson.indexOf('function toTestQuestion'))
 const quizIds = [...quizBlock.matchAll(/id: 'q(\d+)'/g)].map((match) => Number(match[1]))
 if (quizIds.length !== 20) failures.push(`The platform test has ${quizIds.length} questions; expected exactly 20.`)
 if (quizIds.some((id, index) => id !== index + 1)) failures.push('The platform test question ids are not sequential 1–20.')
@@ -525,26 +526,22 @@ for (const prompt of quizPrompts) {
   if (sourcePrompts.includes(prompt)) failures.push(`The platform test copies a source question: ${prompt}`)
 }
 
-/* 20. test UX rules: no feedback before submit, restart clears answers */
-requirePhrase('الإجابات الصحيحة إلا بعد تسليم الاختبار.', 'no-feedback-before-submit note', lesson)
-requirePhrase('تسليم الاختبار', 'submit button', lesson)
-requirePhrase('أعد الاختبار', 'restart button in the test', lesson)
+/* 20. test UX rules: page-level checking via the shared framework; restart clears answers */
+requirePhrase('لا تظهر التغذية الراجعة ولا الإجابات الصحيحة إلا بعد التحقق من الصفحة.', 'no-feedback-before-page-check note', lesson)
 requirePhrase('أعد المحاولة', 'restart button in activities', lesson)
-requirePhrase('data-testid="lesson9-official-test"', 'platform test hook', lesson)
-requirePhrase('data-testid="lesson9-solutions"', 'solutions hook', lesson)
-if (!/setSubmitted\(false\)[\s\S]{0,120}setAnswers\(\{\}\)/.test(lesson)) {
-  failures.push('Restarting the platform test must clear the submitted state and the previous answers.')
-}
-if (!/onReset=\{\(\) => setTestResult\(null\)\}/.test(lesson)) {
-  failures.push('Restarting the platform test must also clear the previous result.')
-}
-const testArea = lesson.slice(lesson.indexOf('function TestArea'), lesson.indexOf('function SolutionsArea'))
-for (const leaked of ['is-good', 'is-bad', 'الإجابة الصحيحة', 'إجابة صحيحة', 'الإجابة النموذجية']) {
-  if (testArea.includes(leaked)) failures.push(`The platform test leaks feedback before submission: ${leaked}`)
-}
-if (!/disabled=\{submitted\}/.test(testArea)) failures.push('The platform test fields must be disabled after submission.')
+requirePhrase('testId="lesson9-official-test"', 'platform test hook', lesson)
+requirePhrase('testId="lesson9-solutions"', 'solutions hook', lesson)
+if (!lesson.includes('export const testDefinition: TestDefinition')) failures.push('The platform test must be declared once in the shared platform schema (testDefinition).')
+if (!lesson.includes('<TestRunner')) failures.push('The platform test must render through the shared TestRunner (page-level «تحقّق من الإجابات» on every page).')
+if (!lesson.includes('useTestEngine(testDefinition)')) failures.push('The platform test must use the shared engine so answers and page results survive navigation.')
+if (!lesson.includes("matching: 'loose'")) failures.push('The platform test must keep its harakat-insensitive grading (matching: loose).')
+if (lesson.includes('setTestResult') || lesson.includes('const [testResult')) failures.push('The platform test must not keep legacy result state; the shared engine owns results and reset.')
+if (lesson.includes('function TestArea')) failures.push('The bespoke TestArea must be replaced by the shared TestRunner.')
+if (lesson.includes('disabled={submitted}')) failures.push('The platform test must not lock fields after submission; rechecking after edits is required.')
 
-/* 21. solutions area: gated, grouped five per group, explanatory */
+/* 21. solutions area: shared structured area, gated per checked page, grouped five per group */
+if (!lesson.includes('<SolutionsArea')) failures.push('The solutions step must render the shared SolutionsArea.')
+if (!lesson.includes('engine={testEngine}')) failures.push('The solutions area must share the test engine (per-page reveal).')
 for (const group of [
   'المجموعة الأولى: الأسئلة 1–5',
   'المجموعة الثانية: الأسئلة 6–10',
@@ -553,10 +550,9 @@ for (const group of [
 ]) {
   requirePhrase(group, `solutions group ${group}`, lesson)
 }
-requirePhrase('الإجابة الصحيحة:', 'solutions show the correct answer label', lesson)
-requirePhrase('التفسير:', 'solutions include an explanation label', lesson)
-requirePhrase('أكمل «اختبار الدرس التاسع» وسلّمه أولًا', 'solutions are gated behind the test', lesson)
-if (!/result: TestResult \| null/.test(lesson)) failures.push('Solutions must be gated on the submitted test result.')
+requirePhrase('الإجابة الصحيحة:', 'solutions show the correct answer label', sharedSolutions)
+requirePhrase('التفسير:', 'solutions include an explanation label', sharedSolutions)
+if (lesson.includes('function SolutionsArea')) failures.push('The bespoke SolutionsArea must be replaced by the shared SolutionsArea.')
 
 /* 22. teacher area sections */
 for (const section of [

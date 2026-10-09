@@ -4,16 +4,52 @@ import { TeacherSpace } from '../shared/teacher/TeacherSpace'
 import { COURSE_TEACHER_PASSWORD } from '../shared/teacher/teacherPassword'
 import * as C from './morphology-lesson-01/content'
 import {
-  answerKey,
-  autoStatus,
-  gradeTest,
+  SolutionsArea,
+  TestPageView,
+  answeredCount,
+  autoFields,
   looseKey,
   normalizeAnswer,
-  readableAnswer,
-  answeredCount,
-  type AnswerMap,
-  type TestResult,
-} from './morphology-lesson-01/grading'
+  useTestEngine,
+  type TestDefinition,
+  type TestEngine,
+  type TestQuestion,
+} from '../shared/test'
+
+
+/* ================================================================== *
+ * اختبار الدرس — shared platform test framework (src/shared/test).
+ * The six source groups become six checkable pages, each ending with
+ * «تحقّق من الإجابات». Essay parts (التعليل والتفكير) are manual-review;
+ * source-provided answers (1–40) are shown with their source badge.
+ * ================================================================== */
+
+function toTestQuestion(question: C.MorphTestQuestion): TestQuestion {
+  return {
+    id: question.id,
+    number: question.number,
+    type: question.type,
+    prompt: question.prompt,
+    fields: question.fields,
+    explanation: question.explanation,
+    teacherAnswer: question.teacherAnswer,
+    sourceAnswer: question.number <= 40 ? C.sourceAnswers[question.number] : undefined,
+    answerSource: question.number <= 40 ? 'source' : 'platform',
+  }
+}
+
+/** The lesson's test, declared once in the shared platform schema. */
+// eslint-disable-next-line react-refresh/only-export-components -- the test schema is lesson data, not a component.
+export const testDefinition: TestDefinition = { id: 'morphology-lesson-01-test', title: 'اختبار الدرس الأول', matching: 'strict',
+  description: C.testSubtitle,
+  pages: C.testGroups.map((group) => ({
+    id: group.id,
+    title: group.title,
+    questions: C.testQuestions
+      .filter((question) => question.number >= group.from && question.number <= group.to)
+      .map(toTestQuestion),
+  })),
+}
 
 interface Props {
   onProgressChange?: (value: number) => void
@@ -706,229 +742,60 @@ function ActivityGroupStep({ from, to, title }: { from: number; to: number; titl
 }
 
 /* ================================================================== *
- * اختبار المنصة: ستة أجزاء ثم التسليم والنتيجة
+ * اختبار المنصة: كل مجموعة صفحة قابلة للتحقق — shared test framework
  * ================================================================== */
 
-function TestGroupStep({
-  from,
-  to,
-  title,
-  answers,
-  submitted,
-  onAnswer,
-}: {
-  from: number
-  to: number
-  title: string
-  answers: AnswerMap
-  submitted: boolean
-  onAnswer: (questionId: string, fieldIndex: number, value: string[]) => void
-}) {
-  const questions = C.testQuestions.filter((question) => question.number >= from && question.number <= to)
-  return (
-    <section className="official-test morph-test" data-testid={`morph-test-${from}`}>
-      <div className="official-test__intro">
-        <strong>{title}</strong>
-        <span>{questions.length} أسئلة</span>
-        <p>
-          {submitted
-            ? 'تم تسليم الاختبار. الإجابات مقفلة، ولن تظهر النتيجة هنا.'
-            : 'أجب عن الأسئلة. لا يظهر أي تصحيح أثناء الحل، وتُحفظ إجاباتك عند الانتقال بين الخطوات.'}
-        </p>
-      </div>
-      <div className="official-test__groups">
-        {questions.map((question) => (
-          <fieldset
-            className="official-question morph-test-question"
-            key={question.id}
-            disabled={submitted}
-            data-testid={`morph-question-${question.id}`}
-          >
-            <legend>
-              <span className="question-number">
-                السؤال <bdi>{question.number}</bdi>
-              </span>{' '}
-              <span className="morph-type">{question.type}</span>{' '}
-              <bdi>{question.prompt}</bdi>
-            </legend>
-            {question.fields.map((field, fieldIndex) => {
-              const value = answers[answerKey(question.id, fieldIndex)] ?? []
-              const label = field.label
-              if (field.kind === 'choice') {
-                return (
-                  <div className="official-options" role="radiogroup" aria-label={`${question.prompt} — ${label}`} key={label}>
-                    {field.options.map((option) => (
-                      <label key={option}>
-                        <input
-                          type="radio"
-                          name={`${question.id}-${fieldIndex}`}
-                          value={option}
-                          checked={value[0] === option}
-                          onChange={() => onAnswer(question.id, fieldIndex, [option])}
-                        />
-                        <span>
-                          <bdi>{option}</bdi>
-                        </span>
-                      </label>
-                    ))}
-                  </div>
-                )
-              }
-              if (field.kind === 'text') {
-                return (
-                  <label className="morph-field" key={`${label}-${fieldIndex}`}>
-                    <span>{label}</span>
-                    <input
-                      value={value[0] ?? ''}
-                      placeholder={field.placeholder}
-                      aria-label={`${question.prompt} — ${label}`}
-                      onChange={(event) => onAnswer(question.id, fieldIndex, [event.target.value])}
-                    />
-                  </label>
-                )
-              }
-              return (
-                <label className="morph-field morph-field--essay" key={`${label}-${fieldIndex}`}>
-                  <span>
-                    {label} <small>(يُراجع يدويًا)</small>
-                  </span>
-                  <textarea
-                    value={value[0] ?? ''}
-                    placeholder={field.placeholder}
-                    aria-label={`${question.prompt} — ${label}`}
-                    onChange={(event) => onAnswer(question.id, fieldIndex, [event.target.value])}
-                  />
-                </label>
-              )
-            })}
-          </fieldset>
-        ))}
-      </div>
-    </section>
-  )
-}
+/** The final step: combines the latest valid page results into the final result. */
+function SubmitStep({ engine }: { engine: TestEngine }) {
+  const answered = answeredCount(C.testQuestions, engine.answers)
+  const { finalResult, allPagesChecked } = engine
+  // The automatic degree covers the automatically gradable questions only
+  // (objective + roots + the automatic part of the analysis questions).
+  const autoTotal = C.testQuestions.filter((question) => autoFields(question).length > 0).length
 
-function SubmitStep({
-  answers,
-  result,
-  onSubmit,
-  onRestart,
-}: {
-  answers: AnswerMap
-  result: TestResult | null
-  onSubmit: () => void
-  onRestart: () => void
-}) {
-  const answered = answeredCount(C.testQuestions, answers)
-  if (!result) {
-    return (
-      <section className="morph-submit" aria-labelledby="submit-title">
-        <h3 id="submit-title">تسليم الاختبار</h3>
-        <p>
-          أجبت عن <bdi>{answered}</bdi> من <bdi>45</bdi> سؤالًا. ستظهر النتيجة بعد التسليم فقط.
-        </p>
-        <p className="morph-muted">{C.manualReviewNote}</p>
-        <button type="button" className="button button--primary" onClick={onSubmit}>
-          تسليم الاختبار وإظهار النتيجة
-        </button>
-      </section>
-    )
-  }
   return (
-    <section className="morph-submit" aria-labelledby="result-title" role="status">
-      <h3 id="result-title">نتيجة الاختبار</h3>
-      <p className="morph-score">
-        النتيجة الآلية: <bdi>{result.autoCorrect} / {result.autoTotal}</bdi>
-      </p>
-      <ul className="morph-counts">
-        <li>
-          إجابات صحيحة: <bdi>{result.autoCorrect}</bdi>
-        </li>
-        <li>
-          إجابات خاطئة: <bdi>{result.autoWrong}</bdi>
-        </li>
-        <li>
-          أسئلة غير مجابة: <bdi>{result.autoUnanswered}</bdi>
-        </li>
-      </ul>
+    <section className="morph-submit" aria-labelledby="submit-title">
+      <h3 id="submit-title">تسليم الاختبار والنتيجة</h3>
       <p>
-        أسئلة تحتاج مراجعة يدوية: <bdi>{result.manualIds.length}</bdi> (الأسئلة من ٣١ إلى ٣٥، ومن ٤١ إلى ٤٥،
-        وتفسير الأسئلة ٣٨–٤٠). هذه الأسئلة لا تُصحَّح آليًا ولا تدخل في الدرجة الآلية.
+        أجبت عن <bdi>{answered}</bdi> من <bdi>45</bdi> سؤالًا.
       </p>
-      <ul className="morph-counts morph-counts--types">
-        {C.testGroups.map((group) => {
-          const stats = result.byType[group.type] ?? { total: 0, correct: 0 }
-          return (
-            <li key={group.id}>
-              {group.type}: <bdi>{stats.correct} / {stats.total}</bdi>
+      <p className="morph-muted">{C.manualReviewNote}</p>
+      {!allPagesChecked ? (
+        <p>تحقّق من كل صفحة أولًا («تحقّق من الإجابات» في نهاية كل صفحة) لتظهر النتيجة النهائية.</p>
+      ) : (
+        <div role="status">
+          <p className="morph-score">
+            النتيجة الآلية: <bdi>{finalResult.correct} / {autoTotal}</bdi>
+          </p>
+          <ul className="morph-counts">
+            <li>
+              إجابات صحيحة: <bdi>{finalResult.correct}</bdi>
             </li>
-          )
-        })}
-      </ul>
-      <button type="button" className="button button--secondary" onClick={onRestart}>
-        إعادة الاختبار
-      </button>
-    </section>
-  )
-}
-
-function SolutionsStep({ result, answers }: { result: TestResult | null; answers: AnswerMap }) {
-  if (!result) {
-    return (
-      <section className="morph-panel">
-        <p>تظهر الحلول بعد تسليم الاختبار من خطوة «تسليم الاختبار وإظهار النتيجة».</p>
-      </section>
-    )
-  }
-  return (
-    <section className="morph-solutions" aria-label="حلول الاختبار">
-      {C.testQuestions.map((question) => {
-        const status = autoStatus(question, answers)
-        const manual = question.fields.some((field) => field.kind === 'essay')
-        return (
-          <article key={question.id} className="morph-solution">
-            <p className="morph-solution__head">
-              <span className="question-number">
-                السؤال <bdi>{question.number}</bdi>
-              </span>{' '}
-              <bdi>{question.prompt}</bdi>
-            </p>
-            <p className="morph-solution__status">
-              {manual && status === null && <span className="morph-pill">يُراجع يدويًا</span>}
-              {status === 'correct' && <span className="morph-pill morph-pill--ok">إجابة صحيحة</span>}
-              {status === 'wrong' && <span className="morph-pill morph-pill--no">إجابة غير صحيحة</span>}
-              {status === 'unanswered' && <span className="morph-pill">غير مجابة</span>}
-              {manual && status !== null && <span className="morph-pill">الجزء التفسيري يُراجع يدويًا</span>}
-            </p>
-            {question.fields.map((field, index) => {
-              const value = answers[answerKey(question.id, index)]
-              const mine = readableAnswer(field, value)
-              if (field.kind === 'essay') {
-                return (
-                  <p key={index}>
-                    <strong>إجابتك:</strong> {mine ?? 'لم تُكتب إجابة.'}
-                  </p>
-                )
-              }
-              const shown = field.kind === 'choice' ? field.answer : field.accept[0]
+            <li>
+              إجابات خاطئة: <bdi>{finalResult.wrong}</bdi>
+            </li>
+            <li>
+              أسئلة غير مجابة: <bdi>{finalResult.unanswered}</bdi>
+            </li>
+            <li>
+              أسئلة للمراجعة مع المعلم: <bdi>{finalResult.manual}</bdi>
+            </li>
+          </ul>
+          <ul className="morph-counts morph-counts--types">
+            {C.testGroups.map((group) => {
+              const stats = finalResult.byGroup[group.type] ?? { total: 0, correct: 0 }
               return (
-                <p key={index}>
-                  <strong>{field.label}:</strong> إجابتك <bdi>{mine ?? '—'}</bdi> — الصحيح{' '}
-                  <bdi>{shown}</bdi>
-                </p>
+                <li key={group.id}>
+                  {group.type}: <bdi>{stats.correct} / {stats.total}</bdi>
+                </li>
               )
             })}
-            {question.number <= 40 && (
-              <p className="morph-solution__source">
-                <strong>الجواب المعتمد من المصدر:</strong> <bdi>{C.sourceAnswers[question.number]}</bdi>
-              </p>
-            )}
-            <p className="morph-solution__why">
-              <strong>لماذا؟ (توضيح تعليمي من المنصة)</strong> {question.explanation}
-            </p>
-          </article>
-        )
-      })}
+          </ul>
+          <button type="button" className="button button--secondary" onClick={engine.resetTest}>
+            إعادة الاختبار
+          </button>
+        </div>
+      )}
     </section>
   )
 }
@@ -947,27 +814,7 @@ function TeacherArea() {
           الأسئلة 41–45 لم يرد لها جواب في المصدر؛ والإجابات الواردة لها نماذج من إعداد المنصة، ويُقبل أي جواب
           تعبيري صحيح.
         </p>
-        {C.testQuestions.map((question) => (
-          <div key={question.id}>
-            <p>
-              <strong>السؤال {question.number}</strong> (<bdi>{question.type}</bdi>): <bdi>{question.prompt}</bdi>
-            </p>
-            {question.number <= 40 && (
-              <p>
-                <strong>الجواب المعتمد من المصدر: </strong>
-                <bdi>{C.sourceAnswers[question.number]}</bdi>
-              </p>
-            )}
-            <p>
-              {question.number > 40 ? (
-                <strong>إجابة نموذجية من إعداد المنصة (لم ترد في المصدر): </strong>
-              ) : (
-                <strong>توضيح تعليمي من المنصة: </strong>
-              )}
-              {question.teacherAnswer}
-            </p>
-          </div>
-        ))}
+        <SolutionsArea test={testDefinition} mode="teacher" title="الإجابات النموذجية التفصيلية للاختبار" eyebrow="منطقة المعلم" />
 
         <h3>ب. حلول النشاط التطبيقي (15 كلمة): من إعداد المنصة</h3>
         <p>لم يرد في المصدر حل لأسئلة النشاط التطبيقي؛ الحلول التالية توضيح تعليمي من المنصة.</p>
@@ -1057,39 +904,17 @@ function Bullets({ items }: { items: string[] }) {
 }
 
 export function LessonMorphologyOne({ onProgressChange, onFinish }: Props) {
-  const [testAnswers, setTestAnswers] = useState<AnswerMap>({})
-  const [testResult, setTestResult] = useState<TestResult | null>(null)
+  // The shared test engine lives here, above LessonFlow, so answers and page
+  // results survive step navigation (see docs/lesson-test-standards.md).
+  const testEngine = useTestEngine(testDefinition)
 
-  function setTestAnswer(questionId: string, fieldIndex: number, value: string[]) {
-    setTestAnswers((current) => ({ ...current, [answerKey(questionId, fieldIndex)]: value }))
-  }
-
-  function submitTest() {
-    setTestResult(gradeTest(C.testQuestions, testAnswers))
-  }
-
-  function restartTest() {
-    setTestAnswers({})
-    setTestResult(null)
-  }
-
-  const submitted = testResult !== null
-  const testGroupSteps = C.testGroups.map((group) =>
-    step(
-      `test-${group.id}`,
-      `${group.title}`,
-      'الاختبار الإلكتروني',
-      '📝',
-      <TestGroupStep
-        from={group.from}
-        to={group.to}
-        title={group.title}
-        answers={testAnswers}
-        submitted={submitted}
-        onAnswer={setTestAnswer}
-      />,
-    ),
-  )
+  const testGroupSteps = C.testGroups.map((group) => {
+    const page = testDefinition.pages.find((item) => item.id === group.id)
+    if (!page) throw new Error(`Missing test page for group ${group.id}`)
+    return step(`test-${group.id}`, `${group.title}`, 'الاختبار الإلكتروني', '📝', (
+      <TestPageView page={page} engine={testEngine} questionTestIdPrefix="morph-question" />
+    ))
+  })
 
   const steps: LessonStepDefinition[] = [
     step('intro', 'الدرس الأول: مدخل إلى علم الصرف', 'البداية', '📘', <IntroStep />),
@@ -1139,11 +964,9 @@ export function LessonMorphologyOne({ onProgressChange, onFinish }: Props) {
     step('summary', '33. خلاصة الدرس', 'الخلاصة', '📌', <SummaryStep />),
 
     ...testGroupSteps,
-    step('submit', 'تسليم الاختبار والنتيجة', 'الاختبار الإلكتروني', '✅', (
-      <SubmitStep answers={testAnswers} result={testResult} onSubmit={submitTest} onRestart={restartTest} />
-    )),
+    step('submit', 'تسليم الاختبار والنتيجة', 'الاختبار الإلكتروني', '✅', <SubmitStep engine={testEngine} />),
     step('solutions', 'حلول الاختبار', 'الاختبار الإلكتروني', '📗', (
-      <SolutionsStep result={testResult} answers={testAnswers} />
+      <SolutionsArea test={testDefinition} engine={testEngine} testId="morphology-solutions" title="حلول اختبار الدرس الأول" />
     )),
 
     step('next-lesson', 'تمهيد الدرس الثاني', 'ما بعد الدرس', '➡️', <NextLessonStep />),

@@ -343,7 +343,7 @@ if (!lesson.includes('aria-pressed=') || !lesson.includes('<select') || !lesson.
 }
 
 /* 22–24. the final test: exactly 25 numbered questions with the official structure */
-const finalBlock = slice('const finalTestQuestions', 'const objectiveAnswers')
+const finalBlock = slice('const finalTestQuestions', 'export const testDefinition')
 const numbers = [...finalBlock.matchAll(/number:\s*(\d+)/g)].map((match) => Number(match[1]))
 if (numbers.length !== 25) failures.push(`Final test has ${numbers.length} numbered questions; expected exactly 25.`)
 for (let number = 1; number <= 25; number += 1) {
@@ -462,11 +462,10 @@ for (const fragment of openAnswers.slice(0, 8)) {
   }
 }
 
-/* 10. final-test UX: nothing is revealed before submission */
-requirePhrase('النتيجة ولا الإجابات النموذجية إلا بعد تسليم الاختبار.', 'no-feedback-before-submit note')
-requirePhrase('تسليم الاختبار', 'submit button')
-requirePhrase('أعد الاختبار', 'restart button')
-if (!/setAnswers\(\{\}\)/.test(lesson)) failures.push('Restarting the final test must clear the draft answers.')
+/* 10. final-test UX: page-level checking through the shared framework; solutions only per checked page */
+if (!lesson.includes('export const testDefinition: TestDefinition')) failures.push('The final test must be declared once in the shared platform schema (testDefinition).')
+if (!lesson.includes('<TestRunner')) failures.push('The final test must render through the shared TestRunner (page-level «تحقّق من الإجابات» on every page).')
+if (!lesson.includes('useTestEngine(testDefinition)')) failures.push('The final test must use the shared engine so answers and page results survive navigation.')
 if (/onChange=\{[\s\S]{0,200}setSubmitted/.test(lesson)) failures.push('Answering must not submit or reveal results immediately.')
 
 /* 25–28. teacher area coverage */
@@ -481,7 +480,7 @@ for (const activityTitle of [
   requirePhrase(activityTitle, `teacher area ${activityTitle}`)
 }
 requirePhrase('الإجابات النموذجية لاختبار نهاية الدرس', 'teacher final-test answer key')
-requirePhrase('{finalTestQuestions.map((question) => (', 'teacher area renders the whole answer key')
+requirePhrase('<SolutionsArea test={testDefinition} mode="teacher"', 'teacher area renders the shared structured answer key')
 for (const phrase of [
   '1. لا تختصر درس المثنى بقاعدة "ان/ين"',
   '2. فرّق بين المثنى وجمع المذكر السالم',

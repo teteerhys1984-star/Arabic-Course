@@ -272,7 +272,7 @@ describe('Lesson 1 as a sequential, one-step-at-a-time flow', () => {
     expect(document.querySelector('.ayn-result')).toHaveTextContent('أكتب')
   })
 
-  it('exposes exactly 20 official questions once the student reaches the test step', async () => {
+  it('exposes the 20 official questions across four checkable pages once the student reaches the test step', async () => {
     goToLesson()
     const user = userEvent.setup()
     render(<App />)
@@ -281,12 +281,21 @@ describe('Lesson 1 as a sequential, one-step-at-a-time flow', () => {
       await user.click(screen.getByRole('button', { name: /التالي/ }))
     }
     expect(screen.getByRole('heading', { name: 'اختبار نهاية الدرس', level: 2 })).toBeInTheDocument()
-    const officialTest = screen.getByTestId('official-test')
-    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(20)
-    expect(within(officialTest).getByText(/أجب عن الأسئلة العشرين كلها/)).toBeInTheDocument()
+    const officialTest = screen.getByTestId('lesson1-official-test')
+    // Page-level checking: the page ends with «تحقّق من الإجابات».
+    expect(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' })).toBeInTheDocument()
+    // The 20 questions are spread over the four pages (6 + 4 + 3 + 7).
+    const counts: number[] = []
+    for (let page = 0; page < 4; page += 1) {
+      counts.push(officialTest.querySelectorAll('.test-question').length)
+      const next = within(officialTest).queryByRole('button', { name: /الصفحة بعدها/ })
+      if (next) await user.click(next)
+    }
+    expect(counts).toEqual([6, 4, 3, 7])
+    expect(counts.reduce((sum, count) => sum + count, 0)).toBe(20)
   })
 
-  it('does not reveal correctness on selection, only after CHECK, and preserves answers when navigating away and back', async () => {
+  it('checks the current page only on demand, distinguishes the answer states, and preserves answers when navigating away and back', async () => {
     goToLesson()
     const user = userEvent.setup()
     render(<App />)
@@ -294,24 +303,32 @@ describe('Lesson 1 as a sequential, one-step-at-a-time flow', () => {
     for (let step = 0; step < 16; step += 1) {
       await user.click(screen.getByRole('button', { name: /التالي/ }))
     }
-    const officialTest = screen.getByTestId('official-test')
-    const firstQuestion = officialTest.querySelector('.official-question')
+    const officialTest = screen.getByTestId('lesson1-official-test')
+    const firstQuestion = officialTest.querySelector('.test-question') as HTMLElement
     expect(firstQuestion).not.toBeNull()
 
     // Selecting an option must not reveal correctness by itself.
-    const options = within(firstQuestion as HTMLElement).getAllByRole('radio')
+    const options = within(firstQuestion).getAllByRole('radio')
     await user.click(options[1])
-    expect(within(firstQuestion as HTMLElement).queryByText('إجابة صحيحة.')).not.toBeInTheDocument()
+    expect(within(firstQuestion).queryByText('إجابة صحيحة')).not.toBeInTheDocument()
+    expect(within(firstQuestion).queryByText('إجابة غير صحيحة')).not.toBeInTheDocument()
     expect(options[1]).toBeChecked()
 
-    // Navigate away (Previous) and back (Next): the selection must be preserved.
+    // Page-level checking evaluates only the current page and reports its state.
+    await user.click(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' }))
+    expect(within(firstQuestion).getByText(/إجابة (صحيحة|غير صحيحة)/)).toBeInTheDocument()
+    expect(within(officialTest).getByTestId('test-page-summary-page-1')).toBeInTheDocument()
+    // The remaining pages are not checked: no feedback and no summary for them.
+    expect(within(officialTest).queryByTestId('test-page-summary-page-2')).not.toBeInTheDocument()
+
+    // Navigate away (Previous) and back (Next): the selection and the page check are preserved.
     await user.click(screen.getByRole('button', { name: /السابق/ }))
     expect(screen.getByRole('heading', { name: 'المراجعة: ملخص الدرس للحفظ', level: 2 })).toBeInTheDocument()
     await user.click(screen.getByRole('button', { name: /التالي/ }))
-    const testAgain = screen.getByTestId('official-test')
-    const firstQuestionAgain = testAgain.querySelector('.official-question')
-    const optionsAgain = within(firstQuestionAgain as HTMLElement).getAllByRole('radio')
-    expect(optionsAgain[1]).toBeChecked()
+    const testAgain = screen.getByTestId('lesson1-official-test')
+    const firstQuestionAgain = testAgain.querySelector('.test-question') as HTMLElement
+    expect(within(firstQuestionAgain).getAllByRole('radio')[1]).toBeChecked()
+    expect(within(testAgain).getByTestId('test-page-summary-page-1')).toBeInTheDocument()
   })
 
   it('keeps complete teacher material behind the teacher gate on its own step', async () => {
@@ -377,7 +394,7 @@ describe('Lesson 2 as a sequential, one-step-at-a-time flow', () => {
     expect(screen.getByRole('heading', { name: 'مدخل الدرس: الجملة الاسمية', level: 2 })).toBeInTheDocument()
   })
 
-  it('exposes all 20 Lesson 2 final-test questions on the final-test step', async () => {
+  it('exposes all 20 Lesson 2 final-test questions across four checkable pages', async () => {
     goToLesson('lesson-2')
     const user = userEvent.setup()
     render(<App />)
@@ -387,9 +404,17 @@ describe('Lesson 2 as a sequential, one-step-at-a-time flow', () => {
     }
     expect(screen.getByRole('heading', { name: 'رابعًا: اختبار نهاية الدرس', level: 2 })).toBeInTheDocument()
     const officialTest = screen.getByTestId('lesson2-official-test')
-    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(20)
+    expect(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' })).toBeInTheDocument()
+    // The 20 questions are spread over the four pages (7 + 5 + 4 + 4).
+    const counts: number[] = []
+    for (let page = 0; page < 4; page += 1) {
+      counts.push(officialTest.querySelectorAll('.test-question').length)
+      const next = within(officialTest).queryByRole('button', { name: /الصفحة بعدها/ })
+      if (next) await user.click(next)
+    }
+    expect(counts).toEqual([7, 5, 4, 4])
+    expect(counts.reduce((sum, count) => sum + count, 0)).toBe(20)
     expect(within(officialTest).getByText(/سؤال تفكير/)).toBeInTheDocument()
-    expect(within(officialTest).getByText(/أجب عن الأسئلة العشرين كلها/)).toBeInTheDocument()
   })
 
   it('keeps Lesson 2 teacher/reference material behind the teacher gate', async () => {
@@ -473,7 +498,7 @@ describe('Lesson 3 as a sequential, one-step-at-a-time flow', () => {
     expect(screen.getByText('→ اللاعبُ = فاعل.')).toBeInTheDocument()
   })
 
-  it('exposes all 20 Lesson 3 final-test questions on the final-test step', async () => {
+  it('exposes all 20 Lesson 3 final-test questions across five checkable pages', async () => {
     goToLesson('lesson-3')
     const user = userEvent.setup()
     render(<App />)
@@ -483,9 +508,17 @@ describe('Lesson 3 as a sequential, one-step-at-a-time flow', () => {
     }
     expect(screen.getByRole('heading', { name: 'رابعًا: اختبار نهاية الدرس', level: 2 })).toBeInTheDocument()
     const officialTest = screen.getByTestId('lesson3-official-test')
-    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(20)
+    expect(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' })).toBeInTheDocument()
+    // The 20 questions are spread over the five pages (8 + 6 + 3 + 2 + 1).
+    const counts: number[] = []
+    for (let page = 0; page < 5; page += 1) {
+      counts.push(officialTest.querySelectorAll('.test-question').length)
+      const next = within(officialTest).queryByRole('button', { name: /الصفحة بعدها/ })
+      if (next) await user.click(next)
+    }
+    expect(counts).toEqual([8, 6, 3, 2, 1])
+    expect(counts.reduce((sum, count) => sum + count, 0)).toBe(20)
     expect(within(officialTest).getByRole('heading', { name: 'خامسًا: سؤال تفكير', level: 3 })).toBeInTheDocument()
-    expect(within(officialTest).getByText(/أجب عن الأسئلة العشرين كلها/)).toBeInTheDocument()
   })
 
   it('keeps Lesson 3 teacher/reference material behind the teacher gate', async () => {
@@ -612,8 +645,16 @@ describe('Lesson 4 as a sequential, one-step-at-a-time flow', () => {
 
     expect(screen.getByRole('heading', { name: 'اختبار نهاية الدرس', level: 2 })).toBeInTheDocument()
     const officialTest = screen.getByTestId('lesson4-official-test')
-    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(20)
-    expect(within(officialTest).getByText('أجب عن الأسئلة العشرين كلها. بعد التحقق تظهر التغذية الراجعة، والأسئلة المفتوحة تراجع معلمك.')).toBeInTheDocument()
+    expect(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' })).toBeInTheDocument()
+    // The 20 questions are spread over the five pages (8 + 6 + 3 + 2 + 1).
+    const counts: number[] = []
+    for (let page = 0; page < 5; page += 1) {
+      counts.push(officialTest.querySelectorAll('.test-question').length)
+      const next = within(officialTest).queryByRole('button', { name: /الصفحة بعدها/ })
+      if (next) await user.click(next)
+    }
+    expect(counts).toEqual([8, 6, 3, 2, 1])
+    expect(counts.reduce((sum, count) => sum + count, 0)).toBe(20)
   })
 
   it('keeps the teacher material gated and exposes the five activity steps in the outline', async () => {
@@ -730,37 +771,55 @@ describe('Lesson 7 as a sequential, one-step-at-a-time flow', () => {
     expect(within(activity).queryByText(/الإجابة الصحيحة:/)).not.toBeInTheDocument()
   })
 
-  it('keeps the 25-question official test unrevealed until submission and clears the draft on restart', async () => {
+  it('checks the 25-question official test page by page, aggregates the final result, and clears the draft on restart', async () => {
     goToLesson('lesson-7')
     const user = userEvent.setup()
     render(<App />)
 
     await user.click(openStep('رابعًا: اختبار نهاية الدرس'))
     const officialTest = screen.getByTestId('lesson7-official-test')
-    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(25)
-    expect(screen.getByRole('heading', { name: 'السؤال السابع: تحدٍّ إضافي', level: 3 })).toBeInTheDocument()
-    expect(within(officialTest).getByText('٢٥ سؤالًا')).toBeInTheDocument()
-    expect(within(officialTest).getByText(/مسلمان – مسلمين – معلمان – معلمين – معلمون – معلمات/)).toBeInTheDocument()
+    expect(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' })).toBeInTheDocument()
+    // The 25 questions are spread over the seven pages (8 + 7 + 3 + 2 + 3 + 1 + 1).
+    const counts: number[] = []
+    for (let page = 0; page < 7; page += 1) {
+      counts.push(officialTest.querySelectorAll('.test-question').length)
+      const next = within(officialTest).queryByRole('button', { name: /الصفحة بعدها/ })
+      if (next) await user.click(next)
+    }
+    expect(counts).toEqual([8, 7, 3, 2, 3, 1, 1])
+    expect(counts.reduce((sum, count) => sum + count, 0)).toBe(25)
 
+    // Jump back to the first page and answer.
+    await user.click(within(officialTest).getByRole('button', { name: /السؤال الأول: اختر الإجابة الصحيحة/ }))
     // Answering reveals nothing by itself.
-    const firstQuestion = officialTest.querySelector('.official-question') as HTMLElement
+    const firstQuestion = officialTest.querySelector('.test-question') as HTMLElement
     const firstOption = within(firstQuestion).getAllByRole('radio')[1]
     await user.click(firstOption)
-    expect(within(officialTest).queryByText(/الإجابة النموذجية/)).not.toBeInTheDocument()
-    expect(within(officialTest).queryByText(/النتيجة الموضوعية/)).not.toBeInTheDocument()
+    expect(within(officialTest).queryByText(/الإجابة الصحيحة:/)).not.toBeInTheDocument()
+    expect(within(officialTest).queryByTestId('test-final-result')).not.toBeInTheDocument()
     expect(firstOption).toBeChecked()
 
-    await user.click(within(officialTest).getByRole('button', { name: 'تسليم الاختبار' }))
-    expect(within(officialTest).getByText(/النتيجة الموضوعية/)).toHaveTextContent('1 / 15')
-    expect(within(officialTest).getAllByText(/الإجابة النموذجية/).length).toBeGreaterThan(0)
+    // Page-level check: only the current page is evaluated.
+    await user.click(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' }))
+    expect(within(officialTest).getByTestId('test-page-summary-page-1')).toHaveTextContent('1 صحيحة')
 
-    // Restart clears the draft.
-    await user.click(within(officialTest).getByRole('button', { name: 'أعد الاختبار' }))
+    // The final result appears only when every page has a valid check.
+    expect(within(officialTest).queryByTestId('test-final-result')).not.toBeInTheDocument()
+    for (let page = 1; page < 7; page += 1) {
+      await user.click(within(officialTest).getByRole('button', { name: /الصفحة بعدها/ }))
+      await user.click(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' }))
+    }
+    expect(screen.getByTestId('test-final-result')).toHaveTextContent('1 / 25')
+
+    // Restart clears the draft and the page results.
+    await user.click(within(officialTest).getByRole('button', { name: 'إعادة الاختبار' }))
     const restarted = screen.getByTestId('lesson7-official-test')
-    const firstAgain = restarted.querySelector('.official-question') as HTMLElement
+    // Jump back to the first page (the runner keeps its page across a restart).
+    await user.click(within(restarted).getByRole('button', { name: /السؤال الأول: اختر الإجابة الصحيحة/ }))
+    const firstAgain = restarted.querySelector('.test-question') as HTMLElement
     expect(within(firstAgain).getAllByRole('radio')[1]).not.toBeChecked()
-    expect(within(restarted).queryByText(/النتيجة الموضوعية/)).not.toBeInTheDocument()
-    expect(within(restarted).queryByText(/الإجابة النموذجية/)).not.toBeInTheDocument()
+    expect(within(restarted).queryByTestId('test-final-result')).not.toBeInTheDocument()
+    expect(within(restarted).queryByText(/الإجابة الصحيحة:/)).not.toBeInTheDocument()
   })
 
   it('keeps the teacher area gated and exposes the complete source answer material', async () => {
@@ -1031,60 +1090,88 @@ describe('Lesson 8 as a native multi-step lesson (الأسماء الخمسة)',
     expect(within(thinking).getByText(/مثنى، مرفوع بالألف/)).toBeInTheDocument()
   })
 
-  it('keeps the 20-question platform test unrevealed until submission and clears the draft on restart', async () => {
+  it('checks the 20-question platform test page by page, aggregates the final result, and clears the draft on restart', async () => {
     goToLesson('lesson-8')
     const user = userEvent.setup()
     render(<App />)
 
     await user.click(openStep('39. اختبار الدرس الثامن (٢٠ سؤالًا)'))
     const officialTest = screen.getByTestId('lesson8-official-test')
-    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(20)
-    expect(within(officialTest).getByText('أساسي: ٦')).toBeInTheDocument()
-    expect(within(officialTest).getByText('متوسط: ٧')).toBeInTheDocument()
-    expect(within(officialTest).getByText('متقدم: ٤')).toBeInTheDocument()
-    expect(within(officialTest).getByText('تفكير: ٣')).toBeInTheDocument()
+    // The 20 questions are spread over four checkable pages of five.
+    const counts: number[] = []
+    for (let page = 0; page < 4; page += 1) {
+      counts.push(officialTest.querySelectorAll('.test-question').length)
+      const next = within(officialTest).queryByRole('button', { name: /الصفحة بعدها/ })
+      if (next) await user.click(next)
+    }
+    expect(counts).toEqual([5, 5, 5, 5])
 
+    // Jump back to the first page via the page navigation.
+    await user.click(within(officialTest).getByRole('button', { name: /المجموعة الأولى: الأسئلة 1–5/ }))
     // Answering reveals nothing by itself.
-    const questionOne = screen.getByTestId('lesson8-test-q1')
-    await user.selectOptions(within(questionOne).getByRole('combobox'), 'جد')
+    await user.selectOptions(within(screen.getByTestId('lesson8-test-q1')).getByRole('combobox'), 'جد')
     await user.selectOptions(within(screen.getByTestId('lesson8-test-q2')).getByRole('combobox'), 'صح')
     expect(within(officialTest).queryByText(/النتيجة:/)).not.toBeInTheDocument()
     expect(within(officialTest).queryByText(/الإجابة الصحيحة/)).not.toBeInTheDocument()
 
-    await user.click(within(officialTest).getByRole('button', { name: 'تسليم الاختبار' }))
-    expect(within(officialTest).getByText(/2 \/ 20/)).toBeInTheDocument()
+    // Page-level check of the first page only.
+    await user.click(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' }))
+    expect(within(officialTest).getByTestId('test-page-summary-page-1')).toHaveTextContent('2 صحيحة')
+
+    // The final result appears only when every page has a valid check.
+    expect(within(officialTest).queryByTestId('test-final-result')).not.toBeInTheDocument()
+    for (let page = 1; page < 4; page += 1) {
+      await user.click(within(officialTest).getByRole('button', { name: /الصفحة بعدها/ }))
+      await user.click(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' }))
+    }
+    expect(screen.getByTestId('test-final-result')).toHaveTextContent('2 / 20')
     expect(within(officialTest).getByText(/إجابات صحيحة:/)).toBeInTheDocument()
 
-    // Restart clears the draft and the previous result.
-    await user.click(within(officialTest).getByRole('button', { name: 'أعد الاختبار' }))
+    // Restart clears the draft and the previous results.
+    await user.click(within(officialTest).getByRole('button', { name: 'إعادة الاختبار' }))
     const restarted = screen.getByTestId('lesson8-official-test')
-    expect(within(restarted).queryByText(/النتيجة:/)).not.toBeInTheDocument()
+    expect(within(restarted).queryByTestId('test-final-result')).not.toBeInTheDocument()
+    // Jump back to the first page (the runner keeps its page across a restart).
+    await user.click(within(restarted).getByRole('button', { name: /المجموعة الأولى: الأسئلة 1–5/ }))
     expect(within(screen.getByTestId('lesson8-test-q1')).getByRole('combobox')).toHaveValue('')
   })
 
-  it('gates the explanatory solutions area behind the submitted test', async () => {
+  it('reveals the structured solutions area page by page — never the solutions of unchecked pages', async () => {
     goToLesson('lesson-8')
     const user = userEvent.setup()
     render(<App />)
 
     await user.click(openStep('40. حلول الاختبار'))
     expect(screen.getByTestId('lesson8-solutions')).toBeInTheDocument()
-    expect(screen.getByText(/أكمل «اختبار الدرس الثامن» وسلّمه أولًا/)).toBeInTheDocument()
-    expect(screen.queryByText('التفسير:')).not.toBeInTheDocument()
+    // Nothing is revealed before any page is checked; all four groups are listed but locked.
+    expect(screen.queryByTestId('solution-q1')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'المجموعة الأولى: الأسئلة 1–5', level: 4 })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'المجموعة الرابعة: الأسئلة 16–20', level: 4 })).toBeInTheDocument()
+    expect(screen.getAllByText(/تحقّق من هذه الصفحة أولًا/)).toHaveLength(4)
 
+    // Check only the first page of the test.
     await user.click(openStep('39. اختبار الدرس الثامن (٢٠ سؤالًا)'))
     const officialTest = screen.getByTestId('lesson8-official-test')
     await user.selectOptions(within(screen.getByTestId('lesson8-test-q1')).getByRole('combobox'), 'جد')
-    await user.click(within(officialTest).getByRole('button', { name: 'تسليم الاختبار' }))
+    await user.click(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' }))
 
+    // Back to the solutions: page 1 is revealed (5 solutions); pages 2–4 stay locked.
     await user.click(openStep('40. حلول الاختبار'))
-    expect(screen.getByText('المجموعة الأولى: الأسئلة 1–5')).toBeInTheDocument()
-    expect(screen.getByText('المجموعة الثانية: الأسئلة 6–10')).toBeInTheDocument()
-    expect(screen.getByText('المجموعة الثالثة: الأسئلة 11–15')).toBeInTheDocument()
-    expect(screen.getByText('المجموعة الرابعة: الأسئلة 16–20')).toBeInTheDocument()
-    expect(screen.getAllByText(/الإجابة الصحيحة:/).length).toBe(20)
-    expect(screen.getAllByText(/التفسير:/).length).toBe(20)
-    expect(screen.getByText(/1 \/ 20/)).toBeInTheDocument()
+    expect(screen.getAllByText(/الإجابة الصحيحة:/)).toHaveLength(5)
+    expect(screen.getAllByText(/التفسير:/)).toHaveLength(5)
+    expect(screen.getAllByText(/تحقّق من هذه الصفحة أولًا/)).toHaveLength(3)
+
+    // Check the remaining pages → all 20 solutions are revealed.
+    await user.click(openStep('39. اختبار الدرس الثامن (٢٠ سؤالًا)'))
+    // The step remounted: re-query the test element (the old reference is stale).
+    const testAgain = screen.getByTestId('lesson8-official-test')
+    for (let page = 1; page < 4; page += 1) {
+      await user.click(within(testAgain).getByRole('button', { name: /الصفحة بعدها/ }))
+      await user.click(within(testAgain).getByRole('button', { name: 'تحقّق من الإجابات' }))
+    }
+    await user.click(openStep('40. حلول الاختبار'))
+    expect(screen.getAllByText(/الإجابة الصحيحة:/)).toHaveLength(20)
+    expect(screen.getAllByText(/التفسير:/)).toHaveLength(20)
   })
 
   it('keeps the Teacher Area behind somer173 with the complete answer material', async () => {
@@ -1590,59 +1677,88 @@ describe('Lesson 9 as a native multi-step lesson (كان وأخواتها)', () 
     expect(within(thinking).getByText(/الماء تحوّل وأصبح باردًا/)).toBeInTheDocument()
   })
 
-  it('keeps the 20-question platform test unrevealed until submission and clears the draft on restart', async () => {
+  it('checks the 20-question platform test page by page, aggregates the final result, and clears the draft on restart', async () => {
     goToLesson('lesson-9')
     const user = userEvent.setup()
     render(<App />)
 
     await user.click(openStep('37. اختبار الدرس التاسع (٢٠ سؤالًا)'))
     const officialTest = screen.getByTestId('lesson9-official-test')
-    expect(officialTest.querySelectorAll('.official-question')).toHaveLength(20)
-    expect(within(officialTest).getByText('أساسي: ٦')).toBeInTheDocument()
-    expect(within(officialTest).getByText('متوسط: ٧')).toBeInTheDocument()
-    expect(within(officialTest).getByText('متقدم: ٤')).toBeInTheDocument()
-    expect(within(officialTest).getByText('تفكير: ٣')).toBeInTheDocument()
+    // The 20 questions are spread over four checkable pages of five.
+    const counts: number[] = []
+    for (let page = 0; page < 4; page += 1) {
+      counts.push(officialTest.querySelectorAll('.test-question').length)
+      const next = within(officialTest).queryByRole('button', { name: /الصفحة بعدها/ })
+      if (next) await user.click(next)
+    }
+    expect(counts).toEqual([5, 5, 5, 5])
 
+    // Jump back to the first page via the page navigation.
+    await user.click(within(officialTest).getByRole('button', { name: /المجموعة الأولى: الأسئلة 1–5/ }))
     // Answering reveals nothing by itself.
     await user.selectOptions(within(screen.getByTestId('lesson9-test-q1')).getByRole('combobox'), 'إنَّ')
     await user.selectOptions(within(screen.getByTestId('lesson9-test-q2')).getByRole('combobox'), 'صح')
     expect(within(officialTest).queryByText(/النتيجة:/)).not.toBeInTheDocument()
     expect(within(officialTest).queryByText(/الإجابة الصحيحة/)).not.toBeInTheDocument()
 
-    await user.click(within(officialTest).getByRole('button', { name: 'تسليم الاختبار' }))
-    expect(within(officialTest).getByText(/2 \/ 20/)).toBeInTheDocument()
+    // Page-level check of the first page only.
+    await user.click(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' }))
+    expect(within(officialTest).getByTestId('test-page-summary-page-1')).toHaveTextContent('2 صحيحة')
+
+    // The final result appears only when every page has a valid check.
+    expect(within(officialTest).queryByTestId('test-final-result')).not.toBeInTheDocument()
+    for (let page = 1; page < 4; page += 1) {
+      await user.click(within(officialTest).getByRole('button', { name: /الصفحة بعدها/ }))
+      await user.click(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' }))
+    }
+    expect(screen.getByTestId('test-final-result')).toHaveTextContent('2 / 20')
     expect(within(officialTest).getByText(/إجابات صحيحة:/)).toBeInTheDocument()
 
-    // Restart clears the draft and the previous result.
-    await user.click(within(officialTest).getByRole('button', { name: 'أعد الاختبار' }))
+    // Restart clears the draft and the previous results.
+    await user.click(within(officialTest).getByRole('button', { name: 'إعادة الاختبار' }))
     const restarted = screen.getByTestId('lesson9-official-test')
-    expect(within(restarted).queryByText(/النتيجة:/)).not.toBeInTheDocument()
+    expect(within(restarted).queryByTestId('test-final-result')).not.toBeInTheDocument()
+    // Jump back to the first page (the runner keeps its page across a restart).
+    await user.click(within(restarted).getByRole('button', { name: /المجموعة الأولى: الأسئلة 1–5/ }))
     expect(within(screen.getByTestId('lesson9-test-q1')).getByRole('combobox')).toHaveValue('')
   })
 
-  it('gates the explanatory solutions area behind the submitted test in four groups of five', async () => {
+  it('reveals the structured solutions area page by page — never the solutions of unchecked pages', async () => {
     goToLesson('lesson-9')
     const user = userEvent.setup()
     render(<App />)
 
     await user.click(openStep('38. حلول الاختبار'))
     expect(screen.getByTestId('lesson9-solutions')).toBeInTheDocument()
-    expect(screen.getByText(/أكمل «اختبار الدرس التاسع» وسلّمه أولًا/)).toBeInTheDocument()
-    expect(screen.queryByText('التفسير:')).not.toBeInTheDocument()
+    // Nothing is revealed before any page is checked; all four groups are listed but locked.
+    expect(screen.queryByTestId('solution-q1')).not.toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'المجموعة الأولى: الأسئلة 1–5', level: 4 })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'المجموعة الرابعة: الأسئلة 16–20', level: 4 })).toBeInTheDocument()
+    expect(screen.getAllByText(/تحقّق من هذه الصفحة أولًا/)).toHaveLength(4)
 
+    // Check only the first page of the test.
     await user.click(openStep('37. اختبار الدرس التاسع (٢٠ سؤالًا)'))
     const officialTest = screen.getByTestId('lesson9-official-test')
     await user.selectOptions(within(screen.getByTestId('lesson9-test-q1')).getByRole('combobox'), 'إنَّ')
-    await user.click(within(officialTest).getByRole('button', { name: 'تسليم الاختبار' }))
+    await user.click(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' }))
 
+    // Back to the solutions: page 1 is revealed (5 solutions); pages 2–4 stay locked.
     await user.click(openStep('38. حلول الاختبار'))
-    expect(screen.getByText('المجموعة الأولى: الأسئلة 1–5')).toBeInTheDocument()
-    expect(screen.getByText('المجموعة الثانية: الأسئلة 6–10')).toBeInTheDocument()
-    expect(screen.getByText('المجموعة الثالثة: الأسئلة 11–15')).toBeInTheDocument()
-    expect(screen.getByText('المجموعة الرابعة: الأسئلة 16–20')).toBeInTheDocument()
-    expect(screen.getAllByText(/الإجابة الصحيحة:/).length).toBe(20)
-    expect(screen.getAllByText(/التفسير:/).length).toBe(20)
-    expect(screen.getByText(/1 \/ 20/)).toBeInTheDocument()
+    expect(screen.getAllByText(/الإجابة الصحيحة:/)).toHaveLength(5)
+    expect(screen.getAllByText(/التفسير:/)).toHaveLength(5)
+    expect(screen.getAllByText(/تحقّق من هذه الصفحة أولًا/)).toHaveLength(3)
+
+    // Check the remaining pages → all 20 solutions are revealed.
+    await user.click(openStep('37. اختبار الدرس التاسع (٢٠ سؤالًا)'))
+    // The step remounted: re-query the test element (the old reference is stale).
+    const testAgain = screen.getByTestId('lesson9-official-test')
+    for (let page = 1; page < 4; page += 1) {
+      await user.click(within(testAgain).getByRole('button', { name: /الصفحة بعدها/ }))
+      await user.click(within(testAgain).getByRole('button', { name: 'تحقّق من الإجابات' }))
+    }
+    await user.click(openStep('38. حلول الاختبار'))
+    expect(screen.getAllByText(/الإجابة الصحيحة:/)).toHaveLength(20)
+    expect(screen.getAllByText(/التفسير:/)).toHaveLength(20)
   })
 
   it('keeps the Teacher Area behind somer173 with the complete answer material', async () => {
@@ -1881,56 +1997,89 @@ describe('Lesson 10 as a native multi-step lesson (إنَّ وأخواتها)', 
     expect(within(activity).getAllByText('إجابة صحيحة')).toHaveLength(6)
   })
 
-  it('keeps the 20-question test unrevealed, keeps answers across steps, and clears them on restart', async () => {
+  it('checks the 20-question test page by page, keeps answers across steps, and clears them on restart', async () => {
     goToLesson('lesson-10')
     const user = userEvent.setup()
     render(<App />)
 
     await user.click(openStep('37. اختبار الدرس العاشر (٢٠ سؤالًا)'))
-    expect(document.querySelectorAll('[data-testid^="lesson10-test-q"]')).toHaveLength(20)
-    expect(screen.getByText('أساسي: ٦')).toBeInTheDocument()
-    expect(screen.getByText('متوسط: ٧')).toBeInTheDocument()
-    expect(screen.getByText('متقدم: ٤')).toBeInTheDocument()
-    expect(screen.getByText('تفكير: ٣')).toBeInTheDocument()
+    const officialTest = screen.getByTestId('lesson10-official-test')
+    // The 20 questions are spread over four checkable pages of five.
+    const counts: number[] = []
+    for (let page = 0; page < 4; page += 1) {
+      counts.push(officialTest.querySelectorAll('.test-question').length)
+      const next = within(officialTest).queryByRole('button', { name: /الصفحة بعدها/ })
+      if (next) await user.click(next)
+    }
+    expect(counts).toEqual([5, 5, 5, 5])
     expect(screen.queryByText('إجابة صحيحة')).not.toBeInTheDocument()
     expect(screen.queryByText('إجابة خاطئة')).not.toBeInTheDocument()
 
+    // Jump back to page 1 and answer two questions.
+    await user.click(within(officialTest).getByRole('button', { name: /المجموعة الأولى: الأسئلة 1–5/ }))
     await user.selectOptions(within(screen.getByTestId('lesson10-test-q01')).getByRole('combobox'), 'كانَ')
     await user.type(within(screen.getByTestId('lesson10-test-q04')).getByRole('textbox'), 'لعل')
-    await user.click(within(screen.getByTestId('lesson10-test-q13')).getByRole('checkbox', { name: 'الفريقَ: اسم ليتَ منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.' }))
-    await user.click(within(screen.getByTestId('lesson10-test-q13')).getByRole('checkbox', { name: 'فائزٌ: خبر ليتَ مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.' }))
 
+    // The solutions step reveals only the checked page (page 1) — nothing else.
+    await user.click(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' }))
     await user.click(openStep('38. حلول الاختبار'))
-    expect(screen.getByText(/أكمل «اختبار الدرس العاشر» وسلّمه أولًا/)).toBeInTheDocument()
+    expect(screen.getAllByText(/الإجابة الصحيحة:/)).toHaveLength(5)
+    expect(screen.getAllByText(/تحقّق من هذه الصفحة أولًا/)).toHaveLength(3)
+
+    // Answers are preserved across step navigation.
     await user.click(openStep('37. اختبار الدرس العاشر (٢٠ سؤالًا)'))
+    // The step remounted: re-query the test element (the old reference is stale).
+    const testAgain = screen.getByTestId('lesson10-official-test')
     expect(within(screen.getByTestId('lesson10-test-q01')).getByRole('combobox')).toHaveValue('كانَ')
     expect(within(screen.getByTestId('lesson10-test-q04')).getByRole('textbox')).toHaveValue('لعل')
 
-    await user.click(screen.getByRole('button', { name: 'تسليم الاختبار' }))
-    expect(screen.getByText(/إجابات صحيحة:/)).toHaveTextContent('إجابات صحيحة: 3')
-    expect(screen.getByText(/إجابات خاطئة:/)).toHaveTextContent('إجابات خاطئة: 0')
-    expect(screen.getByText(/أسئلة غير مجابة:/)).toHaveTextContent('أسئلة غير مجابة: 17')
-    expect(within(screen.getByTestId('lesson10-test-q01')).getByRole('combobox')).toBeDisabled()
+    // Answer the multi-select question on page 3 and check that page.
+    await user.click(within(testAgain).getByRole('button', { name: /المجموعة الثالثة: الأسئلة 11–15/ }))
+    await user.click(within(screen.getByTestId('lesson10-test-q13')).getByRole('checkbox', { name: 'الفريقَ: اسم ليتَ منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.' }))
+    await user.click(within(screen.getByTestId('lesson10-test-q13')).getByRole('checkbox', { name: 'فائزٌ: خبر ليتَ مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.' }))
+    await user.click(within(testAgain).getByRole('button', { name: 'تحقّق من الإجابات' }))
 
-    await user.click(screen.getByRole('button', { name: 'أعد الاختبار' }))
+    // Check the remaining two pages → the final result combines the latest page results.
+    await user.click(within(testAgain).getByRole('button', { name: /المجموعة الثانية: الأسئلة 6–10/ }))
+    await user.click(within(testAgain).getByRole('button', { name: 'تحقّق من الإجابات' }))
+    await user.click(within(testAgain).getByRole('button', { name: /المجموعة الرابعة: الأسئلة 16–20/ }))
+    await user.click(within(testAgain).getByRole('button', { name: 'تحقّق من الإجابات' }))
+    expect(screen.getByTestId('test-final-result')).toHaveTextContent('3 / 20')
+    expect(within(testAgain).getByText(/إجابات صحيحة:/)).toHaveTextContent('3')
+    expect(within(testAgain).getByText(/إجابات غير صحيحة:/)).toHaveTextContent('0')
+    expect(within(testAgain).getByText(/أسئلة لم تُجب:/)).toHaveTextContent('17')
+    // Fields stay editable after checking (recheck after edits is possible).
+    await user.click(within(testAgain).getByRole('button', { name: /المجموعة الأولى: الأسئلة 1–5/ }))
+    expect(within(screen.getByTestId('lesson10-test-q01')).getByRole('combobox')).toBeEnabled()
+
+    // Restart clears the draft and the page results.
+    await user.click(within(testAgain).getByRole('button', { name: 'إعادة الاختبار' }))
     expect(within(screen.getByTestId('lesson10-test-q01')).getByRole('combobox')).toHaveValue('')
     expect(within(screen.getByTestId('lesson10-test-q04')).getByRole('textbox')).toHaveValue('')
-    expect(screen.getByRole('button', { name: 'تسليم الاختبار' })).toBeEnabled()
+    expect(within(testAgain).queryByTestId('test-final-result')).not.toBeInTheDocument()
   })
 
-  it('gates the solutions behind the submitted test and shows four groups of five with the student answer', async () => {
+  it('reveals the solutions page by page and shows four groups of five with the student answer', async () => {
     goToLesson('lesson-10')
     const user = userEvent.setup()
     render(<App />)
 
     await user.click(openStep('38. حلول الاختبار'))
-    expect(screen.getByText(/أكمل «اختبار الدرس العاشر» وسلّمه أولًا/)).toBeInTheDocument()
-    expect(screen.queryByRole('heading', { name: 'المجموعة الأولى: الأسئلة 1–5', level: 4 })).not.toBeInTheDocument()
+    expect(screen.getByTestId('lesson10-solutions')).toBeInTheDocument()
+    // Locked until the pages are checked.
+    expect(screen.queryByTestId('solution-q01')).not.toBeInTheDocument()
+    expect(screen.getAllByText(/تحقّق من هذه الصفحة أولًا/)).toHaveLength(4)
 
+    // Check all four pages of the test.
     await user.click(openStep('37. اختبار الدرس العاشر (٢٠ سؤالًا)'))
-    await user.click(screen.getByRole('button', { name: 'تسليم الاختبار' }))
-    await user.click(openStep('38. حلول الاختبار'))
+    const officialTest = screen.getByTestId('lesson10-official-test')
+    for (let page = 0; page < 4; page += 1) {
+      await user.click(within(officialTest).getByRole('button', { name: 'تحقّق من الإجابات' }))
+      const next = within(officialTest).queryByRole('button', { name: /الصفحة بعدها/ })
+      if (next) await user.click(next)
+    }
 
+    await user.click(openStep('38. حلول الاختبار'))
     for (const title of [
       'المجموعة الأولى: الأسئلة 1–5',
       'المجموعة الثانية: الأسئلة 6–10',
@@ -2048,7 +2197,7 @@ describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف
     expect(screen.getByText(/الخطوة/).closest('div')).toHaveTextContent('الخطوة 1 من')
   })
 
-  it('keeps the exam unrevealed until submission, then grades and resets on restart', async () => {
+  it('checks the exam page by page, reveals solutions per checked page, and resets on restart', async () => {
     goToLesson('morphology-lesson-01')
     const user = userEvent.setup()
     render(<App />)
@@ -2060,11 +2209,26 @@ describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف
     expect(screen.queryByText(/النتيجة الآلية/)).not.toBeInTheDocument()
     expect(screen.queryByText('إجابة صحيحة')).not.toBeInTheDocument()
 
+    // Page-level check of the first page (10 questions).
+    await user.click(screen.getByRole('button', { name: 'تحقّق من الإجابات' }))
+    expect(screen.getByTestId('test-page-summary-mcq')).toHaveTextContent('1 صحيحة')
+
+    // The solutions step reveals only the checked page; the other five stay locked.
     await user.click(screen.getByRole('button', { name: /حلول الاختبار/ }))
-    expect(screen.getByText(/تظهر الحلول بعد تسليم الاختبار/)).toBeInTheDocument()
+    expect(screen.getAllByText(/الإجابة الصحيحة:/)).toHaveLength(10)
+    expect(screen.getAllByText(/تحقّق من هذه الصفحة أولًا/)).toHaveLength(5)
+
+    // The submit step shows the final result only when every page is checked.
+    await user.click(screen.getByRole('button', { name: /تسليم الاختبار والنتيجة/ }))
+    expect(screen.queryByText(/النتيجة الآلية:/)).not.toBeInTheDocument()
+
+    // Check the remaining five pages.
+    for (const group of [/ثانيًا: صح أم خطأ/, /ثالثًا: استخرج الجذر/, /رابعًا: علّل/, /خامسًا: حلّل الكلمات/, /سادسًا: أسئلة تفكير/]) {
+      await user.click(screen.getByRole('button', { name: group }))
+      await user.click(screen.getByRole('button', { name: 'تحقّق من الإجابات' }))
+    }
 
     await user.click(screen.getByRole('button', { name: /تسليم الاختبار والنتيجة/ }))
-    await user.click(screen.getByRole('button', { name: 'تسليم الاختبار وإظهار النتيجة' }))
     expect(screen.getByText(/النتيجة الآلية:/)).toHaveTextContent('1 / 35')
 
     await user.click(screen.getByRole('button', { name: 'إعادة الاختبار' }))

@@ -83,8 +83,10 @@ if (openCount !== 6) failures.push(`Lesson 4 must preserve 3 classification/extr
 for (let number = 1; number <= 20; number += 1) {
   if (!questionBlock.includes(`number: ${number}`)) failures.push(`Missing Lesson 4 official question ${number}.`)
 }
-if (!lesson.includes('officialQuestions.slice(0, 8)')) failures.push('Final test must render the first 8 official questions as multiple choice.')
-if (!lesson.includes('officialQuestions.slice(8, 14)')) failures.push('Final test must render 6 official true/false questions.')
+if (!lesson.includes('export const testDefinition: TestDefinition')) failures.push('The final test must be declared once in the shared platform schema (testDefinition).')
+if (!lesson.includes('from: 1, to: 8')) failures.push('Final test page 1 must render the first 8 official questions as multiple choice.')
+if (!lesson.includes('from: 9, to: 14')) failures.push('Final test page 2 must render 6 official true/false questions.')
+if (!lesson.includes('<TestRunner')) failures.push('The final test must render through the shared TestRunner (page-level checking).')
 
 // Teacher-only answer key, correction guidance, remedial training, mastery threshold, and summary.
 for (const phrase of [

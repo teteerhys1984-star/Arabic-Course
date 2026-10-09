@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from 'react'
 import { EducationalCard } from '../shared/components/EducationalCard'
 import { LessonFlow, type LessonStepDefinition } from '../shared/components/LessonFlow'
+import { SolutionsArea, TestRunner, useTestEngine, type TestDefinition, type TestQuestion } from '../shared/test'
 import { TeacherSpace } from '../shared/teacher/TeacherSpace'
 
 interface Props {
@@ -1266,11 +1267,6 @@ function normalize(value: string | undefined) {
     .trim()
 }
 
-function sameSet(left: string[], right: string[]) {
-  if (left.length !== right.length) return false
-  const normalizedRight = right.map((item) => normalize(item))
-  return left.every((item) => normalizedRight.includes(normalize(item)))
-}
 
 interface ActivityField {
   label: string
@@ -2335,313 +2331,55 @@ const quizQuestions: QuizQuestion[] = [
   },
 ]
 
-interface TestResult {
-  score: number
-  total: number
-  correct: number
-  wrong: number
-  unanswered: number
-  byLevel: Array<{ level: QuizLevel; correct: number; total: number }>
+
+/* ================================================================== *
+ * اختبار المنصة — shared platform test framework (src/shared/test).
+ * Four checkable pages of five questions, each ending with
+ * «تحقّق من الإجابات». The source's harakat-insensitive grading is
+ * preserved through `matching: 'loose'`.
+ * ================================================================== */
+
+function toTestQuestion(question: QuizQuestion): TestQuestion {
+  return {
+    id: question.id,
+    number: question.number,
+    level: question.level,
+    type: question.type,
+    prompt: question.prompt,
+    sentence: question.sentence,
+    fields: question.fields,
+    solution: question.solution,
+    explanation: question.explanation,
+  }
 }
+
+const testPages = [
+  { id: 'page-1', title: 'المجموعة الأولى: الأسئلة 1–5', from: 1, to: 5 },
+  { id: 'page-2', title: 'المجموعة الثانية: الأسئلة 6–10', from: 6, to: 10 },
+  { id: 'page-3', title: 'المجموعة الثالثة: الأسئلة 11–15', from: 11, to: 15 },
+  { id: 'page-4', title: 'المجموعة الرابعة: الأسئلة 16–20', from: 16, to: 20 },
+] as const
+
+/** The lesson's platform test, declared once in the shared platform schema. */
+// eslint-disable-next-line react-refresh/only-export-components -- the test schema is lesson data, not a component.
+export const testDefinition: TestDefinition = { id: 'lesson-9-platform-test', title: 'اختبار الدرس التاسع', matching: 'loose',
+  description:
+    '20 سؤالًا في أربع صفحات — تحقّق من كل صفحة على حدة، وعدّل إجاباتك وأعِد التحقق متى شئت. لا تظهر التغذية الراجعة ولا الإجابات الصحيحة إلا بعد التحقق من الصفحة.',
+  pages: testPages.map((page) => ({
+    id: page.id,
+    title: page.title,
+    questions: quizQuestions
+      .filter((question) => question.number >= page.from && question.number <= page.to)
+      .map(toTestQuestion),
+  })),
+}
+
 
 /** مفاتيح لاتينية آمنة لأسماء المستويات في أنماط العرض. */
-function levelKey(level: QuizLevel) {
-  return level === 'أساسي' ? 'basic' : level === 'متوسط' ? 'medium' : level === 'متقدم' ? 'advanced' : 'thinking'
-}
 
-function isFieldAnswered(value: string[] | undefined) {
-  if (!value || value.length === 0) return false
-  return value.some((entry) => normalize(entry).length > 0)
-}
 
-function isFieldCorrect(field: QuizField, value: string[] | undefined) {
-  if (!value) return false
-  if (field.kind === 'select') return normalize(value[0]) === normalize(field.answer)
-  if (field.kind === 'multi') return sameSet(value, field.answers)
-  return field.accept.some((accepted) => normalize(value[0]) === normalize(accepted))
-}
 
 /** اختبار المنصة: لا تظهر نتيجة ولا إجابة صحيحة قبل تسليم الاختبار. */
-function TestArea({
-  onSubmitted,
-  onReset,
-}: {
-  onSubmitted: (result: TestResult) => void
-  onReset: () => void
-}) {
-  const [answers, setAnswers] = useState<Record<string, string[]>>({})
-  const [submitted, setSubmitted] = useState(false)
-  const [result, setResult] = useState<TestResult | null>(null)
-
-  function setValue(questionId: string, fieldIndex: number, value: string[], multi = false) {
-    setAnswers((current) => {
-      const key = `${questionId}-${fieldIndex}`
-      if (!multi) return { ...current, [key]: value }
-      const existing = current[key] ?? []
-      const next = existing.includes(value[0])
-        ? existing.filter((entry) => entry !== value[0])
-        : [...existing, value[0]]
-      return { ...current, [key]: next }
-    })
-  }
-
-  function questionAnswered(question: QuizQuestion) {
-    return question.fields.every((_, index) => isFieldAnswered(answers[`${question.id}-${index}`]))
-  }
-
-  function questionCorrect(question: QuizQuestion) {
-    return question.fields.every((field, index) => isFieldCorrect(field, answers[`${question.id}-${index}`]))
-  }
-
-  function submit() {
-    const correct = quizQuestions.filter((question) => questionCorrect(question)).length
-    const unanswered = quizQuestions.filter((question) => !questionAnswered(question)).length
-    const levels: QuizLevel[] = ['أساسي', 'متوسط', 'متقدم', 'تفكير']
-    const byLevel = levels.map((level) => {
-      const group = quizQuestions.filter((question) => question.level === level)
-      return {
-        level,
-        total: group.length,
-        correct: group.filter((question) => questionCorrect(question)).length,
-      }
-    })
-    setSubmitted(true)
-    const summary: TestResult = {
-      score: correct,
-      total: quizQuestions.length,
-      correct,
-      wrong: quizQuestions.length - correct - unanswered,
-      unanswered,
-      byLevel,
-    }
-    setResult(summary)
-    onSubmitted(summary)
-  }
-
-  const answeredCount = quizQuestions.filter((question) => questionAnswered(question)).length
-
-  return (
-    <section className="official-test lesson-nine-test" data-testid="lesson9-official-test">
-      <div className="official-test__intro">
-        <strong>اختبار الدرس التاسع</strong>
-        <span>٢٠ سؤالًا</span>
-        <p>
-          اختبار المنصة: ٦ أسئلة أساسية، و٧ متوسطة، و٤ متقدمة، و٣ أسئلة تفكير. لا تظهر النتيجة ولا
-          الإجابات الصحيحة إلا بعد تسليم الاختبار.
-        </p>
-      </div>
-
-      <div className="lesson-nine-test-levels" aria-label="توزيع الأسئلة على المستويات">
-        <span>أساسي: ٦</span>
-        <span>متوسط: ٧</span>
-        <span>متقدم: ٤</span>
-        <span>تفكير: ٣</span>
-      </div>
-
-      <div className="official-test__groups lesson-nine-test-groups">
-        {quizQuestions.map((question) => (
-          <fieldset
-            className="official-question lesson-nine-test-question"
-            key={question.id}
-            disabled={submitted}
-            data-testid={`lesson9-test-${question.id}`}
-            data-level={question.level}
-          >
-            <legend>
-              <span className="question-number">السؤال <bdi>{question.number}</bdi></span> <bdi>{question.prompt}</bdi>
-              <span className={`lesson-nine-level lesson-nine-level--${levelKey(question.level)}`}>{question.level}</span>
-              <span className="lesson-nine-type">{question.type}</span>
-            </legend>
-            {question.sentence && (
-              <p className="lesson-nine-test-sentence">
-                <bdi>{question.sentence}</bdi>
-              </p>
-            )}
-            <div className="lesson-nine-test-fields">
-              {question.fields.map((field, fieldIndex) => {
-                const value = answers[`${question.id}-${fieldIndex}`] ?? []
-                if (field.kind === 'multi') {
-                  return (
-                    <div className="lesson-nine-multi" key={field.label}>
-                      <p className="lesson-nine-field-label">{field.label}</p>
-                      <div className="official-options">
-                        {field.options.map((option) => (
-                          <label key={option}>
-                            <input
-                              type="checkbox"
-                              value={option}
-                              checked={value.includes(option)}
-                              onChange={() => setValue(question.id, fieldIndex, [option], true)}
-                            />
-                            <span><bdi>{option}</bdi></span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  )
-                }
-                if (field.kind === 'text') {
-                  return (
-                    <label className="lesson-nine-field" key={field.label}>
-                      <span>{field.label}</span>
-                      <input
-                        value={value[0] ?? ''}
-                        onChange={(event) => setValue(question.id, fieldIndex, [event.target.value])}
-                        placeholder={field.placeholder}
-                        aria-label={`${question.prompt} — ${field.label}`}
-                      />
-                    </label>
-                  )
-                }
-                return (
-                  <label className="lesson-nine-field" key={field.label}>
-                    <span>{field.label}</span>
-                    <select
-                      value={value[0] ?? ''}
-                      onChange={(event) => setValue(question.id, fieldIndex, [event.target.value])}
-                      aria-label={`${question.prompt} — ${field.label}`}
-                    >
-                      <option value="">اختر…</option>
-                      {field.options.map((option) => (
-                        <option key={option} value={option}>{option}</option>
-                      ))}
-                    </select>
-                  </label>
-                )
-              })}
-            </div>
-          </fieldset>
-        ))}
-      </div>
-
-      <div className="official-test__actions">
-        {!submitted ? (
-          <>
-            <button type="button" className="button button--primary" onClick={submit}>
-              تسليم الاختبار
-            </button>
-            <p className="lesson-nine-test-progress" role="status">
-              أجبت عن <bdi>{answeredCount}</bdi> من <bdi>{quizQuestions.length}</bdi> سؤالًا.
-            </p>
-          </>
-        ) : (
-          <>
-            {result && <ResultPanel result={result} />}
-            <p className="lesson-nine-test-progress">
-              تم تسليم الاختبار. الأرقام أعلاه هي نتيجتك، وانتقل إلى خطوة «حلول الاختبار» لمراجعة كل إجابة
-              وتفسيرها.
-            </p>
-            <button
-              type="button"
-              className="button button--secondary"
-              onClick={() => {
-                setSubmitted(false)
-                setAnswers({})
-                setResult(null)
-                onReset()
-              }}
-            >
-              أعد الاختبار
-            </button>
-          </>
-        )}
-      </div>
-    </section>
-  )
-}
-
-/** لوحة النتيجة: تظهر بعد التسليم فقط — الدرجة والعدّ والتوزيع على المستويات. */
-function ResultPanel({ result }: { result: TestResult }) {
-  return (
-    <div className="lesson-nine-solutions-summary" role="status">
-      <p className="lesson-nine-solutions-score">
-        النتيجة: <bdi>{result.correct} / {result.total}</bdi>
-      </p>
-      <ul className="lesson-nine-counts">
-        <li>إجابات صحيحة: <bdi>{result.correct}</bdi></li>
-        <li>إجابات خاطئة: <bdi>{result.wrong}</bdi></li>
-        <li>أسئلة غير مجابة: <bdi>{result.unanswered}</bdi></li>
-      </ul>
-      <ul className="lesson-nine-counts lesson-nine-counts--levels">
-        {result.byLevel.map((entry) => (
-          <li key={entry.level}>
-            {entry.level}: <bdi>{entry.correct} / {entry.total}</bdi>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-/** حلول الاختبار: أربع مجموعات، كل مجموعة خمسة أسئلة، مع تفسير القاعدة لكل إجابة. */
-function SolutionsArea({ result }: { result: TestResult | null }) {
-  const groups = [
-    { title: 'المجموعة الأولى: الأسئلة 1–5', from: 1, to: 5 },
-    { title: 'المجموعة الثانية: الأسئلة 6–10', from: 6, to: 10 },
-    { title: 'المجموعة الثالثة: الأسئلة 11–15', from: 11, to: 15 },
-    { title: 'المجموعة الرابعة: الأسئلة 16–20', from: 16, to: 20 },
-  ]
-
-  return (
-    <section className="lesson-nine-solutions" data-testid="lesson9-solutions">
-      <EducationalCard title="حلول اختبار الدرس التاسع" eyebrow="منطقة الحلول" tone="accent">
-        {!result ? (
-          <div className="lesson-nine-solutions-gate">
-            <p>
-              أكمل «اختبار الدرس التاسع» وسلّمه أولًا، ثم عُد إلى هذه الخطوة؛ لتظهر لك النتيجة مع حلول
-              جميع الأسئلة مشروحة.
-            </p>
-            <p className="lesson-nine-note">
-              الإجابات النموذجية الكاملة موجودة أيضًا في «منطقة خاصة بالمعلم» لتصحيحها مع معلمك.
-            </p>
-          </div>
-        ) : (
-          <>
-            <p className="lesson-nine-solutions-note">نتيجتك في الاختبار:</p>
-            <ResultPanel result={result} />
-
-            {groups.map((group) => (
-              <div className="lesson-nine-solution-group" key={group.title}>
-                <h4>{group.title}</h4>
-                <ol className="lesson-nine-solution-list">
-                  {quizQuestions
-                    .filter((question) => question.number >= group.from && question.number <= group.to)
-                    .map((question) => (
-                      <li key={question.id}>
-                        <p className="lesson-nine-solution-prompt">
-                          <strong>السؤال <bdi>{question.number}</bdi>:</strong> <bdi>{question.prompt}</bdi>
-                          {question.sentence && <> — <bdi>{question.sentence}</bdi></>}
-                        </p>
-                        <p className="lesson-nine-solution-answer">
-                          <strong>الإجابة الصحيحة:</strong> <bdi>{question.solution}</bdi>
-                        </p>
-                        {question.fields.map((field) => (
-                          <p className="lesson-nine-solution-field" key={field.label}>
-                            {field.label}:{' '}
-                            <bdi>
-                              {field.kind === 'multi'
-                                ? field.answers.join(' — ')
-                                : field.kind === 'select'
-                                  ? field.answer
-                                  : field.accept[0]}
-                            </bdi>
-                          </p>
-                        ))}
-                        <p className="lesson-nine-solution-explain">
-                          <strong>التفسير:</strong> {question.explanation}
-                        </p>
-                      </li>
-                    ))}
-                </ol>
-              </div>
-            ))}
-          </>
-        )}
-      </EducationalCard>
-    </section>
-  )
-}
-
 /* ================================================================== *
  * الخلاصة وملخص الدرس
  * ================================================================== */
@@ -3324,7 +3062,9 @@ function SubSignExample({ id }: { id: string }) {
  * ================================================================== */
 
 export function LessonNine({ onProgressChange, onFinish }: Props) {
-  const [testResult, setTestResult] = useState<TestResult | null>(null)
+  // The shared test engine lives here, above LessonFlow, so answers and page
+  // results survive step navigation (see docs/lesson-test-standards.md).
+  const testEngine = useTestEngine(testDefinition)
 
   const steps: LessonStepDefinition[] = [
     step('intro', 'الدرس التاسع: كان وأخواتها', 'البداية', '📘', (
@@ -3854,10 +3594,12 @@ export function LessonNine({ onProgressChange, onFinish }: Props) {
     step('golden-key', '36. قاعدة سريعة للحفظ ومفتاح الحفظ', 'الخلاصة', '⭐', <GoldenKey />),
 
     step('platform-test', '37. اختبار الدرس التاسع (٢٠ سؤالًا)', 'الاختبار الإلكتروني', '🏁', (
-      <TestArea onSubmitted={setTestResult} onReset={() => setTestResult(null)} />
+      <TestRunner test={testDefinition} engine={testEngine} testId="lesson9-official-test" questionTestIdPrefix="lesson9-test" />
     )),
 
-    step('solutions', '38. حلول الاختبار', 'الاختبار الإلكتروني', '📗', <SolutionsArea result={testResult} />),
+    step('solutions', '38. حلول الاختبار', 'الاختبار الإلكتروني', '📗', (
+      <SolutionsArea test={testDefinition} engine={testEngine} testId="lesson9-solutions" title="حلول اختبار الدرس التاسع" />
+    )),
 
     step('teacher', '39. منطقة خاصة بالمعلم', 'منطقة المعلم', '🔐', <TeacherArea />),
   ]

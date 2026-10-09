@@ -1,4 +1,5 @@
-import { useMemo, useState } from 'react'
+import { useEffect, useMemo } from 'react'
+import { TestRunner, useTestEngine, type TestDefinition, type TestQuestion } from '../test'
 import type { QuizQuestionData } from './types'
 
 interface QuizProps {
@@ -8,26 +9,48 @@ interface QuizProps {
   onComplete?: (score: number, total: number) => void
 }
 
-type Answers = Record<string, string>
-
+/**
+ * The shared quick-check quiz — now built on the platform-wide test framework
+ * (src/shared/test), so it inherits the same page-level checking behaviour as
+ * every lesson test:
+ *
+ *  - the «تحقّق من الإجابات» action checks the quiz page without requiring every
+ *    question to be answered first (unanswered questions are reported);
+ *  - after checking, each question shows correct / wrong / unanswered feedback
+ *    with the explanation;
+ *  - answers can be edited and rechecked — the page result is replaced, never
+ *    double-counted.
+ *
+ * The legacy props (`id`, `title`, `questions`, `onComplete`) are unchanged.
+ */
 export function Quiz({ id = 'quiz', title = 'اختبار قصير', questions, onComplete }: QuizProps) {
-  const [answers, setAnswers] = useState<Answers>({})
-  const [checked, setChecked] = useState(false)
-  const allAnswered = questions.every((question) => answers[question.id])
-  const score = useMemo(
-    () => questions.filter((question) => answers[question.id] === question.correctOptionId).length,
-    [answers, questions],
+  const test = useMemo<TestDefinition>(
+    () => ({
+      id: `${id}-quiz`,
+      title,
+      description: 'أجب عن الأسئلة، ثم تحقّق من إجاباتك في نهاية الصفحة.',
+      pages: [
+        {
+          id: `${id}-page`,
+          title: 'أسئلة التحقق',
+          questions: questions.map<TestQuestion>((question, index) => {
+            const correctLabel =
+              question.options.find((option) => option.id === question.correctOptionId)?.label ??
+              question.correctOptionId
+            return {
+              id: question.id,
+              number: index + 1,
+              prompt: question.prompt,
+              fields: [{ kind: 'choice', options: question.options.map((option) => option.label), answer: correctLabel }],
+              solution: correctLabel,
+              explanation: question.explanation,
+            }
+          }),
+        },
+      ],
+    }),
+    [id, title, questions],
   )
-
-  function reset() {
-    setAnswers({})
-    setChecked(false)
-  }
-
-  function checkAnswers() {
-    setChecked(true)
-    onComplete?.(score, questions.length)
-  }
 
   return (
     <section className="quiz" aria-labelledby={`${id}-title`}>
@@ -36,60 +59,30 @@ export function Quiz({ id = 'quiz', title = 'اختبار قصير', questions, 
           <p className="card__eyebrow">تدريب تفاعلي</p>
           <h3 id={`${id}-title`}>{title}</h3>
         </div>
-        {checked && (
-          <p className="quiz__score" role="status">
-            النتيجة: <bdi>{score} / {questions.length}</bdi>
-          </p>
-        )}
       </div>
-
-      {questions.map((question, questionIndex) => {
-        const isCorrect = answers[question.id] === question.correctOptionId
-        const correctLabel = question.options.find(
-          (option) => option.id === question.correctOptionId,
-        )?.label
-        const questionLabel = `${id}-question-${questionIndex + 1}`
-
-        return (
-          <fieldset className="quiz__question" key={question.id} disabled={checked} aria-labelledby={questionLabel}>
-            <legend id={questionLabel}><span className="question-number">السؤال <bdi>{questionIndex + 1}</bdi></span>{' '}{question.prompt}</legend>
-            <div className="quiz__options">
-              {question.options.map((option) => (
-                <label key={option.id}>
-                  <input
-                    type="radio"
-                    name={`${id}-${question.id}`}
-                    value={option.id}
-                    checked={answers[question.id] === option.id}
-                    onChange={() => setAnswers((current) => ({ ...current, [question.id]: option.id }))}
-                  />
-                  <span>{option.label}</span>
-                </label>
-              ))}
-            </div>
-            {checked && (
-              <div className={`quiz__feedback quiz__feedback--${isCorrect ? 'correct' : 'incorrect'}`}>
-                <strong>{isCorrect ? 'إجابة صحيحة' : 'إجابة غير صحيحة'}</strong>
-                {!isCorrect && <p>الإجابة الصحيحة: {correctLabel}</p>}
-                <p>{question.explanation}</p>
-              </div>
-            )}
-          </fieldset>
-        )
-      })}
-
-      <div className="quiz__actions">
-        {!checked ? (
-          <button className="button button--primary" type="button" disabled={!allAnswered} onClick={checkAnswers}>
-            تحقق من الإجابات
-          </button>
-        ) : (
-          <button className="button button--secondary" type="button" onClick={reset}>
-            أعد المحاولة
-          </button>
-        )}
-        {!allAnswered && !checked && <p>أجب عن جميع الأسئلة أولًا.</p>}
-      </div>
+      <QuizEngine test={test} onComplete={onComplete} />
     </section>
   )
+}
+
+/**
+ * Bridges the shared engine to the legacy `onComplete(score, total)` callback:
+ * fires with the page's latest result whenever a check completes or is replaced.
+ */
+function QuizEngine({
+  test,
+  onComplete,
+}: {
+  test: TestDefinition
+  onComplete?: (score: number, total: number) => void
+}) {
+  const engine = useTestEngine(test)
+  const page = test.pages[0]
+  const result = engine.pageResults[page.id]
+
+  useEffect(() => {
+    if (result && onComplete) onComplete(result.correct, result.total)
+  }, [result, onComplete])
+
+  return <TestRunner test={test} engine={engine} />
 }

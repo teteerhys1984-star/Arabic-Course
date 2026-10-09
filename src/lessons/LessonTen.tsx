@@ -21,7 +21,6 @@ import {
   kanaInnaPairs,
   laitaNote,
   letterData,
-  levelOrder,
   memoryKey,
   mnemonics,
   nasikhaQuiz,
@@ -37,20 +36,54 @@ import {
   workedExamples,
   type ActivityRow,
   type LetterData,
-  type QuizField,
-  type QuizLevel,
-  type TestQuestion,
+  type TestQuestion as LessonTestQuestion,
 } from './lesson-ten/content'
 import {
-  answerKey,
-  answeredCount,
-  gradeTest,
+  SolutionsArea,
+  TestRunner,
   normalizeAnswer,
-  readableAnswer,
-  type AnswerMap,
-  type QuestionStatus,
-  type TestResult,
-} from './lesson-ten/grading'
+  useTestEngine,
+  type TestDefinition,
+  type TestQuestion as SharedTestQuestion,
+} from '../shared/test'
+
+
+/* ================================================================== *
+ * اختبار المنصة — shared platform test framework (src/shared/test).
+ * Four checkable pages of five questions (the source solution groups),
+ * each ending with «تحقّق من الإجابات». The source's harakat-sensitive
+ * grading is preserved through `matching: 'strict'`.
+ * ================================================================== */
+
+function toTestQuestion(question: LessonTestQuestion): SharedTestQuestion {
+  return {
+    id: question.id,
+    number: question.number,
+    level: question.level,
+    type: question.type,
+    prompt: question.prompt,
+    sentence: question.sentence,
+    fields: question.fields,
+    solution: question.solution,
+    rule: question.rule,
+    explanation: question.explanation,
+    parsing: question.parsing,
+  }
+}
+
+/** The lesson's platform test, declared once in the shared platform schema. */
+// eslint-disable-next-line react-refresh/only-export-components -- the test schema is lesson data, not a component.
+export const testDefinition: TestDefinition = { id: 'lesson-10-platform-test', title: 'اختبار الدرس العاشر', matching: 'strict',
+  description:
+    '20 سؤالًا في أربع صفحات — تحقّق من كل صفحة على حدة، وعدّل إجاباتك وأعِد التحقق متى شئت. لا تظهر التغذية الراجعة ولا الإجابات الصحيحة إلا بعد التحقق من الصفحة.',
+  pages: solutionGroups.map((group) => ({
+    id: `page-${group.from}`,
+    title: group.title,
+    questions: testQuestions
+      .filter((question) => question.number >= group.from && question.number <= group.to)
+      .map(toTestQuestion),
+  })),
+}
 
 interface Props {
   onProgressChange?: (value: number) => void
@@ -951,290 +984,6 @@ function MemoryStep() {
   )
 }
 
-/* ================================================================== *
- * اختبار المنصة وحلوله
- * ================================================================== */
-
-function levelClass(level: QuizLevel): string {
-  if (level === 'أساسي') return 'basic'
-  if (level === 'متوسط') return 'medium'
-  if (level === 'متقدم') return 'advanced'
-  return 'thinking'
-}
-
-function ResultPanel({ result }: { result: TestResult }) {
-  return (
-    <div className="lesson-ten-solutions-summary" role="status">
-      <p className="lesson-ten-solutions-score">
-        النتيجة: <bdi>{result.correct} / {result.total}</bdi>
-      </p>
-      <ul className="lesson-ten-counts">
-        <li>
-          إجابات صحيحة: <bdi>{result.correct}</bdi>
-        </li>
-        <li>
-          إجابات خاطئة: <bdi>{result.wrong}</bdi>
-        </li>
-        <li>
-          أسئلة غير مجابة: <bdi>{result.unanswered}</bdi>
-        </li>
-      </ul>
-      <ul className="lesson-ten-counts lesson-ten-counts--levels">
-        {levelOrder.map((level) => (
-          <li key={level}>
-            {level}: <bdi>{result.byLevel[level].correct} / {result.byLevel[level].total}</bdi>
-          </li>
-        ))}
-      </ul>
-    </div>
-  )
-}
-
-function TestArea({
-  answers,
-  result,
-  onAnswer,
-  onSubmit,
-  onRestart,
-}: {
-  answers: AnswerMap
-  result: TestResult | null
-  onAnswer: (questionId: string, fieldIndex: number, value: string[]) => void
-  onSubmit: () => void
-  onRestart: () => void
-}) {
-  const submitted = result !== null
-  const answered = answeredCount(testQuestions, answers)
-
-  return (
-    <section className="official-test lesson-ten-test" data-testid="lesson10-official-test">
-      <div className="official-test__intro">
-        <strong>اختبار الدرس العاشر</strong>
-        <span>٢٠ سؤالًا</span>
-        <p>
-          اختبار المنصة: ٦ أسئلة أساسية، و٧ متوسطة، و٤ متقدمة، و٣ أسئلة تفكير. لا تظهر النتيجة ولا الإجابات
-          الصحيحة إلا بعد تسليم الاختبار.
-        </p>
-      </div>
-
-      <div className="lesson-ten-test-levels" aria-label="توزيع الأسئلة على المستويات">
-        <span>أساسي: ٦</span>
-        <span>متوسط: ٧</span>
-        <span>متقدم: ٤</span>
-        <span>تفكير: ٣</span>
-      </div>
-
-      <div className="official-test__groups lesson-ten-test-groups">
-        {testQuestions.map((question: TestQuestion) => (
-          <fieldset
-            className="official-question lesson-ten-test-question"
-            key={question.id}
-            disabled={submitted}
-            data-testid={`lesson10-test-${question.id}`}
-            data-level={question.level}
-          >
-            <legend>
-              <span className="question-number">
-                السؤال <bdi>{question.number}</bdi>
-              </span>{' '}
-              <bdi>{question.prompt}</bdi>
-              <span className={`lesson-ten-level lesson-ten-level--${levelClass(question.level)}`}>{question.level}</span>
-              <span className="lesson-ten-type">{question.type}</span>
-            </legend>
-            {question.sentence && (
-              <p className="lesson-ten-test-sentence">
-                <bdi>{question.sentence}</bdi>
-              </p>
-            )}
-            <div className="lesson-ten-test-fields">
-              {question.fields.map((field: QuizField, fieldIndex) => {
-                const value = answers[answerKey(question.id, fieldIndex)] ?? []
-                if (field.kind === 'multi') {
-                  return (
-                    <div className="lesson-ten-multi" key={field.label}>
-                      <p className="lesson-ten-field-label">{field.label}</p>
-                      <div className="official-options">
-                        {field.options.map((option) => (
-                          <label key={option}>
-                            <input
-                              type="checkbox"
-                              value={option}
-                              checked={value.includes(option)}
-                              onChange={() =>
-                                onAnswer(
-                                  question.id,
-                                  fieldIndex,
-                                  value.includes(option)
-                                    ? value.filter((entry) => entry !== option)
-                                    : [...value, option],
-                                )
-                              }
-                            />
-                            <span>
-                              <bdi>{option}</bdi>
-                            </span>
-                          </label>
-                        ))}
-                      </div>
-                    </div>
-                  )
-                }
-                if (field.kind === 'text') {
-                  return (
-                    <label className="lesson-ten-field" key={field.label}>
-                      <span>{field.label}</span>
-                      <input
-                        value={value[0] ?? ''}
-                        placeholder={field.placeholder}
-                        aria-label={`${question.prompt} — ${field.label}`}
-                        onChange={(event) => onAnswer(question.id, fieldIndex, [event.target.value])}
-                      />
-                    </label>
-                  )
-                }
-                return (
-                  <label className="lesson-ten-field" key={field.label}>
-                    <span>{field.label}</span>
-                    <select
-                      value={value[0] ?? ''}
-                      aria-label={`${question.prompt} — ${field.label}`}
-                      onChange={(event) => onAnswer(question.id, fieldIndex, [event.target.value])}
-                    >
-                      <option value="">اختر…</option>
-                      {field.options.map((option) => (
-                        <option key={option} value={option}>
-                          {option}
-                        </option>
-                      ))}
-                    </select>
-                  </label>
-                )
-              })}
-            </div>
-          </fieldset>
-        ))}
-      </div>
-
-      <div className="official-test__actions">
-        {!submitted ? (
-          <>
-            <button type="button" className="button button--primary" onClick={onSubmit}>
-              تسليم الاختبار
-            </button>
-            <p className="lesson-ten-test-progress" role="status">
-              أجبت عن <bdi>{answered}</bdi> من <bdi>{testQuestions.length}</bdi> سؤالًا.
-            </p>
-          </>
-        ) : (
-          <>
-            <ResultPanel result={result} />
-            <p className="lesson-ten-test-progress">
-              تم تسليم الاختبار. انتقل إلى خطوة «حلول الاختبار» لمراجعة كل إجابة وتفسيرها.
-            </p>
-            <button type="button" className="button button--secondary" onClick={onRestart}>
-              أعد الاختبار
-            </button>
-          </>
-        )}
-      </div>
-    </section>
-  )
-}
-
-const statusLabel: Record<QuestionStatus, string> = {
-  correct: 'إجابة صحيحة',
-  wrong: 'إجابة خاطئة',
-  unanswered: 'لم تُجب',
-}
-
-/** حلول الاختبار: أربع مجموعات من خمسة أسئلة، وتظهر فقط بعد التسليم. */
-function SolutionsArea({ result, answers }: { result: TestResult | null; answers: AnswerMap }) {
-  return (
-    <section className="lesson-ten-solutions" data-testid="lesson10-solutions">
-      <EducationalCard title="حلول اختبار الدرس العاشر" eyebrow="منطقة الحلول" tone="accent">
-        {!result ? (
-          <div className="lesson-ten-solutions-gate">
-            <p>
-              أكمل «اختبار الدرس العاشر» وسلّمه أولًا، ثم عُد إلى هذه الخطوة؛ لتظهر لك النتيجة مع حلول جميع
-              الأسئلة مشروحة.
-            </p>
-            <p className="lesson-ten-note">
-              الإجابات النموذجية الكاملة موجودة أيضًا في «منطقة خاصة بالمعلم» لتصحيحها مع معلمك.
-            </p>
-          </div>
-        ) : (
-          <>
-            <p className="lesson-ten-solutions-note">نتيجتك في الاختبار:</p>
-            <ResultPanel result={result} />
-
-            {solutionGroups.map((group) => (
-              <div className="lesson-ten-solution-group" key={group.title}>
-                <h4>{group.title}</h4>
-                <ol className="lesson-ten-solution-list">
-                  {testQuestions
-                    .filter((question) => question.number >= group.from && question.number <= group.to)
-                    .map((question) => {
-                      const status = result.statuses[question.id]
-                      const yours = question.fields
-                        .map((field, index) => {
-                          const value = readableAnswer(field, answers[answerKey(question.id, index)])
-                          return value ? `${field.label}: ${value}` : `${field.label}: لم تُجب`
-                        })
-                        .join(' — ')
-                      return (
-                        <li key={question.id}>
-                          <p className="lesson-ten-solution-prompt">
-                            <strong>
-                              السؤال <bdi>{question.number}</bdi>:
-                            </strong>{' '}
-                            <bdi>{question.prompt}</bdi>
-                            {question.sentence && (
-                              <>
-                                {' '}
-                                — <bdi>{question.sentence}</bdi>
-                              </>
-                            )}
-                          </p>
-                          <p className={`lesson-ten-solution-status lesson-ten-solution-status--${status}`}>
-                            {statusLabel[status]}
-                          </p>
-                          <p className="lesson-ten-solution-yours">
-                            <strong>إجابتك:</strong> <bdi>{yours}</bdi>
-                          </p>
-                          <p className="lesson-ten-solution-answer">
-                            <strong>الإجابة الصحيحة:</strong> <bdi>{question.solution}</bdi>
-                          </p>
-                          <p className="lesson-ten-solution-explain">
-                            <strong>القاعدة:</strong> {question.rule}
-                          </p>
-                          <p className="lesson-ten-solution-explain">
-                            <strong>التفسير:</strong> {question.explanation}
-                          </p>
-                          {question.parsing && (
-                            <>
-                              <p>
-                                <strong>الإعراب الكامل:</strong>
-                              </p>
-                              <FullParsing lines={question.parsing} />
-                            </>
-                          )}
-                        </li>
-                      )
-                    })}
-                </ol>
-              </div>
-            ))}
-          </>
-        )}
-      </EducationalCard>
-    </section>
-  )
-}
-
-/* ================================================================== *
- * منطقة المعلم: محمية بكلمة مرور منفصلة عن منطقة الطالب
- * ================================================================== */
-
 function TeacherArea() {
   return (
     <TeacherSpace password="somer173">
@@ -1410,15 +1159,7 @@ function TeacherArea() {
         </p>
 
         <h3>ز. حلول اختبار المنصة (20 سؤالًا)</h3>
-        {testQuestions.map((question) => (
-          <div key={question.id}>
-            <p>
-              السؤال {question.number} ({question.level}): <bdi>{question.solution}</bdi>
-            </p>
-            <p>القاعدة: {question.rule}</p>
-            {question.parsing && <FullParsing lines={question.parsing} />}
-          </div>
-        ))}
+        <SolutionsArea test={testDefinition} mode="teacher" title="حلول اختبار الدرس العاشر" eyebrow="منطقة المعلم" />
       </div>
     </TeacherSpace>
   )
@@ -1429,21 +1170,9 @@ function TeacherArea() {
  * ================================================================== */
 
 export function LessonTen({ onProgressChange, onFinish }: Props) {
-  const [testAnswers, setTestAnswers] = useState<AnswerMap>({})
-  const [testResult, setTestResult] = useState<TestResult | null>(null)
-
-  function setTestAnswer(questionId: string, fieldIndex: number, value: string[]) {
-    setTestAnswers((current) => ({ ...current, [answerKey(questionId, fieldIndex)]: value }))
-  }
-
-  function submitTest() {
-    setTestResult(gradeTest(testQuestions, testAnswers))
-  }
-
-  function restartTest() {
-    setTestAnswers({})
-    setTestResult(null)
-  }
+  // The shared test engine lives here, above LessonFlow, so answers and page
+  // results survive step navigation (see docs/lesson-test-standards.md).
+  const testEngine = useTestEngine(testDefinition)
 
   const steps: LessonStepDefinition[] = [
     step('intro', 'الدرس العاشر: إنَّ وأخواتها', 'البداية', '📘', <IntroStep />),
@@ -1501,17 +1230,11 @@ export function LessonTen({ onProgressChange, onFinish }: Props) {
     step('memory', '36. قاعدة سريعة للحفظ', 'الخلاصة', '💡', <MemoryStep />),
 
     step('platform-test', '37. اختبار الدرس العاشر (٢٠ سؤالًا)', 'الاختبار الإلكتروني', '🏁', (
-      <TestArea
-        answers={testAnswers}
-        result={testResult}
-        onAnswer={setTestAnswer}
-        onSubmit={submitTest}
-        onRestart={restartTest}
-      />
+      <TestRunner test={testDefinition} engine={testEngine} testId="lesson10-official-test" questionTestIdPrefix="lesson10-test" />
     )),
 
     step('solutions', '38. حلول الاختبار', 'الاختبار الإلكتروني', '📗', (
-      <SolutionsArea result={testResult} answers={testAnswers} />
+      <SolutionsArea test={testDefinition} engine={testEngine} testId="lesson10-solutions" title="حلول اختبار الدرس العاشر" />
     )),
 
     step('teacher', '39. منطقة خاصة بالمعلم', 'منطقة المعلم', '🔐', <TeacherArea />),

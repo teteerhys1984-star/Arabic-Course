@@ -27,6 +27,8 @@ const registry = read('src/lessons/registry.ts')
 const content = read('src/lessons/morphology-lesson-01/content.ts')
 const lesson = read('src/lessons/LessonMorphologyOne.tsx')
 const grading = read('src/lessons/morphology-lesson-01/grading.ts')
+const sharedGrading = read('src/shared/test/grading.ts')
+const sharedSolutions = read('src/shared/test/components/SolutionsArea.tsx')
 const app = read('src/app/App.tsx')
 
 // --- Registry: one entry, correct section, number and title ----------------
@@ -74,7 +76,9 @@ if (typeCounts.essayQ !== 10) failures.push(`Expected 10 essay-style questions (
 
 // Essay-style questions must never be auto-graded.
 if (!/essay'/.test(content) || !/kind: 'essay'/.test(content)) failures.push('Essay questions must use an essay field.')
-if (!/if \(field\.kind === 'essay'\)|field\.kind === 'essay'/.test(grading)) failures.push('Grading must treat essay fields as manual review.')
+if (!/kind === 'essay'/.test(sharedGrading)) failures.push('The shared grading engine must treat essay fields as manual review.')
+if (!/essay-only|return answered \? 'manual' : 'unanswered'/.test(sharedGrading)) failures.push('The shared grading engine must report answered essay-only questions as manual review.')
+if (!/from '..\/..\/shared\/test'/.test(grading)) failures.push('The lesson grading module must delegate to the shared engine.')
 
 // --- Activity and worked examples ---------------------------------------
 const wordCount = (content.match(/\{ id: 'w\d{2}'/g) ?? []).length
@@ -92,15 +96,20 @@ if (!/<LessonFlow/.test(lesson)) failures.push('The lesson must render its steps
 if (/teacherAnswer[^\n]*(?:<|\{)/.test(lesson)) {
   // teacherAnswer may only appear in the Teacher Area.
 }
-const solutionsGate = /if \(!result\)/.test(lesson) && /تظهر الحلول بعد تسليم الاختبار/.test(lesson)
-if (!solutionsGate) failures.push('Solutions must be gated until the test is submitted.')
+if (!lesson.includes('export const testDefinition: TestDefinition')) failures.push('The exam must be declared once in the shared platform schema (testDefinition).')
+if (!lesson.includes('<TestPageView')) failures.push('Every exam page must render through the shared TestPageView (page-level «تحقّق من الإجابات»).')
+if (!lesson.includes('useTestEngine(testDefinition)')) failures.push('The exam must use the shared engine so answers and page results survive navigation.')
+if (!lesson.includes('<SolutionsArea')) failures.push('The solutions step must render the shared SolutionsArea.')
+if (!lesson.includes('engine={testEngine}')) failures.push('The solutions area must share the exam engine (per-page reveal).')
+if (!sharedSolutions.includes('تحقّق من هذه الصفحة أولًا')) failures.push('The shared SolutionsArea must keep unchecked pages locked (no premature exposure).')
 if (/النتيجة الآلية/.test(lesson.slice(0, lesson.indexOf('function SubmitStep')))) {
   failures.push('The score must not be rendered before the submit step.')
 }
-if (!/تسليم الاختبار وإظهار النتيجة/.test(lesson)) failures.push('The exam must offer a submit action that reveals results.')
-if (!/إعادة الاختبار/.test(lesson) || !/setTestAnswers\(\{\}\)/.test(lesson)) {
-  failures.push('Retaking the exam must clear previous answers.')
+if (!/function SubmitStep/.test(lesson) || !/allPagesChecked/.test(lesson)) failures.push('The submit step must combine the latest valid page results (final result when all pages are checked).')
+if (!/إعادة الاختبار/.test(lesson) || !/resetTest/.test(lesson)) {
+  failures.push('Retaking the exam must clear previous answers and page results through the shared engine.')
 }
+if (/setTestAnswers\(\{\}\)/.test(lesson)) failures.push('The exam must not keep legacy answer state; the shared engine owns reset.')
 
 // --- Teacher Area ---------------------------------------------------------
 // The password value lives only in the shared constant; the lesson imports it, never copies it.

@@ -1,6 +1,7 @@
 import { useState, type Dispatch, type ReactNode, type SetStateAction } from 'react'
 import { EducationalCard } from '../shared/components/EducationalCard'
 import { LessonFlow, type LessonStepDefinition } from '../shared/components/LessonFlow'
+import { SolutionsArea, TestRunner, useTestEngine, type TestDefinition, type TestQuestion } from '../shared/test'
 import { TeacherSpace } from '../shared/teacher/TeacherSpace'
 
 interface LessonFourProps {
@@ -234,6 +235,60 @@ const officialQuestions: OfficialQuestion[] = [
   },
 ]
 
+/* ================================================================== *
+ * الاختبار النهائي — shared platform test framework (src/shared/test).
+ * Checkable pages, each ending with «تحقّق من الإجابات». Open questions
+ * are manual-review; their model answers stay visible after checking
+ * (revealEssaySolution), as in the source lesson.
+ * ================================================================== */
+
+const testPages = [
+  { id: 'page-1', title: 'أولاً: اختر الإجابة الصحيحة', from: 1, to: 8, type: 'اختيار من متعدد' },
+  { id: 'page-2', title: 'ثانياً: صح أو خطأ', from: 9, to: 14, type: 'صح أو خطأ' },
+  { id: 'page-3', title: 'ثالثاً: التصنيف والاستخراج', from: 15, to: 17, type: 'تصنيف واستخراج' },
+  { id: 'page-4', title: 'رابعاً: التحويل', from: 18, to: 19, type: 'تحويل' },
+  { id: 'page-5', title: 'خامساً: سؤال التفكير', from: 20, to: 20, type: 'تفكير' },
+] as const
+
+function toTestQuestion(question: OfficialQuestion, type: string): TestQuestion {
+  if (question.type === 'choice') {
+    return {
+      id: `q${question.number}`,
+      number: question.number,
+      type,
+      prompt: question.prompt,
+      fields: [{ kind: 'choice', options: question.options ?? [], answer: question.answer }],
+      solution: question.answer,
+      explanation: question.explanation,
+    }
+  }
+  return {
+    id: `q${question.number}`,
+    number: question.number,
+    type,
+    prompt: question.prompt,
+    fields: [{ kind: 'essay', label: 'إجابتك', placeholder: 'اكتب إجابتك هنا' }],
+    solution: question.answer,
+    explanation: question.explanation,
+    teacherAnswer: question.answer,
+    revealEssaySolution: true,
+  }
+}
+
+/** The lesson's official final test, declared once in the shared platform schema. */
+// eslint-disable-next-line react-refresh/only-export-components -- the test schema is lesson data, not a component.
+export const testDefinition: TestDefinition = { id: 'lesson-4-final-test', title: 'اختبار نهاية الدرس',
+  description:
+    '20 سؤالًا في خمس صفحات — تحقّق من كل صفحة على حدة، وعدّل إجاباتك وأعِد التحقق متى شئت. الأسئلة المفتوحة تُراجع مع المعلم.',
+  pages: testPages.map((page) => ({
+    id: page.id,
+    title: page.title,
+    questions: officialQuestions
+      .filter((question) => question.number >= page.from && question.number <= page.to)
+      .map((question) => toTestQuestion(question, page.type)),
+  })),
+}
+
 const solvedExamples = [
   { number: 1, sentence: 'كتبَ الطالبُ الدرسَ.', answer: 'كتبَ = فعل ماضٍ؛ لأنه يدل على حدث انتهى.' },
   { number: 2, sentence: 'يقرأُ سامرٌ الكتابَ.', answer: 'يقرأُ = فعل مضارع؛ لأنه يدل على فعل يحدث الآن أو قد يحدث لاحقًا.' },
@@ -254,8 +309,9 @@ export function LessonFour({ onProgressChange, onFinish }: LessonFourProps) {
   const [transformationChecked, setTransformationChecked] = useState(false)
   const [detectiveAnswer, setDetectiveAnswer] = useState('')
   const [detectiveChecked, setDetectiveChecked] = useState(false)
-  const [testAnswers, setTestAnswers] = useState<Record<number, string>>({})
-  const [testChecked, setTestChecked] = useState(false)
+  // The shared test engine lives here, above LessonFlow, so answers and page
+  // results survive step navigation (see docs/lesson-test-standards.md).
+  const testEngine = useTestEngine(testDefinition)
 
   function setAnswer(setter: Dispatch<SetStateAction<ActivityAnswers>>, id: string, value: string) {
     setter((current) => ({ ...current, [id]: value }))
@@ -872,7 +928,7 @@ export function LessonFour({ onProgressChange, onFinish }: LessonFourProps) {
       group: 'اختبر نفسك',
       icon: '📝',
       description: 'رابعًا: اختبار نهاية الدرس — الاختبار الرسمي: 20 سؤالًا، مع feedback بعد التحقق.',
-      render: () => <OfficialTest answers={testAnswers} checked={testChecked} onChange={(number, value) => setTestAnswers((current) => ({ ...current, [number]: value }))} onCheck={() => setTestChecked(true)} />,
+      render: () => <TestRunner test={testDefinition} engine={testEngine} testId="lesson4-official-test" />,
     },
     {
       id: 'teacher-space',
@@ -975,19 +1031,8 @@ function DetectiveActivity({ answer, checked, onChange, onCheck, onReset }: { an
   return <div className="activity-card detective-card"><ActivityHeader number="٥" title="المحقق اللغوي">اقرأ الجملة، ثم حدّد نوع الفعل وفسّر اختيارك.</ActivityHeader><div className="detective-sentence"><bdi>تكتبُ سارةُ واجبها الآن.</bdi><p>ثم قالت لها أمها: <bdi>اكتبْ العنوانَ.</bdi></p></div><label className="long-answer"><span>ما نوع «تكتبُ» وما نوع «اكتبْ»؟ ولماذا؟</span><textarea rows={4} disabled={checked} value={answer} onChange={(event) => onChange(event.target.value)} placeholder="اكتب ملاحظتك كمحقق لغوي" /></label><ActivityActions checked={checked} disabled={!answer.trim()} onCheck={onCheck} onReset={onReset} />{checked && <p className="activity-feedback activity-feedback--good">الإجابة النموذجية: تكتبُ فعل مضارع يخبر عن فعل يحدث الآن، أما اكتبْ فهو فعل أمر يطلب فعلًا.</p>}</div>
 }
 
-function OfficialTest({ answers, checked, onChange, onCheck }: { answers: Record<number, string>; checked: boolean; onChange: (number: number, value: string) => void; onCheck: () => void }) {
-  const allAnswered = officialQuestions.every((question) => answers[question.number]?.trim())
-  const score = officialQuestions.filter((question) => question.type === 'choice' && answers[question.number] === question.answer).length
-  return <div className="official-test" data-testid="lesson4-official-test" aria-label="اختبار نهاية الدرس الرابع الرسمي"><div className="official-test__intro"><strong>اختبار نهاية الدرس</strong><span>٢٠ سؤالًا</span><p>أجب عن الأسئلة العشرين كلها. بعد التحقق تظهر التغذية الراجعة، والأسئلة المفتوحة تراجع معلمك.</p></div><div className="official-test__groups"><h3>أولًا: اختر الإجابة الصحيحة</h3>{officialQuestions.slice(0, 8).map((question) => <OfficialQuestionView key={question.number} question={question} value={answers[question.number] || ''} checked={checked} onChange={onChange} />)}<h3>ثانيًا: صح أو خطأ</h3>{officialQuestions.slice(8, 14).map((question) => <OfficialQuestionView key={question.number} question={question} value={answers[question.number] || ''} checked={checked} onChange={onChange} />)}<h3>ثالثًا: التصنيف والاستخراج</h3>{officialQuestions.slice(14, 17).map((question) => <OfficialQuestionView key={question.number} question={question} value={answers[question.number] || ''} checked={checked} onChange={onChange} />)}<h3>رابعًا: التحويل</h3>{officialQuestions.slice(17, 19).map((question) => <OfficialQuestionView key={question.number} question={question} value={answers[question.number] || ''} checked={checked} onChange={onChange} />)}<h3>خامسًا: سؤال التفكير</h3>{officialQuestions.slice(19).map((question) => <OfficialQuestionView key={question.number} question={question} value={answers[question.number] || ''} checked={checked} onChange={onChange} />)}</div><div className="official-test__actions"><button type="button" className="button button--primary" disabled={!allAnswered || checked} onClick={onCheck}>تحقق من الاختبار</button>{!allAnswered && !checked && <p>أجب عن الأسئلة العشرين كلها أولًا.</p>}{checked && <p className="official-test__result" role="status">الإجابات الموضوعية الصحيحة: <bdi>{score} / 14</bdi>. راجع الإجابات المفتوحة مع المعلم.</p>}</div></div>
-}
-
-function OfficialQuestionView({ question, value, checked, onChange }: { question: OfficialQuestion; value: string; checked: boolean; onChange: (number: number, value: string) => void }) {
-  const isCorrect = question.type === 'choice' && value === question.answer
-  return <fieldset className="official-question" data-question-number={question.number} disabled={checked}><legend><span className="question-number">السؤال <bdi>{question.number}</bdi></span> {question.prompt}</legend>{question.type === 'choice' ? <div className="official-options">{question.options?.map((option) => <label key={option}><input type="radio" name={`lesson4-question-${question.number}`} value={option} checked={value === option} onChange={() => onChange(question.number, option)} /><span>{option}</span></label>)}</div> : <textarea rows={question.rows || 3} value={value} onChange={(event) => onChange(question.number, event.target.value)} aria-label={`إجابة السؤال ${question.number}`} placeholder="اكتب إجابتك هنا" />}{checked && <div className={isCorrect ? 'question-feedback question-feedback--good' : 'question-feedback'}><strong>{question.type === 'choice' ? (isCorrect ? 'إجابة صحيحة.' : 'إجابة غير صحيحة.') : 'تم تسجيل إجابتك.'}</strong><p>الإجابة النموذجية: {question.answer}</p><p>{question.explanation}</p></div>}</fieldset>
-}
-
 function TeacherMaterial() {
-  return <div className="teacher-material"><h3>الإجابات النموذجية للنشاط التطبيقي والأنشطة</h3><ol className="source-list"><li>النشاط الأول: كتبَ ماضٍ، يقرأُ مضارع، اجلسْ أمر، لعبَ ماضٍ، تدرسُ مضارع، افتحْ أمر.</li><li>النشاط الثاني: كتبَ ماضٍ، يكتبُ مضارع، اكتبْ أمر، سيسافرُ مضارع، يكتبْ مضارع، يذهبَ مضارع.</li><li>النشاط الثالث: كتبَ، يكتبُ، اكتبْ، يذهبُ.</li><li>النشاط الرابع: يكتبُ الطالبُ الدرسَ، يقرأُ سامرٌ الكتابَ، اكتبْ الدرسَ، افتحْ البابَ.</li><li>النشاط الخامس: تكتبُ فعل مضارع؛ لأنه يخبر عن فعل يحدث الآن. اكتبْ فعل أمر؛ لأنه يطلب من المخاطب فعلًا.</li></ol><h3>الإجابات النموذجية لاختبار نهاية الدرس</h3><p>١ ب، ٢ أ، ٣ ب، ٤ ب، ٥ ج، ٦ ج، ٧ ج، ٨ أ.</p><p>٩ صح، ١٠ صح، ١١ خطأ، ١٢ خطأ، ١٣ صح، ١٤ خطأ.</p><p>١٥: كتبَ ماضٍ، يقرأُ مضارع، اذهبْ أمر. ١٦: قرأَ ماضٍ. ١٧: يكتبُ مضارع. ١٨: يلعبُ الطفلُ بالكرةِ. ١٩: اقرأْ الكتابَ. ٢٠: تكتبُ مضارع وكتبتْ ماضٍ؛ يكتبُ خبر واكتبْ طلب.</p><h3>الأخطاء المتوقعة عند الطالب وملاحظات التصحيح للمعلم</h3><ul className="source-list"><li><strong>الخطأ الأول:</strong> اعتبار كل كلمة تبدأ بـ أ، ن، ي، ت فعلًا مضارعًا. صحح بمقارنة أحمدُ وياسرُ مع تكتبُ وتدرسُ.</li><li><strong>الخطأ الثاني:</strong> الخلط بين يكتبُ واكتبْ. اسأل: هل الكلمة تخبر عن فعل أم تطلب فعلًا؟</li><li><strong>الخطأ الثالث:</strong> اعتبار المضارع مستقبلًا دائمًا. وضّح أن السياق قد يجعله للحاضر أو المستقبل.</li><li><strong>الخطأ الرابع:</strong> اعتبار لم يكتبْ فعلًا ماضيًا. النفي لا يغيّر نوع الفعل؛ يكتبْ مضارع.</li><li><strong>الخطأ الخامس:</strong> الحكم من التاء وحدها. تكتبُ مضارع، وكتبتْ ماضٍ؛ ننظر إلى مكان التاء والدلالة.</li></ul><p className="source-note source-note--important">توجيه التصحيح: اطلب من الطالب أن يذكر الدليل: حدث انتهى، يحدث أو سيحدث، أم طلب القيام بالفعل. لا تطلب في هذا الدرس إعراب الفعل بعد «لم»؛ فقد أجّل المصدر هذا التفصيل إلى دروس لاحقة.</p><h3>تدريب علاجي سريع للطالب الضعيف</h3><p>اقرأ الفعل واسأل السؤال المناسب، واجعل الطالب يملأ الجدول بنفسه.</p><div className="table-scroll"><table className="remedial-table"><thead><tr><th>الفعل</th><th>السؤال</th><th>النوع</th><th>الدليل</th></tr></thead><tbody><tr><td><bdi>كتبَ</bdi></td><td>هل انتهى؟</td><td>ماضٍ</td><td>حدث انتهى</td></tr><tr><td><bdi>يكتبُ</bdi></td><td>هل يحدث أو سيحدث؟</td><td>مضارع</td><td>يخبر عن فعل</td></tr><tr><td><bdi>اكتبْ</bdi></td><td>هل يطلب؟</td><td>أمر</td><td>طلب فعل</td></tr><tr><td><bdi>لم يكتبْ</bdi></td><td>ما نوع الفعل الأصلي؟</td><td>مضارع</td><td>النفي لا يغيّر النوع</td></tr></tbody></table></div><p>التوصية العلاجية: أعِد تدريب الطالب على أسئلة «هل انتهى؟ هل يحدث أو سيحدث؟ هل يطلب؟» قبل الانتقال إلى الدرس الخامس.</p><h3>معيار إتقان الدرس</h3><ul className="check-list"><li>شرح أن الفعل يدل على حدث مرتبط بزمن.</li><li>تمييز الماضي والمضارع والأمر في جمل بسيطة.</li><li>ذكر أحرف المضارعة: أ، ن، ي، ت، مع فهم أن الحرف وحده لا يكفي.</li><li>التمييز بين أحمدُ وياسرُ وبين تكتبُ وتدرسُ.</li><li>التمييز بين يكتبُ واكتبْ.</li><li>فهم أن النفي لا يغيّر نوع الفعل.</li><li>تحويل الماضي إلى المضارع والمضارع إلى الأمر.</li></ul><p className="mastery-note"><strong>مستوى الإتقان المقترح: 15/20 فأكثر.</strong> إذا حصل الطالب على أقل من 15/20، يوصى بإعادة الشرح والتدريب العلاجي قبل الانتقال.</p></div>
+  return <div className="teacher-material"><h3>الإجابات النموذجية للنشاط التطبيقي والأنشطة</h3><ol className="source-list"><li>النشاط الأول: كتبَ ماضٍ، يقرأُ مضارع، اجلسْ أمر، لعبَ ماضٍ، تدرسُ مضارع، افتحْ أمر.</li><li>النشاط الثاني: كتبَ ماضٍ، يكتبُ مضارع، اكتبْ أمر، سيسافرُ مضارع، يكتبْ مضارع، يذهبَ مضارع.</li><li>النشاط الثالث: كتبَ، يكتبُ، اكتبْ، يذهبُ.</li><li>النشاط الرابع: يكتبُ الطالبُ الدرسَ، يقرأُ سامرٌ الكتابَ، اكتبْ الدرسَ، افتحْ البابَ.</li><li>النشاط الخامس: تكتبُ فعل مضارع؛ لأنه يخبر عن فعل يحدث الآن. اكتبْ فعل أمر؛ لأنه يطلب من المخاطب فعلًا.</li></ol><SolutionsArea test={testDefinition} mode="teacher" title="الإجابات النموذجية لاختبار نهاية الدرس" eyebrow="منطقة المعلم" /><h3>الأخطاء المتوقعة عند الطالب وملاحظات التصحيح للمعلم</h3><ul className="source-list"><li><strong>الخطأ الأول:</strong> اعتبار كل كلمة تبدأ بـ أ، ن، ي، ت فعلًا مضارعًا. صحح بمقارنة أحمدُ وياسرُ مع تكتبُ وتدرسُ.</li><li><strong>الخطأ الثاني:</strong> الخلط بين يكتبُ واكتبْ. اسأل: هل الكلمة تخبر عن فعل أم تطلب فعلًا؟</li><li><strong>الخطأ الثالث:</strong> اعتبار المضارع مستقبلًا دائمًا. وضّح أن السياق قد يجعله للحاضر أو المستقبل.</li><li><strong>الخطأ الرابع:</strong> اعتبار لم يكتبْ فعلًا ماضيًا. النفي لا يغيّر نوع الفعل؛ يكتبْ مضارع.</li><li><strong>الخطأ الخامس:</strong> الحكم من التاء وحدها. تكتبُ مضارع، وكتبتْ ماضٍ؛ ننظر إلى مكان التاء والدلالة.</li></ul><p className="source-note source-note--important">توجيه التصحيح: اطلب من الطالب أن يذكر الدليل: حدث انتهى، يحدث أو سيحدث، أم طلب القيام بالفعل. لا تطلب في هذا الدرس إعراب الفعل بعد «لم»؛ فقد أجّل المصدر هذا التفصيل إلى دروس لاحقة.</p><h3>تدريب علاجي سريع للطالب الضعيف</h3><p>اقرأ الفعل واسأل السؤال المناسب، واجعل الطالب يملأ الجدول بنفسه.</p><div className="table-scroll"><table className="remedial-table"><thead><tr><th>الفعل</th><th>السؤال</th><th>النوع</th><th>الدليل</th></tr></thead><tbody><tr><td><bdi>كتبَ</bdi></td><td>هل انتهى؟</td><td>ماضٍ</td><td>حدث انتهى</td></tr><tr><td><bdi>يكتبُ</bdi></td><td>هل يحدث أو سيحدث؟</td><td>مضارع</td><td>يخبر عن فعل</td></tr><tr><td><bdi>اكتبْ</bdi></td><td>هل يطلب؟</td><td>أمر</td><td>طلب فعل</td></tr><tr><td><bdi>لم يكتبْ</bdi></td><td>ما نوع الفعل الأصلي؟</td><td>مضارع</td><td>النفي لا يغيّر النوع</td></tr></tbody></table></div><p>التوصية العلاجية: أعِد تدريب الطالب على أسئلة «هل انتهى؟ هل يحدث أو سيحدث؟ هل يطلب؟» قبل الانتقال إلى الدرس الخامس.</p><h3>معيار إتقان الدرس</h3><ul className="check-list"><li>شرح أن الفعل يدل على حدث مرتبط بزمن.</li><li>تمييز الماضي والمضارع والأمر في جمل بسيطة.</li><li>ذكر أحرف المضارعة: أ، ن، ي، ت، مع فهم أن الحرف وحده لا يكفي.</li><li>التمييز بين أحمدُ وياسرُ وبين تكتبُ وتدرسُ.</li><li>التمييز بين يكتبُ واكتبْ.</li><li>فهم أن النفي لا يغيّر نوع الفعل.</li><li>تحويل الماضي إلى المضارع والمضارع إلى الأمر.</li></ul><p className="mastery-note"><strong>مستوى الإتقان المقترح: 15/20 فأكثر.</strong> إذا حصل الطالب على أقل من 15/20، يوصى بإعادة الشرح والتدريب العلاجي قبل الانتقال.</p></div>
 }
 
 function Summary() {

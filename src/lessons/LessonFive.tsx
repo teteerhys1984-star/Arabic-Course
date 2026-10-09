@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { EducationalCard } from '../shared/components/EducationalCard'
 import { LessonFlow, type LessonStepDefinition } from '../shared/components/LessonFlow'
 import { TeacherSpace } from '../shared/teacher/TeacherSpace'
+import { SolutionsArea, TestRunner, useTestEngine, type TestDefinition, type TestQuestion } from '../shared/test'
 
 interface Props { onProgressChange?: (value: number) => void; onFinish?: () => void }
 type Question = { number: number; prompt: string; options?: string[]; answer: string; section: string }
@@ -37,9 +38,51 @@ const questions: Question[] = [
   {number:20,section:'السؤال السادس: سؤال تفكير',prompt:'عادَ أحمدُ إلى منزلِهِ، ثم فتحَ كتابَهُ. أ. استخرج الضمير المتصل المتكرر. ب. على من يعود؟ ج. لماذا استُعمل بدل تكرار أحمد؟',answer:'الهاء (ـه) في منزله وكتابه؛ يعود على أحمد؛ لتجنب تكرار اسمه وجعل الكلام أكثر سلاسة.'},
 ]
 
+
+/* ================================================================== *
+ * الاختبار النهائي — shared platform test framework (src/shared/test).
+ * One checkable page per source section, each ending with
+ * «تحقّق من الإجابات». Open questions are manual-review; their model
+ * answers stay visible after checking (revealEssaySolution), as in the
+ * source lesson.
+ * ================================================================== */
+
+function toTestQuestion(question: Question): TestQuestion {
+  const base = {
+    id: `q${question.number}`,
+    number: question.number,
+    prompt: question.prompt,
+    solution: question.answer,
+    teacherAnswer: question.answer,
+    revealEssaySolution: true,
+  }
+  if (question.options) {
+    return { ...base, type: 'اختيار من متعدد', fields: [{ kind: 'choice', options: question.options, answer: question.answer }] }
+  }
+  return {
+    ...base,
+    type: 'سؤال مفتوح',
+    fields: [{ kind: 'essay', label: 'إجابتك', placeholder: 'اكتب إجابتك هنا' }],
+  }
+}
+
+/** The lesson's official final test, declared once in the shared platform schema. */
+// eslint-disable-next-line react-refresh/only-export-components -- the test schema is lesson data, not a component.
+export const testDefinition: TestDefinition = { id: 'lesson-5-final-test', title: 'اختبار نهاية الدرس',
+  description:
+    '20 سؤالًا في ست صفحات — تحقّق من كل صفحة على حدة، وعدّل إجاباتك وأعِد التحقق متى شئت. الأسئلة المفتوحة تُراجع مع المعلم.',
+  pages: [...new Set(questions.map((question) => question.section))].map((section, index) => ({
+    id: `page-${index + 1}`,
+    title: section,
+    questions: questions.filter((question) => question.section === section).map(toTestQuestion),
+  })),
+}
+
 export function LessonFive({ onProgressChange, onFinish }: Props) {
  const [activityAnswers,setActivityAnswers]=useState<Record<string,string>>({}); const [activityChecked,setActivityChecked]=useState<Record<string,boolean>>({});
- const [testAnswers,setTestAnswers]=useState<Record<number,string>>({}); const [testChecked,setTestChecked]=useState(false)
+ // The shared test engine lives here, above LessonFlow, so answers and page
+ // results survive step navigation (see docs/lesson-test-standards.md).
+ const testEngine=useTestEngine(testDefinition)
  const steps: LessonStepDefinition[] = [
   step('intro','الدرس الخامس: الضمائر المنفصلة والمتصلة','البداية','👋',<EducationalCard title="الدرس الخامس: الضمائر المنفصلة والمتصلة" eyebrow="عنوان الدرس" tone="accent"><div className="pronoun-hero"><bdi>أنا</bdi><span>•</span><bdi>أنتَ</bdi><span>•</span><bdi>هو</bdi></div><p>نتعلم كيف يحل الضمير محل الاسم، وكيف يأتي منفصلًا أو متصلًا، مع فكرة أولية عن الضمير المستتر.</p></EducationalCard>),
   step('objectives','أهداف الدرس','البداية','🎯',<><p>في نهاية هذا الدرس يُتوقَّع من الطالب أن يستطيع:</p><ul className="check-list"><li>فهم معنى الضمير وسبب استخدامه.</li><li>التمييز بين الاسم الظاهر والضمير.</li><li>معرفة ضمائر المتكلم والمخاطب والغائب.</li><li>معرفة الضمائر المنفصلة الأساسية وأهم الضمائر المتصلة.</li><li>تحديد ما يعود عليه الضمير واستخدامه بطريقة صحيحة.</li><li>تجنب الأخطاء الشائعة.</li><li>إجراء إعراب أولي بسيط لبعض الضمائر دون الدخول في التفاصيل المتقدمة.</li></ul></>),
@@ -63,7 +106,7 @@ export function LessonFive({ onProgressChange, onFinish }: Props) {
   step('solved','ثانيًا: أمثلة محلولة','أمثلة محلولة','💡',<RevealList items={solved}/>),
   step('activities','ثالثًا: النشاط التطبيقي','التطبيق والأنشطة','🧠',<Activities answers={activityAnswers} checked={activityChecked} setAnswers={setActivityAnswers} setChecked={setActivityChecked}/>),
   step('identify','كيف أتعرف إلى الضمير في الجملة؟','التطبيق والأنشطة','🕵️',<><ol><li>ابحث عن كلمة مستقلة من الضمائر الاثني عشر.</li><li>انظر إلى أواخر الأسماء والأفعال والحروف: هل اتصل بها ـي أو نا أو ك أو ه أو ها أو هم؟</li><li>اسأل: على من يعود الضمير؟ وهل يدل على متكلم أو مخاطب أو غائب؟</li><li>تحقق من التوافق في الجنس والعدد.</li><li>إن لم يظهر الفاعل، فقد نفهم ضميرًا مستترًا، مثل أكتبُ → أنا، واكتبْ → أنتَ.</li></ol><p>التحويل من الاسم الظاهر: خالد → هو، سارة → هي، خالد وسامر → هما، الطلاب → هم، الطالبات → هنَّ.</p></>),
-  step('final-test','رابعًا: اختبار نهاية الدرس','اختبر نفسك','✅',<OfficialTest answers={testAnswers} checked={testChecked} setAnswers={setTestAnswers} onCheck={()=>setTestChecked(true)}/>),
+  step('final-test','رابعًا: اختبار نهاية الدرس','اختبر نفسك','✅',<TestRunner test={testDefinition} engine={testEngine} testId="lesson5-official-test"/>),
   step('teacher','خامسًا: منطقة خاصة بالمعلم','منطقة المعلم','🔐',<TeacherArea/>),
   step('summary','الخلاصة للحفظ السريع','الخلاصة','⭐',<Summary/>),
  ]
@@ -77,6 +120,5 @@ function PronounTable({rows}:{rows:string[][]}){return <div className="table-scr
 function Error({bad,good,note}:{bad:string;good:string;note:string}){return <div className="error-pair"><p>❌ <del>{bad}</del></p><p>✅ <strong>{good}</strong></p><small>{note}</small></div>}
 function RevealList({items}:{items:string[][]}){const [open,setOpen]=useState<Record<number,boolean>>({});return <div className="worked-examples">{items.map((x,i)=><article className="worked-example" key={x[0]}><div><span className="activity-number">{i+1}</span><bdi>{x[0]}</bdi></div><button className="button button--ghost" type="button" onClick={()=>setOpen(o=>({...o,[i]:!o[i]}))}>{open[i]?'إخفاء الحل':'أظهر الحل'}</button>{open[i]&&<p className="activity-feedback activity-feedback--good">{x[1]}</p>}</article>)}</div>}
 function Activities({answers,checked,setAnswers,setChecked}:{answers:Record<string,string>;checked:Record<string,boolean>;setAnswers:(x:Record<string,string>)=>void;setChecked:(x:Record<string,boolean>)=>void}){const groups=[{id:'a1',title:'النشاط الأول: اختر الضمير المناسب',items:[['خالدٌ طالبٌ مجتهدٌ. (هو – هي) يحبُّ العلمَ.','هو'],['مريمُ طالبةٌ نشيطةٌ. (هو – هي) تساعدُ أمها.','هي'],['خالدٌ وسامرٌ صديقان. (هما – هم) يلعبانِ.','هما'],['الطالباتُ مجتهداتٌ. (هم – هنَّ) يدرسنَ.','هنَّ'],['أنا وأخي نذهب إلى المدرسة. (نحن – أنتم) ندرسُ معًا.','نحن']]},{id:'a2',title:'النشاط الثاني: حدد نوع الضمير',items:[['أنا أحبُّ مدرستي.','منفصل'],['هذا كتابي (الياء).','متصل'],['هو يقرأُ القصةَ.','منفصل'],['أخذَ سامرٌ قلمه (الهاء).','متصل'],['نحن نحبُّ وطننا: نحن / نا.','منفصل، متصل']]},{id:'a3',title:'النشاط الثالث: استبدل الاسم بضمير مناسب',items:[['خالد → ______ يدرسُ.','هو'],['سارة → ______ تقرأُ.','هي'],['خالد وسامر → ______ يلعبانِ.','هما'],['الطلاب → ______ يكتبونَ.','هم'],['الطالبات → ______ يدرسنَ.','هنَّ']]}];return <div className="activity-list">{groups.map(g=><section className="activity-card" key={g.id}><h3>{g.title}</h3>{g.items.map((it,i)=><label className="activity-row" key={it[0]}><bdi>{i+1}. {it[0]}</bdi><input value={answers[`${g.id}-${i}`]||''} disabled={checked[g.id]} onChange={e=>setAnswers({...answers,[`${g.id}-${i}`]:e.target.value})}/>{checked[g.id]&&<span className="answer-mark is-good">الإجابة: {it[1]}</span>}</label>)}<button type="button" className="button button--primary" onClick={()=>setChecked({...checked,[g.id]:true})}>تحقق من النشاط</button></section>)}</div>}
-function OfficialTest({answers,checked,setAnswers,onCheck}:{answers:Record<number,string>;checked:boolean;setAnswers:(x:Record<number,string>)=>void;onCheck:()=>void;}){return <div className="official-test" data-testid="lesson5-official-test"><div className="official-test__intro"><strong>اختبار نهاية الدرس</strong><span>٢٠ سؤالًا</span><p>أجب عن الأسئلة العشرين كاملة، مع المحافظة على الفئات والترقيم الرسمي.</p></div>{questions.map(q=>{const heading=q.number===1||questions[q.number-2]?.section!==q.section;return <div key={q.number}>{heading&&<h3>{q.section}</h3>}<fieldset className="official-question" disabled={checked}><legend><span className="question-number">{q.number}</span> {q.prompt}</legend>{q.options?<div className="quiz__options">{q.options.map(o=><label key={o}><input type="radio" name={`q${q.number}`} checked={answers[q.number]===o} onChange={()=>setAnswers({...answers,[q.number]:o})}/><span>{o}</span></label>)}</div>:<textarea rows={3} value={answers[q.number]||''} onChange={e=>setAnswers({...answers,[q.number]:e.target.value})}/>} {checked&&<p className="activity-feedback activity-feedback--good">الإجابة النموذجية: {q.answer}</p>}</fieldset></div>})}<button type="button" className="button button--primary" onClick={onCheck}>تحقق من الاختبار</button></div>}
-function TeacherArea(){return <TeacherSpace><div className="teacher-material"><h3>إجابات النشاط التطبيقي</h3><p><strong>النشاط الأول:</strong> 1. هو، 2. هي، 3. هما، 4. هنَّ، 5. نحن.</p><p><strong>النشاط الثاني:</strong> 1. أنا منفصل، 2. الياء في كتابي متصل، 3. هو منفصل، 4. الهاء في قلمه متصل، 5. نحن منفصل ونا في وطننا متصل.</p><p><strong>النشاط الثالث:</strong> هو يدرسُ؛ هي تقرأُ؛ هما يلعبانِ؛ هم يكتبونَ؛ هنَّ يدرسنَ.</p><h3>الإجابات النموذجية لاختبار نهاية الدرس</h3><ol>{questions.map(q=><li key={q.number}><strong>{q.number}.</strong> {q.answer}</li>)}</ol><h3>ملاحظات للمعلم</h3><p><strong>لا تبدأ بالإعراب المعقد.</strong> الهدف: ما الضمير؟ لمن يدل؟ هل هو منفصل أم متصل؟ تؤجل عبارات «ضمير متصل مبني في محل جر بالإضافة» و«في محل نصب مفعول به» إلى ما بعد تأسيس الإعراب.</p><p><strong>ركز على المتكلم والمخاطب والغائب:</strong> قل: أنا معلمٌ، ثم أنتَ طالبٌ، ثم هو طالبٌ، واسأل في كل مرة.</p><p><strong>استخدم الأسماء قبل الضمائر:</strong> أحمد → هو، مريم → هي، أحمد وسامر → هما، مريم وسارة → هما، الطلاب → هم، الطالبات → هنَّ.</p><h3>أخطاء متوقعة من الطالب وتصحيحها</h3><ul><li>هم بدل هما: كرر «اثنان → هما، جماعة ذكور → هم».</li><li>هو وهي: «ولد واحد → هو، بنت واحدة → هي».</li><li>هم وهنَّ: «طلاب → هم، طالبات → هنَّ».</li><li>عدم رؤية المتصل: اكتب «كتاب + ه = كتابه، كتاب + ها = كتابها، كتاب + ي = كتابي، كتاب + نا = كتابنا»، ثم ضع خطًا تحت الجزء المضاف.</li></ul><h3>اقتراح لإعادة التدريس — الطريقة العلاجية</h3><ol><li><strong>المرحلة الأولى:</strong> أنا – نحن – أنتَ – أنتِ – هو – هي فقط.</li><li><strong>المرحلة الثانية:</strong> أضف أنتما – أنتم – أنتنَّ – هما – هم – هنَّ.</li><li><strong>المرحلة الثالثة:</strong> انتقل إلى ـي – نا – ـكَ/ـكِ – ـه – ـها – ـهم، مع كتابي وكتابنا وكتابك وكتابه وكتابها وكتابهم.</li></ol><p>لا ينتقل الطالب إلى التفاصيل الإعرابية قبل أن يميز المنفصل والمتصل بسهولة.</p><h3>واجب منزلي مقترح</h3><p><strong>أ. ضع الضمير المناسب:</strong> أحمدٌ مجتهدٌ. ___ يدرس يوميًا؛ سارة تحب الرسم. ___ ترسم زهرة؛ أحمد وسامر صديقان. ___ يلعبان؛ الطالبات في الصف. ___ يستمعن؛ أنا وأخي نقرأ. ___ نحب الكتب.</p><p><strong>ب. استخرج الضمير:</strong> هذا قلمي؛ نحن نحب وطننا؛ هو يساعد والده؛ هي رتبت غرفتها؛ أنتم طلاب مجتهدون.</p><p><strong>ج. كوّن خمس جمل</strong> باستخدام: أنا – أنتَ – هي – نحن – هم.</p></div></TeacherSpace>}
+function TeacherArea(){return <TeacherSpace><div className="teacher-material"><h3>إجابات النشاط التطبيقي</h3><p><strong>النشاط الأول:</strong> 1. هو، 2. هي، 3. هما، 4. هنَّ، 5. نحن.</p><p><strong>النشاط الثاني:</strong> 1. أنا منفصل، 2. الياء في كتابي متصل، 3. هو منفصل، 4. الهاء في قلمه متصل، 5. نحن منفصل ونا في وطننا متصل.</p><p><strong>النشاط الثالث:</strong> هو يدرسُ؛ هي تقرأُ؛ هما يلعبانِ؛ هم يكتبونَ؛ هنَّ يدرسنَ.</p><SolutionsArea test={testDefinition} mode="teacher" title="الإجابات النموذجية لاختبار نهاية الدرس" eyebrow="منطقة المعلم" /><h3>ملاحظات للمعلم</h3><p><strong>لا تبدأ بالإعراب المعقد.</strong> الهدف: ما الضمير؟ لمن يدل؟ هل هو منفصل أم متصل؟ تؤجل عبارات «ضمير متصل مبني في محل جر بالإضافة» و«في محل نصب مفعول به» إلى ما بعد تأسيس الإعراب.</p><p><strong>ركز على المتكلم والمخاطب والغائب:</strong> قل: أنا معلمٌ، ثم أنتَ طالبٌ، ثم هو طالبٌ، واسأل في كل مرة.</p><p><strong>استخدم الأسماء قبل الضمائر:</strong> أحمد → هو، مريم → هي، أحمد وسامر → هما، مريم وسارة → هما، الطلاب → هم، الطالبات → هنَّ.</p><h3>أخطاء متوقعة من الطالب وتصحيحها</h3><ul><li>هم بدل هما: كرر «اثنان → هما، جماعة ذكور → هم».</li><li>هو وهي: «ولد واحد → هو، بنت واحدة → هي».</li><li>هم وهنَّ: «طلاب → هم، طالبات → هنَّ».</li><li>عدم رؤية المتصل: اكتب «كتاب + ه = كتابه، كتاب + ها = كتابها، كتاب + ي = كتابي، كتاب + نا = كتابنا»، ثم ضع خطًا تحت الجزء المضاف.</li></ul><h3>اقتراح لإعادة التدريس — الطريقة العلاجية</h3><ol><li><strong>المرحلة الأولى:</strong> أنا – نحن – أنتَ – أنتِ – هو – هي فقط.</li><li><strong>المرحلة الثانية:</strong> أضف أنتما – أنتم – أنتنَّ – هما – هم – هنَّ.</li><li><strong>المرحلة الثالثة:</strong> انتقل إلى ـي – نا – ـكَ/ـكِ – ـه – ـها – ـهم، مع كتابي وكتابنا وكتابك وكتابه وكتابها وكتابهم.</li></ol><p>لا ينتقل الطالب إلى التفاصيل الإعرابية قبل أن يميز المنفصل والمتصل بسهولة.</p><h3>واجب منزلي مقترح</h3><p><strong>أ. ضع الضمير المناسب:</strong> أحمدٌ مجتهدٌ. ___ يدرس يوميًا؛ سارة تحب الرسم. ___ ترسم زهرة؛ أحمد وسامر صديقان. ___ يلعبان؛ الطالبات في الصف. ___ يستمعن؛ أنا وأخي نقرأ. ___ نحب الكتب.</p><p><strong>ب. استخرج الضمير:</strong> هذا قلمي؛ نحن نحب وطننا؛ هو يساعد والده؛ هي رتبت غرفتها؛ أنتم طلاب مجتهدون.</p><p><strong>ج. كوّن خمس جمل</strong> باستخدام: أنا – أنتَ – هي – نحن – هم.</p></div></TeacherSpace>}
 function Summary(){return <><EducationalCard title="خلاصة للحفظ السريع" eyebrow="الخلاصة"><p><strong>الضمير</strong> يدل على متكلم أو مخاطب أو غائب.</p><p><strong>المتكلم:</strong> أنا، نحن. <strong>المخاطب:</strong> أنتَ، أنتِ، أنتما، أنتم، أنتنَّ. <strong>الغائب:</strong> هو، هي، هما، هم، هنَّ.</p><p><strong>المنفصل:</strong> كلمة مستقلة مثل أنا وهو ونحن. <strong>المتصل:</strong> يتصل بكلمة مثل كتابي وكتابه ووطننا وساعدني. <strong>المستتر:</strong> لا يظهر لكن نفهمه: أكتبُ، والفاعل ضمير مستتر تقديره أنا.</p><ol><li>المتصل قد يتصل باسم أو فعل أو حرف.</li><li>انتبه إلى المذكر والمؤنث والمفرد والمثنى والجمع.</li><li>هما للمثنى المذكر والمؤنث.</li><li>أحكام المستتر التفصيلية مؤجلة.</li></ol></EducationalCard><blockquote className="grammar-quote golden-rule"><p className="source-kicker">الفكرة الذهبية:</p><p><strong>الضمير يجعل الكلام أسهل وأجمل، ويجنبنا تكرار الاسم؛ فابحث عمّن يدل عليه، ثم اسأل: أهو منفصل أم متصل أم مفهوم مستتر؟</strong></p></blockquote></>}

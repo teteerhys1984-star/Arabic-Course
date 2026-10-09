@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { EducationalCard } from '../shared/components/EducationalCard'
 import { LessonFlow, type LessonStepDefinition } from '../shared/components/LessonFlow'
 import { TeacherSpace } from '../shared/teacher/TeacherSpace'
+import { SolutionsArea, TestRunner, useTestEngine, type TestDefinition, type TestQuestion } from '../shared/test'
 
 interface Props {
   onProgressChange?: (value: number) => void
@@ -312,29 +313,83 @@ const finalTestQuestions: FinalTestQuestion[] = [
 ]
 
 /** الأسئلة الموضوعية التي تُصحَّح آليًا: 1–8 اختيار من متعدد و9–15 صح أم خطأ. */
-const objectiveAnswers: Record<number, string> = {
-  1: 'ب. مثنى',
-  2: 'ج. الألف',
-  3: 'ب. الياء',
-  4: 'ج. الواو',
-  5: 'أ. الياء',
-  6: 'ج. الكسرة',
-  7: 'ج. جمع مؤنث سالم',
-  8: 'أ. جمع تكسير',
-  9: 'صح',
-  10: 'خطأ',
-  11: 'صح',
-  12: 'صح',
-  13: 'صح',
-  14: 'خطأ',
-  15: 'خطأ',
+
+/* ================================================================== *
+ * الاختبار النهائي — shared platform test framework (src/shared/test).
+ * One checkable page per source section, each ending with
+ * «تحقّق من الإجابات». Open/parts questions are manual-review; their
+ * model answers stay visible after checking (revealEssaySolution), as
+ * in the source lesson.
+ * ================================================================== */
+
+const typeLabels: Record<FinalTestQuestion['type'], string> = {
+  choice: 'اختيار من متعدد',
+  'true-false': 'صح أو خطأ',
+  identify: 'استخراج وتحديد',
+  transform: 'تحويل',
+  parsing: 'إعراب',
+  thinking: 'سؤال تفكير',
+  challenge: 'تحدٍّ إضافي',
 }
+
+/** The source answer may carry a trailing dot or a «؛» remark; the field grades the option itself. */
+function matchOption(options: string[], answer: string): string {
+  const strip = (value: string) => value.replace(/[ًٌٍَُِّْـ]/g, '').replace(/\s+/g, ' ').trim()
+  const cleaned = strip(answer.split('؛')[0].replace(/\.+$/, ''))
+  return options.find((option) => strip(option) === cleaned) ?? answer
+}
+
+/** The full-parsing lines the source teacher key shows for the parsing questions (16–18, 21–23). */
+const parsingByNumber: Record<number, string[]> = {
+  16: ['الطالبانِ: فاعل مرفوع وعلامة رفعه الألف؛ لأنه مثنى.'],
+  17: ['المعلمينَ: مفعول به منصوب وعلامة نصبه الياء؛ لأنه جمع مذكر سالم.'],
+  18: ['الطالباتُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.'],
+  21: ['الطالبانِ: فاعل مرفوع وعلامة رفعه الألف؛ لأنه مثنى.'],
+  22: ['المعلمينَ: مفعول به منصوب وعلامة نصبه الياء؛ لأنه جمع مذكر سالم.'],
+  23: ['الطالباتِ: اسم مجرور بـ"على"، وعلامة جره الكسرة الظاهرة على آخره.'],
+}
+
+function toTestQuestion(question: FinalTestQuestion): TestQuestion {
+  const base = {
+    id: `q${question.number}`,
+    number: question.number,
+    prompt: question.prompt,
+    solution: question.answer,
+    teacherAnswer: question.answer,
+    revealEssaySolution: true,
+    type: typeLabels[question.type],
+    parsing: parsingByNumber[question.number],
+  }
+  if (question.options) {
+    return { ...base, fields: [{ kind: 'choice', options: question.options, answer: matchOption(question.options, question.answer) }] }
+   }
+  return {
+    ...base,
+    fields: [{ kind: 'essay', label: 'إجابتك', placeholder: 'اكتب إجابتك هنا' }],
+  }
+}
+
+/** The lesson's official final test, declared once in the shared platform schema. */
+// eslint-disable-next-line react-refresh/only-export-components -- the test schema is lesson data, not a component.
+export const testDefinition: TestDefinition = { id: 'lesson-7-final-test', title: 'اختبار نهاية الدرس',
+  description:
+    '25 سؤالًا في سبع صفحات — تحقّق من كل صفحة على حدة، وعدّل إجاباتك وأعِد التحقق متى شئت. الأسئلة المفتوحة تُراجع مع المعلم.',
+  pages: [...new Set(finalTestQuestions.map((question) => question.section))].map((section, index) => ({
+    id: `page-${index + 1}`,
+    title: section,
+    questions: finalTestQuestions.filter((question) => question.section === section).map(toTestQuestion),
+  })),
+}
+
 
 /* ------------------------------------------------------------------ *
  * تعلّم متسلسل: كل خطوة تُعرض وحدها داخل LessonFlow
  * ------------------------------------------------------------------ */
 
 export function LessonSeven({ onProgressChange, onFinish }: Props) {
+  // The shared test engine lives here, above LessonFlow, so answers and page
+  // results survive step navigation (see docs/lesson-test-standards.md).
+  const testEngine = useTestEngine(testDefinition)
   const steps: LessonStepDefinition[] = [
     step('intro', 'الدرس السابع: المثنى وجمع المذكر السالم وجمع المؤنث السالم', 'البداية', '📘', (
       <EducationalCard
@@ -1179,7 +1234,7 @@ export function LessonSeven({ onProgressChange, onFinish }: Props) {
         items={activityFiveItems}
       />
     )),
-    step('final-test', 'رابعًا: اختبار نهاية الدرس', 'اختبار نهاية الدرس', '🏁', <FinalTest />),
+    step('final-test', 'رابعًا: اختبار نهاية الدرس', 'اختبار نهاية الدرس', '🏁', <TestRunner test={testDefinition} engine={testEngine} testId="lesson7-official-test" />),
     step('teacher', 'خامسًا: منطقة خاصة بالمعلم', 'منطقة المعلم', '🔐', <TeacherArea />),
     step('homework', 'واجب منزلي', 'الواجب والتحدي', '🏠', <Homework />),
     step('challenge', 'تحدي إضافي للطالب المتقدم', 'الواجب والتحدي', '🚀', <AdvancedChallenge />),
@@ -1230,9 +1285,6 @@ function Arrow() {
  * يعرض نصًا من المصدر كما هو في البيانات، مع إظهار السهم باتجاه القراءة العربية
  * حتى لا يكسر الترتيب البصري في الاتجاه من اليمين إلى اليسار.
  */
-function SourceText({ text }: { text: string }) {
-  return <>{text.replace(/→/g, '←')}</>
-}
 
 function Rule({ children }: { children: ReactNode }) {
   return (
@@ -1654,140 +1706,6 @@ function ActivityActions({
  * اختبار نهاية الدرس — 25 سؤالًا رسميًا، بلا تغذية راجعة قبل التسليم
  * ------------------------------------------------------------------ */
 
-function FinalTest() {
-  const [answers, setAnswers] = useState<Record<string, string>>({})
-  const [submitted, setSubmitted] = useState(false)
-
-  function setAnswer(key: string, value: string) {
-    setAnswers((current) => ({ ...current, [key]: value }))
-  }
-
-  const objectiveNumbers = Object.keys(objectiveAnswers).map(Number)
-  const unansweredObjective = objectiveNumbers.filter((number) => !answers[`${number}`])
-  const objectiveScore = objectiveNumbers.filter(
-    (number) => normalize(answers[`${number}`]) === normalize(objectiveAnswers[number]),
-  ).length
-
-  return (
-    <section className="official-test lesson-seven-test" data-testid="lesson7-official-test">
-      <div className="official-test__intro">
-        <strong>اختبار نهاية الدرس</strong>
-        <span>٢٥ سؤالًا</span>
-        <p>
-          أجب عن الأسئلة الخمسة والعشرين كاملة، مع المحافظة على الفئات والترقيم الرسمي. لا تظهر
-          النتيجة ولا الإجابات النموذجية إلا بعد تسليم الاختبار.
-        </p>
-      </div>
-
-      <div className="official-test__groups">
-        {finalTestQuestions.map((question, index) => {
-          const showHeading = index === 0 || finalTestQuestions[index - 1].section !== question.section
-          return (
-            <div key={question.number}>
-              {showHeading && <h3>{question.section}</h3>}
-              <fieldset className="official-question" data-question-number={question.number} disabled={submitted}>
-                <legend>
-                  <span className="question-number">السؤال {question.number}</span> {question.prompt}
-                </legend>
-
-                {question.options ? (
-                  <div className="official-options">
-                    {question.options.map((option) => (
-                      <label key={option}>
-                        <input
-                          type="radio"
-                          name={`lesson7-question-${question.number}`}
-                          value={option}
-                          checked={answers[`${question.number}`] === option}
-                          onChange={() => setAnswer(`${question.number}`, option)}
-                        />
-                        <span>{option}</span>
-                      </label>
-                    ))}
-                  </div>
-                ) : question.parts ? (
-                  <div className="lesson-seven-test-parts">
-                    {question.parts.map((part, partIndex) => (
-                      <label key={part} htmlFor={`lesson7-q${question.number}-part${partIndex}`}>
-                        <span><SourceText text={part} /></span>
-                        <input
-                          id={`lesson7-q${question.number}-part${partIndex}`}
-                          value={answers[`${question.number}#${partIndex}`] ?? ''}
-                          onChange={(event) => setAnswer(`${question.number}#${partIndex}`, event.target.value)}
-                          placeholder="اكتب إجابتك"
-                        />
-                      </label>
-                    ))}
-                  </div>
-                ) : (
-                  <textarea
-                    rows={3}
-                    value={answers[`${question.number}`] ?? ''}
-                    onChange={(event) => setAnswer(`${question.number}`, event.target.value)}
-                    aria-label={`إجابة السؤال ${question.number}`}
-                    placeholder="اكتب إجابتك هنا"
-                  />
-                )}
-
-                {submitted && (
-                  <div className="lesson-seven-feedback is-good">
-                    <strong>الإجابة النموذجية</strong>
-                    <p><SourceText text={question.answer} /></p>
-                  </div>
-                )}
-              </fieldset>
-            </div>
-          )
-        })}
-      </div>
-
-      <div className="official-test__actions">
-        {!submitted ? (
-          <>
-            <button type="button" className="button button--primary" onClick={() => setSubmitted(true)}>
-              تسليم الاختبار
-            </button>
-            {unansweredObjective.length > 0 && (
-              <p>لم تجب بعد عن {unansweredObjective.length} من الأسئلة الموضوعية (1–15).</p>
-            )}
-          </>
-        ) : (
-          <>
-            <p className="official-test__result" role="status">
-              النتيجة الموضوعية: <bdi>{objectiveScore} / 15</bdi> من أسئلة الاختيار وصح أم خطأ، وراجع
-              الإجابات النموذجية للأسئلة المفتوحة مع معلمك.
-            </p>
-            <button
-              type="button"
-              className="button button--secondary"
-              onClick={() => {
-                setSubmitted(false)
-                setAnswers({})
-              }}
-            >
-              أعد الاختبار
-            </button>
-          </>
-        )}
-      </div>
-    </section>
-  )
-}
-
-/* ------------------------------------------------------------------ *
- * منطقة المعلم — إجابات كاملة ومطابقة للمصدر
- * ------------------------------------------------------------------ */
-
-/** الإعراب الكامل للأسئلة التي يطلب المصدر إعرابها (16–18 و21–23). */
-const parsingAnswerLines: Record<number, string[]> = {
-  16: ['الطالبانِ: فاعل مرفوع وعلامة رفعه الألف؛ لأنه مثنى.'],
-  17: ['المعلمينَ: مفعول به منصوب وعلامة نصبه الياء؛ لأنه جمع مذكر سالم.'],
-  18: ['الطالباتُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.'],
-  21: ['الطالبانِ: فاعل مرفوع وعلامة رفعه الألف؛ لأنه مثنى.'],
-  22: ['المعلمينَ: مفعول به منصوب وعلامة نصبه الياء؛ لأنه جمع مذكر سالم.'],
-  23: ['الطالباتِ: اسم مجرور بـ"على"، وعلامة جره الكسرة الظاهرة على آخره.'],
-}
-
 function TeacherArea() {
   return (
     <TeacherSpace>
@@ -1847,18 +1765,7 @@ function TeacherArea() {
           ))}
         </ol>
 
-        <h3>الإجابات النموذجية لاختبار نهاية الدرس</h3>
-        <ol>
-          {finalTestQuestions.map((question) => (
-            <li key={question.number}>
-              <strong>{question.number}.</strong> <SourceText text={question.answer} />
-              {(parsingAnswerLines[question.number] ?? []).map((line) => (
-                <FullParsing key={line} lines={[line]} />
-              ))}
-            </li>
-          ))}
-        </ol>
-
+        <SolutionsArea test={testDefinition} mode="teacher" title="الإجابات النموذجية لاختبار نهاية الدرس" eyebrow="منطقة المعلم" />
         <h3>ملاحظات متقدمة للمعلم</h3>
 
         <h4>1. لا تختصر درس المثنى بقاعدة "ان/ين"</h4>

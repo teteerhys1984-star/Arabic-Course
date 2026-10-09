@@ -16,7 +16,7 @@ The app includes:
 - a complete Arabic RTL Lesson 1 source covering الكلام، الاسم، الفعل، والحرف;
 - direction-safe mixed text, isolated numbers, and RTL-safe tables;
 - source-preserving examples, worked solutions, noun-sign cards, verb classification, the Grammar Detective game, and the five-second challenge;
-- the official 20-question end-of-lesson test with student interaction (SELECT → change → CHECK → reveal); and
+- the official 20-question end-of-lesson test, delivered through the shared test framework: every test page ends with «تحقّق من الإجابات», which grades that page alone (correct / incorrect / unanswered / manually-reviewed), keeps answers while navigating, allows editing and rechecking without double-counting, and combines the latest valid page results into the final score; and
 - a clearly labelled front-end-only Teacher's Space containing the complete answer key, corrections, teacher notes, expected mistakes, and mastery criterion.
 
 Lesson content never displays a WhatsApp/contact block; this is a permanent course-wide rule for all future lessons. The course has exactly **one** official contact element — **المهندس سومر شاهين** with a real WhatsApp link (`wa.me/963930215022`) — declared once in `src/shared/contact/instructorDetails.ts` and rendered by the shared shells, centered in the top bar of the index and of every lesson. It is never duplicated inside lesson content.
@@ -39,10 +39,13 @@ The platform's information architecture is **Arabic Platform → Section → Les
 - `src/sections/` — the section registry: the five permanent sections and the derived section → lessons grouping
 - `src/lessons/` — lesson modules and the lesson registry (every lesson declares its `sectionId`)
 - `src/shared/` — reusable shell, educational, quiz, direction, teacher, and contact components
+- `src/shared/test/` — the shared test framework: the `TestDefinition` schema, the pure grading engine, the `useTestEngine` hook, `TestRunner`/`TestPageView` (page-level checking) and the structured `SolutionsArea`
 - `src/shared/contact/` — the single source of truth for the instructor's phone number and the shared, centered WhatsApp contact element
 - `src/styles/` — RTL-first responsive presentation styles (`sections.css` carries the section index, section cards, section hero, empty state, and breadcrumbs; `contact.css` carries the contact element's layout and states)
 - `scripts/check-rtl.mjs` — static RTL foundation validation
 - `scripts/check-architecture.mjs` — reusable-architecture validation (section-index home, data-driven section pages, sectionId on every lesson, routing, sequential lesson flow)
+- `scripts/check-test-ux.mjs` — platform-wide test-UX validation: every lesson test uses the shared framework (page-level «تحقّق من الإجابات», latest-valid-result aggregation) and the shared structured Solutions Area; legacy whole-test patterns are rejected
+- `docs/lesson-test-standards.md` — the binding lesson-test and solutions-area standard for every current and future lesson
 - `scripts/check-lesson1.mjs` — Lesson 1 source-fidelity audit and WhatsApp-removal guard
 - `docs/lesson1-source-inventory.md` — authoritative Lesson 1 source-section inventory (fidelity contract)
 - `.github/workflows/pages.yml` — build, validation, and GitHub Pages deployment

@@ -12,6 +12,30 @@ import type { SectionId } from '../sections/sectionRegistry'
  * Every lesson declares the one section it belongs to (`sectionId`, from the section
  * registry), so it appears under that section automatically — the home page and the
  * section pages are never edited by hand when a lesson is added.
+ *
+ * TESTS AND SOLUTIONS ARE SHARED, NOT RE-IMPLEMENTED (docs/lesson-test-standards.md):
+ * a lesson declares its test ONCE as a `TestDefinition` (pages of questions) and
+ * renders it through the shared framework in `src/shared/test`:
+ *
+ *   export const testDefinition: TestDefinition = { id, title, pages: [...] }
+ *   const testEngine = useTestEngine(testDefinition)   // in the lesson component
+ *   <TestRunner test={testDefinition} engine={testEngine} />      // the test steps
+ *   <SolutionsArea test={testDefinition} engine={testEngine} />   // the solutions step
+ *
+ * The shared framework guarantees, for every lesson:
+ *   - a «تحقّق من الإجابات» action at the END OF EVERY TEST PAGE, which grades only
+ *     that page (no need to finish the other pages, or even the whole page);
+ *   - the four answer statuses: correct / wrong / unanswered / manually-reviewed;
+ *   - answers preserved across step navigation (the engine lives above LessonFlow);
+ *   - editing + rechecking without double-counting (results are keyed by page id);
+ *   - a final result combining the LATEST valid result of every page;
+ *   - solutions revealed only for pages the student has actually checked;
+ *   - one structured Solutions Area (title, question number + reference, correct
+ *     answer, explanation, optional example, manual-review status, and the
+ *     source-provided vs platform-generated distinction).
+ *
+ * Enforced by `npm run check:test-ux` and `src/shared/test/lessonConformance.test.ts`
+ * (add a new lesson's `testDefinition` to that suite's list).
  */
 
 export interface LessonMeta {

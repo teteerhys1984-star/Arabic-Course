@@ -2,6 +2,7 @@ import { useState, type ReactNode } from 'react'
 import { EducationalCard } from '../shared/components/EducationalCard'
 import { LessonFlow, type LessonStepDefinition } from '../shared/components/LessonFlow'
 import { TeacherSpace } from '../shared/teacher/TeacherSpace'
+import { SolutionsArea, TestRunner, useTestEngine, type TestDefinition, type TestQuestion } from '../shared/test'
 
 interface Props {
   onProgressChange?: (value: number) => void
@@ -176,6 +177,69 @@ const finalQuestions: FinalQuestion[] = [
   },
 ]
 
+
+/* ================================================================== *
+ * الاختبار النهائي — shared platform test framework (src/shared/test).
+ * One checkable page per source section, each ending with
+ * «تحقّق من الإجابات». Open questions are manual-review; their model
+ * answers stay visible after checking (revealEssaySolution), as in the
+ * source lesson.
+ * ================================================================== */
+
+const typeLabels: Record<FinalQuestion['type'], string> = {
+  choice: 'اختيار من متعدد',
+  'true-false': 'صح أو خطأ',
+  identify: 'تحديد الحالة والعلامة',
+  complete: 'إكمال',
+  parsing: 'إعراب',
+  thinking: 'سؤال تفكير',
+}
+
+/** The source answer carries the option letter («ب. الضمة.»); the field grades the option itself. */
+function matchOption(options: string[], answer: string): string {
+  const strip = (value: string) => value.replace(/[ًٌٍَُِّْـ]/g, '').replace(/\s+/g, ' ').trim()
+  const cleaned = strip(answer.replace(/^[أ-ى]\s*\.\s*/, '').split(/[؛.]/)[0])
+  return options.find((option) => strip(option) === cleaned) ?? answer
+}
+
+/** The full-parsing lines the source teacher key shows for the parsing questions. */
+const parsingByNumber: Record<number, string[]> = {
+  18: ['الطالبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.', 'الواجبَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.'],
+  19: ['خالدٌ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.', 'المدرسةِ: اسم مجرور بـ إلى وعلامة جره الكسرة الظاهرة على آخره.'],
+}
+
+function toTestQuestion(question: FinalQuestion): TestQuestion {
+  const base = {
+    id: `q${question.number}`,
+    number: question.number,
+    prompt: question.prompt,
+    solution: question.answer,
+    teacherAnswer: question.answer,
+    revealEssaySolution: true,
+    type: typeLabels[question.type],
+    parsing: parsingByNumber[question.number],
+  }
+  if (question.options) {
+    return { ...base, fields: [{ kind: 'choice', options: question.options, answer: matchOption(question.options, question.answer) }] }
+  }
+  return {
+    ...base,
+    fields: [{ kind: 'essay', label: 'إجابتك', placeholder: 'اكتب إجابتك هنا' }],
+  }
+}
+
+/** The lesson's official final test, declared once in the shared platform schema. */
+// eslint-disable-next-line react-refresh/only-export-components -- the test schema is lesson data, not a component.
+export const testDefinition: TestDefinition = { id: 'lesson-6-final-test', title: 'اختبار نهاية الدرس',
+  description:
+    '20 سؤالًا في ست صفحات — تحقّق من كل صفحة على حدة، وعدّل إجاباتك وأعِد التحقق متى شئت. الأسئلة المفتوحة تُراجع مع المعلم.',
+  pages: [...new Set(finalQuestions.map((question) => question.section))].map((section, index) => ({
+    id: `page-${index + 1}`,
+    title: section,
+    questions: finalQuestions.filter((question) => question.section === section).map(toTestQuestion),
+  })),
+}
+
 const activityGroups: Array<{ id: string; title: string; items: ActivityItem[] }> = [
   {
     id: 'state',
@@ -212,6 +276,9 @@ const activityGroups: Array<{ id: string; title: string; items: ActivityItem[] }
 ]
 
 export function LessonSix({ onProgressChange, onFinish }: Props) {
+  // The shared test engine lives here, above LessonFlow, so answers and page
+  // results survive step navigation (see docs/lesson-test-standards.md).
+  const testEngine = useTestEngine(testDefinition)
   const steps: LessonStepDefinition[] = [
     step('intro', 'الدرس السادس: علامات الإعراب الأصلية والفرعية', 'البداية', '📘', (
       <EducationalCard title="الدرس السادس: علامات الإعراب الأصلية والفرعية" eyebrow="عنوان الدرس" tone="accent">
@@ -528,7 +595,7 @@ export function LessonSix({ onProgressChange, onFinish }: Props) {
     step('activity-one', 'النشاط الأول: حدد الحالة الإعرابية', 'الأنشطة', '📝', <Activities group={activityGroups[0]} />),
     step('activity-two', 'النشاط الثاني: اختر العلامة الأصلية', 'الأنشطة', '✅', <Activities group={activityGroups[1]} />),
     step('activity-three', 'النشاط الثالث: أكمل', 'الأنشطة', '✍️', <Activities group={activityGroups[2]} />),
-    step('final-test', 'رابعًا: اختبار نهاية الدرس', 'اختبر نفسك', '🏁', <FinalTest />),
+    step('final-test', 'رابعًا: اختبار نهاية الدرس', 'اختبر نفسك', '🏁', <TestRunner test={testDefinition} engine={testEngine} testId="lesson6-official-test" />),
     step('teacher', 'خامسًا: منطقة خاصة بالمعلم', 'منطقة المعلم', '🔐', <TeacherArea />),
     step('homework', 'واجب منزلي مقترح', 'الواجب والخلاصة', '🏠', <Homework />),
     step('quick-summary', 'خلاصة للحفظ السريع', 'الواجب والخلاصة', '🌟', <QuickSummary />),
@@ -589,37 +656,13 @@ function Activities({ group }: { group: { id: string; title: string; items: Acti
   </section>
 }
 
-function FinalTest() {
-  const [answers, setAnswers] = useState<Record<number, string>>({})
-  const [checked, setChecked] = useState(false)
-  const [score, setScore] = useState(0)
-
-  function check() {
-    // Objective questions are checked against their explicit labels; open questions receive a model answer after checking.
-    const objectiveAnswers: Record<number, string> = { 1: 'الضمة', 2: 'الفتحة', 3: 'الكسرة', 4: 'السكون', 5: 'المدرسة', 6: 'صح', 7: 'خطأ', 8: 'صح', 9: 'خطأ', 10: 'صح' }
-    const objectiveScore = Object.entries(objectiveAnswers).filter(([number, answer]) => normalize(answers[Number(number)]) === normalize(answer)).length
-    setScore(objectiveScore)
-    setChecked(true)
-  }
-
-  return <section className="official-test lesson-six-test" data-testid="lesson6-official-test">
-    <div className="official-test__intro"><strong>اختبار نهاية الدرس</strong><span>٢٠ سؤالًا</span><p>أجب عن الأسئلة العشرين كاملة، مع المحافظة على الفئات والترقيم الرسمي.</p></div>
-    {finalQuestions.map((question, index) => {
-      const showHeading = index === 0 || finalQuestions[index - 1].section !== question.section
-      return <div key={question.number}>{showHeading && <h3>{question.section}</h3>}<fieldset className="official-question lesson-six-official-question" disabled={checked}><legend><span className="question-number">{question.number}</span> {question.prompt}</legend>{question.options ? <div className="official-options">{question.options.map((option) => <label key={option}><input type="radio" name={`lesson6-q-${question.number}`} value={option} checked={answers[question.number] === option} onChange={() => setAnswers((current) => ({ ...current, [question.number]: option }))} /><span>{option}</span></label>)}</div> : <textarea rows={question.type === 'thinking' ? 5 : 3} value={answers[question.number] ?? ''} onChange={(event) => setAnswers((current) => ({ ...current, [question.number]: event.target.value }))} />}{checked && <p className="lesson-six-feedback is-good">الإجابة النموذجية: {question.answer}</p>}</fieldset></div>
-    })}
-    <div className="official-test__actions">{!checked ? <button type="button" className="button button--primary" onClick={check}>تحقق من الاختبار</button> : <><p className="official-test__result">النتيجة الموضوعية: <bdi>{score} / 10</bdi>، وراجِع الإجابات النموذجية للأسئلة المفتوحة.</p><button type="button" className="button button--secondary" onClick={() => { setChecked(false); setAnswers({}); setScore(0) }}>أعد الاختبار</button></>}</div>
-  </section>
-}
-
 function TeacherArea() {
   return <TeacherSpace><div className="teacher-material teacher-material--lesson6">
     <h3>إجابات النشاط التطبيقي</h3>
     <h4>النشاط الأول</h4><ol><li>الطالبُ: <strong>مرفوع</strong></li><li>الكتابَ: <strong>منصوب</strong></li><li>المدرسةِ: <strong>مجرور</strong></li><li>العلمُ: <strong>مرفوع</strong></li><li>الحليبَ: <strong>منصوب</strong></li></ol>
     <h4>النشاط الثاني</h4><ol><li><strong>الضمة</strong></li><li><strong>الفتحة</strong></li><li><strong>الكسرة</strong></li><li><strong>السكون</strong></li></ol>
     <h4>النشاط الثالث</h4><ol><li>الفاعل <strong>مرفوع</strong>.</li><li>المفعول به <strong>منصوب</strong>.</li><li>المبتدأ <strong>مرفوع</strong>.</li><li>الخبر <strong>مرفوع</strong>.</li><li>الاسم بعد حرف الجر <strong>مجرور</strong>.</li></ol>
-    <h3>الإجابات النموذجية لاختبار نهاية الدرس</h3>
-    <ol>{finalQuestions.map((question) => <li key={question.number}><strong>{question.number}.</strong> {question.answer}{question.number === 18 && <FullParsing lines={['الطالبُ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.', 'الواجبَ: مفعول به منصوب وعلامة نصبه الفتحة الظاهرة على آخره.']} />}{question.number === 19 && <FullParsing lines={['خالدٌ: فاعل مرفوع وعلامة رفعه الضمة الظاهرة على آخره.', 'المدرسةِ: اسم مجرور بـ إلى وعلامة جره الكسرة الظاهرة على آخره.']} />}</li>)}</ol>
+    <SolutionsArea test={testDefinition} mode="teacher" title="الإجابات النموذجية لاختبار نهاية الدرس" eyebrow="منطقة المعلم" />
     <h3>ملاحظات للمعلم</h3>
     <p>هذا الدرس من أهم الدروس التأسيسية، لذلك لا يُنصح بأن يكون هدف الطالب حفظ جميع العلامات الفرعية مباشرة.</p>
     <h4>يُدرَّس على مرحلتين</h4>

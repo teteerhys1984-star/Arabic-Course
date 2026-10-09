@@ -27,6 +27,7 @@ function read(path) {
 const lesson = read('src/lessons/LessonTen.tsx')
 const content = read('src/lessons/lesson-ten/content.ts')
 const grading = read('src/lessons/lesson-ten/grading.ts')
+const sharedGrading = read('src/shared/test/grading.ts')
 const registry = read('src/lessons/registry.ts')
 const app = read('src/app/App.tsx')
 const main = read('src/main.tsx')
@@ -60,8 +61,9 @@ if ((lesson.match(/<LessonFlow\b/g) ?? []).length !== 1) failures.push('LessonTe
 for (const attr of ['lessonTitle="إنَّ وأخواتها"', 'lessonNumber="١٠"', 'lessonEyebrow="الدرس العاشر"']) {
   requirePhrase(lesson, attr, 'LessonFlow header')
 }
-if ((lesson.match(/^export /gm) ?? []).length !== 1 || !/^export function LessonTen\b/m.test(lesson)) {
-  failures.push('LessonTen.tsx must export only LessonTen.')
+const exports = [...lesson.matchAll(/^export (?:function|const) (\w+)/gm)].map((match) => match[1])
+if (!exports.includes('LessonTen') || exports.some((name) => !['LessonTen', 'testDefinition'].includes(name))) {
+  failures.push('LessonTen.tsx must export only the lesson component and its shared testDefinition.')
 }
 const stepPattern = /step\('([a-z0-9-]+)',\s*'([^']+)',\s*'([^']+)'/g
 const steps = [...lesson.matchAll(stepPattern)].map((match) => ({ id: match[1], title: match[2], group: match[3] }))
@@ -269,18 +271,18 @@ for (const wrong of ['لعلَّ الطالبُ ناجحٌ.', 'ليتَ العط
   if (testBlock.includes(wrong)) failures.push(`Platform test copies a lesson or source sentence: ${wrong}`)
 }
 
-/* 13. No immediate feedback; restart clears; solutions gated on submission. */
-const testArea = lesson.slice(lesson.indexOf('function TestArea('), lesson.indexOf('const statusLabel'))
-for (const leaked of ['is-good', 'is-bad', 'إجابة صحيحة', 'الإجابة الصحيحة', 'إجابة خاطئة', 'correctOptionId']) {
-  if (testArea.includes(leaked)) failures.push(`The platform test leaks feedback before submission: ${leaked}`)
-}
-requirePhrase(testArea, 'disabled={submitted}', 'Test lock after submission')
-requirePhrase(testArea, 'const submitted = result !== null', 'Test submitted state')
-requirePhrase(lesson, 'function restartTest() {\n    setTestAnswers({})\n    setTestResult(null)', 'Restart clears the attempt')
-requirePhrase(lesson, 'setTestResult(gradeTest(testQuestions, testAnswers))', 'Submit computes the result')
-requirePhrase(lesson, 'const [testAnswers, setTestAnswers] = useState<AnswerMap>({})', 'Answers live in LessonTen')
-const solutionsArea = lesson.slice(lesson.indexOf('function SolutionsArea('), lesson.indexOf('function TeacherArea('))
-requirePhrase(solutionsArea, '!result ? (', 'Solutions gated on submission')
+/* 13. Page-level checking via the shared framework; solutions gated per checked page. */
+requirePhrase(lesson, 'لا تظهر التغذية الراجعة ولا الإجابات الصحيحة إلا بعد التحقق من الصفحة.', 'no-feedback-before-page-check note')
+requirePhrase(lesson, 'testId="lesson10-official-test"', 'platform test hook')
+requirePhrase(lesson, 'testId="lesson10-solutions"', 'solutions hook')
+if (!lesson.includes('export const testDefinition: TestDefinition')) failures.push('The platform test must be declared once in the shared platform schema (testDefinition).')
+if (!lesson.includes('<TestRunner')) failures.push('The platform test must render through the shared TestRunner (page-level «تحقّق من الإجابات» on every page).')
+if (!lesson.includes('useTestEngine(testDefinition)')) failures.push('The platform test must use the shared engine so answers and page results survive navigation.')
+if (!lesson.includes("matching: 'strict'")) failures.push('The platform test must keep its harakat-sensitive grading (matching: strict).')
+if (lesson.includes('function TestArea')) failures.push('The bespoke TestArea must be replaced by the shared TestRunner.')
+if (lesson.includes('function SolutionsArea')) failures.push('The bespoke SolutionsArea must be replaced by the shared SolutionsArea.')
+if (lesson.includes('disabled={submitted}')) failures.push('The platform test must not lock fields after submission; rechecking after edits is required.')
+if (lesson.includes('setTestResult') || lesson.includes('const [testResult')) failures.push('The platform test must not keep legacy result state; the shared engine owns results and reset.')
 requirePhrase(content, 'export const solutionGroups', 'Solution groups')
 for (const [from, to] of [
   [1, 5],
@@ -290,8 +292,11 @@ for (const [from, to] of [
 ]) {
   requirePhrase(content, `from: ${from}, to: ${to}`, 'Solution group')
 }
-requirePhrase(grading, "if (!answered) return 'unanswered'", 'Incomplete questions count as unanswered')
-requirePhrase(grading, 'if (field.kind === \'select\') return normalizeAnswer(value[0]) === normalizeAnswer(field.answer)', 'Choice answers compare harakat exactly')
+// The shared grading engine is the single implementation; the lesson adapter delegates to it.
+requirePhrase(sharedGrading, "if (!answered) return 'unanswered'", 'Incomplete questions count as unanswered')
+requirePhrase(sharedGrading, "compareKey(value[0], matching) === compareKey(field.answer, matching)", 'Choice answers compare with the matching mode (harakat exact in strict mode)')
+requirePhrase(grading, "from '../../shared/test'", 'The lesson grading module delegates to the shared engine')
+requirePhrase(grading, "gradeQuestions(questions, answers, 'strict')", 'The lesson grading keeps harakat-sensitive comparison')
 
 /* 14. Teacher Area: separate password, complete material. */
 requirePhrase(lesson, '<TeacherSpace password="somer173">', 'Teacher password')

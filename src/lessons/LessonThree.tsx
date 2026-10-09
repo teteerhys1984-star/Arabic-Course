@@ -3,6 +3,7 @@ import { EducationalCard } from '../shared/components/EducationalCard'
 import { LessonFlow, type LessonStepDefinition } from '../shared/components/LessonFlow'
 import { DirectionText } from '../shared/direction/DirectionText'
 import { TeacherSpace } from '../shared/teacher/TeacherSpace'
+import { SolutionsArea, TestRunner, useTestEngine, type TestDefinition, type TestQuestion } from '../shared/test'
 
 interface LessonThreeProps {
   onProgressChange?: (value: number) => void
@@ -20,6 +21,8 @@ type OfficialQuestion = {
   answer: string
   correction?: string
   rows?: number
+  /** Pure-teacher pedagogical note, shown only in the Teacher Space solutions. */
+  teacherNote?: string
 }
 
 const verbalSentenceExamples = [
@@ -209,6 +212,7 @@ const officialQuestions: OfficialQuestion[] = [
       'استخرج الفعل والفاعل والمفعول به إن وجد من:\n\nذهبَ خالدٌ إلى المدرسةِ.\n\nالفعل: ....................\nالفاعل: ....................\nالمفعول به: ....................',
     answer:
       'الفعل: ذهبَ. الفاعل: خالدٌ. المفعول به: لا يوجد. "إلى المدرسةِ" جار ومجرور، وليس مفعولًا به.',
+    teacherNote: 'وسيتم شرح حروف الجر والاسم المجرور بالتفصيل في الدرس الثاني عشر.',
     rows: 4,
   },
   {
@@ -242,6 +246,56 @@ const officialQuestions: OfficialQuestion[] = [
   },
 ]
 
+/* ================================================================== *
+ * الاختبار النهائي — shared platform test framework (src/shared/test).
+ * Checkable pages, each ending with «تحقّق من الإجابات»; open questions
+ * are manual-review and keep their model answers in the Teacher Space.
+ * ================================================================== */
+
+const testPages = [
+  { id: 'page-1', title: 'أولاً: اختر الإجابة الصحيحة', from: 1, to: 8, type: 'اختيار من متعدد' },
+  { id: 'page-2', title: 'ثانيًا: صح أو خطأ', from: 9, to: 14, type: 'صح أو خطأ' },
+  { id: 'page-3', title: 'ثالثًا: استخرج', from: 15, to: 17, type: 'استخراج' },
+  { id: 'page-4', title: 'رابعًا: الإعراب المبسط', from: 18, to: 19, type: 'إعراب مبسط' },
+  { id: 'page-5', title: 'خامسًا: سؤال تفكير', from: 20, to: 20, type: 'تفكير' },
+] as const
+
+function toTestQuestion(question: OfficialQuestion, type: string): TestQuestion {
+  if (question.type === 'choice') {
+    return {
+      id: `q${question.number}`,
+      number: question.number,
+      type,
+      prompt: question.prompt,
+      fields: [{ kind: 'choice', options: question.options ?? [], answer: question.answer }],
+      solution: question.answer,
+      explanation: question.correction,
+    }
+  }
+  return {
+    id: `q${question.number}`,
+    number: question.number,
+    type,
+    prompt: question.prompt,
+    fields: [{ kind: 'essay', label: 'إجابتك', placeholder: 'اكتب إجابتك هنا' }],
+    teacherAnswer: question.teacherNote ? `${question.answer} ${question.teacherNote}` : question.answer,
+  }
+}
+
+/** The lesson's official final test, declared once in the shared platform schema. */
+// eslint-disable-next-line react-refresh/only-export-components -- the test schema is lesson data, not a component.
+export const testDefinition: TestDefinition = { id: 'lesson-3-final-test', title: 'اختبار نهاية الدرس',
+  description:
+    '20 سؤالًا في 5 صفحات — تحقّق من كل صفحة على حدة، وعدّل إجاباتك وأعِد التحقق متى شئت. الأسئلة المفتوحة تُراجع مع المعلم.',
+  pages: testPages.map((page) => ({
+    id: page.id,
+    title: page.title,
+    questions: officialQuestions
+      .filter((question) => question.number >= page.from && question.number <= page.to)
+      .map((question) => toTestQuestion(question, page.type)),
+  })),
+}
+
 /**
  * Lesson 3 authoritative content, delivered one step at a time through LessonFlow.
  *
@@ -259,8 +313,9 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
   const [activityThreeAnswers, setActivityThreeAnswers] = useState<Record<string, ObjectAnswer>>({})
   const [detectiveAnswers, setDetectiveAnswers] = useState({ verb: '', fael: '', mafool: '' })
   const [detectiveRevealed, setDetectiveRevealed] = useState(false)
-  const [testAnswers, setTestAnswers] = useState<Record<number, string>>({})
-  const [testChecked, setTestChecked] = useState(false)
+  // The shared test engine lives here, above LessonFlow, so answers and page
+  // results survive step navigation (see docs/lesson-test-standards.md).
+  const testEngine = useTestEngine(testDefinition)
 
   function updateActivityOne(sentence: string, field: 'verb' | 'fael', value: string) {
     setActivityOneAnswers((current) => ({
@@ -283,10 +338,6 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
         [field]: value,
       },
     }))
-  }
-
-  function updateTestAnswer(number: number, answer: string) {
-    setTestAnswers((current) => ({ ...current, [number]: answer }))
   }
 
   const steps: LessonStepDefinition[] = [
@@ -1031,9 +1082,7 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
       group: 'اختبر نفسك والمعلم',
       icon: '📝',
       description: 'الاختبار النهائي الرسمي المكون من 20 سؤالًا.',
-      render: () => (
-        <OfficialTest answers={testAnswers} checked={testChecked} onChange={updateTestAnswer} onCheck={() => setTestChecked(true)} />
-      ),
+      render: () => <TestRunner test={testDefinition} engine={testEngine} testId="lesson3-official-test" />,
     },
     {
       id: 'teacher-space',
@@ -1113,17 +1162,6 @@ export function LessonThree({ onProgressChange, onFinish }: LessonThreeProps) {
   )
 }
 
-function QuestionText({ text }: { text: string }) {
-  return (
-    <span className="question-text">
-      {text.split('\n').map((line, index) => (
-        <span className="question-text__line" key={`${index}-${line || 'blank'}`}>
-          {line || '\u00a0'}
-        </span>
-      ))}
-    </span>
-  )
-}
 
 function Subheading({ children }: { children: string }) {
   return <h3 className="source-subheading">{children}</h3>
@@ -1724,122 +1762,6 @@ function ActivityFour({
   )
 }
 
-function OfficialTest({
-  answers,
-  checked,
-  onChange,
-  onCheck,
-}: {
-  answers: Record<number, string>
-  checked: boolean
-  onChange: (number: number, value: string) => void
-  onCheck: () => void
-}) {
-  const objectiveQuestions = officialQuestions.filter((question) => question.type === 'choice')
-  const allAnswered = officialQuestions.every((question) => answers[question.number]?.trim())
-  const score = objectiveQuestions.filter((question) => answers[question.number] === question.answer).length
-
-  return (
-    <div className="official-test" data-testid="lesson3-official-test" aria-label="اختبار نهاية الدرس الثالث الرسمي">
-      <div className="official-test__intro">
-        <strong>اختبار نهاية الدرس</strong>
-        <span>٢٠ سؤالًا</span>
-        <p>أجب عن الأسئلة كلها. الأسئلة المفتوحة يراجعها معلمك، والإجابات النموذجية محفوظة في منطقة المعلم.</p>
-      </div>
-      <div className="official-test__groups">
-        <h3>أولًا: اختر الإجابة الصحيحة</h3>
-        {officialQuestions.slice(0, 8).map((question) => (
-          <OfficialQuestionView question={question} value={answers[question.number] || ''} checked={checked} onChange={onChange} key={question.number} />
-        ))}
-        <h3>ثانيًا: صح أو خطأ</h3>
-        {officialQuestions.slice(8, 14).map((question) => (
-          <OfficialQuestionView question={question} value={answers[question.number] || ''} checked={checked} onChange={onChange} key={question.number} />
-        ))}
-        <h3>ثالثًا: استخرج</h3>
-        {officialQuestions.slice(14, 17).map((question) => (
-          <OfficialQuestionView question={question} value={answers[question.number] || ''} checked={checked} onChange={onChange} key={question.number} />
-        ))}
-        <h3>رابعًا: الإعراب المبسط</h3>
-        {officialQuestions.slice(17, 19).map((question) => (
-          <OfficialQuestionView question={question} value={answers[question.number] || ''} checked={checked} onChange={onChange} key={question.number} />
-        ))}
-        <h3>خامسًا: سؤال تفكير</h3>
-        {officialQuestions.slice(19).map((question) => (
-          <OfficialQuestionView question={question} value={answers[question.number] || ''} checked={checked} onChange={onChange} key={question.number} />
-        ))}
-      </div>
-      <div className="official-test__actions">
-        <button className="button button--primary" type="button" disabled={!allAnswered || checked} onClick={onCheck}>
-          تحقق من الاختبار
-        </button>
-        {!allAnswered && !checked && <p>أجب عن الأسئلة العشرين كلها أولًا.</p>}
-        {checked && (
-          <p className="official-test__result" role="status">
-            الإجابات الموضوعية الصحيحة: <bdi>{score} / {objectiveQuestions.length}</bdi>. الأسئلة المفتوحة جاهزة للمراجعة مع
-            المعلم.
-          </p>
-        )}
-      </div>
-    </div>
-  )
-}
-
-function OfficialQuestionView({
-  question,
-  value,
-  checked,
-  onChange,
-}: {
-  question: OfficialQuestion
-  value: string
-  checked: boolean
-  onChange: (number: number, value: string) => void
-}) {
-  const isChoiceCorrect = checked && question.type === 'choice' && value === question.answer
-  return (
-    <fieldset className="official-question" data-question-number={question.number} disabled={checked}>
-      <legend>
-        <span className="question-number">
-          السؤال <bdi>{question.number}</bdi>
-        </span>{' '}
-        <QuestionText text={question.prompt} />
-      </legend>
-      {question.type === 'choice' && (
-        <div className="official-options">
-          {question.options?.map((option) => (
-            <label key={option}>
-              <input
-                type="radio"
-                name={`lesson3-official-${question.number}`}
-                value={option}
-                checked={value === option}
-                onChange={() => onChange(question.number, option)}
-              />
-              <span>{option}</span>
-            </label>
-          ))}
-        </div>
-      )}
-      {question.type === 'open' && (
-        <textarea
-          rows={question.rows ?? 3}
-          value={value}
-          onChange={(event) => onChange(question.number, event.target.value)}
-          aria-label={`إجابة السؤال ${question.number}`}
-          placeholder="اكتب إجابتك هنا"
-        />
-      )}
-      {checked && question.type === 'choice' && (
-        <p className={isChoiceCorrect ? 'question-feedback question-feedback--good' : 'question-feedback'}>
-          {isChoiceCorrect ? 'إجابة صحيحة.' : `الإجابة النموذجية: ${question.answer}`}
-          {question.correction ? ` ${question.correction}` : ''}
-        </p>
-      )}
-      {checked && question.type === 'open' && <p className="question-feedback">تم تسجيل الإجابة للمراجعة مع المعلم.</p>}
-    </fieldset>
-  )
-}
-
 function TeacherMaterial() {
   return (
     <div className="teacher-material teacher-material--lesson3">
@@ -1894,102 +1816,7 @@ function TeacherMaterial() {
         المثنى وعلامات الإعراب الفرعية؛ فهذا سيأتي لاحقًا.
       </p>
 
-      <h3>الإجابات النموذجية لاختبار نهاية الدرس</h3>
-      <h4>أولًا: الاختيار من متعدد</h4>
-      <DataTable
-        caption="إجابات الاختيار من متعدد"
-        headers={['السؤال', 'الإجابة']}
-        rows={officialQuestions.slice(0, 8).map((question) => [String(question.number), question.answer.replace('.', ' —')])}
-      />
-      <h4>ثانيًا: صح أو خطأ</h4>
-      <ol className="solution-list" start={9}>
-        <li>
-          <strong>صح.</strong>
-        </li>
-        <li>
-          <strong>صح.</strong>
-        </li>
-        <li>
-          <strong>خطأ.</strong>
-          <br />
-          المفعول به هو الذي وقع عليه الفعل، وليس الذي قام به.
-        </li>
-        <li>
-          <strong>صح.</strong>
-        </li>
-        <li>
-          <strong>خطأ.</strong>
-          <br />
-          الماءَ مفعول به، أما الطفلُ فهو الفاعل.
-        </li>
-        <li>
-          <strong>خطأ.</strong>
-          <br />
-          بعض الجمل الفعلية تحتوي على فعل وفاعل فقط، مثل: <strong>نامَ الطفلُ.</strong>
-        </li>
-      </ol>
-      <h4>ثالثًا: الاستخراج</h4>
-      <h4>15. أكلَ الطفلُ التفاحةَ.</h4>
-      <ul className="solution-list">
-        <li>
-          الفعل: <strong>أكلَ</strong>
-        </li>
-        <li>
-          الفاعل: <strong>الطفلُ</strong>
-        </li>
-        <li>
-          المفعول به: <strong>التفاحةَ</strong>
-        </li>
-      </ul>
-      <h4>16. ذهبَ خالدٌ إلى المدرسةِ.</h4>
-      <ul className="solution-list">
-        <li>
-          الفعل: <strong>ذهبَ</strong>
-        </li>
-        <li>
-          الفاعل: <strong>خالدٌ</strong>
-        </li>
-        <li>
-          المفعول به: <strong>لا يوجد</strong>
-        </li>
-      </ul>
-      <p>
-        "إلى المدرسةِ" جار ومجرور، وليس مفعولًا به. وسيتم شرح حروف الجر والاسم المجرور بالتفصيل في الدرس الثاني عشر.
-      </p>
-      <h4>17. رسمتْ سارةُ زهرةً.</h4>
-      <ul className="solution-list">
-        <li>
-          الفعل: <strong>رسمتْ</strong>
-        </li>
-        <li>
-          الفاعل: <strong>سارةُ</strong>
-        </li>
-        <li>
-          المفعول به: <strong>زهرةً</strong>
-        </li>
-      </ul>
-
-      <h4>رابعًا: الإعراب</h4>
-      <h4>18.</h4>
-      <p>
-        <strong>الطالبُ:</strong> فاعل مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.
-      </p>
-      <h4>19.</h4>
-      <p>
-        <strong>الدرسَ:</strong> مفعول به منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.
-      </p>
-      <h4>خامسًا: سؤال التفكير</h4>
-      <p>الإجابة النموذجية:</p>
-      <p>
-        <strong>
-          عرفت أن "الأبُ" فاعل لأنه هو الذي قام بالفعل، وعرفت أن "البابَ" مفعول به لأنه الشيء الذي وقع عليه الفعل.
-        </strong>
-      </p>
-      <p>والقاعدة:</p>
-      <p>
-        <strong>الفاعل هو الذي قام بالفعل، والمفعول به هو الذي وقع عليه الفعل.</strong>
-      </p>
-
+      <SolutionsArea test={testDefinition} mode="teacher" title="الإجابات النموذجية لاختبار نهاية الدرس" eyebrow="منطقة المعلم" />
       <h3>ملاحظات التصحيح للمعلم</h3>
       <div className="correction-box">
         <h4>الخطأ الأول: الخلط بين الفاعل والمفعول به</h4>

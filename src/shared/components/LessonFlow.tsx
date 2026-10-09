@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
 import { LessonStep } from './LessonStep'
 import { LessonOutline } from './LessonOutline'
 
@@ -55,6 +55,12 @@ export function LessonFlow({
 }: LessonFlowProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
   const [mobileDrawerOpen, setMobileDrawerOpen] = useState(false)
+  // Counts deliberate step navigations (pager or outline). The post-navigation
+  // scroll/focus is driven from this counter in a layout effect instead of a raw
+  // requestAnimationFrame inside the click handler: a frame callback can fire late —
+  // in the middle of the student's NEXT interaction (e.g. while typing into an
+  // input) — and steal focus, sending every keystroke to the heading instead.
+  const [navigationCount, setNavigationCount] = useState(0)
   const headingRef = useRef<HTMLHeadingElement>(null)
   const total = steps.length
   const current = steps[currentIndex]
@@ -89,16 +95,21 @@ export function LessonFlow({
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [mobileDrawerOpen])
 
+  // Deliberate navigation always lands the student at the top of the new step, and
+  // moves focus there so keyboard and screen-reader users notice the step changed.
+  // Runs synchronously after the new step is committed to the DOM — never on a later
+  // animation frame that could land mid-interaction and steal focus.
+  useLayoutEffect(() => {
+    if (navigationCount === 0) return // the initial mount is not a deliberate navigation
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+    headingRef.current?.focus()
+  }, [navigationCount])
+
   function goTo(nextIndex: number) {
     if (nextIndex < 0 || nextIndex >= total) return
     setCurrentIndex(nextIndex)
     setMobileDrawerOpen(false)
-    // Deliberate navigation always lands the student at the top of the new step, and
-    // moves focus there so keyboard and screen-reader users notice the step changed.
-    window.requestAnimationFrame(() => {
-      window.scrollTo({ top: 0, behavior: 'smooth' })
-      headingRef.current?.focus()
-    })
+    setNavigationCount((count) => count + 1)
   }
 
   function handlePrevious() {

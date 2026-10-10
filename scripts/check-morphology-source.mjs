@@ -343,15 +343,17 @@ chQ.forEach((q, i) => eq(`Challenge question ${i + 1}`, (C.challengeQuestions[i]
 eq('Challenge note', C.challengeNote, L.find((l) => l.includes('تنبيه للمعلم:')) ?? '')
 
 // ================================================================
-// 9. Registration, sections, stable route, Lesson 2 absence, password
+// 9. Registration, sections, stable route, Lesson 3 absence, password
 // ================================================================
 const count = (text, needle) => text.split(needle).length - 1
 if (count(registry, "id: 'morphology-lesson-01'") !== 1) fail('morphology-lesson-01 must be registered exactly once')
-if (count(registry, "sectionId: 'morphology'") !== 1) fail('Section «morphology» must contain exactly one lesson')
+// Narrowed when Lesson 2 was built: الصرف now carries exactly two lessons (١ و٢), not one.
+if (count(registry, "sectionId: 'morphology'") !== 2) fail('Section «morphology» must contain exactly two lessons (١ و٢)')
 if (count(registry, "sectionId: 'basics-grammar'") !== 10) fail('Section «basics-grammar» must keep exactly ten lessons')
 const morphEntry = registry.slice(registry.indexOf("id: 'morphology-lesson-01'"), registry.indexOf("id: 'morphology-lesson-01'") + 500)
 if (!/number: '١'/.test(morphEntry) || !/title: 'مدخل إلى علم الصرف'/.test(morphEntry)) fail('Lesson 1 must be numbered ١ with the source title')
-if (/morphology-lesson-0[2-9]|morphology-lesson-1\d/.test(registry + lesson + content)) fail('Lesson 2 must not be registered or built')
+if (/morphology-lesson-0[3-9]|morphology-lesson-1\d/.test(registry + lesson + content)) fail('Lesson 3 must not be registered or built yet')
+if (/LessonMorphologyTwo|morphology-lesson-02/.test(lesson + content)) fail('Lesson 1 files must not reference Lesson 2')
 if (!/morphology-lesson-01/.test(read('src/app/App.tsx'))) fail('The stable route morphology-lesson-01 must be wired in App.tsx')
 
 const password = /COURSE_TEACHER_PASSWORD\s*=\s*'([^']+)'/.exec(readFileSync(new URL('../src/shared/teacher/teacherPassword.ts', import.meta.url), 'utf8'))?.[1] ?? ''
@@ -539,5 +541,5 @@ if (failures.length) {
 console.log(
   `Morphology source audit passed against ${srcPath}: 12 objectives, 8 worked examples, 15 activity words, ` +
     '3 family lists, 8 mind-map nodes, 9 golden rules, 6 tools, 45 questions in source order with prompts/options/groups, ' +
-    'answer keys 1–40, 5 teacher mistakes, 11 review rows, remediation and challenge, one Lesson 1 registration, ten basics lessons, no Lesson 2.',
+    'answer keys 1–40, 5 teacher mistakes, 11 review rows, remediation and challenge, one Lesson 1 registration, ten basics lessons, exactly two lessons in الصرف (١ و٢), no Lesson 3.',
 )

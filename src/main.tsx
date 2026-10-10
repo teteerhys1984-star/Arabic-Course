@@ -16,6 +16,7 @@ import './styles/lesson-eight.css'
 import './styles/lesson-nine.css'
 import './styles/lesson-ten.css'
 import './styles/morphology-lesson-01.css'
+import './styles/morphology-lesson-02.css'
 import './styles/test-framework.css'
 import './styles/contact.css'
 

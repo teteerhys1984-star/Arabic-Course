@@ -50,12 +50,12 @@ const count = (text, needle) => text.split(needle).length - 1
 if (count(registry, "id: 'morphology-lesson-02'") !== 1) {
   failures.push('morphology-lesson-02 must be registered exactly once.')
 }
-// Narrowed when Lesson 3 was built (docs/morphology-lesson-03-audit.md): الصرف now carries three lessons.
-if (count(registry, "sectionId: 'morphology'") !== 3) {
-  failures.push('Section «morphology» must contain exactly three lessons (١ و٢ و٣).')
+// Narrowed when Lesson 4 was built (docs/morphology-lesson-04-audit.md): الصرف now carries four lessons.
+if (count(registry, "sectionId: 'morphology'") !== 4) {
+  failures.push('Section «morphology» must contain exactly four lessons (١ و٢ و٣ و٤).')
 }
-if (/morphology-lesson-0[4-9]|morphology-lesson-1\d/.test(registry + lesson + content)) {
-  failures.push('No fourth morphology lesson may be registered or built yet.')
+if (/morphology-lesson-0[5-9]|morphology-lesson-1\d/.test(registry + lesson + content)) {
+  failures.push('No fifth morphology lesson may be registered or built yet.')
 }
 
 const start = registry.indexOf("id: 'morphology-lesson-02'")

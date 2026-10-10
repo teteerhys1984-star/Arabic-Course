@@ -285,6 +285,20 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['مجرّد ومزيد', 'أصل وزيادة', 'تضعيف وأوزان'],
   },
+  {
+    id: 'morphology-lesson-04',
+    sectionId: 'morphology',
+    number: '٤',
+    eyebrow: 'أوزان الثلاثي المجرّد',
+    title: 'أوزان الفعل الثلاثي المجرّد',
+    documentTitle: 'الدرس الرابع: أوزان الفعل الثلاثي المجرّد',
+    summary:
+      'الأبواب الستة المشهورة للفعل الثلاثي المجرّد، وتحديد عين الفعل وحركتها في الماضي والمضارع، وحيلة حفظ الأبواب، وخطوات استخراج الوزن الصرفي، مع مختبرات تفاعلية وتدريبين واختبار من ٢٠ سؤالًا وحلول.',
+    duration: '٩٠',
+    strand: 'الصرف',
+    available: true,
+    parts: ['عين الفعل', 'الأبواب الستة', 'الماضي والمضارع'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

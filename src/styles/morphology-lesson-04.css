@@ -1,0 +1,593 @@
+/* ==================================================================
+ * الدرس الرابع من قسم الصرف: أوزان الفعل الثلاثي المجرّد
+ * كل الأصناف بالبادئة morph4- لعزل الدرس عن بقية الدروس.
+ * التخطيط بالخصائص المنطقية (inline/block) ليعمل مع RTL بلا انعكاس.
+ * ألوان دلالية لحركة عين الفعل: الفتحة ذهبي، الكسرة زمردي، الضمة أخضر داكن.
+ * ================================================================== */
+
+.morph4-hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-end: 0.85rem;
+}
+
+.morph4-hero span {
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--green-dark);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.morph4-muted {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.morph4-big {
+  font: 700 1.4rem/1.85 'Noto Naskh Arabic', serif;
+  color: var(--green-dark);
+  margin-block: 0.35rem;
+}
+
+.morph4-list {
+  padding-inline-start: 1.25rem;
+}
+
+.morph4-list li {
+  margin-block: 0.35rem;
+  line-height: 1.85;
+}
+
+.morph4-list--numbered {
+  padding-inline-start: 1.45rem;
+}
+
+/** عزل الكلمات والأوزان الصرفية لئلا تنقلب الرموز أو الشرطات في سياق RTL */
+.morph4-word {
+  display: inline-block;
+  font: 700 1.22rem/1.9 'Noto Naskh Arabic', serif;
+  color: var(--green-dark);
+}
+
+.morph4-weight {
+  display: inline-block;
+  font: 700 1.15rem/1.9 'Noto Naskh Arabic', serif;
+  color: #8a5a00;
+  background: #fff9eb;
+  padding: 0.1rem 0.55rem;
+  border-radius: 8px;
+  border: 1px solid #ead59b;
+}
+
+/* ---------- شارات الحركات الصرفية ---------- */
+.morph4-vowel {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.3rem;
+  padding: 0.18rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  border: 1px solid transparent;
+}
+
+.morph4-vowel--fatha {
+  background: #fff3d1;
+  border-color: #e6c670;
+  color: #734c00;
+}
+
+.morph4-vowel--kasra {
+  background: #e3f4ee;
+  border-color: #9fd3c0;
+  color: #0e543c;
+}
+
+.morph4-vowel--damma {
+  background: #e6eef8;
+  border-color: #aac3e2;
+  color: #183f6e;
+}
+
+/* ---------- بطاقات التنبيه والقاعدة والتوضيح ---------- */
+.morph4-callout {
+  margin-block: 0.9rem;
+  padding: 1rem 1.2rem;
+  border-inline-start: 5px solid var(--gold);
+  border-radius: 15px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.morph4-callout strong {
+  display: block;
+  margin-block-end: 0.35rem;
+  color: var(--green-dark);
+}
+
+.morph4-callout p {
+  margin-block: 0.3rem;
+}
+
+.morph4-caution {
+  margin-block: 0.95rem;
+  padding: 1rem 1.2rem;
+  border-inline-start: 5px solid #c94a38;
+  border-radius: 15px;
+  background: #fdf4f2;
+  border-block: 1px solid #f1d0cb;
+  border-inline-end: 1px solid #f1d0cb;
+}
+
+.morph4-caution__title {
+  display: inline-block;
+  margin-block-end: 0.35rem;
+  padding: 0.15rem 0.65rem;
+  border-radius: 999px;
+  background: #c94a38;
+  color: #fff;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.morph4-clarification {
+  display: grid;
+  gap: 0.4rem;
+  margin-block: 0.9rem;
+  padding: 0.9rem 1.1rem;
+  border: 1px dashed #b9c9bf;
+  border-radius: 14px;
+  background: #f5faf7;
+  font-size: 0.9rem;
+}
+
+.morph4-clarification__badge {
+  justify-self: start;
+  padding: 0.15rem 0.6rem;
+  border-radius: 999px;
+  background: var(--green);
+  color: #fff;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.morph4-golden {
+  display: flex;
+  align-items: center;
+  gap: 0.8rem;
+  margin-block: 1.1rem;
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  background: var(--cream);
+  border: 1px solid var(--cream-deep);
+}
+
+.morph4-golden span {
+  font-size: 1.4rem;
+}
+
+.morph4-golden p {
+  margin: 0;
+  color: var(--green-deep);
+  font: 700 1.05rem/1.9 'Noto Naskh Arabic', serif;
+}
+
+/* ---------- شريط مقارنة حركة العين في الماضي والمضارع ---------- */
+.morph4-door-banner {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.75rem;
+  margin-block: 0.9rem;
+  padding: 1rem;
+  border-radius: 18px;
+  background: #fcfaf3;
+  border: 1px solid #e6d7ae;
+}
+
+.morph4-door-banner__cell {
+  display: grid;
+  gap: 0.25rem;
+  padding: 0.65rem 0.8rem;
+  border-radius: 12px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+}
+
+.morph4-door-banner__label {
+  font-size: 0.78rem;
+  color: var(--muted);
+}
+
+.morph4-door-banner__value {
+  font: 700 1.1rem/1.7 'Noto Naskh Arabic', serif;
+  color: var(--green-dark);
+}
+
+/* ---------- بطاقات المقارنة والأمثلة ---------- */
+.morph4-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block: 0.7rem;
+}
+
+.morph4-chips bdi,
+.morph4-chips span {
+  padding: 0.4rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fcfdfb;
+  font-family: 'Noto Naskh Arabic', serif;
+  font-size: 1.05rem;
+}
+
+.morph4-compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+  gap: 0.85rem;
+  margin-block: 0.9rem;
+}
+
+.morph4-card {
+  display: grid;
+  gap: 0.45rem;
+  justify-items: start;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+}
+
+.morph4-card--gold {
+  border-color: #e6cf93;
+  background: #fffaf0;
+}
+
+.morph4-example {
+  padding: 1rem 1.15rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+  margin-block: 0.85rem;
+}
+
+.morph4-example h4 {
+  margin: 0 0 0.45rem;
+  color: var(--green-dark);
+}
+
+/* ---------- الجداول المتجاوبة ---------- */
+.morph4-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin-block: 0.85rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+}
+
+.morph4-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.96rem;
+}
+
+.morph4-table caption {
+  padding: 0.65rem 0.85rem 0.4rem;
+  color: var(--muted);
+  font-size: 0.84rem;
+  text-align: start;
+}
+
+.morph4-caption {
+  caption-side: top;
+}
+
+.morph4-table th,
+.morph4-table td {
+  padding: 0.6rem 0.75rem;
+  border-block-end: 1px solid var(--line);
+  text-align: start;
+}
+
+.morph4-table th {
+  color: var(--green-dark);
+  background: var(--cream);
+  font-weight: 700;
+}
+
+.morph4-table tbody tr:last-child td {
+  border-block-end: 0;
+}
+
+/* ---------- مربعات مقابلة الحروف بالميزان ---------- */
+.morph4-scale-boxes {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(80px, 1fr));
+  gap: 0.65rem;
+  margin-block: 0.8rem;
+}
+
+.morph4-scale-box {
+  display: grid;
+  justify-items: center;
+  gap: 0.25rem;
+  padding: 0.75rem 0.5rem;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: #fcfdfb;
+}
+
+.morph4-scale-box--ayn {
+  background: #fff8e6;
+  border-color: #e2c267;
+}
+
+.morph4-scale-box__word {
+  font: 700 1.45rem/1.4 'Noto Naskh Arabic', serif;
+  color: var(--green-dark);
+}
+
+.morph4-scale-box__scale {
+  font: 700 1.2rem/1.4 'Noto Naskh Arabic', serif;
+  color: #8a5a00;
+}
+
+.morph4-scale-box__role {
+  font-size: 0.76rem;
+  color: var(--muted);
+}
+
+/* ---------- المختبرات والتدريبات ---------- */
+.morph4-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.95rem;
+  margin-block: 0.95rem;
+}
+
+.morph4-item {
+  padding: 1rem 1.1rem;
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  background: var(--paper);
+}
+
+.morph4-item__title {
+  margin: 0 0 0.55rem;
+  font: 700 1.08rem/1.9 'Noto Naskh Arabic', serif;
+  color: var(--green-dark);
+}
+
+.morph4-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-block-start: 0.75rem;
+}
+
+.morph4-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.morph4-options--stacked {
+  flex-direction: column;
+  align-items: stretch;
+}
+
+.morph4-option {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-height: 44px;
+  padding: 0.45rem 0.85rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fcfdfb;
+  cursor: pointer;
+  font: 1.05rem/1.55 'Noto Naskh Arabic', serif;
+}
+
+.morph4-option input {
+  accent-color: var(--green);
+  width: 18px;
+  height: 18px;
+}
+
+.morph4-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+  gap: 0.65rem;
+  margin-block-start: 0.4rem;
+}
+
+.morph4-field {
+  display: grid;
+  gap: 0.3rem;
+  font-size: 0.86rem;
+  color: var(--muted);
+}
+
+.morph4-field__label {
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
+.morph4-field select {
+  min-height: 44px;
+  padding: 0.45rem 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  background: #fcfdfb;
+  font: 1.02rem/1.5 'Noto Naskh Arabic', serif;
+}
+
+.morph4-feedback {
+  margin-block-start: 0.85rem;
+  padding: 0.85rem 1rem;
+  border-radius: 12px;
+  border-inline-start: 4px solid var(--gold);
+  background: var(--cream);
+  font-size: 0.92rem;
+  animation: morph4-in 0.25s ease-out;
+}
+
+.morph4-feedback--ok {
+  border-inline-start-color: var(--success);
+  background: #eef7f2;
+}
+
+.morph4-feedback--no {
+  border-inline-start-color: var(--error);
+  background: #fbf0f0;
+}
+
+.morph4-feedback p {
+  margin-block: 0.3rem;
+}
+
+@keyframes morph4-in {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+/* ---------- خطوات مرتبة ---------- */
+.morph4-steps {
+  list-style: none;
+  padding: 0;
+  display: grid;
+  gap: 0.75rem;
+  margin-block: 0.9rem;
+}
+
+.morph4-steps__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.85rem;
+  align-items: start;
+  padding: 0.9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+}
+
+.morph4-steps__num {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--green-dark);
+  color: #fff;
+  font: 700 1rem/1 'Noto Naskh Arabic', serif;
+}
+
+.morph4-steps__item p {
+  margin: 0.2rem 0 0;
+}
+
+/* ---------- تسليم الاختبار ومنطقة المعلم ---------- */
+.morph4-submit {
+  padding: clamp(1rem, 3vw, 1.6rem);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.morph4-submit h3 {
+  color: var(--green-dark);
+  font: 700 1.4rem/1.5 'Noto Naskh Arabic', serif;
+}
+
+.morph4-score {
+  font-size: 1.25rem;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
+.morph4-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  list-style: none;
+  padding: 0;
+}
+
+.morph4-counts li {
+  padding: 0.3rem 0.75rem;
+  border-radius: 10px;
+  background: var(--cream);
+  font-size: 0.88rem;
+}
+
+.morph4-keys {
+  padding-inline-start: 1.4rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.morph4-keys li {
+  font-size: 0.9rem;
+  line-height: 1.9;
+}
+
+.morph4-keys__note {
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.morph4-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .morph4-feedback {
+    animation: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .morph4-grid {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .morph4-table {
+    font-size: 0.88rem;
+  }
+  .morph4-table th,
+  .morph4-table td {
+    padding: 0.45rem 0.55rem;
+  }
+  .morph4-option {
+    width: 100%;
+  }
+  .morph4-scale-boxes {
+    grid-template-columns: repeat(3, minmax(68px, 1fr));
+  }
+  .morph4-steps__item {
+    padding: 0.75rem 0.85rem;
+  }
+}

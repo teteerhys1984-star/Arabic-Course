@@ -347,12 +347,12 @@ eq('Challenge note', C.challengeNote, L.find((l) => l.includes('تنبيه لل�
 // ================================================================
 const count = (text, needle) => text.split(needle).length - 1
 if (count(registry, "id: 'morphology-lesson-01'") !== 1) fail('morphology-lesson-01 must be registered exactly once')
-// Narrowed when Lesson 3 was built: الصرف now carries exactly three lessons (١ و٢ و٣).
-if (count(registry, "sectionId: 'morphology'") !== 3) fail('Section «morphology» must contain exactly three lessons (١ و٢ و٣)')
+// Narrowed when Lesson 4 was built: الصرف now carries exactly four lessons (١ و٢ و٣ و٤).
+if (count(registry, "sectionId: 'morphology'") !== 4) fail('Section «morphology» must contain exactly four lessons (١ و٢ و٣ و٤)')
 if (count(registry, "sectionId: 'basics-grammar'") !== 10) fail('Section «basics-grammar» must keep exactly ten lessons')
 const morphEntry = registry.slice(registry.indexOf("id: 'morphology-lesson-01'"), registry.indexOf("id: 'morphology-lesson-01'") + 500)
 if (!/number: '١'/.test(morphEntry) || !/title: 'مدخل إلى علم الصرف'/.test(morphEntry)) fail('Lesson 1 must be numbered ١ with the source title')
-if (/morphology-lesson-0[4-9]|morphology-lesson-1\d/.test(registry + lesson + content)) fail('Lesson 4 must not be registered or built yet')
+if (/morphology-lesson-0[5-9]|morphology-lesson-1\d/.test(registry + lesson + content)) fail('Lesson 5 must not be registered or built yet')
 if (/LessonMorphologyTwo|morphology-lesson-02/.test(lesson + content)) fail('Lesson 1 files must not reference Lesson 2')
 if (!/morphology-lesson-01/.test(read('src/app/App.tsx'))) fail('The stable route morphology-lesson-01 must be wired in App.tsx')
 

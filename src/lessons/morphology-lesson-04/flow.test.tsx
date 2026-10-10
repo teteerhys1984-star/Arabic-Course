@@ -105,7 +105,7 @@ describe('Morphology Lesson 04 — Interactive Flow & Navigation', () => {
     expect(within(fifth).queryByRole('status')).not.toBeInTheDocument()
   })
 
-  it('checks each test page on demand, hides correctness while answering, and gates final result until all pages are checked', async () => {
+  it('does not reveal answer correctness, page score, or model solutions when checking a page or navigating before final submission, and reveals them only after full test submission', async () => {
     const user = userEvent.setup()
     window.location.hash = '#/lesson/morphology-lesson-04'
     render(<App />)
@@ -117,17 +117,42 @@ describe('Morphology Lesson 04 — Interactive Flow & Navigation', () => {
     await user.click(within(q1).getByRole('radio', { name: 'ف، ع، ل' }))
     expect(within(q1).queryByText('إجابة صحيحة')).not.toBeInTheDocument()
 
+    // Clicking «تحقّق من الإجابات» on a page before final submission saves the page without disclosing correctness or solutions.
     await user.click(screen.getByRole('button', { name: 'تحقّق من الإجابات' }))
-    expect(screen.getByTestId('test-page-summary-morph4-mizan-ayn')).toHaveTextContent('1 صحيحة')
+    expect(screen.getByTestId('test-page-saved-morph4-mizan-ayn')).toHaveTextContent(
+      'تم حفظ إجابات هذه الصفحة. لا تُكشف صحة الإجابات أو الحلول النموذجية إلا بعد تسليم الاختبار كاملًا.',
+    )
+    expect(screen.queryByTestId('test-page-summary-morph4-mizan-ayn')).not.toBeInTheDocument()
+    expect(within(q1).queryByText('إجابة صحيحة')).not.toBeInTheDocument()
+    expect(within(q1).queryByText('الإجابة الصحيحة:')).not.toBeInTheDocument()
 
+    // Navigating to another test page and back preserves the answer without any disclosure.
+    await user.click(openStep('القسم الثاني: الأبواب الثلاثة الأولى'))
+    expect(screen.getByTestId('test-page-morph4-first-three')).toBeInTheDocument()
+    await user.click(openStep('القسم الأول: الميزان الصرفي وعين الفعل'))
+    expect(within(screen.getByTestId('morph4-question-q01')).getByRole('radio', { name: 'ف، ع، ل' })).toBeChecked()
+    expect(within(screen.getByTestId('morph4-question-q01')).queryByText('إجابة صحيحة')).not.toBeInTheDocument()
+
+    // Visiting «حلول الاختبار» before final submission keeps all pages locked, including the checked page.
     await user.click(openStep('حلول الاختبار'))
-    expect(screen.getByTestId('morphology4-solutions')).toBeInTheDocument()
-    expect(screen.getByTestId('solutions-page-morph4-mizan-ayn')).toHaveTextContent('الإجابة الصحيحة')
+    expect(screen.getByTestId('morphology4-solutions')).toHaveTextContent(
+      'لا تُكشف الحلول النموذجية أو صحة الإجابات إلا بعد تسليم الاختبار كاملًا',
+    )
+    expect(screen.queryByTestId('solution-q01')).not.toBeInTheDocument()
+    expect(screen.getByTestId('solutions-page-morph4-mizan-ayn')).toHaveTextContent('تحقّق من هذه الصفحة أولًا')
     expect(screen.getByTestId('solutions-page-morph4-first-three')).toHaveTextContent('تحقّق من هذه الصفحة أولًا')
 
+    // Visiting «تسليم الاختبار والنتيجة» before clicking the submit button does not reveal the score yet.
     await user.click(openStep('تسليم الاختبار والنتيجة'))
-    expect(screen.getByTestId('morph4-submit')).toHaveTextContent('تحقّق من كل صفحة أولًا')
     expect(screen.getByTestId('morph4-submit')).not.toHaveTextContent('النتيجة:')
+
+    // Submitting the complete test reveals the final score and unlocks the model solutions.
+    await user.click(screen.getByTestId('morph4-submit-btn'))
+    expect(screen.getByTestId('morph4-submit')).toHaveTextContent('النتيجة: ١ من ٢٠ إجابة صحيحة')
+
+    await user.click(openStep('حلول الاختبار'))
+    expect(screen.getByTestId('solution-q01')).toHaveTextContent('الإجابة الصحيحة:')
+    expect(screen.getByTestId('solution-q01')).toHaveTextContent('ف، ع، ل')
   })
 
   it('gates the Teacher Area behind the password and displays all model solutions and audit notes', async () => {

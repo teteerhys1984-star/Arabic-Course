@@ -165,7 +165,7 @@ describe('morphology lesson 04 — scientific audit & contradiction resolution',
     expect(fahima?.doorOrder).toBe('الرابع')
   })
 
-  it('explains وَرِثَ — يَرِثُ and وَثِقَ — يَثِقُ in Door 5 accurately without confusing the weight with Waw deletion', () => {
+  it('explains وَرِثَ — يَرِثُ and وَثِقَ — يَثِقُ in Door 5 accurately (door weight فَعِلَ — يَفْعِلُ, underlying يَوْرِثُ/يَوْثِقُ, surface imperfect weight يَعِلُ)', () => {
     const waritha = C.doorFive.examples.find((row) => row.past === 'وَرِثَ')
     expect(waritha).toBeDefined()
     expect(waritha?.aynLetter).toBe('الراء')
@@ -173,8 +173,24 @@ describe('morphology lesson 04 — scientific audit & contradiction resolution',
     expect(waritha?.presentVowel).toBe('الكسرة')
     expect(waritha?.weight).toBe('فَعِلَ — يَفْعِلُ')
     expect(waritha?.doorOrder).toBe('الخامس')
-    expect(C.doorFive.weakVerbClarification).toContain('حُذفت الواو')
+    expect(waritha?.meaning).toContain('يَعِلُ')
+
+    const wathiqa = C.doorFive.examples.find((row) => row.past === 'وَثِقَ')
+    expect(wathiqa).toBeDefined()
+    expect(wathiqa?.aynLetter).toBe('الثاء')
+    expect(wathiqa?.pastVowel).toBe('الكسرة')
+    expect(wathiqa?.presentVowel).toBe('الكسرة')
+    expect(wathiqa?.weight).toBe('فَعِلَ — يَفْعِلُ')
+    expect(wathiqa?.doorOrder).toBe('الخامس')
+    expect(wathiqa?.meaning).toContain('يَعِلُ')
+
+    expect(C.doorFive.weakVerbClarification).toContain('يَوْرِثُ')
+    expect(C.doorFive.weakVerbClarification).toContain('يَوْثِقُ')
+    expect(C.doorFive.weakVerbClarification).toContain('ساكنةً بين ياء المضارعة المفتوحة والكسرة اللازمة')
+    expect(C.doorFive.weakVerbClarification).toContain('يَعِلُ')
     expect(C.doorFive.weakVerbClarification).toContain('الباب الخامس')
+    expect(C.trainingTwo.items[4].explanation).toContain('يَعِلُ')
+    expect(C.teacherAuditNotes[3]).toContain('يَعِلُ')
   })
 
   it('keeps every verb across all six doors and interactive labs consistent with its canonical door', () => {

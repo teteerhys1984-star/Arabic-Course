@@ -32,6 +32,11 @@ interface SolutionsAreaProps {
   title?: string
   eyebrow?: string
   testId?: string
+  /**
+   * When `false` in student mode, keeps all solutions locked until the full test
+   * is submitted, even if individual pages have been checked. Defaults to `true`.
+   */
+  revealFeedback?: boolean
 }
 
 const statusLabels: Record<string, string> = {
@@ -48,10 +53,12 @@ export function SolutionsArea({
   title,
   eyebrow = 'منطقة الحلول',
   testId,
+  revealFeedback = true,
 }: SolutionsAreaProps) {
   const ownEngine = useTestEngine(test)
   const engine = engineProp ?? ownEngine
-  const groups = buildSolutionEntries(test, engine.answers, engine.pageResults, { teacher: mode === 'teacher' })
+  const effectiveResults = mode === 'student' && !revealFeedback ? {} : engine.pageResults
+  const groups = buildSolutionEntries(test, engine.answers, effectiveResults, { teacher: mode === 'teacher' })
   const revealedCount = groups.filter((group) => group.entries.some((entry) => entry.revealed)).length
   const allRevealed = revealedCount === groups.length
 
@@ -66,7 +73,9 @@ export function SolutionsArea({
         <h3>{title ?? `حلول ${test.title}`}</h3>
         {mode === 'student' && !allRevealed && (
           <p className="solutions-area__gate">
-            تظهر الحلول صفحةً صفحةً: تحقّق من الصفحة أولًا لتُكشف حلولها. ({revealedCount} من {groups.length} صفحات مكشوفة)
+            {!revealFeedback
+              ? 'لا تُكشف الحلول النموذجية أو صحة الإجابات إلا بعد تسليم الاختبار كاملًا في خطوة «تسليم الاختبار والنتيجة».'
+              : `تظهر الحلول صفحةً صفحةً: تحقّق من الصفحة أولًا لتُكشف حلولها. (${revealedCount} من ${groups.length} صفحات مكشوفة)`}
           </p>
         )}
       </header>

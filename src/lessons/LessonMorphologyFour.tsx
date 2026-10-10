@@ -1558,10 +1558,20 @@ function NextLessonStep() {
  * الاختبار: التسليم، الحلول، ومنطقة المعلم
  * ================================================================== */
 
-function SubmitStep({ engine }: { engine: TestEngine }) {
+function SubmitStep({
+  engine,
+  isSubmitted,
+  onSubmit,
+  onReset,
+}: {
+  engine: TestEngine
+  isSubmitted: boolean
+  onSubmit: () => void
+  onReset: () => void
+}) {
   const answered = answeredCount(C.testDefinition.pages.flatMap((page) => page.questions), engine.answers)
   const total = C.testDefinition.pages.flatMap((page) => page.questions).length
-  const { finalResult, allPagesChecked } = engine
+  const { finalResult } = engine
 
   return (
     <section className="morph4-submit" aria-labelledby="morph4-submit-title" data-testid="morph4-submit">
@@ -1569,32 +1579,54 @@ function SubmitStep({ engine }: { engine: TestEngine }) {
       <p>
         أجبت عن <bdi>{C.arabicDigits(answered)}</bdi> من <bdi>{C.arabicDigits(total)}</bdi> سؤالًا.
       </p>
-      {!allPagesChecked ? (
-        <p>تحقّق من كل صفحة أولًا («تحقّق من الإجابات» في نهاية كل صفحة) لتظهر النتيجة النهائية.</p>
-      ) : (
-        <div role="status">
-          <p className="morph4-score">
-            النتيجة: <bdi>{C.arabicDigits(finalResult.correct)}</bdi> من <bdi>{C.arabicDigits(finalResult.total)}</bdi>{' '}
-            إجابة صحيحة
+      {!isSubmitted ? (
+        <>
+          <p>
+            لا تُكشف صحة الإجابات أو الحلول النموذجية أو النتيجة النهائية إلا بعد تسليم الاختبار كاملًا. اضغط زر
+            «تسليم الاختبار وإظهار النتيجة» أدناه لاعتماد إجاباتك وإظهار النتيجة النهائية وكشف الحلول النموذجية.
           </p>
-          <ul className="morph4-counts">
-            <li>
-              أسئلة صحيحة: <bdi>{C.arabicDigits(finalResult.correct)}</bdi>
-            </li>
-            <li>
-              أسئلة خاطئة: <bdi>{C.arabicDigits(finalResult.wrong)}</bdi>
-            </li>
-            <li>
-              أسئلة غير مجابة: <bdi>{C.arabicDigits(finalResult.unanswered)}</bdi>
-            </li>
-          </ul>
-        </div>
+          <div className="morph4-item__actions">
+            <button
+              type="button"
+              className="button button--primary"
+              onClick={onSubmit}
+              data-testid="morph4-submit-btn"
+            >
+              تسليم الاختبار وإظهار النتيجة
+            </button>
+            <button type="button" className="button button--secondary" onClick={onReset}>
+              إعادة الاختبار
+            </button>
+          </div>
+        </>
+      ) : (
+        <>
+          <div role="status">
+            <p className="morph4-score">
+              النتيجة: <bdi>{C.arabicDigits(finalResult.correct)}</bdi> من{' '}
+              <bdi>{C.arabicDigits(finalResult.total)}</bdi> إجابة صحيحة
+            </p>
+            <ul className="morph4-counts">
+              <li>
+                أسئلة صحيحة: <bdi>{C.arabicDigits(finalResult.correct)}</bdi>
+              </li>
+              <li>
+                أسئلة خاطئة: <bdi>{C.arabicDigits(finalResult.wrong)}</bdi>
+              </li>
+              <li>
+                أسئلة غير مجابة: <bdi>{C.arabicDigits(finalResult.unanswered)}</bdi>
+              </li>
+            </ul>
+          </div>
+          <div className="morph4-item__actions">
+            <button type="button" className="button button--secondary" onClick={onReset}>
+              إعادة الاختبار
+            </button>
+          </div>
+        </>
       )}
-      <button type="button" className="button button--secondary" onClick={engine.resetTest}>
-        إعادة الاختبار
-      </button>
       <p className="morph4-muted">
-        «إعادة الاختبار» تمسح كل الإجابات ونتائج الصفحات، فتُقفَل النتيجة والحلول من جديد حتى تتحقق من كل صفحة مرة
+        «إعادة الاختبار» تمسح كل الإجابات ونتائج الصفحات، فتُقفَل النتيجة والحلول من جديد حتى تسلّم الاختبار مرة
         أخرى.
       </p>
     </section>
@@ -1668,10 +1700,29 @@ function TeacherArea() {
 export function LessonMorphologyFour({ onProgressChange, onFinish }: Props) {
   // المحرك المشترك يعيش فوق LessonFlow، فتبقى الإجابات والنتائج محفوظة عند التنقل بين الخطوات.
   const testEngine = useTestEngine(testDefinition)
+  const [testSubmitted, setTestSubmitted] = useState(false)
+  const isTestSubmitted = testSubmitted && testEngine.allPagesChecked
+
+  function handleSubmitTest() {
+    for (const page of testDefinition.pages) {
+      testEngine.checkPage(page.id)
+    }
+    setTestSubmitted(true)
+  }
+
+  function handleResetTest() {
+    testEngine.resetTest()
+    setTestSubmitted(false)
+  }
 
   const testSteps = testDefinition.pages.map((page) =>
     step(`test-${page.id}`, page.title, 'الاختبار النهائي (٢٠ سؤالًا)', '📝', (
-      <TestPageView page={page} engine={testEngine} questionTestIdPrefix="morph4-question" />
+      <TestPageView
+        page={page}
+        engine={testEngine}
+        questionTestIdPrefix="morph4-question"
+        revealFeedback={isTestSubmitted}
+      />
     )),
   )
 
@@ -1719,7 +1770,18 @@ export function LessonMorphologyFour({ onProgressChange, onFinish }: Props) {
     step('next-lesson', 'تاسعًا: ما الدرس القادم؟', 'الخلاصة وما بعد الدرس', '➡️', <NextLessonStep />),
 
     ...testSteps,
-    step('submit', 'تسليم الاختبار والنتيجة', 'الاختبار النهائي (٢٠ سؤالًا)', '✅', <SubmitStep engine={testEngine} />),
+    step(
+      'submit',
+      'تسليم الاختبار والنتيجة',
+      'الاختبار النهائي (٢٠ سؤالًا)',
+      '✅',
+      <SubmitStep
+        engine={testEngine}
+        isSubmitted={isTestSubmitted}
+        onSubmit={handleSubmitTest}
+        onReset={handleResetTest}
+      />,
+    ),
     step(
       'solutions',
       'حلول الاختبار',
@@ -1730,6 +1792,7 @@ export function LessonMorphologyFour({ onProgressChange, onFinish }: Props) {
         engine={testEngine}
         testId="morphology4-solutions"
         title="حلول اختبار الدرس الرابع: أوزان الفعل الثلاثي المجرّد"
+        revealFeedback={isTestSubmitted}
       />,
     ),
 

@@ -37,11 +37,25 @@ interface TestPageViewProps {
   showActions?: boolean
   /** Optional prefix for per-question test ids, e.g. «lesson8-test» → «lesson8-test-q1». */
   questionTestIdPrefix?: string
+  /**
+   * Whether checking a page immediately reveals correctness, model answers, and
+   * page score on that page. Defaults to `true`. When `false` (before final test
+   * submission), checking a page records/saves its evaluation in the engine
+   * without disclosing answer correctness, solutions, or scores.
+   */
+  revealFeedback?: boolean
 }
 
-export function TestPageView({ page, engine, showActions = true, questionTestIdPrefix }: TestPageViewProps) {
+export function TestPageView({
+  page,
+  engine,
+  showActions = true,
+  questionTestIdPrefix,
+  revealFeedback = true,
+}: TestPageViewProps) {
   const result = engine.pageResults[page.id]
   const checked = Boolean(result)
+  const showFeedback = checked && revealFeedback
 
   return (
     <section
@@ -63,8 +77,8 @@ export function TestPageView({ page, engine, showActions = true, questionTestIdP
             key={question.id}
             question={question}
             engine={engine}
-            checked={checked}
-            status={result?.statuses[question.id]}
+            checked={showFeedback}
+            status={showFeedback ? result?.statuses[question.id] : undefined}
             questionTestIdPrefix={questionTestIdPrefix}
           />
         ))}
@@ -79,7 +93,7 @@ export function TestPageView({ page, engine, showActions = true, questionTestIdP
           >
             {checked ? 'أعِد التحقّق من الإجابات' : 'تحقّق من الإجابات'}
           </button>
-          {checked && (
+          {showFeedback && (
             <button
               type="button"
               className="button button--ghost"
@@ -93,7 +107,14 @@ export function TestPageView({ page, engine, showActions = true, questionTestIdP
               يمكنك التحقق حتى لو لم تُجب عن كل الأسئلة؛ الأسئلة غير المجابة تُحتسب «لم تُجب».
             </p>
           )}
-          {checked && result && (
+          {checked && !revealFeedback && (
+            <div className="test-page__summary" role="status" data-testid={`test-page-saved-${page.id}`}>
+              <p className="test-page__hint">
+                تم حفظ إجابات هذه الصفحة. لا تُكشف صحة الإجابات أو الحلول النموذجية إلا بعد تسليم الاختبار كاملًا.
+              </p>
+            </div>
+          )}
+          {showFeedback && result && (
             <PageSummary pageId={page.id} result={result} totalQuestions={page.questions.length} />
           )}
         </div>

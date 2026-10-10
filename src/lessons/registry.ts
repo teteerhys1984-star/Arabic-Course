@@ -257,6 +257,20 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['جذر', 'وزن', 'اشتقاق'],
   },
+  {
+    id: 'morphology-lesson-02',
+    sectionId: 'morphology',
+    number: '٢',
+    eyebrow: 'الميزان الصرفي',
+    title: 'الميزان الصرفي: وزن الكلمات',
+    documentTitle: 'الدرس الثاني: الميزان الصرفي — وزن الكلمات ومعرفة الحروف الأصلية والزائدة',
+    summary:
+      'الميزان الصرفي وفائدته، ووزن الثلاثي والرباعي والخماسي، والحروف الأصلية والزائدة، ومواضع الزيادة، والتضعيف والهمزة وحروف العلة، مع خمسة تدريبات واختبار من ٢٦ سؤالًا (٣٠ درجة) وحلول ومفتاح للمعلم.',
+    duration: '٩٠',
+    strand: 'الصرف',
+    available: true,
+    parts: ['ميزان', 'أصل وزيادة', 'تضعيف'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

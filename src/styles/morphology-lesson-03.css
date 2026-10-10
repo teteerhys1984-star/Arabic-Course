@@ -1,0 +1,282 @@
+/* ==================================================================
+ * الدرس الثالث من قسم الصرف: الفعل المجرّد والمزيد
+ * كل الأصناف بالبادئة morph3- لعزل الدرس عن بقية الدروس.
+ * التخطيط بالخصائص المنطقية (inline/block) ليعمل مع RTL بلا انعكاس.
+ * الألوان الدلالية: الحرف الأصلي أخضر، والحرف الزائد ذهبي.
+ * ================================================================== */
+
+.morph3-hero { display: flex; flex-wrap: wrap; gap: .5rem; margin-block-end: .8rem; }
+.morph3-hero span {
+  padding: .3rem .8rem;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--green-dark);
+  font-size: .78rem;
+  font-weight: 700;
+}
+
+.morph3-muted { color: var(--muted); font-size: .86rem; }
+.morph3-big { font: 700 1.4rem/1.8 'Noto Naskh Arabic', serif; color: var(--green-dark); margin-block: .3rem; }
+.morph3-list { padding-inline-start: 1.2rem; }
+.morph3-list li { margin-block: .3rem; }
+.morph3-list--numbered { padding-inline-start: 1.4rem; }
+
+/** نص معزول عن بقية السطر (كلمات وأوزان) لئلا ينقلب ترتيبه داخل RTL. */
+.morph3-word { font: 700 1.25rem/1.9 'Noto Naskh Arabic', serif; color: var(--green-dark); }
+.morph3-weight { font: 700 1.15rem/1.9 'Noto Naskh Arabic', serif; color: var(--gold); }
+.morph3-sentence { font: 700 1.15rem/2 'Noto Naskh Arabic', serif; }
+.morph3-split { font: 700 1.1rem/2 'Noto Naskh Arabic', serif; padding: .4rem .8rem; border-radius: 12px; background: #fcfdfb; border: 1px solid var(--line); }
+
+/* ---------- Callouts, clarifications, golden rule ---------- */
+.morph3-callout {
+  margin-block: .9rem;
+  padding: 1rem 1.2rem;
+  border-inline-start: 5px solid var(--gold);
+  border-radius: 15px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.morph3-callout strong { display: block; margin-block-end: .35rem; color: var(--green-dark); }
+.morph3-callout p { margin-block: .3rem; }
+
+.morph3-clarification {
+  display: grid;
+  gap: .4rem;
+  margin-block: .9rem;
+  padding: .9rem 1.1rem;
+  border: 1px dashed #b9c9bf;
+  border-radius: 14px;
+  background: #f5faf7;
+  font-size: .88rem;
+}
+.morph3-clarification__badge {
+  justify-self: start;
+  padding: .15rem .6rem;
+  border-radius: 999px;
+  background: var(--green);
+  color: #fff;
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+.morph3-golden {
+  display: flex;
+  align-items: center;
+  gap: .8rem;
+  margin-block: 1.1rem;
+  padding: 1rem 1.2rem;
+  border-radius: 16px;
+  background: var(--cream);
+  border: 1px solid var(--cream-deep);
+}
+.morph3-golden span { font-size: 1.4rem; }
+.morph3-golden p { margin: 0; color: var(--green-deep); font: 700 1.05rem/1.9 'Noto Naskh Arabic', serif; }
+
+/* ---------- Chips, cards, comparison ---------- */
+.morph3-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .7rem; }
+.morph3-chips bdi, .morph3-chips span {
+  padding: .4rem .8rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fcfdfb;
+  font-family: 'Noto Naskh Arabic', serif;
+  font-size: 1.05rem;
+}
+
+.morph3-compare { display: grid; grid-template-columns: repeat(auto-fit, minmax(190px, 1fr)); gap: .8rem; margin-block: .9rem; }
+.morph3-card {
+  display: grid;
+  gap: .4rem;
+  justify-items: start;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+}
+.morph3-card--gold { border-color: #e6cf93; background: #fffaf0; }
+
+.morph3-example { padding: 1rem 1.1rem; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); margin-block: .8rem; }
+.morph3-example h4 { margin: 0 0 .4rem; color: var(--green-dark); }
+
+/* ---------- Tables ---------- */
+.morph3-table { width: 100%; border-collapse: collapse; margin-block: .8rem; font-size: .95rem; }
+.morph3-table caption {
+  padding-block-end: .4rem;
+  color: var(--muted);
+  font-size: .82rem;
+  text-align: start;
+}
+.morph3-caption { caption-side: top; }
+.morph3-table th, .morph3-table td { padding: .55rem .7rem; border-bottom: 1px solid var(--line); text-align: start; }
+.morph3-table th { color: var(--green-dark); background: var(--cream); }
+.morph3-row--extra td { background: #fff8e8; }
+.morph3-row--caution td { background: #fdf3f3; }
+.morph3-tag {
+  display: inline-block;
+  margin-inline-start: .5rem;
+  padding: .1rem .5rem;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--green-dark);
+  font-size: .72rem;
+  font-weight: 700;
+}
+
+/* ---------- Letter tiles: original (green) vs extra (gold) ---------- */
+.morph3-tiles { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .6rem; }
+.morph3-tile {
+  display: grid;
+  justify-items: center;
+  gap: .15rem;
+  min-width: 3rem;
+  padding: .45rem .55rem;
+  border-radius: 12px;
+  border: 1px solid transparent;
+  font-size: .72rem;
+}
+.morph3-tile__char { font: 700 1.35rem/1.4 'Noto Naskh Arabic', serif; }
+.morph3-tile--orig { background: #e6f2ea; border-color: #b9d6c3; color: var(--green-dark); }
+.morph3-tile--extra { background: #fff1cc; border-color: #e6cf93; color: #6b4f0c; }
+
+/* ---------- Labs ---------- */
+.morph3-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: .9rem; margin-block: .9rem; }
+
+.morph3-item { padding: .9rem 1rem; border: 1px solid var(--line); border-radius: 18px; background: var(--paper); }
+.morph3-item__title { margin: 0 0 .5rem; font: 700 1.05rem/1.9 'Noto Naskh Arabic', serif; color: var(--green-dark); }
+.morph3-item__actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-block-start: .7rem; }
+.morph3-options { display: flex; flex-wrap: wrap; gap: .5rem; border: 0; padding: 0; margin: 0; }
+.morph3-options--stacked { flex-direction: column; align-items: stretch; }
+.morph3-option {
+  display: inline-flex;
+  align-items: center;
+  gap: .45rem;
+  min-height: 44px;
+  padding: .45rem .8rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fcfdfb;
+  cursor: pointer;
+  font: 1.05rem/1.5 'Noto Naskh Arabic', serif;
+}
+.morph3-option input { accent-color: var(--green); width: 18px; height: 18px; }
+.morph3-option--small { min-height: 40px; padding: .35rem .65rem; }
+
+.morph3-letters { display: flex; flex-wrap: wrap; gap: .55rem; margin-block: .5rem; }
+.morph3-letter {
+  display: grid;
+  justify-items: center;
+  gap: .2rem;
+  min-width: 3rem;
+  padding: .4rem .5rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: #fcfdfb;
+  cursor: pointer;
+  font: 700 1.25rem/1.4 'Noto Naskh Arabic', serif;
+  transition: background-color .2s ease, border-color .2s ease;
+}
+.morph3-letter input { accent-color: var(--green); width: 18px; height: 18px; }
+.morph3-letter small { color: var(--muted); font-size: .7rem; font-weight: 400; }
+.morph3-letter--orig { border-color: var(--green); background: #e6f2ea; }
+
+.morph3-fields { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: .6rem; }
+.morph3-field { display: grid; gap: .25rem; font-size: .84rem; color: var(--muted); }
+.morph3-field__label { margin: .4rem 0 0; font-size: .84rem; color: var(--muted); }
+.morph3-field select {
+  min-height: 42px;
+  padding: .45rem .6rem;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  background: #fcfdfb;
+  font: 1rem/1.5 'Noto Naskh Arabic', serif;
+}
+
+.morph3-feedback {
+  margin-block-start: .8rem;
+  padding: .8rem 1rem;
+  border-radius: 12px;
+  border-inline-start: 4px solid var(--gold);
+  background: var(--cream);
+  font-size: .92rem;
+  animation: morph3-in .25s ease-out;
+}
+.morph3-feedback--ok { border-inline-start-color: var(--success); background: #eef7f2; }
+.morph3-feedback--no { border-inline-start-color: var(--error); background: #fbf0f0; }
+.morph3-feedback p { margin-block: .3rem; }
+.morph3-checks { list-style: none; padding-inline-start: 0; margin-block: .4rem; }
+.morph3-checks li { margin-block: .15rem; font-size: .88rem; }
+
+@keyframes morph3-in {
+  from { opacity: 0; transform: translateY(4px); }
+  to { opacity: 1; transform: none; }
+}
+
+/* ---------- Ordered steps (classification method, summary) ---------- */
+.morph3-steps { list-style: none; padding: 0; display: grid; gap: .7rem; margin-block: .9rem; }
+.morph3-steps__item {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: .8rem;
+  align-items: start;
+  padding: .9rem 1rem;
+  border: 1px solid var(--line);
+  border-radius: 16px;
+  background: var(--paper);
+}
+.morph3-steps__num {
+  display: inline-grid;
+  place-items: center;
+  width: 2rem;
+  height: 2rem;
+  border-radius: 50%;
+  background: var(--green-dark);
+  color: #fff;
+  font: 700 1rem/1 'Noto Naskh Arabic', serif;
+}
+.morph3-steps__item p { margin: .2rem 0 0; }
+
+/* ---------- Test result and marks ---------- */
+.morph3-submit {
+  padding: clamp(1rem, 3vw, 1.6rem);
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+.morph3-submit h3 { color: var(--green-dark); font: 700 1.4rem/1.5 'Noto Naskh Arabic', serif; }
+.morph3-score { font-size: 1.25rem; font-weight: 700; color: var(--green-dark); }
+.morph3-counts { display: flex; flex-wrap: wrap; gap: .5rem 1rem; list-style: none; padding: 0; }
+.morph3-counts li { padding: .3rem .7rem; border-radius: 10px; background: var(--cream); font-size: .88rem; }
+
+/* ---------- Teacher area ---------- */
+.morph3-keys { padding-inline-start: 1.4rem; display: grid; gap: .35rem; }
+.morph3-keys li { font-size: .88rem; line-height: 1.9; }
+.morph3-keys__note { color: var(--muted); font-size: .8rem; }
+
+/* ---------- Screen-reader-only helper (legends) ---------- */
+.morph3-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .morph3-feedback { animation: none; }
+  .morph3-letter { transition: none; }
+}
+
+@media (max-width: 760px) {
+  .morph3-grid { grid-template-columns: minmax(0, 1fr); }
+  .morph3-table { font-size: .88rem; }
+  .morph3-table th, .morph3-table td { padding: .45rem .5rem; }
+  .morph3-option { width: 100%; }
+  .morph3-tile { min-width: 2.6rem; }
+  .morph3-steps__item { padding: .75rem .8rem; }
+}

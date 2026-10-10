@@ -271,6 +271,20 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['ميزان', 'أصل وزيادة', 'تضعيف'],
   },
+  {
+    id: 'morphology-lesson-03',
+    sectionId: 'morphology',
+    number: '٣',
+    eyebrow: 'الفعل المجرّد والمزيد',
+    title: 'الفعل المجرّد والمزيد',
+    documentTitle: 'الدرس الثالث: الفعل المجرّد والمزيد',
+    summary:
+      'الفعل المجرّد والمزيد، والحروف الأصلية والزائدة، والتضعيف وأنواع الزيادة بحرف وبحرفين وثلاثة أحرف، وعلاقة ذلك بالميزان الصرفي، مع مختبرات تفاعلية وتدريبات واختبار من ٢٠ سؤالًا وحلول.',
+    duration: '٩٠',
+    strand: 'الصرف',
+    available: true,
+    parts: ['مجرّد ومزيد', 'أصل وزيادة', 'تضعيف وأوزان'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

@@ -39,8 +39,14 @@ if (!/sectionId: 'morphology'/.test(entry)) failures.push('morphology-lesson-01 
 if (!/number: '١'/.test(entry)) failures.push('morphology-lesson-01 must be numbered ١ inside its section.')
 if (!/title: 'مدخل إلى علم الصرف'/.test(entry)) failures.push('morphology-lesson-01 title must be «مدخل إلى علم الصرف».')
 if (!/available: true/.test(entry)) failures.push('morphology-lesson-01 must be available.')
-if (/morphology-lesson-0[2-9]|morphology-lesson-1\d/.test(registry + content + lesson)) {
-  failures.push('No second morphology lesson may be created in this phase (Lesson 2 is only a teaser).')
+// Narrowed when Lesson 2 was built (docs/morphology-lesson-02-audit.md): Lesson 2 now exists and is
+// registered in الصرف, so the guarantee becomes (a) no THIRD morphology lesson yet, and (b) Lesson 1's
+// own files stay independent of Lesson 2. Every other Lesson 1 assertion below is unchanged.
+if (/morphology-lesson-0[3-9]|morphology-lesson-1\d/.test(registry + content + lesson)) {
+  failures.push('No third morphology lesson may be created yet (Lesson 3 is only a teaser).')
+}
+if (/LessonMorphologyTwo|morphology-lesson-02/.test(content + lesson)) {
+  failures.push('Lesson 1 content/component must stay independent of Lesson 2 (no cross-references).')
 }
 if (!/morphology-lesson-01/.test(app) || !/LessonMorphologyOne/.test(app)) {
   failures.push('App must route morphology-lesson-01 to LessonMorphologyOne.')
@@ -150,9 +156,13 @@ if (!/function checkWeight\(/.test(lesson) || !/checkWeight\(word, values\.weigh
   failures.push('The 15-word activity must grade the weight field.')
 }
 
-// --- Lesson 2 teaser: text only, no lesson, no test ------------------------
-if (/LessonMorphologyTwo|morphology-lesson-02/.test(lesson + app + registry)) {
-  failures.push('Lesson 2 must not be built or registered in this phase.')
+// --- Lesson 3 teaser: text only, no lesson, no test ------------------------
+// (Was «Lesson 2 must not be built»; narrowed now that Lesson 2 ships — see the audit document.)
+if (/LessonMorphologyThree|morphology-lesson-03/.test(lesson + app + registry)) {
+  failures.push('Lesson 3 must not be built or registered yet.')
+}
+if (/LessonMorphologyTwo|morphology-lesson-02/.test(lesson)) {
+  failures.push('Lesson 1 must not embed or link Lesson 2 (its next-lesson teaser stays text-only).')
 }
 
 // --- Hygiene: no unfinished markers in shipped lesson code ---------------

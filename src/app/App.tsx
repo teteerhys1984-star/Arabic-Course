@@ -15,6 +15,7 @@ import { LessonEight } from '../lessons/LessonEight'
 import { LessonNine } from '../lessons/LessonNine'
 import { LessonTen } from '../lessons/LessonTen'
 import { LessonMorphologyOne } from '../lessons/LessonMorphologyOne'
+import { LessonMorphologyTwo } from '../lessons/LessonMorphologyTwo'
 import { LessonSpellingOne } from '../lessons/LessonSpellingOne'
 import { LessonSpellingTwo } from '../lessons/LessonSpellingTwo'
 import { LessonSpellingThree } from '../lessons/LessonSpellingThree'
@@ -70,6 +71,8 @@ function LessonPage({ lesson }: { lesson: LessonMeta }) {
       <LessonSpellingTwo onFinish={finishLesson} />
     ) : lesson.id === 'spelling-lesson-01' ? (
       <LessonSpellingOne onFinish={finishLesson} />
+    ) : lesson.id === 'morphology-lesson-02' ? (
+      <LessonMorphologyTwo onFinish={finishLesson} />
     ) : lesson.id === 'morphology-lesson-01' ? (
       <LessonMorphologyOne onFinish={finishLesson} />
     ) : lesson.id === 'lesson-10' ? (

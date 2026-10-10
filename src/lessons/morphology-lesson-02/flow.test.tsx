@@ -131,4 +131,60 @@ describe('Morphology Lesson 02 — Interactive Flow & Navigation', () => {
     expect(screen.getByText(/قالَ: الجذر ق و ل/)).toBeInTheDocument()
     expect(screen.getByText(/مَفْعول: الجذر ف ع ل/)).toBeInTheDocument()
   })
+
+  it('يوضّح أيّ خمس إجابات تحليل ستُحتسب، بلا نتيجة ولا درجة قبل التحقق', async () => {
+    const user = userEvent.setup()
+    window.location.hash = '#/lesson/morphology-lesson-02'
+    render(<App />)
+    await user.click(openStep('القسم الثالث: التحليل'))
+
+    const rule = screen.getByTestId('morph2-analysis-rule')
+    expect(rule).toHaveTextContent('أيّ خمس كلمات ستُحتسب؟')
+    expect(screen.getByTestId('morph2-analysis-counted')).toHaveTextContent('اكتمل حتى الآن: ٠ من ٥')
+    // عرض القاعدة وحده: لا نتيجة للصفحة ولا درجة ولا حكم صحة.
+    expect(screen.queryByTestId('test-page-summary-morph2-analysis')).not.toBeInTheDocument()
+    expect(rule).not.toHaveTextContent('٢ من ٢')
+
+    // إجابة كاملة عن الكلمة الأولى: الجذر + الوزن + الحروف الزائدة الأربعة.
+    const first = screen.getByTestId('morph2-question-q14')
+    await user.type(within(first).getByRole('textbox'), 'خ ر ج')
+    await user.selectOptions(within(first).getByRole('combobox'), 'اسْتِفْعَال')
+    for (const extra of ['ا (الأولى)', 'س', 'ت', 'ا (الثانية)']) {
+      await user.click(within(first).getByRole('checkbox', { name: extra }))
+    }
+
+    const counted = screen.getByTestId('morph2-analysis-counted')
+    expect(counted).toHaveTextContent('اكتمل حتى الآن: ١ من ٥')
+    expect(counted).toHaveTextContent('اسْتِخْراج')
+    // لم تظهر النتيجة ولا الدرجات.
+    expect(screen.queryByTestId('test-page-summary-morph2-analysis')).not.toBeInTheDocument()
+    expect(screen.queryByText('الدرجة الآلية')).not.toBeInTheDocument()
+  })
+
+  it('يتيح «إعادة الاختبار» قبل إنهاء كل الصفحات، ويصفّر الإجابات ونتائجها والحلول', async () => {
+    const user = userEvent.setup()
+    window.location.hash = '#/lesson/morphology-lesson-02'
+    render(<App />)
+
+    // صفحة واحدة متحقَّق منها فقط (القسم الثاني).
+    await user.click(openStep('القسم الثاني: الوزن الصرفي'))
+    await user.selectOptions(screen.getByLabelText(/زِن الكلمة الآتية: كَتَبَ/), 'فَعَلَ')
+    await user.click(screen.getByRole('button', { name: 'تحقّق من الإجابات' }))
+    expect(screen.getByTestId('test-page-summary-morph2-weights')).toBeInTheDocument()
+
+    // الزر متاح قبل إنهاء بقية الصفحات.
+    await user.click(openStep('تسليم الاختبار والنتيجة'))
+    const submit = screen.getByTestId('morph2-submit')
+    expect(submit).toHaveTextContent('تحقّق من كل صفحة أولًا')
+    expect(submit).not.toHaveTextContent('الدرجة الآلية')
+    await user.click(within(submit).getByRole('button', { name: 'إعادة الاختبار' }))
+    expect(screen.getByTestId('morph2-submit')).toHaveTextContent('تحقّق من كل صفحة أولًا')
+
+    // التصفير: الإجابة، ونتيجة الصفحة، والحلول تُقفَل من جديد (بلا تسريب).
+    await user.click(openStep('القسم الثاني: الوزن الصرفي'))
+    expect(screen.queryByTestId('test-page-summary-morph2-weights')).not.toBeInTheDocument()
+    expect(screen.getByLabelText(/زِن الكلمة الآتية: كَتَبَ/)).toHaveValue('')
+    await user.click(openStep('حلول الاختبار'))
+    expect(screen.getByTestId('solutions-page-morph2-weights')).toHaveTextContent('تحقّق من هذه الصفحة أولًا')
+  })
 })

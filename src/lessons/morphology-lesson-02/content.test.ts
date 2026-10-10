@@ -400,3 +400,96 @@ describe('morphology lesson 02 — verbatim source lines in the content layer', 
     expect(C.quadriliteral.moreLines).toEqual(['زَلْزَلَ: فَعْلَلَ.', 'وَسْوَسَ: فَعْلَلَ.', 'بَعْثَرَ: فَعْلَلَ.'])
   })
 })
+
+describe('morphology lesson 02 — post-review fixes (E1, E2, توحيد التسمية وقبول الإجابة)', () => {
+  /** عدد الرسوم المكتوبة لكل كلمة (بلا اعتبار للشدة). */
+  const writtenGlyphs: Record<string, string[]> = {
+    كَتَبَ: ['ك', 'ت', 'ب'],
+    أَكْرَمَ: ['أ', 'ك', 'ر', 'م'],
+    عَلَّمَ: ['ع', 'ل', 'م'],
+    تَعَلَّمَ: ['ت', 'ع', 'ل', 'م'],
+    'انْطَلَقَ': ['ا', 'ن', 'ط', 'ل', 'ق'],
+    'اسْتَغْفَرَ': ['ا', 'س', 'ت', 'غ', 'ف', 'ر'],
+    دَحْرَجَ: ['د', 'ح', 'ر', 'ج'],
+    تَدَحْرَجَ: ['ت', 'د', 'ح', 'ر', 'ج'],
+  }
+  /** الكلمات التي يُحسب فيها الحرف المشدّد حرفين في العدّ الصرفي. */
+  const doubled = new Set(['عَلَّمَ', 'تَعَلَّمَ'])
+
+  it('E1: يحسب الحرف المشدّد حرفين في كل صفوف جدول العدّ الصرفي', () => {
+    expect(C.letterCounts.map((row) => [row.word, row.letters, row.roots])).toEqual([
+      ['كَتَبَ', 3, 3],
+      ['أَكْرَمَ', 4, 3],
+      ['عَلَّمَ', 4, 3],
+      ['تَعَلَّمَ', 5, 3],
+      ['انْطَلَقَ', 5, 3],
+      ['اسْتَغْفَرَ', 6, 3],
+      ['دَحْرَجَ', 4, 4],
+      ['تَدَحْرَجَ', 5, 4],
+    ])
+
+    for (const row of C.letterCounts) {
+      const glyphs = writtenGlyphs[row.word]
+      expect(glyphs, `عدد الرسوم المكتوبة لـ${row.word}`).toBeDefined()
+      // العدّ الصرفي = عدد الرسوم + حرف واحد عن كل تضعيف.
+      expect(row.letters, `العدّ الصرفي لـ${row.word}`).toBe(glyphs.length + (doubled.has(row.word) ? 1 : 0))
+      expect(row.roots, `أصول ${row.word}`).toBeLessThanOrEqual(row.letters)
+      expect(row.roots, `أصول ${row.word}`).toBeGreaterThanOrEqual(3)
+    }
+
+    // التاء الزائدة وحدها هي الفرق بين عَلَّمَ وتَعَلَّمَ بعد احتساب التضعيف في كليهما.
+    const rowOf = (word: string) => C.letterCounts.find((row) => row.word === word)
+    expect(rowOf('تَعَلَّمَ')?.letters).toBe((rowOf('عَلَّمَ')?.letters ?? 0) + 1)
+  })
+
+  it('E1: يوضح اصطلاح العدّ بجوار الجدول ويفصله عن الرسم المكتوب', () => {
+    expect(C.letterCountsConvention).toContain('يُحسب الحرف المشدّد حرفين')
+    expect(C.letterCountsConvention).toContain('ع، ل، ل، م')
+    expect(C.letterCountsConvention).toContain('ت، ع، ل، ل، م')
+    // حتى لا يظن الطالب أن الشدة حرف مستقل في الكتابة.
+    expect(C.letterCountsConvention).toContain('وليست حرفًا مستقلًّا يُكتب')
+    expect(C.letterCountsConvention).toContain('صرفي لا إملائي')
+  })
+
+  it('E2: لا يصف واو «وَعَدَ» بالسكون، ويُبقي الحكم الصرفي الصحيح', () => {
+    const wa3ada = C.weakLab.find((item) => item.word === 'وَعَدَ')
+    expect(wa3ada).toBeDefined()
+    expect(wa3ada?.note).not.toContain('ساكنة')
+    expect(wa3ada?.note).toContain('فاء الكلمة')
+    expect(wa3ada?.note).toContain('أصلية')
+    expect(wa3ada?.note).toContain('لم يقع فيها إعلال')
+    expect(wa3ada?.answer).toBe('لا إعلال')
+    // الحكم نفسه في متن الدرس بلا وصف خاطئ.
+    expect(JSON.stringify(C.weakLab) + JSON.stringify(C.weakWeights)).not.toContain('ساكنة الحركة')
+  })
+
+  it('يوحّد تسمية حقل الزوائد في أسئلة التحليل الثمانية، ويبيّن درجة حقل الأصل', () => {
+    const analysis = C.testDefinition.pages.find((page) => page.id === 'morph2-analysis')
+    expect(analysis).toBeDefined()
+    for (const question of analysis?.questions ?? []) {
+      const extras = question.fields.find((field) => (field.label ?? '').startsWith('الحروف الزائدة'))
+      expect(extras?.label, `q${question.number}`).toBe('الحروف الزائدة (نصف درجة)')
+    }
+    const weakWords = (analysis?.questions ?? []).filter((question) => /قالَ|باعَ/.test(question.prompt))
+    expect(weakWords).toHaveLength(2)
+    for (const question of weakWords) {
+      const origin = question.fields.find((field) => (field.label ?? '').startsWith('الألف الظاهرة'))
+      expect(origin?.label).toBe('الألف الظاهرة أصلها (شرط نيل درجة الوزن)')
+      // أربعة حقول: جذر (٠٫٥) + وزن (١) + زوائد (٠٫٥) + أصل الألف (شرط).
+      expect(question.fields).toHaveLength(4)
+    }
+  })
+
+  it('يقبل اسم عبارة «سألتمونيها» بصيغها، ولا يقبل تعداد حروفها بدل اسمها', () => {
+    const question = C.testQuestions.find((item) => item.number === 3)
+    const field = question?.fields[0]
+    expect(field?.kind).toBe('text')
+    if (field?.kind !== 'text') throw new Error('expected a text field')
+    // مفتاح المصدر يبقى أولًا؛ فهو ما يُعرض جوابًا نموذجيًّا.
+    expect(field.accept[0]).toBe('سألتمونيها')
+    expect(field.accept).toEqual(['سألتمونيها', 'عبارة سألتمونيها', 'حروف سألتمونيها'])
+    // تعداد الحروف ليس جوابًا عن «ما العبارة المشهورة؟».
+    expect(field.accept).not.toContain('س، أ، ل، ت، م، و، ن، ي، ه، ا')
+    expect(field.accept.every((item) => item.includes('سألتمونيها'))).toBe(true)
+  })
+})

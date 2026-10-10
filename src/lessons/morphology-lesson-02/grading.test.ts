@@ -241,3 +241,20 @@ describe('morphology lesson 02 — shared engine integration', () => {
     expect(formatMarks(30)).toBe('٣٠')
   })
 })
+
+describe('morphology lesson 02 — renamed analysis fields still map onto the rubric', () => {
+  it('يمنح قالَ وباعَ درجتَيهما كاملتين بعد توحيد تسمية حقلي الزوائد والأصل', () => {
+    const answers = correctAnswers()
+    for (const word of ['قالَ', 'باعَ']) {
+      const question = questionByWord(word)
+      expect(question.fields.map((field) => field.label)).toEqual([
+        'الجذر (نصف درجة)',
+        'الوزن (درجة)',
+        'الحروف الزائدة (نصف درجة)',
+        'الألف الظاهرة أصلها (شرط نيل درجة الوزن)',
+      ])
+      expect(isQuestionAnswered(question, answers)).toBe(true)
+      expect(analysisQuestionMarks(question, answers)).toBe(2)
+    }
+  })
+})

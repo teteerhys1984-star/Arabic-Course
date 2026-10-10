@@ -12,8 +12,10 @@ import {
   type TestEngine,
 } from '../shared/test'
 import {
+  ANALYSIS_PAGE_ID,
   arabicDigits,
   computeMarks,
+  countedAnalysisIds,
   formatMarks,
   looseKey,
   sameSet,
@@ -779,6 +781,35 @@ function ContextItem({ item, number }: { item: (typeof C.trainingFive.items)[num
  * الخطوة الأخيرة من الاختبار: الدرجات الثلاثون
  * ================================================================== */
 
+/**
+ * مؤشر قاعدة الاحتساب في القسم الثالث: يوضح أيّ خمس إجابات ستُحتسب.
+ * عرضٌ فقط — لا درجة ولا حكم صحة قبل التحقق من الصفحة وتسليم الاختبار.
+ */
+function AnalysisRulePanel({ engine }: { engine: TestEngine }) {
+  const { counted, ignored } = countedAnalysisIds(engine.answers)
+  const wordOf = (id: string) => C.testQuestions.find((question) => question.id === id)?.prompt.split(': ').pop() ?? ''
+  return (
+    <aside className="morph2-callout" data-testid="morph2-analysis-rule">
+      <strong>أيّ خمس كلمات ستُحتسب؟</strong>
+      <p>
+        تُحتسب أول <bdi>{arabicDigits(TEST_TOTALS.analysisRequired)}</bdi> إجابات <em>مكتملة</em> بترتيب الأسئلة (كل
+        حقول الكلمة)، من <bdi>{arabicDigits(TEST_TOTALS.analysisTotal)}</bdi> كلمات معروضة؛ وما بعدها لا يزيد الدرجة
+        ولا ينقصها.
+      </p>
+      <p data-testid="morph2-analysis-counted">
+        اكتمل حتى الآن: <bdi>{arabicDigits(counted.length)}</bdi> من{' '}
+        <bdi>{arabicDigits(TEST_TOTALS.analysisRequired)}</bdi>
+        {counted.length > 0 ? ` — المحتسبة الآن: ${counted.map(wordOf).join('، ')}` : ''}
+      </p>
+      {ignored.length > 0 && <p>أُجيبت بعد الخمس الأولى، ولن تُحتسب: {ignored.map(wordOf).join('، ')}</p>}
+      <Clarification>
+        طريقة الاحتساب من إعداد المنصة (م-٣) لتنفيذ قاعدة المصدر «حلّل خمس كلمات من الكلمات الآتية» إلكترونيًّا، ولا
+        تُنسب إلى نص الدرس.
+      </Clarification>
+    </aside>
+  )
+}
+
 function SubmitStep({ engine }: { engine: TestEngine }) {
   const answered = answeredCount(C.testQuestions, engine.answers)
   const { finalResult, allPagesChecked } = engine
@@ -856,11 +887,15 @@ function SubmitStep({ engine }: { engine: TestEngine }) {
               أسئلة للمراجعة مع المعلم: <bdi>{arabicDigits(finalResult.manual)}</bdi>
             </li>
           </ul>
-          <button type="button" className="button button--secondary" onClick={engine.resetTest}>
-            إعادة الاختبار
-          </button>
         </div>
       )}
+      <button type="button" className="button button--secondary" onClick={engine.resetTest}>
+        إعادة الاختبار
+      </button>
+      <p className="morph2-muted">
+        «إعادة الاختبار» تمسح كل الإجابات ونتائج الصفحات؛ فتُقفَل النتيجة والحلول من جديد حتى تتحقق من كل صفحة مرة
+        أخرى. وهو متاح قبل إنهاء الصفحات وبعده.
+      </p>
     </section>
   )
 }
@@ -1083,7 +1118,10 @@ export function LessonMorphologyTwo({ onProgressChange, onFinish }: Props) {
 
   const testSteps = testDefinition.pages.map((page) =>
     step(`test-${page.id}`, page.title, 'الاختبار النهائي (٣٠ درجة)', '📝', (
-      <TestPageView page={page} engine={testEngine} questionTestIdPrefix="morph2-question" />
+      <>
+        {page.id === ANALYSIS_PAGE_ID && <AnalysisRulePanel engine={testEngine} />}
+        <TestPageView page={page} engine={testEngine} questionTestIdPrefix="morph2-question" />
+      </>
     )),
   )
 
@@ -1595,13 +1633,15 @@ function NounsStep() {
       <Callout title="ملاحظة">{C.nouns.note}</Callout>
       <Clarification>{C.inlineClarifications.taMarbuta}</Clarification>
       <MappingExplorer items={C.nouns.rows} label="جرّب بنفسك: مقابلة حروف الأسماء بالميزان" />
-      <h4>عدد حروف الكلمة مقابل عدد أصولها</h4>
-      <table className="morph2-table">
-        <caption className="morph2-caption">عدد الحروف الظاهرة مقابل عدد الحروف الأصلية</caption>
+      <h4>عدد حروف الكلمة في العدّ الصرفي مقابل عدد أصولها</h4>
+      <table className="morph2-table" data-testid="morph2-letter-counts">
+        <caption className="morph2-caption">
+          عدد حروف الكلمة في العدّ الصرفي (الحرف المشدّد يُحسب حرفين) مقابل عدد أصولها
+        </caption>
         <thead>
           <tr>
             <th scope="col">الكلمة</th>
-            <th scope="col">عدد حروفها</th>
+            <th scope="col">عدد حروفها (صرفيًّا)</th>
             <th scope="col">عدد أصولها</th>
             <th scope="col">نوعها</th>
           </tr>
@@ -1613,16 +1653,17 @@ function NounsStep() {
                 <bdi>{row.word}</bdi>
               </td>
               <td>
-                <bdi>{row.letters}</bdi>
+                <bdi>{arabicDigits(row.letters)}</bdi>
               </td>
               <td>
-                <bdi>{row.roots}</bdi>
+                <bdi>{arabicDigits(row.roots)}</bdi>
               </td>
               <td>{row.kind}</td>
             </tr>
           ))}
         </tbody>
       </table>
+      <Callout title="اصطلاح العدّ">{C.letterCountsConvention}</Callout>
       <Clarification>{C.inlineClarifications.letterCounts}</Clarification>
     </>
   )

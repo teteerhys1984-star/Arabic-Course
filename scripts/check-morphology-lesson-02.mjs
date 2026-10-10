@@ -331,14 +331,22 @@ for (const item of C.trainingFive.items) {
   checkWeight('training five', item.weight)
   for (const option of item.weightOptions ?? []) checkWeight('training five option', option)
 }
+// حقل الوزن هو ما begins بـ«الوزن»؛ فحقل «الألف الظاهرة أصلها (شرط نيل درجة الوزن)»
+// شرطٌ لنيل الدرجة لا وزنٌ يُضبط، وذكرُه «الوزن» في تسميته لا يُدخله في هذا الفحص.
+// والتضييق لا يُنقص التغطية: العدد المفحوص ١٨ حقلًا (١٠ في صفحة الوزن + ٨ في صفحة التحليل).
+let weightFields = 0
 for (const page of C.testDefinition.pages) {
   for (const question of page.questions) {
     for (const field of question.fields) {
-      if (!/الوزن/.test(field.label)) continue
+      if (!field.label?.startsWith('الوزن')) continue
+      weightFields += 1
       checkWeight(`test q${question.number}`, field.answer)
       for (const option of field.options ?? []) checkWeight(`test q${question.number} option`, option)
     }
   }
+}
+if (weightFields !== 18) {
+  failures.push(`ض-1: the voweled-weight check must cover 18 test fields (found ${weightFields}).`)
 }
 const haraka = /[\u064B-\u065F\u0670]/
 const weightMatches = [...content.matchAll(/weight: '([^']+)'/g)].map((match) => match[1])
@@ -499,6 +507,142 @@ if (audit && !/ض-1/.test(audit)) failures.push('The audit document must record 
 if (audit && !/م-3/.test(audit)) failures.push('The audit document must record the marks and first-five rule (م-2، م-3).')
 if (inventory && !/morphology-lesson-02/.test(inventory)) failures.push('The source inventory must name the lesson it inventories.')
 
+/* ================================================================== *
+ * 12. مراجعة ما بعد التدقيق المستقل (docs/morphology-lesson-02-audit.md §12):
+ *     اصطلاح العدّ الصرفي، ملاحظة المعتل، مجموعات الخطوات، وعدّ الأنشطة
+ * ================================================================== */
+
+/* ت4 — ٣٤ خطوة في ١٦ مجموعة (لا ١٥). */
+const stepGroups = [...lesson.matchAll(/step\(\s*'([a-z0-9-]+)'\s*,\s*'([^']*)'\s*,\s*'([^']*)'/g)].map(
+  (match) => match[3],
+)
+const testStepGroup = /step\(\s*`test-\$\{page\.id\}`\s*,\s*page\.title\s*,\s*'([^']*)'/m.exec(lesson)?.[1]
+if (!testStepGroup) failures.push('The four test pages must share one explicit step group.')
+const distinctGroups = new Set([...stepGroups, testStepGroup].filter(Boolean))
+if (distinctGroups.size !== 16) {
+  failures.push(`The 34 steps must be presented in 16 groups (found ${distinctGroups.size}).`)
+}
+
+/* ت1 — العدّ في جدول «عدد حروف الكلمة» صرفي: الحرف المشدّد يُحسب حرفين. */
+const writtenGlyphs = {
+  'كَتَبَ': 3,
+  'أَكْرَمَ': 4,
+  'عَلَّمَ': 3,
+  'تَعَلَّمَ': 4,
+  'انْطَلَقَ': 5,
+  'اسْتَغْفَرَ': 6,
+  'دَحْرَجَ': 4,
+  'تَدَحْرَجَ': 5,
+}
+const doubledWords = new Set(['عَلَّمَ', 'تَعَلَّمَ'])
+if (C.letterCounts.length !== Object.keys(writtenGlyphs).length) {
+  failures.push('letterCounts must keep its eight rows.')
+}
+for (const row of C.letterCounts) {
+  const glyphs = writtenGlyphs[row.word]
+  if (glyphs === undefined) {
+    failures.push(`letterCounts contains an unexpected word: ${row.word}`)
+    continue
+  }
+  const expected = glyphs + (doubledWords.has(row.word) ? 1 : 0)
+  if (row.letters !== expected) {
+    failures.push(`${row.word} must count ${expected} letters in the morphological count (found ${row.letters}).`)
+  }
+  if (row.roots > row.letters || row.roots < 3) {
+    failures.push(`${row.word} must keep 3 or 4 roots, never more than its letter count.`)
+  }
+}
+// الاصطلاح مُصرَّح به بجوار الجدول، ومفصول عن الرسم المكتوب.
+if (!/يُحسب الحرف المشدّد حرفين/.test(C.letterCountsConvention ?? '')) {
+  failures.push('letterCountsConvention must state that a doubled letter counts as two.')
+}
+if (!/ع، ل، ل، م/.test(C.letterCountsConvention ?? '') || !/ت، ع، ل، ل، م/.test(C.letterCountsConvention ?? '')) {
+  failures.push('letterCountsConvention must spell out عَلَّمَ (٤) and تَعَلَّمَ (٥).')
+}
+if (!/وليست حرفًا مستقلًّا يُكتب/.test(C.letterCountsConvention ?? '')) {
+  failures.push('letterCountsConvention must separate the morphological count from the written shadda.')
+}
+if (!/letterCountsConvention/.test(lesson)) {
+  failures.push('The lesson must show the counting convention next to the letterCounts table.')
+}
+
+/* ت3 — الأرقام المعروضة في الجدول عربية مشرقية (عرضًا فقط). */
+if (!/arabicDigits\(row\.letters\)/.test(lesson) || !/arabicDigits\(row\.roots\)/.test(lesson)) {
+  failures.push('The letterCounts table must render its digits through arabicDigits().')
+}
+
+/* ت2 — لا وصف خاطئ لواو «وَعَدَ». */
+if ((JSON.stringify(C.weakLab) + JSON.stringify(C.weakWeights)).includes('ساكنة الحركة')) {
+  failures.push('The و of وَعَدَ is open-voweled (فاء الكلمة); «ساكنة الحركة» must not come back.')
+}
+const wa3ada = C.weakLab.find((item) => item.word === 'وَعَدَ')
+for (const phrase of ['فاء الكلمة', 'أصلية', 'لم يقع فيها إعلال']) {
+  if (!wa3ada?.note.includes(phrase)) failures.push(`The وَعَدَ note must keep «${phrase}».`)
+}
+if (wa3ada?.answer !== 'لا إعلال') failures.push('وَعَدَ must keep «لا إعلال» as its answer.')
+
+/* ت5 — عدّ الأنشطة التفاعلية كما هو موثّق في §1 و§12. */
+for (const [name, expected] of [
+  ['mappingLab', 5],
+  ['vowelQuiz', 6],
+  ['originalLab', 6],
+  ['hamzaLab', 4],
+  ['weakLab', 4],
+  ['shaddaLab', 5],
+  ['trainingOne', 15],
+  ['trainingTwo', 10],
+  ['trainingThree', 5],
+  ['trainingFour', 6],
+  ['trainingFive', 8],
+]) {
+  const items = C[name]
+  const length = Array.isArray(items) ? items.length : items?.items?.length
+  if (length !== expected) failures.push(`${name} must keep ${expected} items (found ${length}).`)
+}
+if (C.increasedWords?.examples?.length !== 5) {
+  failures.push('The increased-words section must keep its five interactive worked examples.')
+}
+const labItems = ['mappingLab', 'vowelQuiz', 'originalLab', 'hamzaLab', 'weakLab', 'shaddaLab'].reduce(
+  (total, name) => total + C[name].length,
+  0,
+)
+if (labItems !== 30) failures.push(`The six labs must offer 30 items in total (found ${labItems}).`)
+
+/* تحسينات المراجعة: تسمية حقلي قالَ/باعَ، ومؤشر القاعدة، وقبول العبارة. */
+const analysisPage = C.testDefinition.pages.find((page) => page.id === 'morph2-analysis')
+for (const question of analysisPage?.questions ?? []) {
+  const extras = question.fields.find((field) => field.label?.startsWith('الحروف الزائدة'))
+  if (extras?.label !== 'الحروف الزائدة (نصف درجة)') {
+    failures.push(`Question ${question.number} must label its extras field «الحروف الزائدة (نصف درجة)».`)
+  }
+}
+const weakAnalysis = (analysisPage?.questions ?? []).filter((question) => /قالَ|باعَ/.test(question.prompt))
+if (weakAnalysis.length !== 2) failures.push('The analysis section must keep both قالَ and باعَ questions.')
+for (const question of weakAnalysis) {
+  const origin = question.fields.find((field) => field.label?.startsWith('الألف الظاهرة'))
+  if (origin?.label !== 'الألف الظاهرة أصلها (شرط نيل درجة الوزن)') {
+    failures.push(`Question ${question.number} must label its alef-origin field with the weight-mark condition.`)
+  }
+}
+if (!/AnalysisRulePanel/.test(lesson) || !/morph2-analysis-rule/.test(lesson)) {
+  failures.push('The analysis section must explain which five answers will be counted.')
+}
+const phraseQuestion = C.testQuestions.find((question) => question.number === 3)
+const phraseField = phraseQuestion?.fields?.[0]
+if (phraseField?.kind !== 'text') failures.push('Question 3 must stay a text question.')
+else {
+  if (phraseField.accept[0] !== 'سألتمونيها') {
+    failures.push('The source key «سألتمونيها» must stay first (it is the model answer).')
+  }
+  for (const accepted of ['عبارة سألتمونيها', 'حروف سألتمونيها']) {
+    if (!phraseField.accept.includes(accepted)) failures.push(`Question 3 must also accept «${accepted}».`)
+  }
+  if (phraseField.accept.some((item) => item.includes('،'))) {
+    failures.push('Question 3 must not accept an enumeration of the letters instead of the phrase name.')
+  }
+}
+notes.push(`Post-review fixes verified: morphological letter count (تَعَلَّمَ = ٥), the وَعَدَ note, Arabic-Indic digits, 16 step groups, and the documented activity counts (30 lab items + 5 worked examples + 44 training items).`)
+
 if (failures.length) {
   console.error(failures.join('\n'))
   process.exit(1)
@@ -508,5 +652,6 @@ console.log(
     `34 flow steps (30 explicit + 4 test pages), eight source objectives, twelve source sections, ` +
     `five trainings (15/10/5/6/8) with complete keys, a 26-question / 30-mark test in four pages ` +
     `(26 automatic + 4 manual, first five of eight counted), the four approved corrections applied and ` +
-    `documented, unified voweling, platform additions badged, and a password-gated Teacher Area.\n${notes.join('\n')}`,
+    `documented, unified voweling, platform additions badged, a password-gated Teacher Area, and the ` +
+    `post-review fixes (counting convention, activity counts, 16 step groups).\n${notes.join('\n')}`,
 )

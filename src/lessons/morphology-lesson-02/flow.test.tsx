@@ -191,4 +191,15 @@ describe('Morphology Lesson 02 — Interactive Flow & Navigation', () => {
     await user.click(openStep('حلول الاختبار'))
     expect(screen.getByTestId('solutions-page-morph2-weights')).toHaveTextContent('تحقّق من هذه الصفحة أولًا')
   })
+
+  it('points from the next-lesson step to the existing lesson 3, without the stale "not built yet" wording', async () => {
+    const user = userEvent.setup()
+    window.location.hash = '#/lesson/morphology-lesson-02'
+    render(<App />)
+
+    await user.click(openStep('الدرس التالي المقترح'))
+    expect(screen.getByText('الدرس الثالث في قسم الصرف: الفعل المجرّد والمزيد')).toBeInTheDocument()
+    expect(screen.getByText(/متاح الآن في قسم الصرف/)).toBeInTheDocument()
+    expect(screen.queryByText(/لم يُبنَ بعد/)).not.toBeInTheDocument()
+  })
 })

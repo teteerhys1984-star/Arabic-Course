@@ -1,0 +1,182 @@
+.spell3-panel,
+.spell3-item,
+.spell3-note,
+.spell3-card {
+  border: 1px solid #d9ded9;
+  border-radius: 14px;
+  padding: 1.1rem;
+  margin: 1.1rem 0;
+  background: #ffffff;
+  overflow-wrap: anywhere;
+}
+
+.spell3-note {
+  background: #fbf8f4;
+  border-inline-start: 4px solid #c25e36;
+}
+
+.spell3-note strong {
+  display: block;
+  color: #a04924;
+  margin-block-end: 0.4rem;
+}
+
+.spell3-list {
+  padding-inline-start: 1.5rem;
+}
+
+.spell3-list li {
+  margin: 0.55rem 0;
+  line-height: 1.9;
+}
+
+.spell3-table-wrap {
+  width: 100%;
+  overflow-x: auto;
+  margin: 1rem 0;
+}
+
+.spell3-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: auto;
+  text-align: start;
+  line-height: 1.8;
+}
+
+.spell3-table th,
+.spell3-table td {
+  border: 1px solid #d9ded9;
+  padding: 0.75rem 0.85rem;
+  overflow-wrap: anywhere;
+  vertical-align: top;
+}
+
+.spell3-table th {
+  background: #f7f6f1;
+  font-weight: 700;
+}
+
+.spell3-table input {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #cfd5d0;
+  border-radius: 8px;
+}
+
+.spell3-item textarea {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  margin: 0.6rem 0;
+  padding: 0.75rem;
+  min-height: 4.8rem;
+  border: 1px solid #cfd5d0;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+.spell3-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem 1.2rem;
+  margin: 0.7rem 0;
+}
+
+.spell3-options label {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  background: #f9f9f8;
+  padding: 0.35rem 0.75rem;
+  border-radius: 8px;
+  border: 1px solid #e2e6e2;
+}
+
+.spell3-completion {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  margin: 0.7rem 0;
+}
+
+.spell3-completion-field {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.spell3-completion-field input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  box-sizing: border-box;
+  padding: 0.55rem 0.75rem;
+  border: 1px solid #cfd5d0;
+  border-radius: 8px;
+  font-family: inherit;
+}
+
+.spell3-card--highlight {
+  border-inline-start: 4px solid #2f7a5b;
+  background: #f6faf8;
+}
+
+.spell3-badge {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 6px;
+  font-size: 0.85rem;
+  font-weight: bold;
+}
+
+.spell3-badge--alef {
+  background: #e6f4ea;
+  color: #137333;
+}
+
+.spell3-badge--waw {
+  background: #e8f0fe;
+  color: #1a73e8;
+}
+
+.spell3-badge--nabra {
+  background: #fef7e0;
+  color: #b06000;
+}
+
+.spell3-badge--line {
+  background: #f3e8fd;
+  color: #681da8;
+}
+
+.spell3-status-ok {
+  color: #137333;
+  font-weight: bold;
+}
+
+.spell3-status-retry {
+  color: #b06000;
+  font-weight: bold;
+}
+
+.spell3-analysis-box {
+  background: #fbfbfb;
+  border-radius: 10px;
+  padding: 0.9rem;
+  margin-block-start: 0.6rem;
+  border: 1px dashed #cfd5d0;
+}
+
+@media (max-width: 640px) {
+  .spell3-table {
+    font-size: 0.85rem;
+  }
+  .spell3-table td,
+  .spell3-table th {
+    padding: 0.4rem 0.5rem;
+  }
+}

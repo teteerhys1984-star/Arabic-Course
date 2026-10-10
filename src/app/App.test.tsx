@@ -2299,3 +2299,36 @@ describe('Section 3 (الإملاء) — Lesson 2: همزة الوصل وهمز�
     expect(screen.getByText(/ملاحظات المعلم والتوجيهات التصحيحية/)).toBeInTheDocument()
   })
 })
+
+describe('Section 3 (الإملاء) — Lesson 3: الهمزة المتوسطة', () => {
+  it('navigates through steps, checks test pages on demand, gates solutions and teacher space', async () => {
+    goToLesson('spelling-lesson-03')
+    const user = userEvent.setup()
+    render(<App />)
+
+    expect(screen.getByText('الهمزة المتوسطة')).toBeInTheDocument()
+
+    // Activities
+    await user.click(screen.getByRole('button', { name: /التدريبات التطبيقية/ }))
+    expect(screen.getByText(/النشاط الأول: حدّد كرسي الهمزة/)).toBeInTheDocument()
+
+    // Test runner
+    await user.click(screen.getByRole('button', { name: /اختبار نهاية الدرس/ }))
+    expect(screen.getByTestId('test-page-spelling-03-basics')).toBeInTheDocument()
+
+    // Check on demand
+    await user.click(screen.getByRole('button', { name: 'تحقّق من الإجابات' }))
+    expect(screen.getByTestId('test-page-summary-spelling-03-basics')).toBeInTheDocument()
+
+    // Solutions area
+    await user.click(screen.getByRole('button', { name: /حلول الاختبار/ }))
+    expect(screen.getAllByText(/القسم الأول: المعرفة الأساسية/).length).toBeGreaterThan(0)
+
+    // Teacher Space gated by somer173
+    await user.click(screen.getByRole('button', { name: /منطقة خاصة بالمعلم/ }))
+    expect(screen.getByLabelText('كلمة المرور')).toBeInTheDocument()
+    await user.type(screen.getByLabelText('كلمة المرور'), 'somer173')
+    await user.click(screen.getByRole('button', { name: 'دخول' }))
+    expect(screen.getByText(/ملاحظات المعلم والتوجيهات التصحيحية/)).toBeInTheDocument()
+  })
+})

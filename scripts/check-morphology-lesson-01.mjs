@@ -39,11 +39,11 @@ if (!/sectionId: 'morphology'/.test(entry)) failures.push('morphology-lesson-01 
 if (!/number: '١'/.test(entry)) failures.push('morphology-lesson-01 must be numbered ١ inside its section.')
 if (!/title: 'مدخل إلى علم الصرف'/.test(entry)) failures.push('morphology-lesson-01 title must be «مدخل إلى علم الصرف».')
 if (!/available: true/.test(entry)) failures.push('morphology-lesson-01 must be available.')
-// Narrowed when Lesson 3 was built (docs/morphology-lesson-03-audit.md): Lessons 2 and 3 now exist and
-// are registered in الصرف, so the guarantee becomes (a) no FOURTH morphology lesson yet, and (b) Lesson 1's
-// own files stay independent of Lessons 2 and 3. Every other Lesson 1 assertion below is unchanged.
-if (/morphology-lesson-0[4-9]|morphology-lesson-1\d/.test(registry + content + lesson)) {
-  failures.push('No fourth morphology lesson may be created yet.')
+// Narrowed when Lesson 4 was built (docs/morphology-lesson-04-audit.md): Lessons 2, 3 and 4 now exist and
+// are registered in الصرف, so the guarantee becomes (a) no FIFTH morphology lesson yet, and (b) Lesson 1's
+// own files stay independent of Lessons 2, 3 and 4. Every other Lesson 1 assertion below is unchanged.
+if (/morphology-lesson-0[5-9]|morphology-lesson-1\d/.test(registry + content + lesson)) {
+  failures.push('No fifth morphology lesson may be created yet.')
 }
 if (/LessonMorphologyTwo|morphology-lesson-02/.test(content + lesson)) {
   failures.push('Lesson 1 content/component must stay independent of Lesson 2 (no cross-references).')
@@ -156,8 +156,11 @@ if (!/function checkWeight\(/.test(lesson) || !/checkWeight\(word, values\.weigh
   failures.push('The 15-word activity must grade the weight field.')
 }
 
-// --- Lesson 3 is built and registered; Lesson 1 must not reference it -------
-// (Narrowed when Lesson 3 was built: the guarantee is that Lesson 1's own files stay independent.)
+// --- Lessons 3 and 4 are built and registered; Lesson 1 must not reference them -------
+// (Narrowed when Lesson 4 was built: the guarantee is that Lesson 1's own files stay independent.)
+if (/LessonMorphologyFour|morphology-lesson-04/.test(lesson)) {
+  failures.push('Lesson 1 must not embed or link Lesson 4.')
+}
 if (/LessonMorphologyThree|morphology-lesson-03/.test(lesson)) {
   failures.push('Lesson 1 must not embed or link Lesson 3.')
 }

@@ -581,32 +581,82 @@ for (const phrase of ['فاء الكلمة', 'أصلية', 'لم يقع فيها
 }
 if (wa3ada?.answer !== 'لا إعلال') failures.push('وَعَدَ must keep «لا إعلال» as its answer.')
 
-/* ت5 — عدّ الأنشطة التفاعلية كما هو موثّق في §1 و§12. */
-for (const [name, expected] of [
-  ['mappingLab', 5],
-  ['vowelQuiz', 6],
-  ['originalLab', 6],
-  ['hamzaLab', 4],
-  ['weakLab', 4],
-  ['shaddaLab', 5],
-  ['trainingOne', 15],
-  ['trainingTwo', 10],
-  ['trainingThree', 5],
-  ['trainingFour', 6],
-  ['trainingFive', 8],
-]) {
-  const items = C[name]
-  const length = Array.isArray(items) ? items.length : items?.items?.length
-  if (length !== expected) failures.push(`${name} must keep ${expected} items (found ${length}).`)
+/* ت5 — جرد الأنشطة **المعروضة فعلًا** للطالب (لا كل مُصدَّر في طبقة المحتوى).
+ * الفئات الثلاث مختلفة ولا تُجمع في رقم واحد:
+ *   (أ) ٦٩ بندًا قابلًا للتحقّق — مكوّن وزرّ تحقّق ومفتاح لكل بند؛
+ *   (ب) ٥ أمثلة محلولة تفاعلية (خيارات ثم كشف الخطوات)؛
+ *   (ج) ١٨ كلمة داخل أربعة مستكشفات مقابلة — استكشاف بلا تصحيح.
+ * الأعداد مشتقة من البيانات نفسها، ووجود كل فئة في الواجهة مفروض بعلامة مصدرية. */
+const rendered = (marker) => lesson.includes(marker)
+
+const CHECKABLE_ACTIVITIES = [
+  ['التدريب الأول (اختيار الوزن)', C.trainingOne.items, 15, 'items={C.trainingOne.items}'],
+  ['مختبر الحركات', C.vowelQuiz, 6, 'items={C.vowelQuiz}'],
+  ['مختبر الشدة', C.shaddaLab, 5, 'items={C.shaddaLab.map('],
+  ['مختبر الأصلي والزائد', C.originalLab, 6, 'C.originalLab.map('],
+  ['مختبر الهمزة', C.hamzaLab, 4, 'C.hamzaLab.map('],
+  ['مختبر المعتل', C.weakLab, 4, 'C.weakLab.map('],
+  ['التدريب الثاني (الحروف الزائدة)', C.trainingTwo.items, 10, 'C.trainingTwo.items.map('],
+  ['التدريب الثالث (الجذر)', C.trainingThree.items, 5, 'C.trainingThree.items.map('],
+  ['التدريب الرابع (اكتشاف الخطأ)', C.trainingFour.items, 6, 'C.trainingFour.items.map('],
+  ['التدريب الخامس (الوزن في السياق)', C.trainingFive.items, 8, 'C.trainingFive.items.map('],
+]
+for (const [name, items, expected, marker] of CHECKABLE_ACTIVITIES) {
+  if (items?.length !== expected) {
+    failures.push(`${name} must keep ${expected} rendered items (found ${items?.length}).`)
+  }
+  if (!rendered(marker)) failures.push(`${name} must stay rendered in the lesson (missing marker: ${marker}).`)
+  // لا تحقّق بلا مفتاح: كل بند يحمل جوابه أو مفتاحه الخاص.
+  const keyed = (items ?? []).filter((item) => ['answer', 'weight', 'letters', 'extras'].some((k) => item[k] !== undefined))
+  if (keyed.length !== expected) {
+    failures.push(`${name}: all ${expected} items must carry their own key (found ${keyed.length}).`)
+  }
 }
+const checkableTotal = CHECKABLE_ACTIVITIES.reduce((total, [, items]) => total + (items?.length ?? 0), 0)
+if (checkableTotal !== 69) {
+  failures.push(`The lesson must offer 69 checkable activity items (found ${checkableTotal}).`)
+}
+
 if (C.increasedWords?.examples?.length !== 5) {
   failures.push('The increased-words section must keep its five interactive worked examples.')
 }
-const labItems = ['mappingLab', 'vowelQuiz', 'originalLab', 'hamzaLab', 'weakLab', 'shaddaLab'].reduce(
-  (total, name) => total + C[name].length,
-  0,
-)
-if (labItems !== 30) failures.push(`The six labs must offer 30 items in total (found ${labItems}).`)
+for (const marker of ['C.increasedWords.examples.slice(0, 2)', 'C.increasedWords.examples.slice(2)']) {
+  if (!rendered(marker)) failures.push(`The worked examples must stay rendered (missing marker: ${marker}).`)
+}
+for (const example of C.increasedWords?.examples ?? []) {
+  if (!example.options?.length || !example.steps?.length) {
+    failures.push(`The worked example «${example.word}» must keep its options and its reveal steps.`)
+  }
+}
+
+const MAPPING_EXPLORERS = [
+  ['مقدّمة الميزان', C.mizanDefinition?.labWords, 3, 'items={C.mizanDefinition.labWords}'],
+  ['الرباعي', C.quadriliteral?.labRows, 6, 'items={C.quadriliteral.labRows}'],
+  ['الأسماء', C.nouns?.rows, 6, 'items={C.nouns.rows}'],
+  ['التضعيف', C.doubling?.rows, 3, 'items={C.doubling.rows}'],
+]
+for (const [name, rows, expected, marker] of MAPPING_EXPLORERS) {
+  if (rows?.length !== expected) {
+    failures.push(`Mapping explorer «${name}» must keep ${expected} words (found ${rows?.length}).`)
+  }
+  if (!rendered(marker)) failures.push(`Mapping explorer «${name}» must stay rendered (missing marker: ${marker}).`)
+}
+const explorerTotal = MAPPING_EXPLORERS.reduce((total, [, rows]) => total + (rows?.length ?? 0), 0)
+if (explorerTotal !== 18) {
+  failures.push(`The mapping explorers must offer 18 words in total (found ${explorerTotal}).`)
+}
+if ((lesson.match(/<MappingExplorer/g) ?? []).length !== 4) {
+  failures.push('Exactly four MappingExplorer pickers must be rendered.')
+}
+
+// بيانات غير معروضة — قرار موثّق في §12 (جولة المراجعة الثانية):
+// `mappingLab` محتوى مكافئه معروض فلا يُضاف نشاط مكرر، و`teacherKeyHeader` سطر مصدر يجب أن يبقى ظاهرًا.
+if (rendered('C.mappingLab')) {
+  failures.push('mappingLab became rendered — update the activity inventory in the audit document and its counts here.')
+}
+if (!rendered('C.teacherKeyHeader')) {
+  failures.push('teacherKeyHeader carries a source line for the teacher; it must stay visible in the Teacher Area.')
+}
 
 /* تحسينات المراجعة: تسمية حقلي قالَ/باعَ، ومؤشر القاعدة، وقبول العبارة. */
 const analysisPage = C.testDefinition.pages.find((page) => page.id === 'morph2-analysis')
@@ -641,7 +691,7 @@ else {
     failures.push('Question 3 must not accept an enumeration of the letters instead of the phrase name.')
   }
 }
-notes.push(`Post-review fixes verified: morphological letter count (تَعَلَّمَ = ٥), the وَعَدَ note, Arabic-Indic digits, 16 step groups, and the documented activity counts (30 lab items + 5 worked examples + 44 training items).`)
+notes.push(`Post-review fixes verified: morphological letter count (تَعَلَّمَ = ٥), the وَعَدَ note, Arabic-Indic digits, 16 step groups, and the rendered activity inventory (69 checkable items + 5 worked examples + 18 mapping-explorer words).`)
 
 if (failures.length) {
   console.error(failures.join('\n'))

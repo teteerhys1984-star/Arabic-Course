@@ -10,6 +10,7 @@ import userEvent from '@testing-library/user-event'
 import { describe, expect, it } from 'vitest'
 import { App } from '../../app/App'
 import { COURSE_TEACHER_PASSWORD } from '../../shared/teacher/teacherPassword'
+import { teacherKeyHeader } from './content'
 
 function openStep(name: string) {
   return within(screen.getByRole('complementary', { name: 'فهرس الدرس الجانبي' })).getByRole('button', {
@@ -109,8 +110,11 @@ describe('Morphology Lesson 02 — Interactive Flow & Navigation', () => {
     await user.click(openStep('منطقة خاصة بالمعلم'))
     expect(screen.getByLabelText('كلمة المرور')).toBeInTheDocument()
     expect(screen.queryByRole('heading', { name: /مفتاح التدريب الأول/ })).not.toBeInTheDocument()
+    // سطر المصدر الموجَّه للمعلّم يبقى داخل البوابة (د2): لا يظهر قبل كلمة المرور.
+    expect(screen.queryByText(teacherKeyHeader)).not.toBeInTheDocument()
     await user.type(screen.getByLabelText('كلمة المرور'), COURSE_TEACHER_PASSWORD)
     await user.click(screen.getByRole('button', { name: 'دخول' }))
+    expect(screen.getByText(teacherKeyHeader)).toBeInTheDocument()
     for (const heading of [
       'أ. الإجابات النموذجية التفصيلية للاختبار (٢٦ سؤالًا)',
       'ب. مفتاح التدريب الأول (١٥ كلمة) — نص المصدر',

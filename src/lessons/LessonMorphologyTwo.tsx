@@ -908,6 +908,7 @@ function TeacherArea() {
   return (
     <TeacherSpace password={COURSE_TEACHER_PASSWORD}>
       <div className="teacher-material teacher-material--morphology2">
+        <p className="morph2-keys__note">{C.teacherKeyHeader}</p>
         <h3>أ. الإجابات النموذجية التفصيلية للاختبار (٢٦ سؤالًا)</h3>
         <p>
           الأسئلة ٣–٢٦ لها جواب معتمد من المصدر أو من إعداد المنصة (موضّح في كل سؤال)، ويُعرض أولًا. والسؤالان ١ و٢

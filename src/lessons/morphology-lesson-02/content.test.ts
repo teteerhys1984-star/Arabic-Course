@@ -463,6 +463,44 @@ describe('morphology lesson 02 — post-review fixes (E1, E2, توحيد الت�
     expect(JSON.stringify(C.weakLab) + JSON.stringify(C.weakWeights)).not.toContain('ساكنة الحركة')
   })
 
+  it('يبقي توضيح اصطلاح العدّ متّسقًا مع الجدول ومثالَي التضعيف (المشدّد حرفان)', () => {
+    /** تعداد الحروف في العدّ الصرفي، مشتقٌّ من الكلمة نفسها: الشدة تكرار للحرف الذي قبلها. */
+    const countedLetters = (word: string) => {
+      const chars = [...word]
+      const out: string[] = []
+      chars.forEach((char) => {
+        // الشدة → تكرار آخر حرف مدفوع (ترتيب الحركة والشدة في النص قد يختلف).
+        if (char === '\u0651') return void (out.length > 0 && out.push(out[out.length - 1]))
+        if (/[\u064B-\u065F\u0670\u0640]/.test(char)) return // بقية الحركات والتطويل لا تُعدّ
+        out.push(char)
+      })
+      return out
+    }
+    const numberWord: Record<number, string> = { 3: 'ثلاثة', 4: 'أربعة', 5: 'خمسة', 6: 'ستة' }
+    const doubledWords = ['عَلَّمَ', 'تَعَلَّمَ'] as const
+
+    for (const word of doubledWords) {
+      const letters = countedLetters(word)
+      const row = C.letterCounts.find((item) => item.word === word)
+      // الجدول نفسه: العدد الصرفي = طول التعداد (أي المشدّد حرفان).
+      expect(row?.letters, `${word} في الجدول`).toBe(letters.length)
+      expect(letters.length, `${word}: تعداد المشتقّ`).toBe([...word.replace(/[\u064B-\u065F\u0670]/g, '')].length + 1)
+      // والتوضيح الملاصق للجدول يذكر العدد والتعداد نفسيهما، فلا ينفصل أحدهما عن الآخر.
+      const note = C.letterCountsConvention.slice(C.letterCountsConvention.indexOf(`«${word}»`))
+      expect(note.slice(0, 80), `توضيح ${word}`).toContain(numberWord[letters.length])
+      expect(note.slice(0, 80), `تعداد ${word} في التوضيح`).toContain(letters.join('، '))
+    }
+    expect(countedLetters('عَلَّمَ').join('، ')).toBe('ع، ل، ل، م')
+    expect(countedLetters('تَعَلَّمَ').join('، ')).toBe('ت، ع، ل، ل، م')
+
+    // بقية الصفوف بلا تضعيف: العدد الصرفي = عدد الرسوم، ولا شدة في الكلمة.
+    for (const row of C.letterCounts) {
+      if ((doubledWords as readonly string[]).includes(row.word)) continue
+      expect([...row.word].includes('\u0651'), `${row.word} بلا شدة`).toBe(false)
+      expect(row.letters, `${row.word} بلا تضعيف`).toBe(countedLetters(row.word).length)
+    }
+  })
+
   it('يوحّد تسمية حقل الزوائد في أسئلة التحليل الثمانية، ويبيّن درجة حقل الأصل', () => {
     const analysis = C.testDefinition.pages.find((page) => page.id === 'morph2-analysis')
     expect(analysis).toBeDefined()

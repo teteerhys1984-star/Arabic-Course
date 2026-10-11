@@ -313,6 +313,20 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['الأوزان التسعة', 'حروف الزيادة', 'التمييز والتحليل'],
   },
+  {
+    id: 'morphology-lesson-06',
+    sectionId: 'morphology',
+    number: '٦',
+    eyebrow: 'الرباعي المجرّد والمزيد',
+    title: 'الفعل الرباعي المجرّد والمزيد',
+    documentTitle: 'الدرس السادس: الفعل الرباعي المجرّد والمزيد',
+    summary:
+      'الفعل الرباعي المجرّد ووزنه فَعْلَلَ، والرباعي المزيد بحرف ووزنه تَفَعْلَلَ، مع توضيح أن تكرار الحرف لا يعني زيادته، ومقارنة بين النوعين، وخطوات تحديد نوع الفعل، وتدريبين أصليين واختبار من ٢٠ سؤالًا وحلول.',
+    duration: '٩٠',
+    strand: 'الصرف',
+    available: true,
+    parts: ['رباعي مجرّد', 'رباعي مزيد', 'فَعْلَلَ', 'تَفَعْلَلَ'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

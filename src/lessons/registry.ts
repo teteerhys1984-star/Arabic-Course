@@ -327,6 +327,20 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['رباعي مجرّد', 'رباعي مزيد', 'فَعْلَلَ', 'تَفَعْلَلَ'],
   },
+  {
+    id: 'morphology-lesson-07',
+    sectionId: 'morphology',
+    number: '٧',
+    eyebrow: 'الصحيح والمعتلّ',
+    title: 'الفعل الصحيح والفعل المعتل',
+    documentTitle: 'الدرس السابع: الفعل الصحيح والفعل المعتل',
+    summary:
+      'التمييز بين الفعل الصحيح والفعل المعتلّ من الحروف الأصلية، وأنواع الصحيح (سالم ومهموز ومضعّف)، وأنواع المعتلّ (مثال وأجوف وناقص ولفيف مقرون ومفروق)، مع أصل ألف قَالَ وبَاعَ، وتدريبين أصليين (١١ بندًا) واختبار من ٢٠ سؤالًا وحلول.',
+    duration: '٩٠',
+    strand: 'الصرف',
+    available: true,
+    parts: ['صحيح ومعتلّ', 'سالم ومهموز ومضعّف', 'مثال وأجوف وناقص', 'لفيف'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

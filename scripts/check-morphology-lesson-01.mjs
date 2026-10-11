@@ -39,12 +39,12 @@ if (!/sectionId: 'morphology'/.test(entry)) failures.push('morphology-lesson-01 
 if (!/number: '١'/.test(entry)) failures.push('morphology-lesson-01 must be numbered ١ inside its section.')
 if (!/title: 'مدخل إلى علم الصرف'/.test(entry)) failures.push('morphology-lesson-01 title must be «مدخل إلى علم الصرف».')
 if (!/available: true/.test(entry)) failures.push('morphology-lesson-01 must be available.')
-// الحالة الحالية بعد بناء الدروس ٢ و٣ و٤ و٥ و٦ (موثّق في docs/morphology-lesson-04-audit.md و
-// docs/morphology-lesson-05-audit.md وdocs/morphology-lesson-06-audit.md): قسم الصرف يحمل ستة دروس
-// (١ و٢ و٣ و٤ و٥ و٦)، والضمانة هنا أن يبقى الدرس السابع (الصحيح والمعتل) غير مسجَّل وغير مبنيّ،
-// وتبقى ملفات الدرس الأول مستقلة عن الدروس التالية (٢–٦). كل بقية تحقّقات الدرس الأول أدناه دون تغيير.
-if (/morphology-lesson-0[7-9]|morphology-lesson-1\d/.test(registry + content + lesson)) {
-  failures.push('No seventh morphology lesson may be created yet.')
+// الحالة الحالية بعد بناء الدروس ٢ و٣ و٤ و٥ و٦ و٧ (موثّق في docs/morphology-lesson-04-audit.md و
+// docs/morphology-lesson-05-audit.md وdocs/morphology-lesson-06-audit.md وdocs/morphology-lesson-07-audit.md):
+// قسم الصرف يحمل سبعة دروس (١ و٢ و٣ و٤ و٥ و٦ و٧)، والضمانة هنا أن يبقى الدرس الثامن غير مسجَّل وغير مبنيّ،
+// وتبقى ملفات الدرس الأول مستقلة عن الدروس التالية (٢–٧). كل بقية تحقّقات الدرس الأول أدناه دون تغيير.
+if (/morphology-lesson-0[8-9]|morphology-lesson-1\d/.test(registry + content + lesson)) {
+  failures.push('No eighth morphology lesson may be created yet.')
 }
 if (/LessonMorphologyTwo|morphology-lesson-02/.test(content + lesson)) {
   failures.push('Lesson 1 content/component must stay independent of Lesson 2 (no cross-references).')

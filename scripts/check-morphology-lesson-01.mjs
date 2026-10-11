@@ -39,11 +39,10 @@ if (!/sectionId: 'morphology'/.test(entry)) failures.push('morphology-lesson-01 
 if (!/number: '١'/.test(entry)) failures.push('morphology-lesson-01 must be numbered ١ inside its section.')
 if (!/title: 'مدخل إلى علم الصرف'/.test(entry)) failures.push('morphology-lesson-01 title must be «مدخل إلى علم الصرف».')
 if (!/available: true/.test(entry)) failures.push('morphology-lesson-01 must be available.')
-// Narrowed when Lesson 4 was built (docs/morphology-lesson-04-audit.md): Lessons 2, 3 and 4 now exist and
-// are registered in الصرف, so the guarantee becomes (a) no FIFTH morphology lesson yet, and (b) Lesson 1's
-// own files stay independent of Lessons 2, 3 and 4. Every other Lesson 1 assertion below is unchanged.
-// Narrowed again when Lesson 5 was built: lesson 5 is now registered; the guarantee becomes no SIXTH
-// morphology lesson (الدرس السادس: الفعل الرباعي) yet. Every other Lesson 1 assertion below is unchanged.
+// الحالة الحالية بعد بناء الدروس ٢ و٣ و٤ و٥ (موثّق في docs/morphology-lesson-04-audit.md و
+// docs/morphology-lesson-05-audit.md): قسم الصرف يحمل خمسة دروس (١ و٢ و٣ و٤ و٥)، والضمانة هنا
+// أن يبقى الدرس السادس (الرباعي) غير مسجَّل وغير مبنيّ، وتبقى ملفات الدرس الأول مستقلة عن الدروس
+// التالية (٢–٥). كل بقية تحقّقات الدرس الأول أدناه دون تغيير.
 if (/morphology-lesson-0[6-9]|morphology-lesson-1\d/.test(registry + content + lesson)) {
   failures.push('No sixth morphology lesson may be created yet.')
 }

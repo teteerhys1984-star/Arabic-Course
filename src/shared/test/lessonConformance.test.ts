@@ -16,6 +16,7 @@
  * below — this test then enforces the standard on it automatically.
  */
 import { describe, expect, it } from 'vitest'
+import { lessonRegistry } from '../../lessons/registry'
 import {
   autoFields,
   buildSolutionEntries,
@@ -43,6 +44,7 @@ import { testDefinition as morphologyFourTest } from '../../lessons/LessonMorpho
 import { testDefinition as morphologyFiveTest } from '../../lessons/LessonMorphologyFive'
 import { testDefinition as morphologySixTest } from '../../lessons/LessonMorphologySix'
 import { testDefinition as morphologySevenTest } from '../../lessons/LessonMorphologySeven'
+import { testDefinition as morphologyEightTest } from '../../lessons/LessonMorphologyEight'
 import { testDefinition as spellingOneTest } from '../../lessons/LessonSpellingOne'
 import { testDefinition as spellingTwoTest } from '../../lessons/LessonSpellingTwo'
 import { testDefinition as spellingThreeTest } from '../../lessons/LessonSpellingThree'
@@ -66,15 +68,17 @@ const lessonTests: Array<{ lesson: string; test: TestDefinition; expectedQuestio
   { lesson: 'morphology-lesson-05', test: morphologyFiveTest, expectedQuestions: 20 },
   { lesson: 'morphology-lesson-06', test: morphologySixTest, expectedQuestions: 20 },
   { lesson: 'morphology-lesson-07', test: morphologySevenTest, expectedQuestions: 20 },
+  { lesson: 'morphology-lesson-08', test: morphologyEightTest, expectedQuestions: 20 },
   { lesson: 'spelling-lesson-01', test: spellingOneTest, expectedQuestions: 30 },
   { lesson: 'spelling-lesson-02', test: spellingTwoTest, expectedQuestions: 25 },
   { lesson: 'spelling-lesson-03', test: spellingThreeTest, expectedQuestions: 26 },
 ]
 
 describe('lesson test conformance — the shared platform schema', () => {
-  it('covers every registered lesson (20 lessons)', () => {
-    expect(lessonTests).toHaveLength(20)
-    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(20)
+  it('covers every registered lesson (21 lessons)', () => {
+    expect(lessonTests.map((entry) => entry.lesson).sort()).toEqual(lessonRegistry.filter((entry) => entry.available).map((entry) => entry.id).sort())
+    expect(lessonTests).toHaveLength(21)
+    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(21)
   })
 
   it.each(lessonTests.map((entry) => [entry.lesson, entry] as const))(

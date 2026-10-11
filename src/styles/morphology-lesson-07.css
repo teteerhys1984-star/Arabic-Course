@@ -1,0 +1,568 @@
+/* ==================================================================
+ * الدرس السابع من قسم الصرف: الفعل الصحيح والفعل المعتل
+ * كل الأصناف بالبادئة morph7- لعزل الدرس عن بقية الدروس.
+ * التخطيط بالخصائص المنطقية (inline/block) ليعمل مع RTL بلا انعكاس.
+ * الكلمات والأصول معزولة بـ bdi لمنع انقلاب التشكيل.
+ * هوية اللون: تركوازي هادئ للصحيح، وخزامي للمعتل، وذهب معتدل للتلميحات —
+ * لتمييز القسمين بصريًا دون تكرار ممل ولا مؤثرات تشتت.
+ * ================================================================== */
+
+.morph7-hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-end: 0.85rem;
+}
+
+.morph7-hero span {
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  background: #e2f1ef;
+  color: #0f5550;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.morph7-big {
+  font: 700 1.45rem/1.9 'Noto Naskh Arabic', serif;
+  color: var(--green-dark);
+  margin-block: 0.35rem 0.7rem;
+}
+
+.morph7-muted {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.morph7-order {
+  margin-block: 0.4rem;
+  padding: 0.55rem 0.85rem;
+  border-inline-start: 4px solid #0f766e;
+  border-radius: 10px;
+  background: #eff8f6;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
+.morph7-conclusion {
+  margin-block: 0.9rem;
+  padding: 0.9rem 1.15rem;
+  border-radius: 14px;
+  background: #eff8f6;
+  border: 1px solid #bfe0da;
+  font-weight: 700;
+  color: var(--green-dark);
+  line-height: 1.9;
+}
+
+.morph7-definition {
+  margin-block: 0.8rem;
+  padding: 1rem 1.2rem;
+  border-radius: 15px;
+  background: var(--paper);
+  border: 1px solid #bfe0da;
+  box-shadow: var(--shadow);
+}
+
+.morph7-definition p {
+  margin-block: 0.3rem;
+  line-height: 1.9;
+  font-weight: 600;
+}
+
+.morph7-rule {
+  margin-block: 0.9rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #eff8f6, #f6f1fb);
+  border: 1px solid #9d8cc9;
+}
+
+.morph7-rule h4 {
+  margin-block: 0 0.4rem;
+  color: var(--green-dark);
+}
+
+.morph7-rule p {
+  margin-block: 0.25rem;
+  line-height: 1.9;
+}
+
+.morph7-example {
+  margin-block: 0.9rem;
+  padding: 1rem 1.15rem;
+  border-radius: 14px;
+  background: #f7f4fc;
+  border-inline-start: 5px solid #6b5aa6;
+}
+
+.morph7-example p,
+.morph7-example li {
+  margin-block: 0.3rem;
+  line-height: 1.85;
+}
+
+.morph7-list {
+  padding-inline-start: 1.25rem;
+}
+
+.morph7-list li {
+  margin-block: 0.35rem;
+  line-height: 1.9;
+}
+
+.morph7-summary li {
+  padding-block: 0.15rem;
+}
+
+/* ---------- عزل الكلمات والأصول ---------- */
+.morph7-word {
+  display: inline-block;
+  font: 700 1.24rem/2 'Noto Naskh Arabic', serif;
+  color: var(--green-dark);
+}
+
+.morph7-word--muall {
+  color: #4c3d86;
+}
+
+.morph7-root {
+  display: inline-block;
+  font: 700 1.15rem/2 'Noto Naskh Arabic', serif;
+  color: #0f5550;
+  background: #e2f1ef;
+  padding: 0.1rem 0.65rem;
+  border-radius: 8px;
+  border: 1px solid #bfe0da;
+  white-space: nowrap;
+}
+
+.morph7-chip {
+  display: inline-block;
+  margin-inline-start: 0.4rem;
+  padding: 0.05rem 0.55rem;
+  border-radius: 999px;
+  background: #e2f1ef;
+  color: #0f5550;
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+.morph7-chip--muall {
+  background: #ece7f8;
+  color: #4c3d86;
+}
+
+.morph7-chip--weak {
+  background: #fdeee9;
+  color: #8a4432;
+}
+
+/* ---------- بطاقات التنبيه والتوضيح ---------- */
+.morph7-callout {
+  margin-block: 0.9rem;
+  padding: 1rem 1.2rem;
+  border-inline-start: 5px solid var(--gold);
+  border-radius: 15px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.morph7-callout strong {
+  display: block;
+  margin-block-end: 0.35rem;
+  color: var(--green-dark);
+}
+
+.morph7-callout p {
+  margin-block: 0.3rem;
+  line-height: 1.9;
+}
+
+.morph7-clarification {
+  margin-block: 0.95rem;
+  padding: 0.95rem 1.15rem;
+  border-inline-start: 5px solid #6b5aa6;
+  border-radius: 15px;
+  background: #f7f4fc;
+}
+
+.morph7-clarification__badge {
+  display: inline-block;
+  margin-block-end: 0.35rem;
+  padding: 0.12rem 0.7rem;
+  border-radius: 999px;
+  background: #ece7f8;
+  color: #4c3d86;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.morph7-clarification p {
+  margin-block: 0.3rem;
+  line-height: 1.9;
+}
+
+/* ---------- الجداول ---------- */
+.morph7-table-wrap {
+  margin-block: 0.95rem;
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid #bfe0da;
+  background: var(--paper);
+}
+
+.morph7-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 380px;
+}
+
+.morph7-caption {
+  padding: 0.65rem 0.9rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  text-align: start;
+  background: #e2f1ef;
+}
+
+.morph7-table th,
+.morph7-table td {
+  padding: 0.6rem 0.85rem;
+  border-block-end: 1px solid #cfe6e1;
+  text-align: start;
+  vertical-align: top;
+  line-height: 1.9;
+}
+
+.morph7-table th {
+  background: #eff8f6;
+  color: var(--green-dark);
+  font-size: 0.9rem;
+}
+
+.morph7-table tr:last-child td,
+.morph7-table tr:last-child th {
+  border-block-end: none;
+}
+
+.morph7-row--muall td {
+  background: #faf8fd;
+}
+
+.morph7-table bdi {
+  font: 700 1.1rem/1.9 'Noto Naskh Arabic', serif;
+}
+
+/* ---------- البطاقات التفاعلية ---------- */
+.morph7-cards {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 0.9rem;
+  margin-block: 0.95rem;
+}
+
+.morph7-card {
+  padding: 1rem 1.15rem;
+  border-radius: 15px;
+  background: var(--paper);
+  border: 1px solid #bfe0da;
+  box-shadow: var(--shadow);
+}
+
+.morph7-card--muall {
+  border-color: #cfc4ec;
+  background: #faf8fd;
+}
+
+.morph7-card h5 {
+  margin-block: 0 0.5rem;
+  font-size: 1.1rem;
+  color: var(--green-dark);
+}
+
+.morph7-card--muall h5 {
+  color: #4c3d86;
+}
+
+.morph7-card p {
+  margin-block: 0.4rem;
+  line-height: 1.9;
+}
+
+.morph7-pair {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  align-items: center;
+  margin-block: 0.55rem;
+}
+
+.morph7-pair__arrow {
+  color: var(--muted);
+  font-weight: 700;
+}
+
+/* ---------- الخطوات المرقّمة ---------- */
+.morph7-steps {
+  list-style: none;
+  padding-inline-start: 0;
+  margin-block: 0.9rem;
+}
+
+.morph7-steps__item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  margin-block: 0.55rem;
+}
+
+.morph7-steps__num {
+  flex: 0 0 auto;
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: #0f766e;
+  color: #fff;
+  font-weight: 700;
+}
+
+.morph7-steps__item p {
+  margin-block: 0.15rem;
+  line-height: 1.9;
+}
+
+/* ---------- الأنشطة ---------- */
+.morph7-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  gap: 0.9rem;
+  margin-block: 0.95rem;
+}
+
+.morph7-item {
+  padding: 1rem 1.15rem;
+  border-radius: 15px;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  box-shadow: var(--shadow);
+}
+
+.morph7-item--wide {
+  grid-column: 1 / -1;
+}
+
+.morph7-item__title {
+  margin-block: 0 0.55rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  line-height: 1.9;
+}
+
+.morph7-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  margin-block: 0.65rem;
+}
+
+.morph7-options {
+  margin-block: 0.55rem;
+  border: none;
+  padding: 0;
+}
+
+.morph7-options--stacked {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+}
+
+.morph7-option {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  padding: 0.42rem 0.75rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  cursor: pointer;
+  line-height: 1.8;
+}
+
+.morph7-option:has(input:checked) {
+  border-color: #0f766e;
+  background: #eff8f6;
+}
+
+.morph7-option input {
+  accent-color: #0f766e;
+}
+
+.morph7-field {
+  margin-block: 0.55rem;
+}
+
+.morph7-field label {
+  display: block;
+  margin-block-end: 0.3rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  font-size: 0.92rem;
+}
+
+.morph7-select {
+  width: 100%;
+  max-width: 420px;
+  padding: 0.55rem 0.85rem;
+  border-radius: 10px;
+  border: 1px solid var(--line);
+  background: var(--paper);
+  font: inherit;
+  line-height: 1.8;
+}
+
+.morph7-feedback {
+  margin-block: 0.65rem;
+  padding: 0.85rem 1.05rem;
+  border-radius: 12px;
+  line-height: 1.9;
+}
+
+.morph7-feedback--ok {
+  background: #e7f5ec;
+  border: 1px solid #b6ddc3;
+}
+
+.morph7-feedback--no {
+  background: #fdf0ec;
+  border: 1px solid #eec6b8;
+}
+
+.morph7-feedback p {
+  margin-block: 0.25rem;
+}
+
+.morph7-sr {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ---------- التدريبات والخلاصة والتسليم ---------- */
+.morph7-keys {
+  padding-inline-start: 1.35rem;
+}
+
+.morph7-keys li {
+  margin-block: 0.55rem;
+  line-height: 1.95;
+}
+
+.morph7-keys__note {
+  margin-block: 0.4rem 0.9rem;
+  padding: 0.85rem 1.05rem;
+  border-radius: 12px;
+  background: #f7f4fc;
+  border-inline-start: 4px solid #6b5aa6;
+  line-height: 1.95;
+}
+
+.morph7-submit {
+  margin-block: 0.95rem;
+  padding: 1.15rem 1.3rem;
+  border-radius: 16px;
+  background: var(--paper);
+  border: 1px solid #bfe0da;
+  box-shadow: var(--shadow);
+}
+
+.morph7-submit h3 {
+  margin-block: 0 0.55rem;
+}
+
+.morph7-submit p {
+  margin-block: 0.45rem;
+  line-height: 1.95;
+}
+
+.morph7-score {
+  font: 700 1.25rem/1.9 'Noto Naskh Arabic', serif;
+  color: var(--green-dark);
+}
+
+.morph7-counts {
+  list-style: none;
+  padding-inline-start: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-block: 0.55rem;
+}
+
+.morph7-counts li {
+  padding: 0.35rem 0.85rem;
+  border-radius: 999px;
+  background: #eff8f6;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
+/* ---------- منطقة المعلّم: أقسام قابلة للإغلاق ---------- */
+.morph7-teacher details {
+  margin-block: 0.65rem;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  overflow: hidden;
+}
+
+.morph7-teacher summary {
+  cursor: pointer;
+  padding: 0.8rem 1.05rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  background: #eff8f6;
+  line-height: 1.9;
+}
+
+.morph7-teacher details[open] summary {
+  border-block-end: 1px solid var(--line);
+}
+
+.morph7-teacher details > div {
+  padding: 0.85rem 1.05rem;
+}
+
+.morph7-teacher h3 {
+  margin-block: 1rem 0.45rem;
+}
+
+.morph7-teacher h4 {
+  margin-block: 0.75rem 0.35rem;
+  color: var(--green-dark);
+}
+
+/* ---------- استجابة الشاشات ---------- */
+@media (max-width: 640px) {
+  .morph7-grid,
+  .morph7-cards {
+    grid-template-columns: 1fr;
+  }
+
+  .morph7-hero span {
+    font-size: 0.72rem;
+  }
+
+  .morph7-counts {
+    flex-direction: column;
+  }
+}

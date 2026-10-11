@@ -11,8 +11,10 @@ import { existsSync, readFileSync } from 'node:fs'
  *  - the lesson is a native multi-step flow (LessonFlow), not one long page;
  *  - the exam never reveals answers before submission (solutions gated, no inline correction);
  *  - the Teacher Area is present and gated by the approved teacher password;
- *  - no second morphology lesson or extra course is introduced (lesson 2 is not built here).
+ *  - lesson 1 content stays independent; the current scope permits lessons 01–08 only.
  */
+
+import { morphologyScopeIssues } from './morphology-scope.mjs'
 
 const failures = []
 const read = (path) => {
@@ -39,12 +41,11 @@ if (!/sectionId: 'morphology'/.test(entry)) failures.push('morphology-lesson-01 
 if (!/number: '١'/.test(entry)) failures.push('morphology-lesson-01 must be numbered ١ inside its section.')
 if (!/title: 'مدخل إلى علم الصرف'/.test(entry)) failures.push('morphology-lesson-01 title must be «مدخل إلى علم الصرف».')
 if (!/available: true/.test(entry)) failures.push('morphology-lesson-01 must be available.')
-// الحالة الحالية بعد بناء الدروس ٢ و٣ و٤ و٥ و٦ و٧ (موثّق في docs/morphology-lesson-04-audit.md و
-// docs/morphology-lesson-05-audit.md وdocs/morphology-lesson-06-audit.md وdocs/morphology-lesson-07-audit.md):
-// قسم الصرف يحمل سبعة دروس (١ و٢ و٣ و٤ و٥ و٦ و٧)، والضمانة هنا أن يبقى الدرس الثامن غير مسجَّل وغير مبنيّ،
-// وتبقى ملفات الدرس الأول مستقلة عن الدروس التالية (٢–٧). كل بقية تحقّقات الدرس الأول أدناه دون تغيير.
-if (/morphology-lesson-0[8-9]|morphology-lesson-1\d/.test(registry + content + lesson)) {
-  failures.push('No eighth morphology lesson may be created yet.')
+// نطاق الدرس الثامن: دروس الصرف ١–٨ فقط، دون درس تاسع أو اختبار وحدة.
+// راجع docs/morphology-lesson-08-audit.md. بقية حراس محتوى الدرس الأول دون تغيير.
+failures.push(...morphologyScopeIssues(registry, app))
+if (/morphology-lesson-09|morphology-lesson-[1-9]\d/.test(registry + content + lesson)) {
+  failures.push('No ninth morphology lesson may be created yet.')
 }
 if (/LessonMorphologyTwo|morphology-lesson-02/.test(content + lesson)) {
   failures.push('Lesson 1 content/component must stay independent of Lesson 2 (no cross-references).')

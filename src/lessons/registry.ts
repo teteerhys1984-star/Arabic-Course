@@ -341,6 +341,20 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['صحيح ومعتلّ', 'سالم ومهموز ومضعّف', 'مثال وأجوف وناقص', 'لفيف'],
   },
+  {
+    id: 'morphology-lesson-08',
+    sectionId: 'morphology',
+    number: '٨',
+    eyebrow: 'التصريف والإسناد',
+    title: 'تصريف الأفعال والإسناد إلى الضمائر',
+    documentTitle: 'الدرس الثامن: تصريف الأفعال والإسناد إلى الضمائر',
+    summary:
+      'الضمائر الاثنا عشر، وتصريف كَتَبَ في الماضي والمضارع والأمر، والفرق بين تاء الفاعل وتاء التأنيث، مع مختبرات تفاعلية وتدريبين أصليين واختبار مستقل من ٢٠ سؤالًا وحلول مفصّلة.',
+    duration: '٧٥',
+    strand: 'الصرف',
+    available: true,
+    parts: ['الضمائر', 'الماضي والمضارع', 'الأمر', 'تاء الفاعل'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

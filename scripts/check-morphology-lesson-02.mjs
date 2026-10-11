@@ -8,9 +8,9 @@
  *
  * هذا التدقيق لا يُضعف أي ضمان من ضمانات الدرس الأول؛ فالأدلة الخاصة بالدرس
  * الأول (check-morphology-lesson-01 وcheck-morphology-source) هي المرجع، وقد
- * ضُيّقت تدريجيًا مع بناء الدروس التالية لتصبح قسم الصرف خمسة دروس (١–٥) مع
- * استبعاد الدرس السادس (موثّق في docs/morphology-lesson-02-audit.md و
- * docs/morphology-lesson-05-audit.md).
+ * ضُيّقت تدريجيًا مع بناء الدروس التالية لتصبح قسم الصرف ستة دروس (١–٦) مع
+ * استبعاد الدرس السابع (موثّق في docs/morphology-lesson-02-audit.md و
+ * docs/morphology-lesson-05-audit.md وdocs/morphology-lesson-06-audit.md).
  */
 import { readFileSync, existsSync } from 'node:fs'
 
@@ -51,13 +51,13 @@ const count = (text, needle) => text.split(needle).length - 1
 if (count(registry, "id: 'morphology-lesson-02'") !== 1) {
   failures.push('morphology-lesson-02 must be registered exactly once.')
 }
-// الحالة الحالية (بعد بناء الدروس ٤ و٥): قسم الصرف يحمل خمسة دروس (١ و٢ و٣ و٤ و٥).
-if (count(registry, "sectionId: 'morphology'") !== 5) {
-  failures.push('Section «morphology» must contain exactly five lessons (١ و٢ و٣ و٤ و٥).')
+// الحالة الحالية (بعد بناء الدروس ٤ و٥ و٦): قسم الصرف يحمل ستة دروس (١ و٢ و٣ و٤ و٥ و٦).
+if (count(registry, "sectionId: 'morphology'") !== 6) {
+  failures.push('Section «morphology» must contain exactly six lessons (١ و٢ و٣ و٤ و٥ و٦).')
 }
-// شرط مستقل عن شرط العدّ أعلاه: الدرس السادس (الرباعي) غير مسجَّل بعد ولا مبنيّ.
-if (/morphology-lesson-0[6-9]|morphology-lesson-1\d/.test(registry + lesson + content)) {
-  failures.push('No sixth morphology lesson may be registered or built yet.')
+// شرط مستقل عن شرط العدّ أعلاه: الدرس السابع (الصحيح والمعتل) غير مسجَّل بعد ولا مبنيّ.
+if (/morphology-lesson-0[7-9]|morphology-lesson-1\d/.test(registry + lesson + content)) {
+  failures.push('No seventh morphology lesson may be registered or built yet.')
 }
 
 const start = registry.indexOf("id: 'morphology-lesson-02'")
@@ -701,7 +701,7 @@ if (failures.length) {
   process.exit(1)
 }
 console.log(
-  `Morphology lesson 2 check passed: registered in الصرف as lesson ٢ (five lessons ١–٥, no sixth), ` +
+  `Morphology lesson 2 check passed: registered in الصرف as lesson ٢ (six lessons ١–٦, no seventh), ` +
     `34 flow steps (30 explicit + 4 test pages), eight source objectives, twelve source sections, ` +
     `five trainings (15/10/5/6/8) with complete keys, a 26-question / 30-mark test in four pages ` +
     `(26 automatic + 4 manual, first five of eight counted), the four approved corrections applied and ` +

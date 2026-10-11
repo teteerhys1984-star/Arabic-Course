@@ -1,0 +1,616 @@
+/* ==================================================================
+ * الدرس السادس من قسم الصرف: الفعل الرباعي المجرّد والمزيد
+ * كل الأصناف بالبادئة morph6- لعزل الدرس عن بقية الدروس.
+ * التخطيط بالخصائص المنطقية (inline/block) ليعمل مع RTL بلا انعكاس.
+ * الكلمات والأوزان معزولة بـ bdi لمنع انقلاب التشكيل أو ترتيب أحرف الميزان.
+ * ================================================================== */
+
+.morph6-hero {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block-end: 0.85rem;
+}
+
+.morph6-hero span {
+  padding: 0.3rem 0.85rem;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--green-dark);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.morph6-big {
+  font: 700 1.45rem/1.9 'Noto Naskh Arabic', serif;
+  color: var(--green-dark);
+  margin-block: 0.35rem 0.7rem;
+}
+
+.morph6-muted {
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+.morph6-order {
+  margin-block: 0.4rem;
+  padding: 0.55rem 0.85rem;
+  border-inline-start: 4px solid var(--gold);
+  border-radius: 10px;
+  background: #fff9eb;
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
+.morph6-conclusion {
+  margin-block: 0.9rem;
+  padding: 0.9rem 1.15rem;
+  border-radius: 14px;
+  background: #fff9eb;
+  border: 1px solid var(--gold-soft);
+  font-weight: 700;
+  color: var(--green-dark);
+  line-height: 1.9;
+}
+
+.morph6-definition {
+  margin-block: 0.8rem;
+  padding: 1rem 1.2rem;
+  border-radius: 15px;
+  background: #f4fbf4;
+  border: 1px solid var(--gold-soft);
+  box-shadow: var(--shadow);
+}
+
+.morph6-definition p {
+  margin-block: 0.3rem;
+  line-height: 1.9;
+  font-weight: 600;
+}
+
+.morph6-rule {
+  margin-block: 0.9rem;
+  padding: 1.1rem 1.25rem;
+  border-radius: 16px;
+  background: linear-gradient(135deg, #fff9eb, #fdf6e7);
+  border: 1px solid var(--gold);
+}
+
+.morph6-rule h4 {
+  margin-block: 0 0.4rem;
+  color: var(--green-dark);
+}
+
+.morph6-rule p {
+  margin-block: 0.25rem;
+  line-height: 1.9;
+}
+
+.morph6-example {
+  margin-block: 0.9rem;
+  padding: 1rem 1.15rem;
+  border-radius: 14px;
+  background: #f2f8fc;
+  border-inline-start: 5px solid #3d7ea6;
+}
+
+.morph6-example p,
+.morph6-example li {
+  margin-block: 0.3rem;
+  line-height: 1.85;
+}
+
+.morph6-list {
+  padding-inline-start: 1.25rem;
+}
+
+.morph6-list li {
+  margin-block: 0.35rem;
+  line-height: 1.9;
+}
+
+.morph6-list--numbered {
+  padding-inline-start: 1.45rem;
+}
+
+.morph6-summary li {
+  padding-block: 0.15rem;
+}
+
+/* ---------- عزل الكلمات والأوزان الصرفية ---------- */
+.morph6-word {
+  display: inline-block;
+  font: 700 1.24rem/2 'Noto Naskh Arabic', serif;
+  color: var(--green-dark);
+}
+
+.morph6-weight {
+  display: inline-block;
+  font: 700 1.2rem/2 'Noto Naskh Arabic', serif;
+  color: #8a5a00;
+  background: #fff9eb;
+  padding: 0.1rem 0.6rem;
+  border-radius: 8px;
+  border: 1px solid #ead59b;
+  white-space: nowrap;
+}
+
+.morph6-weight-hero {
+  margin-block: 0.8rem;
+  display: flex;
+  justify-content: center;
+}
+
+.morph6-weight-hero .morph6-weight,
+.morph6-weight-hero .morph6-word {
+  font-size: 1.6rem;
+}
+
+.morph6-tag {
+  display: inline-block;
+  margin-inline-start: 0.4rem;
+  padding: 0.05rem 0.5rem;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--green-dark);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* ---------- بطاقات التنبيه والتوضيح ---------- */
+.morph6-callout {
+  margin-block: 0.9rem;
+  padding: 1rem 1.2rem;
+  border-inline-start: 5px solid var(--gold);
+  border-radius: 15px;
+  background: var(--paper);
+  box-shadow: var(--shadow);
+}
+
+.morph6-callout strong {
+  display: block;
+  margin-block-end: 0.35rem;
+  color: var(--green-dark);
+}
+
+.morph6-callout p {
+  margin-block: 0.3rem;
+  line-height: 1.9;
+}
+
+.morph6-clarification {
+  margin-block: 0.95rem;
+  padding: 0.95rem 1.15rem;
+  border-inline-start: 5px solid #3d7ea6;
+  border-radius: 15px;
+  background: #f2f8fc;
+}
+
+.morph6-clarification__badge {
+  display: inline-block;
+  margin-block-end: 0.35rem;
+  padding: 0.12rem 0.7rem;
+  border-radius: 999px;
+  background: #d9ebf7;
+  color: #1d5575;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.morph6-clarification p {
+  margin-block: 0.3rem;
+  line-height: 1.9;
+}
+
+/* ---------- الجداول ---------- */
+.morph6-table-wrap {
+  margin-block: 0.95rem;
+  overflow-x: auto;
+  border-radius: 14px;
+  border: 1px solid var(--gold-soft);
+  background: var(--paper);
+}
+
+.morph6-table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 380px;
+}
+
+.morph6-caption {
+  padding: 0.65rem 0.9rem;
+  font-weight: 700;
+  color: var(--green-dark);
+  text-align: start;
+  background: var(--gold-soft);
+}
+
+.morph6-table th,
+.morph6-table td {
+  padding: 0.6rem 0.85rem;
+  border-block-end: 1px solid var(--gold-soft);
+  text-align: start;
+  vertical-align: top;
+  line-height: 1.9;
+}
+
+.morph6-table th {
+  background: #fff9eb;
+  color: var(--green-dark);
+  font-size: 0.9rem;
+}
+
+.morph6-table tr:last-child td,
+.morph6-table tr:last-child th {
+  border-block-end: none;
+}
+
+.morph6-row--extra td {
+  background: #fff9eb;
+}
+
+.morph6-table--mapping bdi {
+  font: 700 1.1rem/1.9 'Noto Naskh Arabic', serif;
+}
+
+/* ---------- المقارنات ---------- */
+.morph6-compare {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 0.9rem;
+  margin-block: 0.95rem;
+}
+
+.morph6-compare__col {
+  padding: 1rem 1.15rem;
+  border-radius: 15px;
+  background: var(--paper);
+  border: 1px solid var(--gold-soft);
+  box-shadow: var(--shadow);
+}
+
+.morph6-compare__col h5 {
+  margin-block: 0 0.5rem;
+  font-size: 1.1rem;
+}
+
+.morph6-compare__col p {
+  margin-block: 0.4rem;
+  line-height: 1.9;
+}
+
+.morph6-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-block: 0.45rem;
+}
+
+.morph6-pair__line {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  align-items: center;
+  margin-block: 0.5rem;
+}
+
+.morph6-pair__line--big .morph6-word {
+  font-size: 1.45rem;
+}
+
+/* ---------- مسار بناء الوزن (تَفَعْلَلَ) ---------- */
+.morph6-flow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  align-items: center;
+  margin-block: 0.95rem;
+  padding: 1rem 1.15rem;
+  border-radius: 15px;
+  background: #fff9eb;
+  border: 1px solid var(--gold-soft);
+}
+
+.morph6-flow__cell {
+  padding: 0.35rem 0.8rem;
+  border-radius: 10px;
+  background: var(--paper);
+  border: 1px solid var(--gold-soft);
+  line-height: 1.9;
+}
+
+.morph6-flow__cell--plain {
+  font-weight: 700;
+  color: var(--green-dark);
+}
+
+.morph6-flow__cell--result {
+  background: #f4fbf4;
+  border-color: var(--gold);
+  font-weight: 700;
+}
+
+.morph6-flow__cell--word .morph6-word,
+.morph6-flow__cell--weight .morph6-weight {
+  font-size: 1.1rem;
+}
+
+/* ---------- خطوات التحليل ---------- */
+.morph6-steps {
+  list-style: none;
+  padding: 0;
+  margin-block: 0.9rem;
+  display: grid;
+  gap: 0.65rem;
+}
+
+.morph6-steps__item {
+  display: flex;
+  gap: 0.85rem;
+  align-items: flex-start;
+  padding: 0.85rem 1.05rem;
+  border-radius: 14px;
+  background: var(--paper);
+  border: 1px solid var(--gold-soft);
+}
+
+.morph6-steps__num {
+  flex: 0 0 auto;
+  inline-size: 2.25rem;
+  block-size: 2.25rem;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 999px;
+  background: var(--gold-soft);
+  color: var(--green-dark);
+  font-weight: 700;
+}
+
+.morph6-steps__item p {
+  margin-block: 0.15rem;
+  line-height: 1.9;
+}
+
+/* ---------- الجمل المثال ---------- */
+.morph6-sentences {
+  list-style: none;
+  padding-inline-start: 0;
+  margin-block: 0.6rem;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.morph6-sentence {
+  padding: 0.6rem 0.9rem;
+  border-radius: 12px;
+  background: var(--paper);
+  border-inline-start: 3px solid var(--gold-soft);
+  line-height: 2;
+}
+
+/* ---------- المختبرات والأنشطة ---------- */
+.morph6-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 0.95rem;
+  margin-block: 0.95rem;
+}
+
+.morph6-item {
+  padding: 1rem 1.15rem;
+  border-radius: 15px;
+  background: var(--paper);
+  border: 1px solid var(--gold-soft);
+  box-shadow: var(--shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+}
+
+.morph6-item--wide {
+  grid-column: 1 / -1;
+}
+
+.morph6-item__title {
+  font-weight: 700;
+  color: var(--green-dark);
+  line-height: 1.95;
+  margin: 0;
+}
+
+.morph6-item__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+  margin-block: 0.45rem;
+}
+
+.morph6-fields {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 0.6rem;
+}
+
+.morph6-field {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.morph6-field__label {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--muted);
+  line-height: 1.8;
+}
+
+.morph6-field select {
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--gold-soft);
+  background: #fffefb;
+  font: inherit;
+  font-weight: 600;
+}
+
+.morph6-options {
+  display: grid;
+  gap: 0.4rem;
+  padding: 0;
+  border: none;
+}
+
+.morph6-options--stacked {
+  margin-block: 0.2rem;
+}
+
+.morph6-option {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.4rem 0.7rem;
+  border-radius: 10px;
+  border: 1px solid var(--gold-soft);
+  background: #fffefb;
+  line-height: 1.9;
+}
+
+.morph6-option input {
+  accent-color: var(--green-dark);
+}
+
+.morph6-feedback {
+  margin-block: 0.35rem;
+  padding: 0.7rem 0.95rem;
+  border-radius: 12px;
+  font-size: 0.92rem;
+  line-height: 1.85;
+}
+
+.morph6-feedback p {
+  margin-block: 0.25rem;
+}
+
+.morph6-feedback--ok {
+  background: #eef8ef;
+  border: 1px solid #bfe2c4;
+  color: #1f5f2b;
+}
+
+.morph6-feedback--no {
+  background: #fdeeee;
+  border: 1px solid #f0c3c3;
+  color: #8c2f2f;
+}
+
+.morph6-sr {
+  position: absolute;
+  inline-size: 1px;
+  block-size: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}
+
+/* ---------- تسليم الاختبار والنتيجة ---------- */
+.morph6-submit {
+  padding: 1.1rem 1.25rem;
+  border-radius: 16px;
+  background: var(--paper);
+  border: 1px solid var(--gold-soft);
+  box-shadow: var(--shadow);
+}
+
+.morph6-submit h3 {
+  margin-block: 0 0.5rem;
+  color: var(--green-dark);
+}
+
+.morph6-score {
+  margin-block: 0.5rem;
+  font: 700 1.25rem/1.9 'Noto Naskh Arabic', serif;
+  color: var(--green-dark);
+}
+
+.morph6-counts {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  list-style: none;
+  padding: 0;
+  margin-block: 0.5rem 0.9rem;
+}
+
+.morph6-counts li {
+  padding: 0.4rem 0.85rem;
+  border-radius: 999px;
+  background: #fff9eb;
+  border: 1px solid #ead59b;
+  font-size: 0.88rem;
+  font-weight: 700;
+}
+
+/* ---------- منطقة المعلم ---------- */
+.teacher-material--morphology6 h3 {
+  margin-block: 1.1rem 0.5rem;
+  color: var(--green-dark);
+}
+
+.teacher-material--morphology6 h4 {
+  margin-block: 0.7rem 0.35rem;
+  color: var(--green-dark);
+}
+
+.morph6-keys {
+  list-style: decimal;
+  padding-inline-start: 1.4rem;
+  margin-block: 0.5rem;
+}
+
+.morph6-keys li {
+  margin-block: 0.4rem;
+  line-height: 1.9;
+}
+
+.morph6-keys__note {
+  padding: 0.75rem 1rem;
+  border-radius: 12px;
+  background: #f2f8fc;
+  border-inline-start: 5px solid #3d7ea6;
+  font-size: 0.92rem;
+}
+
+.morph6-keys .morph6-item {
+  margin-block: 0.7rem;
+}
+
+/* ---------- الشاشات الصغيرة ---------- */
+@media (max-width: 720px) {
+  .morph6-big {
+    font-size: 1.25rem;
+  }
+
+  .morph6-weight-hero .morph6-weight,
+  .morph6-weight-hero .morph6-word {
+    font-size: 1.35rem;
+  }
+
+  .morph6-pair__line--big .morph6-word {
+    font-size: 1.2rem;
+  }
+
+  .morph6-grid,
+  .morph6-compare,
+  .morph6-fields {
+    grid-template-columns: 1fr;
+  }
+
+  .morph6-table {
+    min-width: 320px;
+  }
+
+  .morph6-flow {
+    padding: 0.75rem 0.85rem;
+  }
+}

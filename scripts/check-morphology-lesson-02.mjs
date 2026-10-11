@@ -51,11 +51,13 @@ if (count(registry, "id: 'morphology-lesson-02'") !== 1) {
   failures.push('morphology-lesson-02 must be registered exactly once.')
 }
 // Narrowed when Lesson 4 was built (docs/morphology-lesson-04-audit.md): الصرف now carries four lessons.
-if (count(registry, "sectionId: 'morphology'") !== 4) {
-  failures.push('Section «morphology» must contain exactly four lessons (١ و٢ و٣ و٤).')
+// Narrowed again when Lesson 5 was built: الصرف now carries five lessons (١ و٢ و٣ و٤ و٥).
+if (count(registry, "sectionId: 'morphology'") !== 5) {
+  failures.push('Section «morphology» must contain exactly five lessons (١ و٢ و٣ و٤ و٥).')
 }
-if (/morphology-lesson-0[5-9]|morphology-lesson-1\d/.test(registry + lesson + content)) {
-  failures.push('No fifth morphology lesson may be registered or built yet.')
+// Narrowed when Lesson 5 was built: lesson 5 is now registered; lesson 6 (الرباعي) is not yet.
+if (/morphology-lesson-0[6-9]|morphology-lesson-1\d/.test(registry + lesson + content)) {
+  failures.push('No sixth morphology lesson may be registered or built yet.')
 }
 
 const start = registry.indexOf("id: 'morphology-lesson-02'")

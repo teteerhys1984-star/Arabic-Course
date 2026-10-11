@@ -299,6 +299,20 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['عين الفعل', 'الأبواب الستة', 'الماضي والمضارع'],
   },
+  {
+    id: 'morphology-lesson-05',
+    sectionId: 'morphology',
+    number: '٥',
+    eyebrow: 'أوزان الثلاثي المزيد',
+    title: 'أوزان الفعل الثلاثي المزيد',
+    documentTitle: 'الدرس الخامس: أوزان الفعل الثلاثي المزيد',
+    summary:
+      'الفرق بين الفعل المجرّد والمزيد، والأوزان التسعة المشهورة للفعل الثلاثي المزيد بحسب عدد أحرف الزيادة، مع مقارنات موثّقة وخطوات تحليل ومختبرات تفاعلية وتدريبات واختبار من ٢٠ سؤالًا وحلول.',
+    duration: '٩٠',
+    strand: 'الصرف',
+    available: true,
+    parts: ['الأوزان التسعة', 'حروف الزيادة', 'التمييز والتحليل'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

@@ -42,8 +42,10 @@ if (!/available: true/.test(entry)) failures.push('morphology-lesson-01 must be 
 // Narrowed when Lesson 4 was built (docs/morphology-lesson-04-audit.md): Lessons 2, 3 and 4 now exist and
 // are registered in الصرف, so the guarantee becomes (a) no FIFTH morphology lesson yet, and (b) Lesson 1's
 // own files stay independent of Lessons 2, 3 and 4. Every other Lesson 1 assertion below is unchanged.
-if (/morphology-lesson-0[5-9]|morphology-lesson-1\d/.test(registry + content + lesson)) {
-  failures.push('No fifth morphology lesson may be created yet.')
+// Narrowed again when Lesson 5 was built: lesson 5 is now registered; the guarantee becomes no SIXTH
+// morphology lesson (الدرس السادس: الفعل الرباعي) yet. Every other Lesson 1 assertion below is unchanged.
+if (/morphology-lesson-0[6-9]|morphology-lesson-1\d/.test(registry + content + lesson)) {
+  failures.push('No sixth morphology lesson may be created yet.')
 }
 if (/LessonMorphologyTwo|morphology-lesson-02/.test(content + lesson)) {
   failures.push('Lesson 1 content/component must stay independent of Lesson 2 (no cross-references).')

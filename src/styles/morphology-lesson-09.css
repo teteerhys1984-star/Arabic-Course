@@ -1,0 +1,241 @@
+/* الدرس التاسع فقط: حبر أخضر داكن، ورق دافئ، ونحاسي هادئ. لا تعديل على دروس سابقة. */
+.morph9-lesson {
+  --morph9-ink: #1f4d40;
+  --morph9-soft: #eaf3ef;
+  --morph9-masdar: #6b3f10;
+  --morph9-masdar-soft: #f8eeda;
+  --morph9-weight: #4a2a6b;
+  --morph9-weight-soft: #f0eaf8;
+  --morph9-brass: #8a5a1c;
+  --morph9-line: #cbded6;
+  --morph9-muted: #4d6459;
+  line-height: 1.9;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.morph9-lesson .lesson-step__heading h2,
+.morph9-lesson .lesson-outline__lesson-title { color: var(--morph9-ink); }
+.morph9-lesson .lesson-outline__progress-fill { background: var(--morph9-ink); }
+.morph9-lesson .lesson-flow__stage { animation-duration: 150ms; }
+.morph9-lesson .card { min-height: auto; margin-block: 1rem; box-shadow: none; }
+.morph9-lesson .button--secondary { background: var(--morph9-ink); }
+.morph9-lesson .button--ghost { margin-block-start: 0; color: var(--morph9-ink); }
+.morph9-lesson :is(button, select, input, summary, a, [tabindex='0']):focus-visible {
+  outline: 3px solid #8a5a1c;
+  outline-offset: 4px;
+}
+.morph9-lesson h4 { margin-block: 1rem .4rem; }
+.morph9-eyebrow { color: var(--morph9-brass); font-size: .8rem; font-weight: 700; }
+.morph9-muted { color: var(--morph9-muted); font-size: .86rem; }
+
+.morph9-hero {
+  padding: clamp(1.15rem, 3vw, 2rem);
+  border: 1px solid var(--morph9-line);
+  border-block-start: 4px solid var(--morph9-ink);
+  border-radius: 24px 24px 8px 24px;
+  background: linear-gradient(135deg, #eff6f2, #fffdf7);
+}
+.morph9-hero h3 { color: var(--morph9-ink); font: 700 clamp(1.7rem, 3vw, 2.2rem)/1.8 'Noto Naskh Arabic', serif; }
+.morph9-hero__subtitle { color: var(--morph9-muted); font-weight: 600; }
+.morph9-hero > p:last-of-type { margin-block-end: 1.5rem; }
+.morph9-hero__compare { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; }
+.morph9-hero__side {
+  display: grid; place-items: center; gap: .45rem; min-inline-size: 0;
+  padding: 1rem .5rem; border: 1px solid var(--morph9-line); border-radius: 14px; background: #fffefa;
+}
+.morph9-hero__side small { color: var(--morph9-muted); text-align: center; }
+.morph9-hero__side .morph9-word { font-size: clamp(1.3rem, 3vw, 1.9rem); }
+.morph9-hero__side--verb { border-block-start: 4px solid var(--morph9-ink); }
+.morph9-hero__side--masdar { border-block-start: 4px solid var(--morph9-masdar); }
+
+.morph9-clarification {
+  margin-block: 1.2rem;
+  padding: .9rem 1.1rem;
+  border-inline-start: 3px solid #b08a4c;
+  border-radius: 4px 14px 14px 4px;
+  background: #f7f3e8;
+}
+.morph9-clarification > strong { color: var(--morph9-brass); font-size: .8rem; }
+.morph9-clarification p { margin-block: .4rem 0; }
+
+.morph9-definition { margin-block: 1rem; padding: 1.1rem 1.3rem; border: 1px solid var(--morph9-line); border-radius: 16px; background: var(--morph9-soft); font-weight: 600; color: var(--morph9-ink); }
+.morph9-definition p { margin: 0; }
+.morph9-definition--main { border-inline-start: 4px solid var(--morph9-ink); font: 700 clamp(1.1rem, 2.4vw, 1.4rem)/2.2 'Noto Naskh Arabic', serif; }
+.morph9-notice { margin-block: 1rem; padding: .9rem 1.1rem; border: 1px dashed #b08a4c; border-radius: 12px; background: #fdf8ec; color: #5f4318; }
+.morph9-notice p { margin: 0; }
+.morph9-list { padding-inline-start: 1.5rem; margin-block: .7rem; }
+.morph9-list li { padding-block: .25rem; }
+.morph9-list li::marker { color: var(--morph9-brass); }
+
+/* لا يُفصل حرف عربي عن حركته؛ الكلمة وحدة واحدة داخل عزل اتجاهي. */
+.morph9-word, .morph9-pair, .morph9-sentence bdi {
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  letter-spacing: normal;
+  unicode-bidi: isolate;
+}
+.morph9-word {
+  display: inline-block;
+  font: 700 1.3rem/2.2 'Noto Naskh Arabic', 'Times New Roman', serif;
+  padding-inline: .3rem;
+  border-radius: 6px;
+}
+.morph9-word--verb { color: var(--morph9-ink); background: var(--morph9-soft); }
+.morph9-word--masdar { color: var(--morph9-masdar); background: var(--morph9-masdar-soft); }
+.morph9-word--weight { color: var(--morph9-weight); background: var(--morph9-weight-soft); }
+.morph9-pair { display: inline; }
+.morph9-arrow { color: var(--morph9-muted); unicode-bidi: isolate; }
+.morph9-sentence { margin-block: .45rem; font-size: 1.05rem; }
+.morph9-sentence bdi { line-height: 2.2; }
+
+.morph9-sentences { display: grid; gap: .35rem; margin-block: 1rem; padding: .9rem 1.1rem; border: 1px solid var(--morph9-line); border-radius: 14px; background: var(--paper); }
+
+.morph9-parts { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-block: 1rem; }
+.morph9-parts article { min-inline-size: 0; padding: 1rem; border: 1px solid var(--morph9-line); border-radius: 14px; background: var(--paper); }
+.morph9-parts h3 { color: var(--morph9-ink); font-size: 1.15rem; margin-block: 0 .5rem; }
+.morph9-parts p { font-size: .9rem; margin: 0; }
+
+.morph9-kinds, .morph9-categories { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; margin-block: 1rem; }
+.morph9-kind, .morph9-category { min-inline-size: 0; padding: 1rem; border: 1px solid var(--morph9-line); border-radius: 14px; background: var(--paper); }
+.morph9-kind h3, .morph9-category h3 { margin-block: 0 .5rem; font-size: 1.05rem; color: var(--morph9-ink); }
+.morph9-kind p, .morph9-category p { margin-block: .35rem 0; font-size: .92rem; }
+.morph9-kind--verb { border-inline-start: 4px solid var(--morph9-ink); }
+.morph9-kind--masdar { border-inline-start: 4px solid var(--morph9-masdar); }
+.morph9-kind--doer { border-inline-start: 4px solid #2c6b7a; }
+.morph9-kind--done { border-inline-start: 4px solid var(--morph9-weight); }
+.morph9-kind__example { color: var(--morph9-muted); }
+.morph9-tag { display: inline-block; padding: .15rem .6rem; border-radius: 999px; background: var(--morph9-soft); color: var(--morph9-ink); font-size: .78rem; font-weight: 700; }
+.morph9-category--quadriliteral .morph9-tag { background: var(--morph9-masdar-soft); color: var(--morph9-masdar); }
+.morph9-category--augmented .morph9-tag { background: var(--morph9-weight-soft); color: var(--morph9-weight); }
+
+.morph9-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-block: 1rem; }
+.morph9-split article { padding: .9rem 1rem; border: 1px solid var(--morph9-line); border-radius: 12px; background: var(--paper); }
+.morph9-split p { margin: 0; }
+
+.morph9-positions, .morph9-applications { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; margin-block: 1rem; }
+.morph9-positions article, .morph9-applications article { min-inline-size: 0; padding: 1rem; border: 1px solid var(--morph9-line); border-radius: 14px; background: var(--paper); }
+.morph9-positions small { color: var(--morph9-muted); }
+.morph9-applications h3 { margin-block: 0 .5rem; font-size: 1rem; color: var(--morph9-ink); }
+.morph9-number { display: inline-grid; place-items: center; min-inline-size: 26px; color: var(--morph9-brass); font-weight: 700; }
+.morph9-absolute { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin-block: 1rem; }
+.morph9-absolute article { padding: .8rem; border: 1px solid var(--morph9-line); border-radius: 12px; background: var(--paper); text-align: center; }
+.morph9-absolute p { margin: 0; }
+.morph9-mistakes { display: grid; gap: .8rem; margin-block: 1rem; }
+.morph9-mistakes article { padding: .9rem 1.1rem; border: 1px solid var(--morph9-line); border-inline-start: 4px solid #a8452f; border-radius: 4px 14px 14px 4px; background: #fdf3f0; }
+.morph9-mistakes h3 { margin-block: 0 .4rem; font-size: 1rem; color: #7d2f1d; }
+.morph9-mistakes p { margin: 0; font-size: .92rem; }
+
+.morph9-analyses { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-block: 1rem; }
+.morph9-analyses--two { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.morph9-analyses article { min-inline-size: 0; padding: .9rem 1rem; border: 1px solid var(--morph9-line); border-radius: 14px; background: var(--paper); }
+.morph9-analyses h3 { margin-block: 0 .5rem; font-size: 1rem; color: var(--morph9-ink); }
+.morph9-steps { padding-inline-start: 1.5rem; margin-block: 1rem; display: grid; gap: .7rem; }
+.morph9-steps strong { color: var(--morph9-ink); }
+.morph9-steps p { margin-block: .2rem 0; }
+
+.morph9-mindmap { display: grid; gap: .9rem; margin-block: 1rem; }
+.morph9-mindmap__title { margin: 0; text-align: center; font-size: 1.05rem; color: var(--morph9-ink); }
+.morph9-mindmap__root { padding: 1.1rem; border: 2px solid var(--morph9-ink); border-radius: 16px; background: var(--morph9-soft); text-align: center; }
+.morph9-mindmap__root h3 { margin-block: 0 .35rem; color: var(--morph9-ink); font-size: 1.4rem; }
+.morph9-mindmap__root p { margin: 0; }
+.morph9-mindmap__branches { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; }
+.morph9-mindmap__branch { min-inline-size: 0; padding: .9rem 1rem; border: 1px solid var(--morph9-line); border-radius: 14px; background: var(--paper); }
+.morph9-mindmap__branch h3 { margin-block: 0 .5rem; font-size: 1rem; color: var(--morph9-masdar); }
+.morph9-mindmap__branch--augmented h3 { color: var(--morph9-weight); }
+.morph9-mindmap__branch ul { list-style: none; padding: 0; margin: 0; display: grid; gap: .4rem; }
+
+/* الجداول: تمرير أفقي داخل حاوية مسماة قابلة للتركيز، وأعمدة لا تنعكس. */
+.morph9-table-scroll { max-inline-size: 100%; overflow-x: auto; margin-block: 1rem; border: 1px solid var(--morph9-line); border-radius: 14px; background: var(--paper); }
+.morph9-table { inline-size: 100%; border-collapse: collapse; text-align: start; font-size: .9rem; }
+.morph9-table caption { text-align: start; padding: .85rem 1rem; color: var(--morph9-ink); font-weight: 700; background: var(--morph9-soft); }
+.morph9-table :is(th, td) { padding: .65rem .85rem; text-align: start; vertical-align: middle; border-block-end: 1px solid #dfeae5; }
+.morph9-table thead th { color: var(--morph9-muted); font-size: .8rem; background: #f6faf8; white-space: nowrap; }
+.morph9-table tbody tr:nth-child(even) { background: #f6faf8; }
+.morph9-table tbody tr:last-child :is(th, td) { border-block-end: 0; }
+.morph9-table tbody th { color: var(--morph9-ink); font-weight: 600; }
+.morph9-table--weights { table-layout: fixed; }
+.morph9-table--weights th:nth-child(1) { inline-size: 22%; }
+.morph9-table--weights :is(th, td):nth-child(2) { inline-size: 22%; }
+.morph9-table--weights :is(th, td):nth-child(3) { inline-size: 28%; }
+.morph9-table--weights :is(th, td):nth-child(4) { inline-size: 28%; }
+.morph9-table .morph9-word { font-size: 1.15rem; }
+.morph9-table td .morph9-word { white-space: normal; }
+
+.morph9-chips { display: flex; flex-wrap: wrap; gap: .65rem; margin-block: .9rem; }
+.morph9-chips button { min-block-size: 48px; min-inline-size: 70px; border: 1px solid var(--morph9-line); padding: .45rem .95rem; border-radius: 10px; color: var(--morph9-ink); background: var(--paper); cursor: pointer; font-weight: 700; }
+.morph9-chips button:hover { background: var(--morph9-soft); }
+.morph9-chips button[aria-pressed='true'] { background: var(--morph9-ink); color: white; border-color: var(--morph9-ink); box-shadow: inset 0 -3px 0 #c8a468; }
+
+.morph9-practice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1.15rem; margin-block: 1rem; }
+.morph9-position-grid { display: grid; gap: 1rem; margin-block: 1rem; }
+.morph9-practice-card { min-inline-size: 0; padding: 1rem; margin: 0; border: 1px solid var(--morph9-line); border-radius: 15px; background: var(--paper); }
+.morph9-practice-card legend { max-inline-size: 100%; padding-inline: .3rem; line-height: 2; font-weight: 600; }
+.morph9-select-label { display: grid; gap: .3rem; margin-block: .5rem .8rem; }
+.morph9-select-label > span { color: var(--morph9-muted); font-size: .82rem; }
+.morph9-select-label select { font: inherit; line-height: 1.8; min-block-size: 48px; inline-size: 100%; max-inline-size: 100%; border: 1px solid #a9c3b8; border-radius: 8px; padding: .4rem .6rem; color: var(--morph9-ink); background: white; }
+.morph9-radio-options { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .35rem 1rem; }
+.morph9-radio-options label { display: flex; align-items: center; gap: .45rem; min-block-size: 48px; padding: .35rem .7rem; border: 1px solid var(--morph9-line); border-radius: 9px; cursor: pointer; }
+.morph9-radio-options label:has(input:checked) { background: var(--morph9-soft); border-color: var(--morph9-ink); }
+.morph9-radio-options input { accent-color: var(--morph9-ink); inline-size: 17px; block-size: 17px; flex-shrink: 0; }
+.morph9-radio-options .morph9-word { font-size: 1.1rem; background: transparent; padding-inline: 0; }
+.morph9-practice-card .button { font-size: .82rem; }
+.morph9-feedback { margin-block-start: 1rem; padding: .85rem 1rem; border-radius: 10px; border: 1px solid #dbcba9; background: #fbf5e9; color: #62431c; font-size: .86rem; }
+.morph9-feedback--correct { border-color: #b8d2c8; background: #f0f7f3; color: #215440; }
+.morph9-feedback p { margin-block: .4rem 0; }
+
+.morph9-stages { list-style: none; counter-reset: stage; padding: 0; margin-block: 1rem; display: grid; gap: .8rem; }
+.morph9-stages > li { padding: .9rem 1rem; border: 1px solid var(--morph9-line); border-radius: 14px; background: var(--paper); }
+.morph9-stages > li > strong { color: var(--morph9-ink); }
+.morph9-stage--done { border-inline-start: 4px solid #2f7a5b; background: #f2f8f5; }
+.morph9-stage__answer { font-size: .86rem; color: var(--morph9-muted); margin-block: .4rem 0; }
+.morph9-analysis-result { margin-block: 1rem; padding: 1rem 1.1rem; border: 1px solid var(--morph9-line); border-inline-start: 4px solid var(--morph9-ink); border-radius: 12px; background: var(--morph9-soft); }
+.morph9-analysis-result h3 { margin-block: 0 .4rem; color: var(--morph9-ink); font-size: 1.05rem; }
+.morph9-analysis-result p { margin-block: .3rem 0; }
+
+.morph9-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; margin-block: 1.25rem; }
+.morph9-transition { padding: 1.25rem; border: 1px solid var(--morph9-line); border-radius: 14px; background: var(--paper); }
+
+.morph9-submit, .morph9-locked { padding: clamp(1rem, 3vw, 1.7rem); border: 1px solid var(--morph9-line); border-radius: 18px; background: var(--paper); }
+.morph9-locked { border-inline-start: 4px solid var(--morph9-brass); }
+.morph9-result { border-radius: 14px; background: var(--morph9-soft); padding: 1.2rem; margin-block: 1rem; }
+.morph9-result h3 { color: var(--morph9-ink); }
+.morph9-score { font-size: 2.5rem; font-weight: 700; color: var(--morph9-ink); margin-block-end: .5rem; }
+.morph9-lesson .test-field--choice bdi { word-break: normal; overflow-wrap: normal; line-height: 2.2; }
+.morph9-lesson .test-field--select select { line-height: 2; }
+
+.morph9-teacher-section { border: 1px solid var(--morph9-line); border-radius: 12px; margin-block: .8rem; background: var(--paper); }
+.morph9-teacher-section > summary { cursor: pointer; padding: .9rem 1rem; color: var(--morph9-ink); font-weight: 700; }
+.morph9-teacher-section[open] > summary { border-block-end: 1px solid var(--morph9-line); background: var(--morph9-soft); border-radius: 12px 12px 0 0; }
+.morph9-teacher-section > div { padding: .5rem 1rem 1rem; min-inline-size: 0; }
+.morph9-teacher-answer { border-block-end: 1px solid var(--morph9-line); padding-block: .6rem; }
+.morph9-teacher a { overflow-wrap: anywhere; text-underline-offset: .2em; }
+
+@media (max-width: 900px) {
+  .morph9-analyses, .morph9-analyses--two { grid-template-columns: minmax(0, 1fr); }
+  .morph9-absolute { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 700px) {
+  .morph9-practice-grid, .morph9-kinds, .morph9-categories, .morph9-positions,
+  .morph9-applications, .morph9-split, .morph9-parts, .morph9-mindmap__branches { grid-template-columns: minmax(0, 1fr); }
+  .morph9-hero__compare { gap: .5rem; }
+  .morph9-table :is(th, td) { padding: .5rem .4rem; }
+  .morph9-table { font-size: .85rem; }
+  .morph9-table .morph9-word { font-size: 1.05rem; }
+  .morph9-table caption { padding: .7rem; }
+  .morph9-teacher-section > div { padding-inline: .65rem; }
+}
+@media (max-width: 480px) {
+  .morph9-chips { gap: .45rem; }
+  .morph9-chips button { padding-inline: .7rem; min-inline-size: 60px; }
+  .morph9-clarification { padding: .8rem; }
+  .morph9-actions { flex-direction: column; align-items: stretch; }
+  .morph9-actions .button { inline-size: 100%; }
+  .morph9-word { font-size: 1.15rem; }
+  .morph9-hero__side { padding: .8rem .4rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .morph9-lesson .lesson-flow__stage { animation: none; }
+  .morph9-lesson :is(.lesson-outline__item, .lesson-outline__progress-fill) { transition: none; }
+}

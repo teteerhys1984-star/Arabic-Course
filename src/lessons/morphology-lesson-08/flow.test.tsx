@@ -44,7 +44,7 @@ describe('morphology 08 — routes, source rendering and shared navigation', () 
     window.location.hash = '#/sections/morphology'
     render(<App />)
     const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
-    expect(links.map((link) => link.getAttribute('href'))).toEqual(Array.from({ length: 8 }, (_, i) => `#/lesson/morphology-lesson-${String(i + 1).padStart(2, '0')}`))
+    expect(links.map((link) => link.getAttribute('href'))).toEqual(Array.from({ length: 9 }, (_, i) => `#/lesson/morphology-lesson-${String(i + 1).padStart(2, '0')}`))
     await user.click(screen.getByRole('link', { name: S.header.title }))
     expect(await screen.findByRole('heading', { name: S.header.firstTitle, level: 2 })).toBeInTheDocument()
     expect(document.querySelector('.lesson-page')).toHaveAttribute('dir', 'rtl')
@@ -115,8 +115,8 @@ describe('morphology 08 — routes, source rendering and shared navigation', () 
     }
   })
 
-  it('rejects the deep link for lesson 9', () => {
-    window.location.hash = '#/lesson/morphology-lesson-09'
+  it('rejects the deep link for lesson 10', () => {
+    window.location.hash = '#/lesson/morphology-lesson-10'
     render(<App />)
     expect(screen.getByRole('heading', { name: 'الدرس غير متاح' })).toBeInTheDocument()
     expect(document.querySelector('.lesson-step')).toBeNull()

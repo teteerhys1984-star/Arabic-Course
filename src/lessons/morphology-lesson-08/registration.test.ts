@@ -8,7 +8,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { lessonRegistry } from '../registry'
 import { getSectionLessons, sectionRegistry } from '../../sections/sectionRegistry'
 
-const expectedIds = Array.from({ length: 8 }, (_, index) => `morphology-lesson-${String(index + 1).padStart(2, '0')}`)
+const expectedIds = Array.from({ length: 9 }, (_, index) => `morphology-lesson-${String(index + 1).padStart(2, '0')}`)
 const guards = ['check-morphology-lesson-01.mjs', 'check-morphology-lesson-02.mjs', 'check-morphology-source.mjs']
 const root = resolve('.')
 let sandbox: string
@@ -36,10 +36,10 @@ describe('morphology 08 — registration and non-weakened source guards', () => 
   })
   afterAll(() => rmSync(sandbox, { recursive: true, force: true }))
 
-  it('registers exactly 01–08, once, in order, with no ninth or unit assessment', () => {
+  it('registers exactly 01–09, once, in order, with no tenth or unit assessment', () => {
     expect(getSectionLessons('morphology').map((lesson) => lesson.id)).toEqual(expectedIds)
     expect(new Set(lessonRegistry.map((lesson) => lesson.id)).size).toBe(lessonRegistry.length)
-    expect(getSectionLessons('morphology').map((lesson) => lesson.number)).toEqual(['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨'])
+    expect(getSectionLessons('morphology').map((lesson) => lesson.number)).toEqual(['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'])
     expect(getSectionLessons('morphology')[7]).toMatchObject({ title: 'تصريف الأفعال والإسناد إلى الضمائر', available: true })
     expect(getSectionLessons('basics-grammar').map((lesson) => lesson.id)).toEqual(Array.from({ length: 10 }, (_, index) => `lesson-${index + 1}`))
     expect(sectionRegistry.map((section) => section.id)).toEqual(['basics-grammar', 'morphology', 'spelling', 'rhetoric', 'reading-expression'])
@@ -49,33 +49,33 @@ describe('morphology 08 — registration and non-weakened source guards', () => 
     for (const result of runGuards(sandbox)) expect(result.status, `${result.guard}: ${result.stderr}`).toBe(0)
   })
 
-  it('rejects lesson 9 even when substituted for 8 to preserve the count', () => {
+  it('rejects lesson 10 even when substituted for 9 to preserve the count', () => {
+    try {
+      writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource.replace("id: 'morphology-lesson-09'", "id: 'morphology-lesson-10'"))
+      expectRejected()
+    } finally { writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource) }
+  })
+
+  it('rejects duplicate 9 and missing 8 even when there are still nine entries', () => {
     try {
       writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource.replace("id: 'morphology-lesson-08'", "id: 'morphology-lesson-09'"))
       expectRejected()
     } finally { writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource) }
   })
 
-  it('rejects duplicate 8 and missing 7 even when there are still eight entries', () => {
-    try {
-      writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource.replace("id: 'morphology-lesson-07'", "id: 'morphology-lesson-08'"))
-      expectRejected()
-    } finally { writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource) }
-  })
-
-  it('rejects a misrouted lesson 8 and an unregistered ninth component', () => {
+  it('rejects a misrouted lesson 8 and an unregistered tenth component', () => {
     try {
       writeFileSync(join(sandbox, 'src/app/App.tsx'), appSource.replace('<LessonMorphologyEight onFinish=', '<LessonMorphologySeven onFinish='))
       expectRejected()
     } finally { writeFileSync(join(sandbox, 'src/app/App.tsx'), appSource) }
-    const path = join(sandbox, 'src/lessons/LessonMorphologyNine.tsx')
+    const path = join(sandbox, 'src/lessons/LessonMorphologyTen.tsx')
     try { writeFileSync(path, '// forbidden future lesson fixture\n'); expectRejected() }
     finally { rmSync(path) }
   })
 
   it('rejects a morphology unit assessment without weakening the lesson whitelist', () => {
     try {
-      writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource.replace("id: 'morphology-lesson-08'", "id: 'morphology-unit-test'"))
+      writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource.replace("id: 'morphology-lesson-09'", "id: 'morphology-unit-test'"))
       expectRejected()
     } finally { writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource) }
   })

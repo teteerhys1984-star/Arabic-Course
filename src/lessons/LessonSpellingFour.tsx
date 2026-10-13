@@ -38,7 +38,7 @@ export default function LessonSpellingFour({
 }) {
   const [activityAnswers, setActivityAnswers] = useState<Record<string, string>>({})
   const [step, setStep] = useState(0)
-  const engine = useTestEngine(lessonFourTest)
+  const engine = useTestEngine(testDefinition)
 
   const totalSteps = 12
 
@@ -337,7 +337,7 @@ export default function LessonSpellingFour({
           <h2>اختبار الدرس المستقل</h2>
           <p>أربع صفحات، خمس أسئلة في كل صفحة. لا تُعرض الإجابة فورًا.</p>
           <TestRunner
-            testDef={lessonFourTest}
+            testDef={testDefinition}
             onProgressChange={onProgressChange}
             onFinish={onFinish}
           />
@@ -350,7 +350,7 @@ export default function LessonSpellingFour({
       content: (
         <div dir="rtl" className="spell4-section">
           <h2>مراجعة حلول الاختبار المستقل</h2>
-          <SolutionsArea test={lessonFourTest} engine={engine} />
+          <SolutionsArea test={testDefinition} engine={engine} />
         </div>
       ),
     },

@@ -11,7 +11,7 @@ import { existsSync, readFileSync } from 'node:fs'
  *  - the lesson is a native multi-step flow (LessonFlow), not one long page;
  *  - the exam never reveals answers before submission (solutions gated, no inline correction);
  *  - the Teacher Area is present and gated by the approved teacher password;
- *  - lesson 1 content stays independent; the current scope permits lessons 01–09 only.
+ *  - lesson 1 content stays independent; the current scope permits lessons 01–10 only.
  */
 
 import { morphologyScopeIssues } from './morphology-scope.mjs'
@@ -41,11 +41,11 @@ if (!/sectionId: 'morphology'/.test(entry)) failures.push('morphology-lesson-01 
 if (!/number: '١'/.test(entry)) failures.push('morphology-lesson-01 must be numbered ١ inside its section.')
 if (!/title: 'مدخل إلى علم الصرف'/.test(entry)) failures.push('morphology-lesson-01 title must be «مدخل إلى علم الصرف».')
 if (!/available: true/.test(entry)) failures.push('morphology-lesson-01 must be available.')
-// نطاق الدرس التاسع: دروس الصرف ١–٩ فقط، دون درس عاشر أو اختبار وحدة.
-// راجع docs/morphology-lesson-09-audit.md. بقية حراس محتوى الدرس الأول دون تغيير.
+// نطاق الدرس العاشر: دروس الصرف ١–١٠ فقط، دون درس حادي عشر أو اختبار وحدة.
+// راجع docs/morphology-lesson-10-audit.md. بقية حراس محتوى الدرس الأول دون تغيير.
 failures.push(...morphologyScopeIssues(registry, app))
-if (/morphology-lesson-10|morphology-lesson-[1-9]\d/.test(registry + content + lesson)) {
-  failures.push('No tenth morphology lesson may be created yet.')
+if (/morphology-lesson-11|morphology-lesson-[2-9]\d/.test(content + lesson)) {
+  failures.push('No eleventh morphology lesson may be created yet.')
 }
 if (/LessonMorphologyTwo|morphology-lesson-02/.test(content + lesson)) {
   failures.push('Lesson 1 content/component must stay independent of Lesson 2 (no cross-references).')

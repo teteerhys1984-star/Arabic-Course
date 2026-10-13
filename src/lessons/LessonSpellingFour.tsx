@@ -26,6 +26,7 @@ import {
   testDefinition as lessonFourTest,
 } from './spelling-lesson-04/content'
 
+// eslint-disable-next-line react-refresh/only-export-components -- shared test schema is lesson data
 export const testDefinition: TestDefinition = lessonFourTest
 
 export default function LessonSpellingFour({
@@ -36,10 +37,10 @@ export default function LessonSpellingFour({
   onFinish?: () => void
 }) {
   const [activityAnswers, setActivityAnswers] = useState<Record<string, string>>({})
-  const [checked, setChecked] = useState(false)
   const [step, setStep] = useState(0)
+  const engine = useTestEngine(lessonFourTest)
 
-  const totalSteps = 10
+  const totalSteps = 12
 
   const steps: LessonStepDefinition[] = [
     {
@@ -340,6 +341,34 @@ export default function LessonSpellingFour({
             onProgressChange={onProgressChange}
             onFinish={onFinish}
           />
+        </div>
+      ),
+    },
+    {
+      id: 'solutions',
+      title: 'مراجعة الاختبار والحلول',
+      content: (
+        <div dir="rtl" className="spell4-section">
+          <h2>مراجعة حلول الاختبار المستقل</h2>
+          <SolutionsArea test={lessonFourTest} engine={engine} />
+        </div>
+      ),
+    },
+    {
+      id: 'summary-next',
+      title: 'الخلاصة والدرس التالي',
+      content: (
+        <div dir="rtl" className="spell4-section">
+          <h2>ملخص الدرس للحفظ</h2>
+          <ul>
+            {summaryPoints.map((p, i) => (
+              <li key={i}>{p}</li>
+            ))}
+          </ul>
+          <h3>الدرس التالي في قسم الإملاء</h3>
+          <h4>{nextLessonInfo.title}</h4>
+          <p>{nextLessonInfo.description}</p>
+          <p><strong>أفضل طريقة:</strong> {bestMethod}</p>
         </div>
       ),
     },

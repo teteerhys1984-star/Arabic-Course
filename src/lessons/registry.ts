@@ -244,6 +244,20 @@ export const lessonRegistry: LessonMeta[] = [
     parts: ['ألف', 'واو', 'نبرة', 'سطر'],
   },
   {
+    id: 'spelling-lesson-04',
+    sectionId: 'spelling',
+    number: '٤',
+    eyebrow: 'الهمزة المتطرفة',
+    title: 'الهمزة المتطرفة — كيف نكتب الهمزة في آخر الكلمة؟',
+    documentTitle: 'الدرس الرابع: الهمزة المتطرفة',
+    summary:
+      'قاعدة حركة الحرف السابق للهمزة المتطرفة، والأشكال الأربعة (أ، ؤ، ئ، ء)، وحروف المدّ، والأخطاء الشائعة، مع تفاعلات واختبار مستقل (٢٠ سؤالًا) وحلول.',
+    duration: '٩٠',
+    strand: 'الإملاء',
+    available: true,
+    parts: ['ألف', 'واو', 'نبرة', 'سطر', 'مد'],
+  },
+  {
     id: 'morphology-lesson-01',
     sectionId: 'morphology',
     number: '١',

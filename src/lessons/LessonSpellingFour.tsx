@@ -37,16 +37,14 @@ export default function LessonSpellingFour({
   onFinish?: () => void
 }) {
   const [activityAnswers, setActivityAnswers] = useState<Record<string, string>>({})
-  const [step, setStep] = useState(0)
   const engine = useTestEngine(testDefinition)
 
-  const totalSteps = 12
 
   const steps: LessonStepDefinition[] = [
     {
       id: 'intro',
       title: 'مقدمة ومراجعة سريعة',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2 className="spell4-title">الدرس الرابع: الهمزة المتطرفة</h2>
           <p className="spell4-sub">كيف نكتب الهمزة في آخر الكلمة؟</p>
@@ -68,7 +66,7 @@ export default function LessonSpellingFour({
     {
       id: 'definition',
       title: 'ما الهمزة المتطرفة؟',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2>{definitionSection.title}</h2>
           <p className="spell4-def">{definitionSection.definition}</p>
@@ -94,7 +92,7 @@ export default function LessonSpellingFour({
     {
       id: 'rules',
       title: 'القاعدة الذهبية',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2>القاعدة الذهبية لكتابة الهمزة المتطرفة</h2>
           <p>ننظر إلى حركة الحرف الذي يسبق الهمزة، لا حركة الهمزة نفسها.</p>
@@ -118,7 +116,7 @@ export default function LessonSpellingFour({
     {
       id: 'mad',
       title: 'الهمزة بعد حرف مدّ',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2>{madSection.title}</h2>
           <p>{madSection.intro}</p>
@@ -137,7 +135,7 @@ export default function LessonSpellingFour({
     {
       id: 'steps',
       title: 'خطوات تحديد الرسم — أمثلة محلولة',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2>{stepsSection.title}</h2>
           <ol>
@@ -162,7 +160,7 @@ export default function LessonSpellingFour({
     {
       id: 'errors',
       title: 'الأخطاء الشائعة',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2>{commonErrors.title}</h2>
           <table className="spell4-table">
@@ -180,7 +178,7 @@ export default function LessonSpellingFour({
     {
       id: 'activities',
       title: 'تفاعلات تعليمية',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2>التفاعلات</h2>
           <p>{activities.instruction}</p>
@@ -262,7 +260,7 @@ export default function LessonSpellingFour({
     {
       id: 'final',
       title: 'اختبار ختامي — خمسة أسئلة',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2>{finalExam.title}</h2>
           <p>اكتب إجابتك في دفترك، ثم راجع الحل.</p>
@@ -281,7 +279,7 @@ export default function LessonSpellingFour({
     {
       id: 'homework',
       title: 'واجب منزلي — عشر كلمات',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2>{homework.title}</h2>
           <p>اكتب الكلمات في دفترك، ضع خطًا تحت الهمزة، واكتب سبب رسمها.</p>
@@ -305,7 +303,7 @@ export default function LessonSpellingFour({
     {
       id: 'summary',
       title: 'ملخص للحفظ',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2>احفظ هذه القواعد الأربع</h2>
           <div className="spell4-cards">
@@ -332,12 +330,12 @@ export default function LessonSpellingFour({
     {
       id: 'test',
       title: 'اختبار مستقل — 20 سؤالًا',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2>اختبار الدرس المستقل</h2>
           <p>أربع صفحات، خمس أسئلة في كل صفحة. لا تُعرض الإجابة فورًا.</p>
           <TestRunner
-            testDef={testDefinition}
+            test={testDefinition}
             onProgressChange={onProgressChange}
             onFinish={onFinish}
           />
@@ -347,7 +345,7 @@ export default function LessonSpellingFour({
     {
       id: 'solutions',
       title: 'مراجعة الاختبار والحلول',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2>مراجعة حلول الاختبار المستقل</h2>
           <SolutionsArea test={testDefinition} engine={engine} />
@@ -357,7 +355,7 @@ export default function LessonSpellingFour({
     {
       id: 'summary-next',
       title: 'الخلاصة والدرس التالي',
-      content: (
+      render: () => (
         <div dir="rtl" className="spell4-section">
           <h2>ملخص الدرس للحفظ</h2>
           <ul>
@@ -374,22 +372,16 @@ export default function LessonSpellingFour({
     },
   ]
 
-  const handleStepChange = (next: number) => {
-    setStep(next)
-    if (onProgressChange) onProgressChange(Math.round(((next + 1) / totalSteps) * 100))
-    if (next === totalSteps - 1 && onFinish) onFinish()
-  }
-
   return (
     <div dir="rtl" className="spell4-page">
       <LessonFlow
         steps={steps}
-        initialStep={step}
-        onStepChange={handleStepChange}
+        onProgressChange={onProgressChange}
+        onFinish={onFinish}
       />
 
       {/* Teacher area */}
-      <TeacherSpace title="منطقة المعلم — حلول الدرس الرابع">
+      <TeacherSpace>
         <h3>الشرح الكامل للقواعد</h3>
         <p>الهمزة المتطرفة تُكتب حسب حركة الحرف السابق: مفتوح → ألف، مضموم → واو، مكسور → نبرة، ساكن أو مد → سطر.</p>
 

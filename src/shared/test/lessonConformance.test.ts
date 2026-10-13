@@ -46,6 +46,7 @@ import { testDefinition as morphologySixTest } from '../../lessons/LessonMorphol
 import { testDefinition as morphologySevenTest } from '../../lessons/LessonMorphologySeven'
 import { testDefinition as morphologyEightTest } from '../../lessons/LessonMorphologyEight'
 import { testDefinition as morphologyNineTest } from '../../lessons/LessonMorphologyNine'
+import { testDefinition as morphologyTenTest } from '../../lessons/LessonMorphologyTen'
 import { testDefinition as spellingOneTest } from '../../lessons/LessonSpellingOne'
 import { testDefinition as spellingTwoTest } from '../../lessons/LessonSpellingTwo'
 import { testDefinition as spellingThreeTest } from '../../lessons/LessonSpellingThree'
@@ -71,16 +72,17 @@ const lessonTests: Array<{ lesson: string; test: TestDefinition; expectedQuestio
   { lesson: 'morphology-lesson-07', test: morphologySevenTest, expectedQuestions: 20 },
   { lesson: 'morphology-lesson-08', test: morphologyEightTest, expectedQuestions: 20 },
   { lesson: 'morphology-lesson-09', test: morphologyNineTest, expectedQuestions: 20 },
+  { lesson: 'morphology-lesson-10', test: morphologyTenTest, expectedQuestions: 20 },
   { lesson: 'spelling-lesson-01', test: spellingOneTest, expectedQuestions: 30 },
   { lesson: 'spelling-lesson-02', test: spellingTwoTest, expectedQuestions: 25 },
   { lesson: 'spelling-lesson-03', test: spellingThreeTest, expectedQuestions: 26 },
 ]
 
 describe('lesson test conformance — the shared platform schema', () => {
-  it('covers every registered lesson (22 lessons)', () => {
+  it('covers every registered lesson (23 lessons)', () => {
     expect(lessonTests.map((entry) => entry.lesson).sort()).toEqual(lessonRegistry.filter((entry) => entry.available).map((entry) => entry.id).sort())
-    expect(lessonTests).toHaveLength(22)
-    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(22)
+    expect(lessonTests).toHaveLength(23)
+    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(23)
   })
 
   it.each(lessonTests.map((entry) => [entry.lesson, entry] as const))(

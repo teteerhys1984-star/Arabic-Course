@@ -8,7 +8,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { lessonRegistry } from '../registry'
 import { getSectionLessons, sectionRegistry } from '../../sections/sectionRegistry'
 
-const expectedIds = Array.from({ length: 9 }, (_, index) => `morphology-lesson-${String(index + 1).padStart(2, '0')}`)
+const expectedIds = Array.from({ length: 10 }, (_, index) => `morphology-lesson-${String(index + 1).padStart(2, '0')}`)
 const guards = ['check-morphology-lesson-01.mjs', 'check-morphology-lesson-02.mjs', 'check-morphology-source.mjs']
 const root = resolve('.')
 let sandbox: string
@@ -43,12 +43,17 @@ describe('morphology 09 — التسجيل وحدود النطاق بعد إضا
   })
   afterAll(() => rmSync(sandbox, { recursive: true, force: true }))
 
-  it('يسجّل ١–٩ مرة واحدة بالترتيب، دون درس عاشر أو اختبار وحدة', () => {
+  it('يسجّل ١–١٠ مرة واحدة بالترتيب، دون درس حادي عشر أو اختبار وحدة', () => {
     expect(getSectionLessons('morphology').map((lesson) => lesson.id)).toEqual(expectedIds)
     expect(new Set(lessonRegistry.map((lesson) => lesson.id)).size).toBe(lessonRegistry.length)
-    expect(getSectionLessons('morphology').map((lesson) => lesson.number)).toEqual(['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩'])
+    expect(getSectionLessons('morphology').map((lesson) => lesson.number)).toEqual(['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '١٠'])
     expect(getSectionLessons('morphology')[8]).toMatchObject({
       title: 'المصدر — تعريفه وأوزانه الأساسية',
+      sectionId: 'morphology',
+      available: true,
+    })
+    expect(getSectionLessons('morphology')[9]).toMatchObject({
+      title: 'أنواع المصادر وأوزانها',
       sectionId: 'morphology',
       available: true,
     })
@@ -66,20 +71,20 @@ describe('morphology 09 — التسجيل وحدود النطاق بعد إضا
     ])
   })
 
-  it('يقبل الدرس التاسع مع بقاء كل حراس المصدر السابقة فعّالة', () => {
+  it('يقبل الدرس التاسع والعاشر مع بقاء كل حراس المصدر السابقة فعّالة', () => {
     for (const result of runGuards(sandbox)) expect(result.status, `${result.guard}: ${result.stderr}`).toBe(0)
   })
 
-  it('يرفض الدرس العاشر حتى لو عوّض التاسع للحفاظ على العدد', () => {
+  it('يرفض الدرس الحادي عشر حتى لو عوّض العاشر للحفاظ على العدد', () => {
     try {
-      writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource.replace("id: 'morphology-lesson-09'", "id: 'morphology-lesson-10'"))
+      writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource.replace("id: 'morphology-lesson-10'", "id: 'morphology-lesson-11'"))
       expectRejected()
     } finally {
       writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource)
     }
   })
 
-  it('يرفض تكرار التاسع وإسقاط الثامن والعدد ما زال تسعة', () => {
+  it('يرفض تكرار التاسع وإسقاط الثامن والعدد ما زال عشرة', () => {
     try {
       writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource.replace("id: 'morphology-lesson-08'", "id: 'morphology-lesson-09'"))
       expectRejected()
@@ -88,14 +93,14 @@ describe('morphology 09 — التسجيل وحدود النطاق بعد إضا
     }
   })
 
-  it('يرفض توجيهًا خاطئًا للدرس التاسع ومكوّنًا عاشرًا غير مسجّل', () => {
+  it('يرفض توجيهًا خاطئًا للدرس التاسع ومكوّنًا حادي عشر غير مسجّل', () => {
     try {
       writeFileSync(join(sandbox, 'src/app/App.tsx'), appSource.replace('<LessonMorphologyNine onFinish=', '<LessonMorphologyEight onFinish='))
       expectRejected()
     } finally {
       writeFileSync(join(sandbox, 'src/app/App.tsx'), appSource)
     }
-    const path = join(sandbox, 'src/lessons/LessonMorphologyTen.tsx')
+    const path = join(sandbox, 'src/lessons/LessonMorphologyEleven.tsx')
     try {
       writeFileSync(path, '// forbidden future lesson fixture\n')
       expectRejected()

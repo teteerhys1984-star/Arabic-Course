@@ -358,7 +358,7 @@ export const testQuestions: TestQuestion[] = [
     id: 't14', number: 14, prompt: 'ما حركة الحرف قبل الهمزة في كلمة بُطْء؟',
     type: 'اختيار من متعدد',
     fields: [{ kind: 'choice', label: 'اختر', options: ['فتحة', 'ضمة', 'كسرة', 'سكون'], answer: 'سكون' }],
-    solution: 'سكون (الطّاء ساكنة).', explanation: 'الطّاء ساكنة دربة السهم.',
+    solution: 'سكون (الطّاء ساكنة).', explanation: 'الطّاء ساكنة (سكون).',
   },
   {
     id: 't15', number: 15, prompt: 'ما الكتابة الصحيحة لِمَبْدَأ؟',

@@ -29,6 +29,7 @@ import { LessonSpellingTwo } from '../lessons/LessonSpellingTwo'
 import { LessonSpellingThree } from '../lessons/LessonSpellingThree'
 import { LessonSpellingFour } from '../lessons/LessonSpellingFour'
 import { LessonSpellingFive } from '../lessons/LessonSpellingFive'
+import { LessonSpellingEight } from '../lessons/LessonSpellingEight'
 import { LessonSpellingSeven } from '../lessons/LessonSpellingSeven'
 import { LessonSpellingSix } from '../lessons/LessonSpellingSix'
 
@@ -79,6 +80,8 @@ function LessonPage({ lesson }: { lesson: LessonMeta }) {
   const lessonContent =
     lesson.id === 'spelling-lesson-05' ? (
       <LessonSpellingFive onFinish={finishLesson} />
+    ) : lesson.id === 'spelling-lesson-08' ? (
+      <LessonSpellingEight onFinish={finishLesson} />
     ) : lesson.id === 'spelling-lesson-07' ? (
       <LessonSpellingSeven onFinish={finishLesson} />
     ) : lesson.id === 'spelling-lesson-06' ? (

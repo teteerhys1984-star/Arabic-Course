@@ -62,7 +62,7 @@ describe('spelling 5 — التسجيل والمسار وعرض المصدر', (
     const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
       ...Array.from({ length: 5 }, (_, index) => `#/lesson/spelling-lesson-0${index + 1}`),
-      '#/lesson/spelling-lesson-06', '#/lesson/spelling-lesson-07',
+      '#/lesson/spelling-lesson-06', '#/lesson/spelling-lesson-07', '#/lesson/spelling-lesson-08',
     ])
     await user.click(links[4])
     expect(await screen.findByRole('heading', { name: S.warmup.heading, level: 2 })).toBeInTheDocument()
@@ -168,8 +168,8 @@ describe('spelling 5 — التسجيل والمسار وعرض المصدر', (
     }
   })
 
-  it('يرفض الرابط المباشر لدرس ثامن غير مسجل ضمن النطاق', () => {
-    window.location.hash = '#/lesson/spelling-lesson-08'
+  it('يرفض الرابط المباشر لدرس تاسع غير مسجل ضمن النطاق', () => {
+    window.location.hash = '#/lesson/spelling-lesson-09'
     render(<App />)
     expect(screen.getByRole('heading', { name: 'الدرس غير متاح' })).toBeInTheDocument()
   })

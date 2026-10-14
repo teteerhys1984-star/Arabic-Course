@@ -12,7 +12,7 @@ const checks = [
  [audit.includes(hash), 'source hash'],
  [[...data.matchAll(/"id": "spell7-exam-\d{2}"/g)].length === 20, 'twenty keyed questions'],
  [registry.indexOf("id: 'spelling-lesson-07'") > registry.indexOf("id: 'spelling-lesson-06'"), 'ordered registration'],
- [!registry.includes("id: 'spelling-lesson-08'"), 'no eighth spelling lesson'],
+ [registry.indexOf("id: 'spelling-lesson-08'") > registry.indexOf("id: 'spelling-lesson-07'"), 'eighth spelling lesson ordered after seventh'],
  [lesson.includes('<TeacherSpace>') && lesson.includes('<SolutionsArea') && lesson.includes('revealFeedback={show}'), 'existing gated areas'],
  [css.includes('@media (max-width: 480px)') && css.includes(':focus-visible') && css.includes('min-width: 0'), 'mobile and keyboard rules'],
  [source.includes('مَرُوءَة') && lesson.includes('مُرُوءَة') && data.includes('مُؤَثِّرة'), 'documented corrections'],

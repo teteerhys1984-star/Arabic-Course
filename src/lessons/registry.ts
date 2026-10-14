@@ -308,6 +308,14 @@ export const lessonRegistry: LessonMeta[] = [
     parts: ['تاء مربوطة (ة)', 'تاء مفتوحة (ت)', 'هاء (ه)', 'الوقف والوصل'],
   },
   {
+    id: 'spelling-lesson-09', sectionId: 'spelling', number: '٩',
+    eyebrow: 'واو الجماعة والألف الفارقة', title: 'الألف الفارقة بعد واو الجماعة',
+    documentTitle: 'الدرس التاسع: الألف الفارقة بعد واو الجماعة',
+    summary: 'لماذا نكتب «كتبوا» ولا نكتب الألف في «يدعو»؟ شرح موسع، وتدريب من ثمانية أسئلة وختامي تعليمي من عشرة واختبار مستقل من عشرين سؤالًا وحلول.',
+    duration: '٧٥', strand: 'الإملاء', available: true,
+    parts: ['واو الجماعة', 'حذف النون', 'الماضي والأمر', 'الواو الأصلية والضمير'],
+  },
+  {
     id: 'morphology-lesson-01',
     sectionId: 'morphology',
     number: '١',

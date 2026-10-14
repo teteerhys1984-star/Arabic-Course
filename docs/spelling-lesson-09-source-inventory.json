@@ -1,0 +1,123 @@
+{
+  "sourceSha256": "662ebc15be744d745eef642173d8c510de2bb88f54d580c0ca38ac0211cc74fd",
+  "baselineCommit": "5f86b77c079c6dfb149688a5144c2a8d71ffca34",
+  "previousContentSha256": {
+    "docs/source/spelling-lesson-04.md": "4604cddb68f96985c9fbe7f3437f668c33c1f416c38641d855628fe962acb317",
+    "docs/source/spelling-lesson-05.md": "feb9768725ff859c4dc7e4618030c64b77d63e081379488fa65823f2afe8aca1",
+    "docs/source/spelling-lesson-06.md": "45748bbca21a289d26271357447b8682079ea824c6fef52c46159725a22db393",
+    "docs/source/spelling-lesson-07.md": "94dd9a0d39037f6d78cd3b318fd0a9169d446aba07ccd81168b482cc08dd9a6d",
+    "docs/source/spelling-lesson-08.md": "334b391edb05c4cd378226bebada454079d69472f893e9d3315376e6b1d430ec",
+    "src/lessons/LessonSpellingEight.tsx": "754a968b39cd5ad33e6c08f79e70668816db1acabd706ade133ccbacc2ed509a",
+    "src/lessons/LessonSpellingFive.tsx": "a19311c22cf7fc2e640234749780ce789030dd54a094a511902481c50271d12a",
+    "src/lessons/LessonSpellingFour.tsx": "97541fbd2a80a7eb846060cae0104e269c1016fd0a032f44589c964ad145b767",
+    "src/lessons/LessonSpellingOne.tsx": "2dde2995180f0d9be03cde1626c36d77da4377b54f3a8dceecdcd93b9d85c604",
+    "src/lessons/LessonSpellingSeven.tsx": "a487feb87082a5d2dc663f76e9357ef03536e8f7b2f6916291f516af8a5d512d",
+    "src/lessons/LessonSpellingSix.tsx": "395d4e0a2e3709f737b994dc254bb63fac53d81d773e9b31b9ea12e2e5395505",
+    "src/lessons/LessonSpellingThree.tsx": "2388c81ab18eb6799118589391179539cd6f888deb7f157c98dedf198cb1ad64",
+    "src/lessons/LessonSpellingTwo.tsx": "29f6c6574846c1af49ec6bca03950e75939d96b4536b547f436688a43bc818bf",
+    "src/lessons/spelling-lesson-01/content.ts": "28cec433b47f4b998518651460112ffbd6e76026a07cccb82c719c4b5c3570dc",
+    "src/lessons/spelling-lesson-02/content.ts": "1ed3be83b36e37a7002e9ec7a240c38816aa9847e1d496b28b1cc96017644e23",
+    "src/lessons/spelling-lesson-03/content.ts": "c657de8ef012d649d7c2012e3536594d6777826f5bbe648898a7bb1bb068fee1",
+    "src/lessons/spelling-lesson-04/content.ts": "f69adcf44caa2da665821d4b93b771586ad622b267202e1a36726216e1fc083c",
+    "src/lessons/spelling-lesson-05/content.ts": "6c6bb5a65b3dd461ee2bc654906f371b4841aedd5ca07f8a03a6dfc08c34881b",
+    "src/lessons/spelling-lesson-05/grading.ts": "27638035f62bfcd4a84821d9dbc2fa20d4ce6d9c3b29062034a1a973ac0ee4e9",
+    "src/lessons/spelling-lesson-05/test-fixtures.ts": "88832aeb22be0ca4a10e9e6983c513818f5d0916e729f596f55655ccefc74a62",
+    "src/lessons/spelling-lesson-06.css": "a5a55418a316d312224ea4f9a63ba2bb6bb3666b538f86dd0372efe93551596a",
+    "src/lessons/spelling-lesson-06/activities.tsx": "f70943df7018def4b38385ae14ca4a93966efd990f379207ecff6336f8b95ebd",
+    "src/lessons/spelling-lesson-06/content.ts": "a59bf4a5c3e81d1e506e06537f81282d338af30315aefb34449adc60e8281b7f",
+    "src/lessons/spelling-lesson-06/presentation.tsx": "cb0b36545aa8cf3d4e0c06bd9877d0e058ad350fcef3e123a75e17dd9105f53a",
+    "src/lessons/spelling-lesson-06/state.tsx": "b748a6fe753024146ca466130ca491309155ca57f37b2e24c41978e07fa0bb8c",
+    "src/lessons/spelling-lesson-06/teacher.tsx": "536c3e5eb017666de6ac174a20b09a6bd215b0c4f0fe166571d0beb49ff4b226",
+    "src/lessons/spelling-lesson-07/content.ts": "f4309662e99772ef61a8e710178922282565be22b6a4e35e4c3eaa9b368688d5",
+    "src/lessons/spelling-lesson-07/lesson.css": "7d11bdc0c8522f742bfaed74c474878ade57eca662739966c9fecddaa250f8ca",
+    "src/lessons/spelling-lesson-08/content.ts": "85f88ae8ef8bac38699bc3bc4a2333d54f39d0fa668522e7e19cce070412c46b",
+    "src/lessons/spelling-lesson-08/lesson.css": "b9a04de99305e53bf9f9c1dc51e720a38147191df9f618eb2dfaecc30bdde997"
+  },
+  "coverage": [
+    {
+      "section": "الأهداف والاكتشاف",
+      "terms": [
+        "أهداف التعلم",
+        "الطلابُ كتبوا الواجبَ",
+        "المعلّمون يكتبون",
+        "الطالبُ يدعو"
+      ]
+    },
+    {
+      "section": "الماضي",
+      "terms": [
+        "كتبوا",
+        "لعبوا",
+        "ذهبوا",
+        "نجحوا",
+        "فهموا",
+        "اجتهدوا"
+      ]
+    },
+    {
+      "section": "النصب والجزم والنون",
+      "terms": [
+        "لن يكتبوا",
+        "لم يكتبوا",
+        "لا تهملوا",
+        "أن ينجحوا",
+        "كي يتفوّقوا",
+        "حذف النون",
+        "ثبوت النون"
+      ]
+    },
+    {
+      "section": "الأمر",
+      "terms": [
+        "اكتبوا",
+        "اقرأوا",
+        "انتبهوا",
+        "حافظوا",
+        "استمعوا"
+      ]
+    },
+    {
+      "section": "الاستثناءات",
+      "terms": [
+        "يدعو",
+        "يسمو",
+        "يرجو",
+        "ينمو",
+        "يكتبون",
+        "يشرحون",
+        "يلعبون",
+        "يدرسون",
+        "كتبوه",
+        "لم يهملوه",
+        "اكتبوه"
+      ]
+    },
+    {
+      "section": "الحفظ والخلاصة والتمهيد",
+      "terms": [
+        "ثلاثة أسئلة",
+        "القاعدة الذهبية",
+        "همزة الوصل",
+        "ابن",
+        "استخرج",
+        "أحمد",
+        "إلى"
+      ]
+    }
+  ],
+  "counts": {
+    "steps": 24,
+    "groups": 6,
+    "practice": 8,
+    "educationalQuiz": 10,
+    "homeworkCompletion": 6,
+    "homeworkCorrection": 4,
+    "independentExam": 20,
+    "pages": [
+      5,
+      5,
+      5,
+      5
+    ]
+  }
+}

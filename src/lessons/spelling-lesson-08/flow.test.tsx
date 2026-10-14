@@ -16,7 +16,7 @@ beforeEach(() => {
 })
 
 describe('spelling lesson 08 — interactive flow, independent test, solutions, and teacher space', () => {
-  it('opens from the spelling section after lesson 7, renders RTL steps, and rejects unregistered lesson 9 route', async () => {
+  it('opens from the spelling section after lesson 7, renders RTL steps, and opens registered lesson 9 route', async () => {
     const user = userEvent.setup()
     window.location.hash = '#/sections/spelling'
     const { unmount } = render(<App />)
@@ -31,6 +31,7 @@ describe('spelling lesson 08 — interactive flow, independent test, solutions, 
       '#/lesson/spelling-lesson-06',
       '#/lesson/spelling-lesson-07',
       '#/lesson/spelling-lesson-08',
+      '#/lesson/spelling-lesson-09',
     ])
 
     await user.click(links[7])
@@ -49,7 +50,7 @@ describe('spelling lesson 08 — interactive flow, independent test, solutions, 
 
     window.location.hash = '#/lesson/spelling-lesson-09'
     render(<App />)
-    expect(screen.getByRole('heading', { name: 'الدرس غير متاح' })).toBeInTheDocument()
+    expect(document.querySelector('.spell9-lesson')).toHaveAttribute('dir', 'rtl')
   })
 
   it('runs the 8-question interactive practice, hides answers until checked, shows completed word, and preserves state across steps', async () => {

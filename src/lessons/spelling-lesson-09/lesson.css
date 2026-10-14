@@ -1,0 +1,29 @@
+.spell9-lesson { color: #172c3b; line-height: 1.95; font-size: 1.08rem; overflow-wrap: anywhere; }
+.spell9-stack { display: grid; gap: 1rem; }
+.spell9-stack p { margin-block: .4rem; }
+.spell9-card, .spell9-analysis { padding: 1rem; border: 1px solid #859ba9; border-radius: .8rem; background: #f5f9fb; min-width: 0; }
+.spell9-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.spell9-waw { text-decoration: underline; text-decoration-thickness: 2px; }
+.spell9-alif { outline: 2px solid #244f63; outline-offset: 2px; }
+.spell9-nun { text-decoration: underline double; }
+.spell9-pronoun { outline: 2px dashed #244f63; outline-offset: 2px; }
+.spell9-original { outline: 2px dotted #244f63; outline-offset: 2px; }
+.spell9-analysis bdi { font-weight: 700; font-size: 1.3em; }
+.spell9-table-wrap { max-width: 100%; }
+.spell9-table-wrap table { width: 100%; border-collapse: collapse; background: #fff; }
+.spell9-table-wrap caption { text-align: start; padding: .7rem; font-weight: 700; }
+.spell9-table-wrap th, .spell9-table-wrap td { padding: .8rem; border: 1px solid #859ba9; text-align: start; }
+.spell9-table-wrap th { background: #eaf2f6; }
+.spell9-table-wrap bdi { white-space: nowrap; }
+.spell9-label { display: grid; gap: .4rem; margin-block: .8rem; }
+.spell9-label textarea { width: 100%; box-sizing: border-box; min-height: 5rem; border: 1px solid #526d7d; border-radius: .4rem; padding: .7rem; font: inherit; color: #172c3b; background: white; }
+.spell9-lesson :is(button, a, textarea, input):focus-visible { outline: 3px solid #005b83; outline-offset: 3px; }
+@media (max-width: 640px) {
+  .spell9-pair { grid-template-columns: 1fr; }
+  .spell9-table-wrap table, .spell9-table-wrap tbody, .spell9-table-wrap caption { display: block; }
+  .spell9-table-wrap thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .spell9-table-wrap tr { display: block; margin-block: .8rem; border: 1px solid #859ba9; }
+  .spell9-table-wrap td { display: block; border: 0; padding: .5rem .8rem; }
+  .spell9-table-wrap td::before { content: attr(data-label) ' — '; font-weight: 700; }
+  .spell9-card { padding: .7rem; }
+}

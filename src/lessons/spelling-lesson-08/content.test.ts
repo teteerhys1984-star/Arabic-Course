@@ -40,7 +40,7 @@ describe('spelling lesson 08 — content, source audit, and registration', () =>
     }
   })
 
-  it('registers spelling-lesson-08 after spelling-lesson-07, keeps lessons 1–7 intact, and adds no lesson 9 or unit test', () => {
+  it('registers spelling-lesson-08 after spelling-lesson-07, keeps lessons 1–7 intact, registers lesson 9 and adds no lesson 10 or unit test', () => {
     const spellingLessons = lessonRegistry.filter((lesson) => lesson.sectionId === 'spelling')
     expect(spellingLessons.map((lesson) => lesson.id)).toEqual([
       'spelling-lesson-01',
@@ -51,6 +51,7 @@ describe('spelling lesson 08 — content, source audit, and registration', () =>
       'spelling-lesson-06',
       'spelling-lesson-07',
       'spelling-lesson-08',
+      'spelling-lesson-09',
     ])
     expect(spellingLessons[7]).toMatchObject({
       id: 'spelling-lesson-08',
@@ -59,7 +60,8 @@ describe('spelling lesson 08 — content, source audit, and registration', () =>
       available: true,
       title: 'التاء المربوطة والتاء المفتوحة والهاء في آخر الكلمة — كيف أميّز بين (ة) و(ت) و(ه)؟',
     })
-    expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-09')).toBe(false)
+    expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-09')).toBe(true)
+    expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-10')).toBe(false)
     expect(lessonRegistry.some((lesson) => lesson.id.includes('unit'))).toBe(false)
   })
 

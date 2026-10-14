@@ -365,7 +365,10 @@
 .spell5-memory__more { padding-block-start: .4rem; border-block-start: 1px dashed var(--s5-line); }
 .spell5-expand { justify-self: start; min-block-size: 2.5rem; padding: .2rem .9rem; border: 1.5px solid var(--s5-qaima); border-radius: 999px; background: #fff; color: var(--s5-qaima); font: inherit; font-weight: 700; cursor: pointer; }
 .spell5-expand[aria-expanded='true'] { background: var(--s5-qaima); color: #fff; }
-.spell5-backlink { font-size: .92rem; color: var(--s5-ink); }
+.spell5-backlink { margin: .4rem 0 .2rem; font-size: .92rem; font-weight: 700; color: var(--s5-ink); }
+.spell5-backlinks ul { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0; padding: 0; list-style: none; }
+.spell5-backlink__button { min-block-size: 2.5rem; padding: .25rem .8rem; border: 1.5px dashed var(--s5-amber); border-radius: 8px; background: var(--s5-paper, #fffdf8); color: var(--s5-ink); font: inherit; font-size: .92rem; text-align: start; cursor: pointer; }
+.spell5-backlink__button:hover { border-style: solid; background: var(--s5-amber-soft); }
 
 .spell5-homework { padding-inline-start: 1.6rem; display: grid; gap: .6rem; }
 .spell5-homework li p { margin: 0; }

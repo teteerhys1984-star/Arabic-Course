@@ -1,5 +1,5 @@
-import { useState, type ReactNode } from 'react'
-import { LessonFlow, type LessonStepDefinition } from '../shared/components/LessonFlow'
+import { useRef, useState, type ReactNode } from 'react'
+import { LessonFlow, type LessonFlowController, type LessonStepDefinition } from '../shared/components/LessonFlow'
 import { TeacherSpace } from '../shared/teacher/TeacherSpace'
 import {
   SolutionsArea, TestPageView, answeredCount, useTestEngine,
@@ -46,12 +46,13 @@ const T = {
   homework: S.homework.heading,
 } as const
 
-const summaryBackLinks: Record<string, string[]> = {
-  'tri-noun': [T.nounsTri, T.nounsTable, T.nounLab],
-  'multi-noun': [T.nounsMulti, T.nounSort],
-  'tri-verb': [T.verbsTri, T.verbLab],
-  'multi-verb': [T.verbsMulti],
-  particles: [T.particles, T.particleLab],
+/** «العودة إلى الشرح»: كل فرع في خريطة الحفظ يعيد إلى خطوات شرحه (معرّف الخطوة بلا البادئة). */
+const summaryBackLinks: Record<string, { stepId: string; title: string }[]> = {
+  'tri-noun': [{ stepId: 'nouns-tri', title: T.nounsTri }, { stepId: 'nouns-table', title: T.nounsTable }, { stepId: 'lab-noun-origin', title: T.nounLab }],
+  'multi-noun': [{ stepId: 'nouns-multi', title: T.nounsMulti }, { stepId: 'lab-noun-sort', title: T.nounSort }],
+  'tri-verb': [{ stepId: 'verbs-tri', title: T.verbsTri }, { stepId: 'lab-verb', title: T.verbLab }],
+  'multi-verb': [{ stepId: 'verbs-multi', title: T.verbsMulti }],
+  particles: [{ stepId: 'particles', title: T.particles }, { stepId: 'lab-particles', title: T.particleLab }],
 }
 
 /* ---------------- عناصر عرض صغيرة ---------------- */
@@ -829,7 +830,7 @@ function OriginalFinalStep({ engine, revealed, onReveal, onReset }: { engine: Te
 }
 
 /* ---------------- الخلاصة والواجب ---------------- */
-function SummaryStep() {
+function SummaryStep({ onJump }: { onJump: (stepId: string) => void }) {
   const [open, setOpen] = useState<Record<string, boolean>>({})
   return <>
     <div className="spell5-memory" aria-label={S.summary.mapTitle}>
@@ -847,7 +848,16 @@ function SummaryStep() {
               <p><strong>لماذا؟</strong> {more.why}</p>
               <List items={more.steps} ordered />
               <p className="spell5-muted"><strong>انتبه:</strong> {more.caution}</p>
-              <p className="spell5-backlink">للعودة إلى الشرح افتح من فهرس الدرس: {summaryBackLinks[branch.id].map((title, i) => <span key={title}>{i > 0 && '، '}«{title}»</span>)}.</p>
+              <nav className="spell5-backlinks" aria-label={`العودة إلى شرح: ${branch.title}`}>
+                <p className="spell5-backlink">العودة إلى الشرح:</p>
+                <ul role="list">
+                  {summaryBackLinks[branch.id].map((link) => <li key={link.stepId}>
+                    <button type="button" className="spell5-backlink__button" data-testid={`spell5-backlink-${link.stepId}`} onClick={() => onJump(link.stepId)}>
+                      <span aria-hidden="true">↩</span> {link.title}
+                    </button>
+                  </li>)}
+                </ul>
+              </nav>
             </div>
           </article>
         })}
@@ -971,6 +981,7 @@ function TeacherArea() {
 
 /* ---------------- المكوّن الرئيس ---------------- */
 export function LessonSpellingFive({ onProgressChange, onFinish }: Props) {
+  const flowRef = useRef<LessonFlowController | null>(null)
   const testEngine = useTestEngine(testDefinition)
   const [testSubmitted, setTestSubmitted] = useState(false)
   const submitted = testSubmitted && testEngine.allPagesChecked
@@ -1035,7 +1046,7 @@ export function LessonSpellingFive({ onProgressChange, onFinish }: Props) {
     step('cumulative', T.cumulative, G.apply, '◈', <ChoiceLab testId="spell5-lab-cumulative" items={C.cumulativeLab} state={cumulativeState} intro={<p>كلمات من كل فروع الدرس مختلطة. حدّد الفرع قبل أن تختار.</p>} />),
     step('practice', T.practice, G.source, '١٠', <PracticeStep />),
     step('original-final', T.original, G.source, '١١', <OriginalFinalStep engine={originalEngine} revealed={originalRevealed} onReveal={revealOriginal} onReset={originalEngine.resetTest} />),
-    step('summary', T.summary, G.wrap, '١٢', <SummaryStep />),
+    step('summary', T.summary, G.wrap, '١٢', <SummaryStep onJump={(stepId) => flowRef.current?.goToStep(`spell5-${stepId}`)} />),
     step('homework', T.homework, G.wrap, '١٣', <HomeworkStep />),
     ...testDefinition.pages.map((page) => step(`test-${page.id}`, page.title, G.test, '◇', <>
       <p className="spell5-muted">{testDefinition.description}</p>
@@ -1052,7 +1063,7 @@ export function LessonSpellingFive({ onProgressChange, onFinish }: Props) {
   ]
 
   return <div className="spell5-lesson">
-    <LessonFlow steps={steps} onProgressChange={onProgressChange} onFinish={onFinish}
+    <LessonFlow steps={steps} controllerRef={flowRef} onProgressChange={onProgressChange} onFinish={onFinish}
       lessonTitle={C.lessonTitle} lessonNumber={C.lessonNumber} lessonEyebrow={C.lessonEyebrow} />
   </div>
 }

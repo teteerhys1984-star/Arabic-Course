@@ -139,6 +139,25 @@ describe('spelling 5 — التسجيل والمسار وعرض المصدر', (
     expect(screen.getByTestId('spell5-correction-ت-٤')).toBeInTheDocument()
   })
 
+  it('خريطة الحفظ: «العودة إلى الشرح» تنقل فعلًا إلى خطوة الشرح وتنقل التركيز إلى عنوانها', async () => {
+    const user = userEvent.setup()
+    openLesson()
+    const jumps: [string, string, string][] = [
+      ['tri-noun', 'nouns-table', 'أمثلة أخرى على الأسماء الثلاثية'],
+      ['multi-verb', 'verbs-multi', 'الأفعال — القاعدة الثانية: الفعل غير الثلاثي'],
+      ['particles', 'lab-particles', 'مختبر فرز الحروف والأسماء المبنية'],
+    ]
+    for (const [branch, stepId, title] of jumps) {
+      await user.click(openStep('ملخص'))
+      const card = screen.getByTestId(`spell5-summary-${branch}`)
+      expect(within(card).queryByTestId(`spell5-backlink-${stepId}`)).not.toBeVisible()
+      await user.click(within(card).getByRole('button', { name: 'الشرح الموسّع' }))
+      await user.click(within(card).getByTestId(`spell5-backlink-${stepId}`))
+      expect(activeStep()).toHaveAttribute('id', `spell5-${stepId}`)
+      expect(screen.getByRole('heading', { level: 2, name: title })).toHaveFocus()
+    }
+  })
+
   it('يرفض الرابط المباشر لدرس سادس غير موجود', () => {
     window.location.hash = '#/lesson/spelling-lesson-06'
     render(<App />)

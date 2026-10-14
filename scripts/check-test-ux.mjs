@@ -1,4 +1,4 @@
-import { readFileSync, readdirSync, existsSync, statSync } from 'node:fs'
+import { readFileSync, readdirSync, existsSync } from 'node:fs'
 import { join } from 'node:path'
 
 /**
@@ -30,13 +30,6 @@ function read(path) {
     return ''
   }
   return readFileSync(path, 'utf8')
-}
-
-function filesUnder(directory) {
-  return readdirSync(directory).flatMap((name) => {
-    const path = join(directory, name)
-    return statSync(path).isDirectory() ? filesUnder(path) : [path]
-  })
 }
 
 // ---------------------------------------------------------------------------
@@ -119,7 +112,11 @@ if (!/from '\.\.\/test'/.test(quiz)) {
 // Level 2 — every lesson uses the shared framework (page-level checking +
 // structured solutions), and the registry is fully covered.
 // ---------------------------------------------------------------------------
-const lessonFiles = filesUnder('src/lessons').filter((path) => /\.tsx$/.test(path) && !/\.test\./.test(path))
+// Each registered lesson is a top-level Lesson*.tsx entry component. Nested JSX files are
+// reusable lesson modules (activities, teacher guidance, presentation), not standalone lessons.
+const lessonFiles = readdirSync('src/lessons')
+  .filter((name) => /^Lesson.*\.tsx$/.test(name) && !/\.test\./.test(name))
+  .map((name) => join('src/lessons', name))
 const registry = read('src/lessons/registry.ts')
 const availableLessons = (registry.match(/available:\s*true/g) ?? []).length
 

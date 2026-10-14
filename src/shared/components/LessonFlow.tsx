@@ -1,4 +1,4 @@
-import { useEffect, useLayoutEffect, useRef, useState, type ReactNode } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState, type ReactNode, type RefObject } from 'react'
 import { LessonStep } from './LessonStep'
 import { LessonOutline } from './LessonOutline'
 
@@ -19,8 +19,20 @@ export interface LessonStepDefinition {
   render: () => ReactNode
 }
 
+/**
+ * Optional, opt-in handle a lesson can use to send the student to one of its own
+ * steps from inside step content (e.g. a summary "back to the explanation" link).
+ * It performs exactly the same deliberate navigation as the pager and the outline.
+ */
+export interface LessonFlowController {
+  /** Navigates to the step with this id. Returns false (and does nothing) for an unknown id. */
+  goToStep: (stepId: string) => boolean
+}
+
 interface LessonFlowProps {
   steps: LessonStepDefinition[]
+  /** Optional ref that receives a LessonFlowController while the flow is mounted. */
+  controllerRef?: RefObject<LessonFlowController | null>
   /** Called whenever the active step changes, with a 0–100 completion percentage. */
   onProgressChange?: (value: number) => void
   /** Called once the student presses "إتمام الدرس" on the final step. */
@@ -47,6 +59,7 @@ interface LessonFlowProps {
  */
 export function LessonFlow({
   steps,
+  controllerRef,
   onProgressChange,
   onFinish,
   lessonTitle,
@@ -111,6 +124,22 @@ export function LessonFlow({
     setMobileDrawerOpen(false)
     setNavigationCount((count) => count + 1)
   }
+
+  // Opt-in controller: lessons that do not pass controllerRef are unaffected.
+  useEffect(() => {
+    if (!controllerRef) return
+    controllerRef.current = {
+      goToStep: (stepId) => {
+        const index = steps.findIndex((candidate) => candidate.id === stepId)
+        if (index < 0) return false
+        goTo(index)
+        return true
+      },
+    }
+    return () => {
+      controllerRef.current = null
+    }
+  })
 
   function handlePrevious() {
     goTo(currentIndex - 1)

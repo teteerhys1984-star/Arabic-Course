@@ -1,0 +1,418 @@
+/*
+ * الإملاء — الدرس الخامس فقط: الألف اللينة في آخر الكلمة.
+ * هوية الدرس: دفتر إملاء مسطّر، وثلاثة ألوان ثابتة للأشكال الثلاثة:
+ *   ا (قائمة) أزرق بحري · ى (مقصورة) توتي · ي (ياء حقيقية) زيتوني.
+ * كل الألوان النصية تتجاوز 4.5:1 على خلفياتها. لا تعديل على أي درس سابق.
+ */
+.spell5-lesson {
+  --s5-ink: #1d3340;
+  --s5-muted: #44565f;
+  --s5-line: #d0dbe1;
+  --s5-paper: #fffdf8;
+  --s5-rule: #dde8ee;
+  --s5-qaima: #14506b;
+  --s5-qaima-soft: #e6f1f6;
+  --s5-maqsura: #8e2f52;
+  --s5-maqsura-soft: #f9e9ef;
+  --s5-ya: #4d5a1e;
+  --s5-ya-soft: #f1f3e2;
+  --s5-amber: #8a5300;
+  --s5-amber-soft: #fdf4e3;
+  --s5-ok: #1f6a46;
+  --s5-ok-soft: #e7f4ec;
+  --s5-bad: #a03535;
+  --s5-bad-soft: #fbeceb;
+  line-height: 1.9;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.spell5-lesson .lesson-step__heading h2,
+.spell5-lesson .lesson-outline__lesson-title { color: var(--s5-ink); }
+.spell5-lesson .lesson-outline__progress-fill { background: var(--s5-qaima); }
+.spell5-lesson .button--secondary { background: var(--s5-qaima); color: #fff; }
+.spell5-lesson .button--secondary:hover:not(:disabled) { background: #0e3c51; }
+.spell5-lesson .button--ghost { margin-block-start: 0; color: var(--s5-ink); }
+.spell5-lesson :is(button, select, input, summary, a, [tabindex='0']):focus-visible {
+  outline: 3px solid #b06f00;
+  outline-offset: 3px;
+}
+.spell5-lesson h3 { color: var(--s5-ink); }
+.spell5-lesson h4 { margin-block: 1rem .4rem; color: var(--s5-ink); }
+
+.spell5-section-mark { display: inline-block; margin-block: 0 .6rem; padding: .25rem .8rem; border-inline-start: 4px solid var(--s5-amber); background: #fff4e0; color: var(--s5-ink); font-weight: 700; border-radius: 4px; }
+.spell5-eyebrow { color: var(--s5-amber); font-size: .9rem; font-weight: 700; margin-block: .3rem; }
+.spell5-muted { color: var(--s5-muted); }
+.spell5-sr {
+  position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden;
+  clip-path: inset(50%); white-space: nowrap;
+}
+
+/* الكلمة العربية وحدة معزولة الاتجاه؛ لا تُكسر داخل الكلمة، وتلتف بين الكلمات فقط. */
+.spell5-word {
+  unicode-bidi: isolate;
+  font-family: 'Noto Naskh Arabic', serif;
+  font-weight: 700;
+  font-size: 1.08em;
+  word-break: normal;
+  overflow-wrap: normal;
+  letter-spacing: normal;
+}
+.spell5-word--qaima { color: var(--s5-qaima); }
+.spell5-word--maqsura { color: var(--s5-maqsura); }
+.spell5-word--ya { color: var(--s5-ya); }
+
+/* الحرف المحوري: شارة ملوّنة لكل شكل */
+.spell5-glyph {
+  display: inline-flex; align-items: center; justify-content: center;
+  min-inline-size: 2.1rem; min-block-size: 2.1rem; padding-inline: .35rem;
+  border: 2px solid currentColor; border-radius: 10px;
+  font: 700 1.45rem/1 'Noto Naskh Arabic', serif;
+  vertical-align: middle;
+}
+.spell5-glyph--qaima { color: var(--s5-qaima); background: var(--s5-qaima-soft); }
+.spell5-glyph--maqsura { color: var(--s5-maqsura); background: var(--s5-maqsura-soft); }
+.spell5-glyph--ya { color: var(--s5-ya); background: var(--s5-ya-soft); border-style: dashed; }
+.spell5-glyph--large { min-inline-size: 3.6rem; min-block-size: 3.6rem; font-size: 2.6rem; border-radius: 16px; }
+
+/* البطل: صفحة دفتر مسطّرة */
+.spell5-hero {
+  padding: clamp(1.1rem, 3vw, 2rem);
+  border: 1px solid var(--s5-line);
+  border-inline-start: 6px double #d9a4b7;
+  border-radius: 6px 22px 22px 6px;
+  background:
+    repeating-linear-gradient(to bottom, transparent 0 2.35rem, var(--s5-rule) 2.35rem 2.42rem),
+    var(--s5-paper);
+}
+.spell5-hero h3 { font: 700 clamp(1.5rem, 3.4vw, 2.1rem)/1.8 'Noto Naskh Arabic', serif; margin-block: .2rem .4rem; }
+.spell5-hero__subtitle { display: flex; flex-wrap: wrap; align-items: center; gap: .6rem; font-weight: 700; color: var(--s5-ink); }
+.spell5-hero__cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .9rem; margin-block: 1rem; }
+
+.spell5-tile {
+  display: grid; gap: .55rem; justify-items: center; align-content: start; min-inline-size: 0;
+  padding: 1rem .6rem; border: 1px solid var(--s5-line); border-radius: 18px 18px 18px 4px;
+  background: #fff; transition: border-color .2s, background-color .2s;
+}
+.spell5-tile--qaima { border-color: var(--s5-qaima); background: var(--s5-qaima-soft); }
+.spell5-tile--maqsura { border-color: var(--s5-maqsura); background: var(--s5-maqsura-soft); }
+.spell5-tile__word {
+  display: flex; align-items: center; gap: .15rem; margin: 0; min-block-size: 3.8rem;
+  font: 700 clamp(2rem, 4vw, 2.6rem)/1.4 'Noto Naskh Arabic', serif; color: var(--s5-ink);
+}
+.spell5-tile__slot {
+  display: inline-grid; place-items: center; inline-size: 3rem; block-size: 3.4rem;
+  border: 2px dashed #8b9aa3; border-radius: 12px; color: var(--s5-muted); font-size: 1.6rem;
+}
+.spell5-tile__guess { display: flex; gap: .4rem; }
+.spell5-tile__guess button, .spell5-sorter__buttons button {
+  padding: .2rem; border: 2px solid transparent; border-radius: 12px; background: transparent; cursor: pointer;
+}
+.spell5-tile__guess button:hover, .spell5-sorter__buttons button:hover { border-color: var(--s5-line); }
+.spell5-tile__guess button[aria-pressed='true'], .spell5-sorter__buttons button[aria-pressed='true'] {
+  border-color: var(--s5-ink); background: #fff; box-shadow: 0 0 0 2px #fff inset;
+}
+.spell5-tile__meta { margin: 0; text-align: center; font-size: .9rem; color: var(--s5-ink); }
+
+/* لوحات وملاحظات */
+.spell5-panel {
+  margin-block: 1rem; padding: 1rem 1.2rem; min-inline-size: 0;
+  border: 1px solid var(--s5-line); border-radius: 16px; background: #fff;
+}
+.spell5-panel h3 { margin-block: 0 .5rem; font-size: 1.08rem; display: flex; flex-wrap: wrap; align-items: center; gap: .5rem; }
+.spell5-panel--focus { border-width: 2px; border-color: var(--s5-ink); background: var(--s5-paper); }
+.spell5-panel--qaima { border-block-start: 5px solid var(--s5-qaima); }
+.spell5-panel--maqsura { border-block-start: 5px solid var(--s5-maqsura); }
+.spell5-panel--warn { border-color: #e1c27d; background: var(--s5-amber-soft); }
+.spell5-split { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; align-items: start; }
+
+.spell5-note {
+  margin-block: 1.1rem; padding: .9rem 1.1rem;
+  border-inline-start: 4px solid #b9862f; border-radius: 4px 14px 14px 4px; background: #f8f3e7;
+}
+.spell5-note__label { display: block; color: var(--s5-amber); font-size: .9rem; }
+.spell5-note p { margin-block: .45rem 0; }
+
+.spell5-correction {
+  margin-block: 1.1rem; padding: 1rem 1.15rem;
+  border: 1px solid #e3b9c7; border-radius: 14px; background: #fff8fa;
+}
+.spell5-correction__label { margin: 0 0 .4rem; color: var(--s5-maqsura); }
+.spell5-correction blockquote {
+  margin: .3rem 0 .6rem; padding: .5rem .8rem; border-inline-start: 3px solid #c79aab;
+  background: #fff; border-radius: 4px 10px 10px 4px; color: var(--s5-ink);
+}
+.spell5-correction__tag { display: inline-block; padding: 0 .5rem; border-radius: 999px; background: var(--s5-maqsura-soft); color: var(--s5-maqsura); font-size: .9rem; font-weight: 700; }
+.spell5-correction p { margin-block: .35rem; }
+
+.spell5-definition {
+  margin-block: 1rem; padding: 1.1rem 1.3rem; border-radius: 16px;
+  border-inline-start: 5px solid var(--s5-ink); background: #eef3f5;
+  font: 700 clamp(1.08rem, 2.3vw, 1.3rem)/2.1 'Noto Naskh Arabic', serif; color: var(--s5-ink);
+}
+.spell5-definition p { margin: 0; }
+.spell5-notice { margin-block: 1rem; padding: .9rem 1.1rem; border: 1px dashed #b9862f; border-radius: 12px; background: var(--s5-amber-soft); color: #5a3b08; }
+.spell5-notice p { margin: 0; }
+.spell5-callout { padding: .7rem 1rem; border-radius: 12px; background: var(--s5-ink); color: #fff; font-weight: 700; }
+.spell5-question { font: 700 1.15rem/2 'Noto Naskh Arabic', serif; color: var(--s5-maqsura); }
+.spell5-sentence { font-size: 1.3rem; }
+.spell5-list { padding-inline-start: 1.5rem; margin-block: .6rem; }
+.spell5-list li { padding-block: .2rem; }
+.spell5-list li::marker { color: var(--s5-amber); }
+
+.spell5-wordlist { display: flex; flex-wrap: wrap; gap: .5rem; list-style: none; padding: 0; margin-block: .5rem; }
+.spell5-wordlist li { padding: .25rem .9rem; border: 1px solid var(--s5-line); border-radius: 999px; background: #fff; font-size: 1.15rem; }
+.spell5-wordlist--end li, .spell5-wordlist--maqsura li { border-color: #dcb1c1; background: var(--s5-maqsura-soft); }
+.spell5-wordlist--qaima li { border-color: #a9c9d8; background: var(--s5-qaima-soft); }
+
+.spell5-rule-pair { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-block: 1rem; }
+.spell5-rule { display: flex; align-items: center; gap: .7rem; margin: 0; padding: .8rem 1rem; border-radius: 14px; font-weight: 700; }
+.spell5-rule--qaima { background: var(--s5-qaima-soft); color: var(--s5-qaima); }
+.spell5-rule--maqsura { background: var(--s5-maqsura-soft); color: var(--s5-maqsura); }
+.spell5-rulebox { margin-block: 1rem; padding: 1rem 1.2rem; border: 2px solid var(--s5-ink); border-radius: 18px 4px 18px 4px; background: var(--s5-paper); }
+.spell5-rulebox h3 { margin-block: 0 .3rem; }
+.spell5-rulebox p { margin: 0; font-weight: 700; }
+
+.spell5-tools { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; list-style: none; padding: 0; }
+.spell5-tools li { display: grid; gap: .3rem; padding: .7rem .9rem; border: 1px solid var(--s5-line); border-radius: 12px; background: #fff; }
+.spell5-tools strong { color: var(--s5-ink); font-size: .92rem; }
+
+/* سلسلة الاستدلال */
+.spell5-chain { margin: .8rem 0; padding: .8rem; border-radius: 14px; background: #f4f7f8; }
+.spell5-chain__track { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; }
+.spell5-chain__node-wrap { display: inline-flex; align-items: center; gap: .35rem; }
+.spell5-chain__node { padding: .2rem .7rem; border: 1px solid var(--s5-line); border-radius: 10px; background: #fff; font: 700 1.1rem/1.8 'Noto Naskh Arabic', serif; }
+.spell5-chain__node--result { border-color: var(--s5-ink); background: var(--s5-ink); color: #fff; }
+.spell5-chain__arrow { color: var(--s5-amber); font-weight: 700; }
+.spell5-chain figcaption { margin-block-start: .4rem; color: var(--s5-muted); font-size: .9rem; }
+
+/* بطاقات الحروف للعدّ */
+.spell5-letters { display: inline-flex; flex-wrap: nowrap; align-items: center; gap: .2rem; white-space: nowrap; vertical-align: middle; }
+.spell5-letter {
+  display: inline-grid; place-items: center; min-inline-size: 1.9rem; block-size: 2.1rem;
+  border: 1px solid var(--s5-line); border-radius: 7px; background: #fff;
+  font: 700 1.15rem/1 'Noto Naskh Arabic', serif; color: var(--s5-ink);
+}
+.spell5-letter--before { border-style: dashed; border-color: #8b9aa3; }
+.spell5-letter--ya { border-style: solid; border-color: var(--s5-ya); background: var(--s5-ya-soft); color: var(--s5-ya); }
+.spell5-letter--qaima { border: 2px solid var(--s5-qaima); background: var(--s5-qaima-soft); color: var(--s5-qaima); }
+.spell5-letter--maqsura { border: 2px solid var(--s5-maqsura); background: var(--s5-maqsura-soft); color: var(--s5-maqsura); }
+.spell5-letters__count { margin-inline-start: .3rem; padding: 0 .45rem; border-radius: 999px; background: var(--s5-ink); color: #fff; font-size: .9rem; }
+.spell5-count-list { list-style: none; padding: 0; display: grid; gap: .7rem; }
+.spell5-count-list li { display: grid; gap: .3rem; padding-block-end: .6rem; border-block-end: 1px dotted var(--s5-line); }
+.spell5-count-list .spell5-word { font-size: 1.35rem; }
+
+/* بطاقات الأشكال الثلاثة */
+.spell5-glyph-trio { display: grid; grid-template-columns: 1.2fr 1.2fr .9fr; gap: .9rem; margin-block: 1rem; }
+.spell5-glyph-card { display: grid; gap: .4rem; justify-items: start; padding: 1.1rem; border-radius: 20px; border: 1px solid var(--s5-line); min-inline-size: 0; }
+.spell5-glyph-card h3 { margin: .2rem 0 0; }
+.spell5-glyph-card p { margin: 0; }
+.spell5-glyph-card--qaima { background: var(--s5-qaima-soft); border-color: #a9c9d8; }
+.spell5-glyph-card--maqsura { background: var(--s5-maqsura-soft); border-color: #dcb1c1; }
+.spell5-glyph-card--ya { background: var(--s5-ya-soft); border: 1px dashed #a7b072; }
+.spell5-compare { margin: .6rem 0 0; font: 700 1.3rem/2 'Noto Naskh Arabic', serif; }
+.spell5-anatomy { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-block: 1rem; }
+.spell5-anatomy__item { padding: .8rem 1rem; border-radius: 14px; border-block-start: 4px solid; background: #fff; border-inline: 1px solid var(--s5-line); border-block-end: 1px solid var(--s5-line); }
+.spell5-anatomy__item--qaima { border-block-start-color: var(--s5-qaima); }
+.spell5-anatomy__item--maqsura { border-block-start-color: var(--s5-maqsura); }
+.spell5-anatomy__item--ya { border-block-start-color: var(--s5-ya); }
+.spell5-anatomy dl { margin: 0; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: .2rem .6rem; }
+.spell5-anatomy dt { font-weight: 700; color: var(--s5-muted); }
+.spell5-anatomy dd { margin: 0; }
+
+/* الجداول */
+.spell5-table-scroll { overflow-x: auto; margin-block: 1rem; border-radius: 14px; border: 1px solid var(--s5-line); }
+.spell5-table { inline-size: 100%; border-collapse: collapse; background: #fff; }
+.spell5-table caption { padding: .6rem .9rem; text-align: start; color: var(--s5-muted); font-size: .9rem; caption-side: top; }
+.spell5-table th, .spell5-table td { padding: .6rem .85rem; border-block-end: 1px solid var(--s5-line); text-align: start; vertical-align: top; }
+.spell5-table thead th { background: var(--s5-ink); color: #fff; }
+.spell5-table tbody th { background: #f5f8f9; }
+.spell5-table--pair { margin-block: .6rem; border: 1px solid var(--s5-line); }
+.spell5-table--pair thead th { font-size: 1.25rem; text-align: center; }
+.spell5-table--pair td { text-align: center; }
+.spell5-cell--maqsura { color: var(--s5-maqsura); }
+.spell5-cell--ya { color: var(--s5-ya); }
+.spell5-cell--wrong { color: var(--s5-bad); }
+.spell5-cell--right { color: var(--s5-ok); }
+.spell5-row--added th, .spell5-row--added td { background: #fbfaf3; }
+.spell5-badge { display: inline-block; padding: .05rem .55rem; border-radius: 999px; font-size: .9rem; font-weight: 700; white-space: nowrap; }
+.spell5-badge--direct { background: var(--s5-ok-soft); color: var(--s5-ok); }
+.spell5-badge--indirect { background: var(--s5-amber-soft); color: var(--s5-amber); }
+.spell5-badge--dictionary { background: var(--s5-maqsura-soft); color: var(--s5-maqsura); border: 1px dashed currentColor; }
+
+/* أمثلة محلولة */
+.spell5-worked { padding: 1rem 1.15rem; border-radius: 18px; border: 1px solid var(--s5-line); background: #fff; min-inline-size: 0; }
+.spell5-worked--qaima { border-block-start: 5px solid var(--s5-qaima); }
+.spell5-worked--maqsura { border-block-start: 5px solid var(--s5-maqsura); }
+.spell5-worked h3 { margin-block-start: 0; }
+.spell5-reasoning { margin: .6rem 0; display: grid; gap: .3rem; }
+.spell5-reasoning > div { display: grid; grid-template-columns: 8.5rem minmax(0, 1fr); gap: .5rem; padding-block: .25rem; border-block-end: 1px dotted var(--s5-line); }
+.spell5-reasoning dt { font-weight: 700; color: var(--s5-muted); }
+.spell5-reasoning dd { margin: 0; }
+.spell5-details { margin-block: .8rem; }
+.spell5-details summary { cursor: pointer; font-weight: 700; color: var(--s5-qaima); padding-block: .3rem; }
+
+/* أنشطة */
+.spell5-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 19rem), 1fr)); gap: 1rem; margin-block: 1rem; }
+.spell5-card { display: grid; gap: .7rem; align-content: start; margin: 0; min-inline-size: 0; padding: 1rem 1.1rem; border: 1px solid var(--s5-line); border-radius: 16px; background: #fff; }
+.spell5-card legend { padding-inline: .4rem; font-weight: 700; color: var(--s5-ink); }
+.spell5-card--error { border-inline-start: 4px solid var(--s5-bad); }
+.spell5-card--explain { background: var(--s5-paper); }
+.spell5-card .button { justify-self: start; }
+.spell5-options { display: flex; flex-wrap: wrap; gap: .5rem; }
+.spell5-option {
+  display: inline-flex; align-items: center; gap: .45rem; min-block-size: 2.75rem;
+  padding: .35rem .85rem; border: 1.5px solid var(--s5-line); border-radius: 12px; background: #fff; cursor: pointer;
+  transition: border-color .15s, background-color .15s;
+}
+.spell5-option:hover { border-color: #8aa4b2; background: #f6f9fa; }
+.spell5-option:has(input:checked) { border-color: var(--s5-ink); background: #eaf0f3; box-shadow: 0 0 0 1px var(--s5-ink) inset; }
+.spell5-option:has(input:focus-visible) { outline: 3px solid #b06f00; outline-offset: 2px; }
+.spell5-option input { accent-color: var(--s5-ink); inline-size: 1.1rem; block-size: 1.1rem; }
+.spell5-options--glyphs .spell5-option { padding-inline: .6rem; }
+.spell5-step-label { margin: 0; font-weight: 700; color: var(--s5-amber); }
+.spell5-lesson fieldset { min-inline-size: 0; }
+.spell5-select-title { margin: .2rem 0 0; font-weight: 700; color: var(--s5-muted); }
+.spell5-number { display: inline-grid; place-items: center; inline-size: 1.8rem; block-size: 1.8rem; border-radius: 50%; background: var(--s5-ink); color: #fff; font-size: .9rem; }
+
+.spell5-feedback { padding: .8rem 1rem; border-radius: 12px; border: 1px solid; }
+.spell5-feedback p { margin-block: .35rem 0; }
+.spell5-feedback--correct { border-color: #9cc9b0; background: var(--s5-ok-soft); }
+.spell5-feedback--correct > strong { color: var(--s5-ok); }
+.spell5-feedback--wrong { border-color: #e2a9a9; background: var(--s5-bad-soft); }
+.spell5-feedback--wrong > strong { color: var(--s5-bad); }
+.spell5-option-reasons { list-style: none; padding: 0; margin: .5rem 0; display: grid; gap: .35rem; }
+.spell5-option-reasons li { padding: .35rem .6rem; border-radius: 8px; background: #fff; border-inline-start: 4px solid; }
+.spell5-option-reasons li.is-correct { border-color: var(--s5-ok); }
+.spell5-option-reasons li.is-wrong { border-color: var(--s5-bad); }
+.spell5-chosen { font-weight: 700; color: var(--s5-ink); }
+
+.spell5-chips { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .8rem; }
+.spell5-chips button {
+  min-block-size: 2.75rem; padding: .25rem 1rem; border: 1.5px solid var(--s5-line); border-radius: 999px;
+  background: #fff; color: var(--s5-ink); cursor: pointer; font: inherit;
+}
+.spell5-chips button:hover { border-color: #8aa4b2; }
+.spell5-chips button[aria-pressed='true'] { border-color: var(--s5-ink); background: var(--s5-ink); color: #fff; }
+.spell5-chip__done { font-weight: 700; }
+
+.spell5-staged__board { padding: 1rem; border-radius: 18px; background: #f4f7f8; }
+.spell5-staged__word { margin: 0 0 .6rem; font-size: 2rem; text-align: center; }
+.spell5-stages { list-style: none; padding: 0; margin: 0; display: grid; gap: .7rem; counter-reset: s5stage; }
+.spell5-stage { counter-increment: s5stage; padding: .7rem .9rem; border-radius: 14px; background: #fff; border: 1px solid var(--s5-line); }
+.spell5-stage fieldset { border: 0; margin: 0; padding: 0; display: grid; gap: .55rem; }
+.spell5-stage legend { font-weight: 700; padding: 0; }
+.spell5-stage legend::before { content: counter(s5stage, arabic-indic) '. '; color: var(--s5-amber); }
+.spell5-stage .button { justify-self: start; }
+.spell5-stage--done { border-color: #9cc9b0; background: var(--s5-ok-soft); }
+.spell5-stage__answer { margin: 0; }
+
+.spell5-result { margin-block: 1rem; padding: 1rem 1.2rem; border-radius: 16px; border: 2px solid var(--s5-ok); background: var(--s5-ok-soft); }
+.spell5-result h3 { margin-block: 0 .4rem; }
+.spell5-score { font-size: 1.6rem; font-weight: 700; color: var(--s5-ink); margin: .2rem 0; }
+.spell5-actions { display: flex; flex-wrap: wrap; gap: .6rem; margin-block: 1rem; }
+
+.spell5-sorter { list-style: none; padding: 0; display: grid; grid-template-columns: repeat(auto-fit, minmax(min(100%, 15rem), 1fr)); gap: .7rem; }
+.spell5-sorter li { display: grid; grid-template-columns: auto auto; justify-content: space-between; align-items: center; gap: .5rem; padding: .6rem .8rem; border: 1px solid var(--s5-line); border-radius: 14px; background: #fff; }
+.spell5-sorter li > .spell5-word { font-size: 1.5rem; }
+.spell5-sorter__buttons { display: flex; gap: .3rem; }
+.spell5-sorter__why { grid-column: 1 / -1; margin: 0; font-size: .92rem; }
+.spell5-sorter--correct { border-color: #9cc9b0 !important; background: var(--s5-ok-soft) !important; }
+.spell5-sorter--wrong { border-color: #e2a9a9 !important; background: var(--s5-bad-soft) !important; }
+
+/* خريطة القرار */
+.spell5-map { margin: 1rem 0; padding: 1rem; border-radius: 20px; background: #f4f7f8; }
+.spell5-map__root { margin: 0 auto 1rem; inline-size: fit-content; max-inline-size: 100%; padding: .5rem 1.2rem; border-radius: 999px; background: var(--s5-ink); color: #fff; font-weight: 700; text-align: center; }
+.spell5-map__branches { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .7rem; }
+.spell5-map__branch { position: relative; padding: .8rem; border-radius: 14px; background: #fff; border: 1px solid var(--s5-line); border-block-start: 4px solid var(--s5-qaima); }
+.spell5-map__branch--multi-noun, .spell5-map__branch--verb { border-block-start-color: var(--s5-maqsura); }
+.spell5-map__branch--particle { border-block-start-color: var(--s5-amber); }
+.spell5-map__branch h4 { margin: 0 0 .3rem; }
+.spell5-map__branch ul { margin: 0; padding-inline-start: 1.1rem; }
+.spell5-map__branch p { margin: 0; }
+
+.spell5-tree { margin-block: 1rem; padding: 1rem 1.1rem; border: 2px solid var(--s5-ink); border-radius: 20px; background: #fff; }
+.spell5-tree__path { list-style: none; padding: 0; margin: 0; display: grid; gap: 0; }
+.spell5-tree__node { position: relative; padding: .7rem 1rem; margin-inline-start: 1.2rem; border-inline-start: 3px solid var(--s5-line); }
+.spell5-tree__node::before { content: ''; position: absolute; inset-inline-start: -.6rem; inset-block-start: 1.05rem; inline-size: .9rem; block-size: .9rem; border-radius: 50%; background: #fff; border: 3px solid var(--s5-line); }
+.spell5-tree__node--done { border-inline-start-color: var(--s5-ok); }
+.spell5-tree__node--done::before { background: var(--s5-ok); border-color: var(--s5-ok); }
+.spell5-tree__node--active::before { border-color: var(--s5-ink); }
+.spell5-tree__q { margin: 0 0 .4rem; font-weight: 700; }
+.spell5-tree__a { margin: 0; }
+.spell5-tree__options { display: flex; flex-wrap: wrap; gap: .5rem; margin-block-end: .5rem; }
+
+/* الأخطاء */
+.spell5-error-analysis { margin: .4rem 0 0; display: grid; gap: .25rem; }
+.spell5-error-analysis > div { display: grid; grid-template-columns: 7.5rem minmax(0, 1fr); gap: .5rem; }
+.spell5-error-analysis dt { font-weight: 700; color: var(--s5-muted); }
+.spell5-error-analysis dd { margin: 0; }
+.spell5-advice { margin-block: 1rem; padding: 1rem 1.2rem; border-radius: 16px; background: var(--s5-ink); color: #fff; }
+.spell5-advice h3 { color: #fff; margin-block: 0 .3rem; }
+.spell5-advice p { margin: 0; }
+
+/* خريطة الحفظ */
+.spell5-memory { margin-block: 1rem; }
+.spell5-memory__core { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; gap: .8rem; margin: 0 auto 1rem; inline-size: fit-content; max-inline-size: 100%; padding: .7rem 1.4rem; border: 2px solid var(--s5-ink); border-radius: 999px; background: var(--s5-paper); font: 700 1.25rem/1.8 'Noto Naskh Arabic', serif; }
+.spell5-memory__glyphs { display: inline-flex; gap: .3rem; }
+.spell5-memory__branches { display: grid; grid-template-columns: repeat(6, minmax(0, 1fr)); gap: .8rem; }
+.spell5-memory__branch { grid-column: span 2; display: grid; gap: .4rem; align-content: start; padding: .9rem 1rem; border-radius: 16px; background: #fff; border: 1px solid var(--s5-line); border-block-start: 5px solid var(--s5-qaima); min-inline-size: 0; }
+.spell5-memory__branch:nth-child(4) { grid-column: 2 / span 2; }
+.spell5-memory__branch--multi-noun, .spell5-memory__branch--multi-verb { border-block-start-color: var(--s5-maqsura); }
+.spell5-memory__branch--particles { border-block-start-color: var(--s5-amber); }
+.spell5-memory__branch h3 { margin: 0; font-size: 1.05rem; }
+.spell5-memory__branch p { margin: 0; }
+.spell5-memory__more { padding-block-start: .4rem; border-block-start: 1px dashed var(--s5-line); }
+.spell5-expand { justify-self: start; min-block-size: 2.5rem; padding: .2rem .9rem; border: 1.5px solid var(--s5-qaima); border-radius: 999px; background: #fff; color: var(--s5-qaima); font: inherit; font-weight: 700; cursor: pointer; }
+.spell5-expand[aria-expanded='true'] { background: var(--s5-qaima); color: #fff; }
+.spell5-backlink { margin: .4rem 0 .2rem; font-size: .92rem; font-weight: 700; color: var(--s5-ink); }
+.spell5-backlinks ul { display: flex; flex-wrap: wrap; gap: .4rem; margin: 0; padding: 0; list-style: none; }
+.spell5-backlink__button { min-block-size: 2.5rem; padding: .25rem .8rem; border: 1.5px dashed var(--s5-amber); border-radius: 8px; background: var(--s5-paper, #fffdf8); color: var(--s5-ink); font: inherit; font-size: .92rem; text-align: start; cursor: pointer; }
+.spell5-backlink__button:hover { border-style: solid; background: var(--s5-amber-soft); }
+
+.spell5-homework { padding-inline-start: 1.6rem; display: grid; gap: .6rem; }
+.spell5-homework li p { margin: 0; }
+.spell5-homework li::marker { color: var(--s5-maqsura); font-weight: 700; }
+
+.spell5-submit { padding: 1rem 1.2rem; border-radius: 18px; border: 1px solid var(--s5-line); background: #fff; }
+.spell5-locked { padding: 1.2rem; border: 2px dashed var(--s5-line); border-radius: 18px; background: #f6f8f9; text-align: center; }
+
+.spell5-teacher-section { margin-block: .6rem; border: 1px solid var(--s5-line); border-radius: 14px; background: #fff; }
+.spell5-teacher-section > summary { cursor: pointer; padding: .8rem 1rem; font-weight: 700; color: var(--s5-ink); }
+.spell5-teacher-section > div { padding: 0 1rem 1rem; }
+
+@media (max-width: 900px) {
+  .spell5-hero__cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .spell5-glyph-trio, .spell5-anatomy, .spell5-tools { grid-template-columns: minmax(0, 1fr); }
+  .spell5-map__branches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .spell5-memory__branches { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .spell5-memory__branch, .spell5-memory__branch:nth-child(4) { grid-column: auto; }
+}
+@media (max-width: 700px) {
+  .spell5-split, .spell5-rule-pair { grid-template-columns: minmax(0, 1fr); }
+  .spell5-reasoning > div, .spell5-error-analysis > div { grid-template-columns: minmax(0, 1fr); gap: 0; }
+  .spell5-memory__branches, .spell5-map__branches { grid-template-columns: minmax(0, 1fr); }
+}
+@media (max-width: 480px) {
+  .spell5-hero__cards { gap: .6rem; }
+  .spell5-tile { padding: .8rem .4rem; }
+  .spell5-actions .button, .spell5-card .button, .spell5-stage .button { inline-size: 100%; justify-self: stretch; }
+  .spell5-table th, .spell5-table td { padding: .5rem .6rem; }
+  .spell5-memory__core { border-radius: 18px; }
+}
+/* الجداول رباعية الأعمدة: في الشاشات الضيقة يصير كل صف بطاقة مكدّسة، وكل خلية تحمل اسم عمودها،
+   بدل تمرير أفقي وخلايا تضيق إلى كلمة في السطر. رأس الجدول يبقى متاحًا لقارئات الشاشة. */
+@media (max-width: 560px) {
+  .spell5-table--stack, .spell5-table--stack tbody, .spell5-table--stack tr,
+  .spell5-table--stack tbody th, .spell5-table--stack td { display: block; inline-size: 100%; box-sizing: border-box; }
+  .spell5-table--stack thead { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .spell5-table--stack tr { border-block-end: 2px solid var(--s5-line); }
+  .spell5-table--stack tr:last-child { border-block-end: 0; }
+  .spell5-table--stack tbody th { border-block-end: 1px dashed var(--s5-line); font-size: 1.1rem; }
+  .spell5-table--stack td { border-block-end: 0; padding-block: .35rem; }
+  .spell5-table--stack td[data-label]::before { content: attr(data-label); display: block; margin-block-end: .15rem; color: var(--s5-muted); font-size: .9rem; font-weight: 700; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spell5-lesson *, .spell5-lesson *::before { transition: none !important; animation: none !important; }
+}

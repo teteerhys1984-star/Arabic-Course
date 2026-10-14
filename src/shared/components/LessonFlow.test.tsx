@@ -1,7 +1,8 @@
-import { render, screen } from '@testing-library/react'
+import { act, render, screen } from '@testing-library/react'
+import { createRef } from 'react'
 import userEvent from '@testing-library/user-event'
 import { describe, expect, it, vi } from 'vitest'
-import { LessonFlow, type LessonStepDefinition } from './LessonFlow'
+import { LessonFlow, type LessonFlowController, type LessonStepDefinition } from './LessonFlow'
 
 /**
  * LessonFlow owns one deliberate-navigation contract: when the student moves between
@@ -70,5 +71,43 @@ describe('LessonFlow — deliberate navigation moves focus deterministically', (
     } finally {
       raf.mockRestore()
     }
+  })
+})
+
+describe('LessonFlow — optional controllerRef (opt-in in-content navigation)', () => {
+  it('navigates to a step by id exactly like the outline, and ignores unknown ids', async () => {
+    const controllerRef = createRef<LessonFlowController | null>()
+    function JumpStep() {
+      return <button type="button" onClick={() => controllerRef.current?.goToStep('step-2')}>العودة إلى الخطوة الثانية</button>
+    }
+    const steps = makeSteps(3)
+    steps[2] = { ...steps[2], render: () => <JumpStep /> }
+    const user = userEvent.setup()
+    render(<LessonFlow steps={steps} controllerRef={controllerRef} />)
+
+    expect(controllerRef.current).not.toBeNull()
+    let result = true
+    act(() => { result = controllerRef.current!.goToStep('no-such-step') })
+    expect(result).toBe(false)
+    expect(headingOf(1)).toBeInTheDocument()
+
+    await user.click(screen.getByRole('button', { name: /الخطوة التجريبية 3/ }))
+    await user.click(screen.getByRole('button', { name: 'العودة إلى الخطوة الثانية' }))
+
+    expect(document.querySelectorAll('.lesson-step')).toHaveLength(1)
+    expect(headingOf(2)).toHaveFocus()
+    expect(screen.getByText('محتوى الخطوة 2')).toBeInTheDocument()
+  })
+
+  it('releases the controller on unmount, and lessons without controllerRef are unaffected', () => {
+    const controllerRef = createRef<LessonFlowController | null>()
+    const { unmount } = render(<LessonFlow steps={makeSteps(2)} controllerRef={controllerRef} />)
+    expect(controllerRef.current).not.toBeNull()
+    unmount()
+    expect(controllerRef.current).toBeNull()
+
+    render(<LessonFlow steps={makeSteps(2)} />)
+    expect(headingOf(1)).toBeInTheDocument()
+    expect(headingOf(1)).not.toHaveFocus()
   })
 })

@@ -258,6 +258,20 @@ export const lessonRegistry: LessonMeta[] = [
     parts: ['ألف', 'واو', 'نبرة', 'سطر', 'مد'],
   },
   {
+    id: 'spelling-lesson-05',
+    sectionId: 'spelling',
+    number: '٥',
+    eyebrow: 'الألف اللينة',
+    title: 'الألف اللينة في آخر الكلمة — الألف القائمة (ا) والألف المقصورة (ى)',
+    documentTitle: 'الدرس الخامس: الألف اللينة في آخر الكلمة',
+    summary:
+      'متى نكتب «ا» ومتى نكتب «ى»؟ أصل الألف في الثلاثي، والقاعدة العامة في غير الثلاثي واستثناؤها، ورسم الحروف المحفوظ، مع مختبرات وخريطة قرار واختبار مستقل (٢٠ سؤالًا) وحلول.',
+    duration: '٩٠',
+    strand: 'الإملاء',
+    available: true,
+    parts: ['ا', 'ى', 'ي', 'أصل', 'حفظ'],
+  },
+  {
     id: 'morphology-lesson-01',
     sectionId: 'morphology',
     number: '١',

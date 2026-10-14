@@ -336,8 +336,7 @@ export function LessonSpellingFour({
           <p>أربع صفحات، خمس أسئلة في كل صفحة. لا تُعرض الإجابة فورًا.</p>
           <TestRunner
             test={testDefinition}
-            onProgressChange={onProgressChange}
-            onFinish={onFinish}
+            engine={engine}
           />
         </div>
       ),

@@ -29,7 +29,7 @@ import {
 // eslint-disable-next-line react-refresh/only-export-components -- shared test schema is lesson data
 export const testDefinition: TestDefinition = lessonFourTest
 
-export default function LessonSpellingFour({
+export function LessonSpellingFour({
   onProgressChange,
   onFinish,
 }: {

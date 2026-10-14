@@ -271,8 +271,8 @@
 .spell5-option input { accent-color: var(--s5-ink); inline-size: 1.1rem; block-size: 1.1rem; }
 .spell5-options--glyphs .spell5-option { padding-inline: .6rem; }
 .spell5-step-label { margin: 0; font-weight: 700; color: var(--s5-amber); }
-.spell5-select { display: grid; gap: .3rem; }
-.spell5-select select { min-block-size: 2.75rem; padding: .3rem .6rem; border: 1.5px solid var(--s5-line); border-radius: 10px; background: #fff; font: inherit; color: var(--s5-ink); max-inline-size: 100%; }
+.spell5-lesson fieldset { min-inline-size: 0; }
+.spell5-select-title { margin: .2rem 0 0; font-weight: 700; color: var(--s5-muted); }
 .spell5-number { display: inline-grid; place-items: center; inline-size: 1.8rem; block-size: 1.8rem; border-radius: 50%; background: var(--s5-ink); color: #fff; font-size: .9rem; }
 
 .spell5-feedback { padding: .8rem 1rem; border-radius: 12px; border: 1px solid; }

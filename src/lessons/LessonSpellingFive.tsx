@@ -458,12 +458,8 @@ function NounSortLab() {
         return <fieldset key={item.id} className="spell5-card" data-testid={`spell5-practice-${item.id}`}>
           <legend><W>{item.word}</W></legend>
           <RadioOptions name={`spell5-sort-shape-${item.id}`} label={`${item.word} — شكل الألف`} options={[{ value: 'ا' }, { value: 'ى' }]} value={shape[item.id]} onPick={(v) => { setShape((c) => ({ ...c, [item.id]: v })); setChecked((c) => ({ ...c, [item.id]: false })) }} glyphs />
-          <label className="spell5-select"><span>السبب</span>
-            <select aria-label={`${item.word} — السبب`} value={reason[item.id] ?? ''} onChange={(e) => { setReason((c) => ({ ...c, [item.id]: e.target.value })); setChecked((c) => ({ ...c, [item.id]: false })) }}>
-              <option value="">اختر السبب…</option>
-              {C.nounReasonOptions.map((o) => <option key={o} value={o}>{o}</option>)}
-            </select>
-          </label>
+          <p className="spell5-select-title" aria-hidden="true">السبب</p>
+          <RadioOptions name={`spell5-sort-reason-${item.id}`} label={`${item.word} — السبب`} options={C.nounReasonOptions.map((value) => ({ value }))} value={reason[item.id]} onPick={(v) => { setReason((c) => ({ ...c, [item.id]: v })); setChecked((c) => ({ ...c, [item.id]: false })) }} />
           <button type="button" className="button button--secondary" disabled={!shape[item.id] || !reason[item.id]} onClick={() => setChecked((c) => ({ ...c, [item.id]: true }))}>تحقق من الإجابة</button>
           {checked[item.id] && <Feedback ok={ok}>
             <p>الكتابة الصحيحة: <W>{item.full}</W></p>

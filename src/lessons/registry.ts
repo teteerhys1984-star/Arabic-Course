@@ -286,6 +286,14 @@ export const lessonRegistry: LessonMeta[] = [
     parts: ['ألف', 'واو', 'نبرة', 'سطر', 'حالة خاصة'],
   },
   {
+    id: 'spelling-lesson-07', sectionId: 'spelling', number: '٧',
+    eyebrow: 'الحالات الخاصة والمتقدمة',
+    title: 'مهمّة المحقّق الإملائي: الهمزة المتوسطة في الحالات الخاصة والمتقدمة',
+    documentTitle: 'الدرس السابع: الهمزة المتوسطة في الحالات الخاصة والمتقدمة',
+    summary: 'تحليل الأدلة الإملائية بعد ألف المد والواو الساكنة والياء الساكنة، وتدريبات واختبار مستقل من ٢٠ سؤالًا.',
+    duration: '٩٠', strand: 'الإملاء', available: true, parts: ['ألف مد', 'واو ساكنة', 'ياء ساكنة', 'تحقيق إملائي'],
+  },
+  {
     id: 'morphology-lesson-01',
     sectionId: 'morphology',
     number: '١',

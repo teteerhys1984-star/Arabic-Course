@@ -1,3 +1,4 @@
+import { LessonSpellingNine } from '../lessons/LessonSpellingNine'
 import { CourseHome } from './CourseHome'
 import { SectionPage } from './SectionPage'
 import { navigate, useHashRoute } from './useHashRoute'
@@ -80,6 +81,8 @@ function LessonPage({ lesson }: { lesson: LessonMeta }) {
   const lessonContent =
     lesson.id === 'spelling-lesson-05' ? (
       <LessonSpellingFive onFinish={finishLesson} />
+    ) : lesson.id === 'spelling-lesson-09' ? (
+      <LessonSpellingNine onFinish={finishLesson} />
     ) : lesson.id === 'spelling-lesson-08' ? (
       <LessonSpellingEight onFinish={finishLesson} />
     ) : lesson.id === 'spelling-lesson-07' ? (

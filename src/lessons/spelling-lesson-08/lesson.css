@@ -1,0 +1,380 @@
+.spell8-lesson {
+  direction: rtl;
+  color: #1f2e27;
+}
+
+.spell8-stack {
+  display: grid;
+  gap: 1.25rem;
+  min-width: 0;
+}
+
+.spell8-hero-box {
+  padding: clamp(1rem, 3vw, 1.75rem);
+  border-radius: 1rem;
+  background: #f7f3ea;
+  border: 1px solid #d6ccb8;
+  border-inline-start: 0.35rem solid #7c4d2b;
+  color: #1f2e27;
+}
+
+.spell8-hero-box__eyebrow {
+  margin: 0 0 0.35rem;
+  font-size: 0.92rem;
+  font-weight: 700;
+  color: #6b4226;
+}
+
+.spell8-hero-box__title {
+  margin: 0 0 0.35rem;
+  font-size: clamp(1.25rem, 2.4vw, 1.65rem);
+  color: #18261f;
+}
+
+.spell8-hero-box__subtitle {
+  margin: 0 0 0.75rem;
+  font-size: 1.08rem;
+  font-weight: 700;
+  color: #5b3b1e;
+}
+
+.spell8-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 999px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  background: #ebe3d2;
+  color: #3a2a19;
+  border: 1px solid #cbbba0;
+}
+
+.spell8-badge--platform {
+  background: #e6f0ec;
+  color: #1b4332;
+  border-color: #9ec5b5;
+}
+
+.spell8-letter-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+  gap: 1rem;
+  min-width: 0;
+}
+
+.spell8-letter-card {
+  display: grid;
+  gap: 0.65rem;
+  padding: 1.15rem;
+  border-radius: 1rem;
+  background: #fffdf8;
+  border: 2px solid #cfc4ae;
+  color: #1f2e27;
+  min-width: 0;
+}
+
+.spell8-letter-card--marbuta {
+  border-inline-start: 0.4rem solid #1f5f4a;
+}
+
+.spell8-letter-card--maftuha {
+  border-inline-start: 0.4rem solid #7c4d2b;
+}
+
+.spell8-letter-card--ha {
+  border-inline-start: 0.4rem solid #355070;
+}
+
+.spell8-letter-card__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.spell8-letter-glyph {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 3.4rem;
+  min-height: 3.4rem;
+  padding: 0.25rem 0.65rem;
+  border-radius: 0.85rem;
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.2;
+  background: #f3ede0;
+  color: #18261f;
+  border: 2px solid #b5a689;
+}
+
+.spell8-letter-forms {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #4a3b28;
+  background: #f7f3ea;
+  padding: 0.25rem 0.6rem;
+  border-radius: 0.5rem;
+  border: 1px solid #d6ccb8;
+}
+
+.spell8-letter-word {
+  font-size: 1.35rem;
+  font-weight: 800;
+  color: #143628;
+  margin: 0;
+}
+
+.spell8-table-wrap {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.spell8-table {
+  width: 100%;
+  border-collapse: collapse;
+  background: #fffdf8;
+  border: 1px solid #cfc4ae;
+  border-radius: 0.85rem;
+  overflow: hidden;
+}
+
+.spell8-table caption {
+  text-align: start;
+  font-weight: 800;
+  padding: 0.65rem 0.85rem;
+  color: #1f2e27;
+  background: #f3ede0;
+  border-bottom: 1px solid #cfc4ae;
+}
+
+.spell8-table th,
+.spell8-table td {
+  padding: 0.75rem 0.85rem;
+  border: 1px solid #dcd3c0;
+  text-align: start;
+  vertical-align: top;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.spell8-table th {
+  background: #f5efe2;
+  color: #1f2e27;
+  font-weight: 800;
+}
+
+.spell8-note {
+  padding: 1rem 1.15rem;
+  border-radius: 0.85rem;
+  background: #f5efe2;
+  border: 1px solid #d6ccb8;
+  border-inline-start: 0.3rem solid #7c4d2b;
+  color: #1f2e27;
+}
+
+.spell8-note--important {
+  background: #eef6f3;
+  border-color: #b4d2c6;
+  border-inline-start-color: #1f5f4a;
+}
+
+.spell8-note--warning {
+  background: #fdf4eb;
+  border-color: #e6c6a8;
+  border-inline-start-color: #9e4718;
+}
+
+.spell8-card-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+  gap: 1rem;
+  min-width: 0;
+}
+
+.spell8-card {
+  padding: 1rem 1.15rem;
+  border-radius: 0.9rem;
+  background: #fffdf9;
+  border: 1px solid #d5cab5;
+  color: #1f2e27;
+  min-width: 0;
+}
+
+.spell8-card h4 {
+  margin-top: 0;
+  margin-bottom: 0.5rem;
+  color: #18261f;
+}
+
+.spell8-question-list {
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.spell8-question-card {
+  margin: 0;
+  padding: 1.1rem;
+  border-radius: 0.95rem;
+  background: #fffdf9;
+  border: 1px solid #cfc4ae;
+  color: #1f2e27;
+  min-width: 0;
+}
+
+.spell8-question-card legend {
+  font-weight: 800;
+  font-size: 1.05rem;
+  padding: 0 0.35rem;
+  color: #18261f;
+  line-height: 1.65;
+}
+
+.spell8-question-meta {
+  margin: 0.35rem 0 0.75rem;
+  font-size: 0.95rem;
+  color: #3f4e46;
+}
+
+.spell8-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  margin-block: 0.75rem;
+}
+
+.spell8-choice {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.55rem 0.95rem;
+  border-radius: 0.75rem;
+  border: 1px solid #b8ab93;
+  background: #f9f6ef;
+  color: #18261f;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.spell8-choice--selected {
+  background: #e6f0ec;
+  border-color: #1f5f4a;
+}
+
+.spell8-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.65rem;
+  align-items: center;
+  margin-top: 0.75rem;
+}
+
+.spell8-feedback {
+  margin-top: 0.85rem;
+  padding: 0.95rem 1.05rem;
+  border-radius: 0.8rem;
+  border: 1px solid #b8ab93;
+  line-height: 1.7;
+}
+
+.spell8-feedback--correct {
+  background: #ebf5f0;
+  border-color: #2d6a4f;
+  border-inline-start: 0.35rem solid #1b4332;
+  color: #153326;
+}
+
+.spell8-feedback--wrong {
+  background: #fdf2ee;
+  border-color: #b55338;
+  border-inline-start: 0.35rem solid #9b2226;
+  color: #3d1814;
+}
+
+.spell8-completed-word {
+  display: inline-block;
+  padding: 0.2rem 0.6rem;
+  border-radius: 0.5rem;
+  background: #fffdf8;
+  border: 1px solid #95b8a6;
+  font-weight: 800;
+  font-size: 1.08rem;
+  color: #143628;
+}
+
+.spell8-input,
+.spell8-textarea {
+  width: 100%;
+  box-sizing: border-box;
+  font: inherit;
+  padding: 0.65rem 0.8rem;
+  border-radius: 0.6rem;
+  border: 1px solid #8c8270;
+  background: #ffffff;
+  color: #18261f;
+}
+
+.spell8-lesson button:focus-visible,
+.spell8-lesson input:focus-visible,
+.spell8-lesson textarea:focus-visible,
+.spell8-lesson a:focus-visible {
+  outline: 3px solid #1f5f4a;
+  outline-offset: 2px;
+}
+
+@media (max-width: 640px) {
+  .spell8-table,
+  .spell8-table thead,
+  .spell8-table tbody,
+  .spell8-table tr,
+  .spell8-table td {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .spell8-table thead {
+    display: none;
+  }
+
+  .spell8-table tr {
+    margin-bottom: 0.75rem;
+    border-bottom: 2px solid #cfc4ae;
+  }
+
+  .spell8-table td[data-label]::before {
+    content: attr(data-label) " — ";
+    font-weight: 800;
+    color: #5b3b1e;
+  }
+
+  .spell8-options {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .spell8-actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}
+
+@media (max-width: 480px) {
+  .spell8-letter-grid,
+  .spell8-card-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .spell8-lesson *,
+  .spell8-lesson *::before,
+  .spell8-lesson *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}

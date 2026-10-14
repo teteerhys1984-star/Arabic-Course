@@ -29,6 +29,7 @@ import { LessonSpellingTwo } from '../lessons/LessonSpellingTwo'
 import { LessonSpellingThree } from '../lessons/LessonSpellingThree'
 import { LessonSpellingFour } from '../lessons/LessonSpellingFour'
 import { LessonSpellingFive } from '../lessons/LessonSpellingFive'
+import { LessonSpellingSix } from '../lessons/LessonSpellingSix'
 
 /**
  * Root of the course. A tiny hash router keeps the permanent Arabic-Course URL and
@@ -77,6 +78,8 @@ function LessonPage({ lesson }: { lesson: LessonMeta }) {
   const lessonContent =
     lesson.id === 'spelling-lesson-05' ? (
       <LessonSpellingFive onFinish={finishLesson} />
+    ) : lesson.id === 'spelling-lesson-06' ? (
+      <LessonSpellingSix onFinish={finishLesson} />
     ) : lesson.id === 'spelling-lesson-04' ? (
       <LessonSpellingFour onFinish={finishLesson} />
     ) : lesson.id === 'spelling-lesson-03' ? (

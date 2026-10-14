@@ -16,15 +16,18 @@ const questionNumbers = new Set([
 ])
 const corrections = ['ت-١', 'ت-٢', 'ت-٣', 'ت-٤', 'ت-٥', 'ت-٦', 'ت-٧', 'ت-٨', 'ت-٩']
 const registryEntry = registry.slice(registry.indexOf("id: 'spelling-lesson-05'"), registry.indexOf("id: 'spelling-lesson-05'") + 600)
+const registryIds = [...registry.matchAll(/id: '([^']+)'/g)].map((match) => match[1])
+const lessonFourIndex = registryIds.indexOf('spelling-lesson-04')
+const lessonFiveIndex = registryIds.indexOf('spelling-lesson-05')
 
 const checks = [
   [createHash('sha256').update(source).digest('hex') === SOURCE_SHA, 'verbatim source file unchanged (SHA-256)'],
   [
-    registry.indexOf("id: 'spelling-lesson-04'") > 0 &&
-      registry.indexOf("id: 'spelling-lesson-05'") > registry.indexOf("id: 'spelling-lesson-04'") &&
-      registryEntry.includes("sectionId: 'spelling'") &&
-      !registry.includes("id: 'spelling-lesson-06'"),
-    'registered in the spelling section after lesson 4, with no lesson 6',
+    lessonFourIndex >= 0 &&
+      registryIds[lessonFourIndex + 1] === 'spelling-lesson-05' &&
+      registryIds[lessonFiveIndex + 1] === 'spelling-lesson-06' &&
+      registryEntry.includes("sectionId: 'spelling'"),
+    'registered in the spelling section after lesson 4, followed immediately by lesson 6',
   ],
   [
     questionNumbers.size === 20 && [...questionNumbers].every((n) => n >= 1 && n <= 20),

@@ -272,6 +272,20 @@ export const lessonRegistry: LessonMeta[] = [
     parts: ['ا', 'ى', 'ي', 'أصل', 'حفظ'],
   },
   {
+    id: 'spelling-lesson-06',
+    sectionId: 'spelling',
+    number: '٦',
+    eyebrow: 'رحلة إلى كرسي الهمزة!',
+    title: 'الهمزة المتوسطة — رحلة إلى كرسي الهمزة!',
+    documentTitle: 'الدرس السادس: الهمزة المتوسطة',
+    summary:
+      'قاعدة أقوى الحركات بوصفها قاعدة عامة، والكراسي الثلاثة، والرسم المفرد على السطر وحالات الياء الساكنة، مع أمثلة مدققة وأنشطة محفوظة واختبار مستقل من ٢٠ سؤالًا وحلول.',
+    duration: '٩٠',
+    strand: 'الإملاء',
+    available: true,
+    parts: ['ألف', 'واو', 'نبرة', 'سطر', 'حالة خاصة'],
+  },
+  {
     id: 'morphology-lesson-01',
     sectionId: 'morphology',
     number: '١',

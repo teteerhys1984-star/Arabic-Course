@@ -1,0 +1,24 @@
+.spell7-lesson { line-height: 1.95; overflow-wrap: anywhere; }
+.spell7-opening { padding: clamp(1rem, 4vw, 2.5rem); border-inline-start: .35rem solid var(--accent, #725c39); background: #f5f1e8; color: #27352d; border-radius: 1rem; }
+.spell7-path { display: grid; gap: 1rem; padding-inline-start: 1.5rem; }
+.spell7-path li { padding: .7rem; border-bottom: 1px solid #d8d4c8; }
+.spell7-note { padding: 1rem; border-inline-start: .25rem solid #725c39; background: #f5f1e8; color: #27352d; margin-block: 1rem; }
+.spell7-wordfiles, .spell7-lab { display: grid; gap: 1.2rem; }
+.spell7-evidence { min-width: 0; border: 1px solid #bdb9a9; border-radius: 1rem; padding: 1rem; background: #fffefa; color: #27352d; }
+.spell7-word { font-size: 1.8rem; text-align: center; margin-block: .5rem; }
+.spell7-choice { display: flex; align-items: center; gap: .8rem; padding: .7rem; margin-block: .5rem; border: 1px solid #bdb9a9; border-radius: .5rem; cursor: pointer; }
+.spell7-choice:has(input:checked) { border: 2px solid #416955; background: #edf4ee; }
+.spell7-lesson :focus-visible { outline: 3px solid #416955; outline-offset: 3px; }
+.spell7-writing { display: grid; gap: .6rem; margin-block: 1.5rem; }
+.spell7-writing textarea { width: 100%; box-sizing: border-box; font: inherit; padding: .8rem; color: #27352d; background: white; border: 1px solid #777; border-radius: .5rem; }
+.spell7-table table { width: 100%; border-collapse: collapse; }
+.spell7-table th, .spell7-table td { text-align: start; border: 1px solid #bdb9a9; padding: .8rem; }
+.spell7-table caption { font-weight: bold; padding: 1rem; }
+@media (max-width: 480px) {
+ .spell7-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+ .spell7-table table, .spell7-table tbody, .spell7-table tr, .spell7-table td { display: block; }
+ .spell7-table tr { margin-block: 1rem; border: 1px solid #bdb9a9; border-radius: .5rem; }
+ .spell7-table td { border: 0; }
+ .spell7-table td:first-child { font-weight: bold; background: #f5f1e8; color: #27352d; }
+ .spell7-evidence { padding: .8rem; }
+}

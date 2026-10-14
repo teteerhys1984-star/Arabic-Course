@@ -1,4 +1,4 @@
-import { useRef, useState, type ReactNode } from 'react'
+import { createContext, useCallback, useContext, useMemo, useRef, useState, type Dispatch, type ReactNode, type SetStateAction } from 'react'
 import { LessonFlow, type LessonFlowController, type LessonStepDefinition } from '../shared/components/LessonFlow'
 import { TeacherSpace } from '../shared/teacher/TeacherSpace'
 import {
@@ -114,10 +114,44 @@ function ActivityTag({ text = 'نشاط تعليمي من المنصة · لا �
   return <p className="spell5-eyebrow">{text}</p>
 }
 
-/* ---------------- حالة الأنشطة ---------------- */
-function usePracticeState() {
-  const [answers, setAnswers] = useState<Record<string, string>>({})
-  const [checked, setChecked] = useState<Record<string, boolean>>({})
+/* ---------------- حالة الأنشطة ----------------
+ * LessonFlow يركّب الخطوة الحالية وحدها ويزيلها عند مغادرتها، فكل حالة تعيش داخل خطوة كانت تضيع
+ * عند التنقل. لذلك تُحفظ حالة الأنشطة في ذاكرة على مستوى الدرس (المكوّن الذي يبقى مركّبًا)، على
+ * نهج الدرس الرابع (activityAnswers): تبقى إجابات الطالب عند المغادرة والعودة، ولا تُمسح إلا بزر
+ * الإعادة الخاص بكل نشاط. ذاكرة محلية للدرس فقط؛ لا تمسّ المكوّنات المشتركة ولا الدروس الأخرى. */
+interface LessonMemoryApi {
+  values: Record<string, unknown>
+  update: (key: string, action: SetStateAction<unknown>, initial: unknown) => void
+}
+const LessonMemory = createContext<LessonMemoryApi | null>(null)
+function useLessonMemoryStore(): LessonMemoryApi {
+  const [values, setValues] = useState<Record<string, unknown>>({})
+  const update = useCallback((key: string, action: SetStateAction<unknown>, initial: unknown) => {
+    setValues((previous) => {
+      const current = key in previous ? previous[key] : initial
+      const next = typeof action === 'function' ? (action as (value: unknown) => unknown)(current) : action
+      return key in previous && Object.is(next, current) ? previous : { ...previous, [key]: next }
+    })
+  }, [])
+  return useMemo(() => ({ values, update }), [values, update])
+}
+/** مثل useState تمامًا، لكن القيمة محفوظة في ذاكرة الدرس تحت مفتاح ثابت فتبقى بعد مغادرة الخطوة. */
+function useKeptState<T>(key: string, initial: T): [T, Dispatch<SetStateAction<T>>] {
+  const memory = useContext(LessonMemory)
+  if (!memory) throw new Error('useKeptState must be used inside the spelling 5 lesson memory')
+  const { values, update } = memory
+  const [initialValue] = useState(initial) // ثابت منذ أول تركيب، مثل القيمة الأولى في useState
+  const value = (key in values ? values[key] : initialValue) as T
+  const setValue = useCallback(
+    (action: SetStateAction<T>) => update(key, action as SetStateAction<unknown>, initialValue),
+    [update, key, initialValue],
+  )
+  return [value, setValue]
+}
+function practiceApi(
+  answers: Record<string, string>, setAnswers: Dispatch<SetStateAction<Record<string, string>>>,
+  checked: Record<string, boolean>, setChecked: Dispatch<SetStateAction<Record<string, boolean>>>,
+) {
   return {
     answers, checked,
     pick(id: string, value: string) { setAnswers((c) => ({ ...c, [id]: value })); setChecked((c) => ({ ...c, [id]: false })) },
@@ -125,7 +159,17 @@ function usePracticeState() {
     reset() { setAnswers({}); setChecked({}) },
   }
 }
-type PracticeState = ReturnType<typeof usePracticeState>
+function usePracticeState() {
+  const [answers, setAnswers] = useState<Record<string, string>>({})
+  const [checked, setChecked] = useState<Record<string, boolean>>({})
+  return practiceApi(answers, setAnswers, checked, setChecked)
+}
+function useKeptPracticeState(key: string) {
+  const [answers, setAnswers] = useKeptState<Record<string, string>>(`${key}:answers`, {})
+  const [checked, setChecked] = useKeptState<Record<string, boolean>>(`${key}:checked`, {})
+  return practiceApi(answers, setAnswers, checked, setChecked)
+}
+type PracticeState = ReturnType<typeof practiceApi>
 
 function RadioOptions({ name, label, options, value, onPick, glyphs = false }: { name: string; label: string; options: readonly { value: string }[]; value: string | undefined; onPick: (value: string) => void; glyphs?: boolean }) {
   return <div className={`spell5-options${glyphs ? ' spell5-options--glyphs' : ''}`} role="radiogroup" aria-label={label}>
@@ -167,10 +211,10 @@ function ChoiceLab({ testId, items, state, intro }: { testId: string; items: rea
 
 /* مختبر متدرّج: كل مرحلة تظهر بعد إتقان السابقة. */
 function StagedLab({ testId, cases, intro }: { testId: string; cases: readonly C.StagedCase[]; intro: ReactNode }) {
-  const [caseId, setCaseId] = useState<string>(cases[0].id)
-  const [answers, setAnswers] = useState<Record<string, string>>({})
-  const [progress, setProgress] = useState<Record<string, number>>({})
-  const [feedback, setFeedback] = useState<{ key: string; ok: boolean } | null>(null)
+  const [caseId, setCaseId] = useKeptState<string>(`${testId}:case`, cases[0].id)
+  const [answers, setAnswers] = useKeptState<Record<string, string>>(`${testId}:answers`, {})
+  const [progress, setProgress] = useKeptState<Record<string, number>>(`${testId}:progress`, {})
+  const [feedback, setFeedback] = useKeptState<{ key: string; ok: boolean } | null>(`${testId}:feedback`, null)
   const active = cases.find((item) => item.id === caseId)!
   const done = progress[caseId] ?? 0
   const key = (index: number) => `${caseId}:${index}`
@@ -220,9 +264,9 @@ function StagedLab({ testId, cases, intro }: { testId: string; cases: readonly C
 
 /* ---------------- خطوات التمهيد ---------------- */
 function IntroStep() {
-  const [predictions, setPredictions] = useState<Record<string, 'ا' | 'ى'>>({})
-  const [revealed, setRevealed] = useState(false)
-  const predictionState = usePracticeState()
+  const [predictions, setPredictions] = useKeptState<Record<string, 'ا' | 'ى'>>('intro:predictions', {})
+  const [revealed, setRevealed] = useKeptState('intro:revealed', false)
+  const predictionState = useKeptPracticeState('intro:prediction')
   return <>
     <header className="spell5-hero">
       <p className="spell5-eyebrow">{S.header.eyebrow}</p>
@@ -399,14 +443,14 @@ function NounsTableStep() {
     <div className="spell5-notice"><p>{S.nouns.tableNote}</p></div>
     <h3>التحقق من كل صف وقوة دليله (توضيح من المنصة)</h3>
     <ScrollTable label="جدول التحقق من أمثلة الأسماء — قابل للتمرير">
-      <table className="spell5-table" data-testid="spell5-table-nouns-verified">
+      <table className="spell5-table spell5-table--stack" data-testid="spell5-table-nouns-verified">
         <thead><tr><th scope="col">الاسم</th><th scope="col">الحرف الذي ظهر</th><th scope="col">التعليل</th><th scope="col">قوة الدليل</th></tr></thead>
         <tbody>
           {S.nouns.tableRows.map((row) => {
             const reason = C.nounTableReasons[row.id]
-            return <tr key={row.id}><th scope="row"><W>{row.noun}</W></th><td><W>{reason.letter}</W></td><td>{reason.reason}</td><td><span className={`spell5-badge spell5-badge--${reason.evidence}`}>{C.evidenceLabels[reason.evidence]}</span></td></tr>
+            return <tr key={row.id}><th scope="row"><W>{row.noun}</W></th><td data-label="الحرف الذي ظهر"><W>{reason.letter}</W></td><td data-label="التعليل">{reason.reason}</td><td data-label="قوة الدليل"><span className={`spell5-badge spell5-badge--${reason.evidence}`}>{C.evidenceLabels[reason.evidence]}</span></td></tr>
           })}
-          {C.nounExtraRows.map((row) => <tr key={row.id} className="spell5-row--added"><th scope="row"><W>{row.noun}</W> <small>(إضافة)</small></th><td><W>{row.reveal}</W></td><td>{row.reason} الكتابة: <W>{row.spelling}</W></td><td><span className="spell5-badge spell5-badge--direct">{C.evidenceLabels.direct}</span></td></tr>)}
+          {C.nounExtraRows.map((row) => <tr key={row.id} className="spell5-row--added"><th scope="row"><W>{row.noun}</W> <small>(إضافة)</small></th><td data-label="الحرف الذي ظهر"><W>{row.reveal}</W></td><td data-label="التعليل">{row.reason} الكتابة: <W>{row.spelling}</W></td><td data-label="قوة الدليل"><span className="spell5-badge spell5-badge--direct">{C.evidenceLabels.direct}</span></td></tr>)}
         </tbody>
       </table>
     </ScrollTable>
@@ -446,9 +490,9 @@ function NounsMultiStep() {
   </>
 }
 function NounSortLab() {
-  const [shape, setShape] = useState<Record<string, string>>({})
-  const [reason, setReason] = useState<Record<string, string>>({})
-  const [checked, setChecked] = useState<Record<string, boolean>>({})
+  const [shape, setShape] = useKeptState<Record<string, string>>('noun-sort:shape', {})
+  const [reason, setReason] = useKeptState<Record<string, string>>('noun-sort:reason', {})
+  const [checked, setChecked] = useKeptState<Record<string, boolean>>('noun-sort:checked', {})
   function reset() { setShape({}); setReason({}); setChecked({}) }
   return <div data-testid="spell5-lab-noun-sort">
     <ActivityTag />
@@ -501,11 +545,11 @@ function VerbsTriStep() {
     <Clarification><p>{C.clarifications.verbTools}</p></Clarification>
     <h3>{S.verbs.tableHeading}</h3>
     <ScrollTable label="جدول الأفعال الثلاثية — قابل للتمرير">
-      <table className="spell5-table" data-testid="spell5-table-verbs">
+      <table className="spell5-table spell5-table--stack" data-testid="spell5-table-verbs">
         <thead><tr>{S.verbs.tableColumns.map((c) => <th scope="col" key={c}>{c}</th>)}<th scope="col">الدليل الموثوق (من المنصة)</th></tr></thead>
         <tbody>{S.verbs.tableRows.map((row) => {
           const ev = C.verbTableEvidence[row.id]
-          return <tr key={row.id}><th scope="row"><W>{row.past}</W></th><td><W>{row.present}</W></td><td>{row.shape}</td><td><span className={`spell5-badge spell5-badge--${ev.evidence}`}>{C.evidenceLabels[ev.evidence]}</span> <W>{ev.proof}</W><br /><small>{ev.reason}</small></td></tr>
+          return <tr key={row.id}><th scope="row"><W>{row.past}</W></th><td data-label={S.verbs.tableColumns[1]}><W>{row.present}</W></td><td data-label={S.verbs.tableColumns[2]}>{row.shape}</td><td data-label="الدليل الموثوق (من المنصة)"><span className={`spell5-badge spell5-badge--${ev.evidence}`}>{C.evidenceLabels[ev.evidence]}</span> <W>{ev.proof}</W><br /><small>{ev.reason}</small></td></tr>
         })}</tbody>
       </table>
     </ScrollTable>
@@ -529,9 +573,9 @@ function VerbsMultiStep() {
     <div className="spell5-notice"><p>{S.verbs.countNote}</p></div>
     <h3>عدّ الأحرف بالبطاقات (توضيح من المنصة)</h3>
     <ScrollTable label="جدول عدّ أحرف الأفعال غير الثلاثية — قابل للتمرير">
-      <table className="spell5-table" data-testid="spell5-table-verbs-count">
+      <table className="spell5-table spell5-table--stack" data-testid="spell5-table-verbs-count">
         <thead><tr><th scope="col">الفعل</th><th scope="col">الأحرف</th><th scope="col">الحرف قبل الألف</th><th scope="col">التعليل</th></tr></thead>
-        <tbody>{C.verbMultiRows.map((row) => <tr key={row.id}><th scope="row"><W tone={row.shape}>{row.word}</W></th><td><LetterBoxes letters={row.letters} label={row.word} /></td><td><W>{row.before}</W></td><td>{row.reason}</td></tr>)}</tbody>
+        <tbody>{C.verbMultiRows.map((row) => <tr key={row.id}><th scope="row"><W tone={row.shape}>{row.word}</W></th><td data-label="الأحرف"><LetterBoxes letters={row.letters} label={row.word} /></td><td data-label="الحرف قبل الألف"><W>{row.before}</W></td><td data-label="التعليل">{row.reason}</td></tr>)}</tbody>
       </table>
     </ScrollTable>
     <Clarification><p>{C.clarifications.rootVsCount}</p></Clarification>
@@ -566,7 +610,7 @@ function ParticlesStep() {
   </>
 }
 function ParticleLab({ state }: { state: PracticeState }) {
-  const [checked, setChecked] = useState(false)
+  const [checked, setChecked] = useKeptState('particles:checked', false)
   const answered = C.particleLab.filter((item) => state.answers[item.id]).length
   const correct = C.particleLab.filter((item) => state.answers[item.id] === item.shape).length
   return <div data-testid="spell5-lab-particles">
@@ -640,9 +684,9 @@ function exclusions(word: C.TreeWord): string[] {
   return lines
 }
 function DecisionStep() {
-  const [wordId, setWordId] = useState(C.treeWords[0].id)
-  const [progress, setProgress] = useState<Record<string, number>>({})
-  const [wrong, setWrong] = useState<{ key: string; value: string } | null>(null)
+  const [wordId, setWordId] = useKeptState<string>('tree:word', C.treeWords[0].id)
+  const [progress, setProgress] = useKeptState<Record<string, number>>('tree:progress', {})
+  const [wrong, setWrong] = useKeptState<{ key: string; value: string } | null>('tree:wrong', null)
   const word = C.treeWords.find((w) => w.id === wordId)!
   const path = treePath(word)
   const done = progress[wordId] ?? 0
@@ -739,9 +783,9 @@ function ErrorLab({ state }: { state: PracticeState }) {
 
 /* ---------------- بناء التفسير ---------------- */
 function ExplainLab() {
-  const [spell, setSpell] = useState<Record<string, string>>({})
-  const [reason, setReason] = useState<Record<string, string>>({})
-  const [checked, setChecked] = useState<Record<string, boolean>>({})
+  const [spell, setSpell] = useKeptState<Record<string, string>>('explain:spell', {})
+  const [reason, setReason] = useKeptState<Record<string, string>>('explain:reason', {})
+  const [checked, setChecked] = useKeptState<Record<string, boolean>>('explain:checked', {})
   function reset() { setSpell({}); setReason({}); setChecked({}) }
   return <div data-testid="spell5-lab-explain">
     <ActivityTag />
@@ -772,8 +816,8 @@ function ExplainLab() {
 
 /* ---------------- التدريب السباعي ---------------- */
 function PracticeStep() {
-  const [answers, setAnswers] = useState<Record<string, string>>({})
-  const [revealed, setRevealed] = useState(false)
+  const [answers, setAnswers] = useKeptState<Record<string, string>>('practice:answers', {})
+  const [revealed, setRevealed] = useKeptState('practice:revealed', false)
   const score = C.practiceQuestions.filter((item) => answers[item.id] === item.answer).length
   return <div data-testid="spell5-practice">
     <p>{S.practice.instruction}</p>
@@ -831,7 +875,7 @@ function OriginalFinalStep({ engine, revealed, onReveal, onReset }: { engine: Te
 
 /* ---------------- الخلاصة والواجب ---------------- */
 function SummaryStep({ onJump }: { onJump: (stepId: string) => void }) {
-  const [open, setOpen] = useState<Record<string, boolean>>({})
+  const [open, setOpen] = useKeptState<Record<string, boolean>>('summary:open', {})
   return <>
     <div className="spell5-memory" aria-label={S.summary.mapTitle}>
       <p className="spell5-memory__core"><span>{S.summary.mapTitle}</span><span className="spell5-memory__glyphs"><Glyph shape="ا" /> <Glyph shape="ى" /></span></p>
@@ -982,6 +1026,7 @@ function TeacherArea() {
 /* ---------------- المكوّن الرئيس ---------------- */
 export function LessonSpellingFive({ onProgressChange, onFinish }: Props) {
   const flowRef = useRef<LessonFlowController | null>(null)
+  const lessonMemory = useLessonMemoryStore()
   const testEngine = useTestEngine(testDefinition)
   const [testSubmitted, setTestSubmitted] = useState(false)
   const submitted = testSubmitted && testEngine.allPagesChecked
@@ -1062,10 +1107,10 @@ export function LessonSpellingFive({ onProgressChange, onFinish }: Props) {
     step('teacher', 'منطقة خاصة بالمعلم', G.teacher, '◆', <TeacherArea />),
   ]
 
-  return <div className="spell5-lesson">
+  return <LessonMemory.Provider value={lessonMemory}><div className="spell5-lesson">
     <LessonFlow steps={steps} controllerRef={flowRef} onProgressChange={onProgressChange} onFinish={onFinish}
       lessonTitle={C.lessonTitle} lessonNumber={C.lessonNumber} lessonEyebrow={C.lessonEyebrow} />
-  </div>
+  </div></LessonMemory.Provider>
 }
 
 function step(id: string, title: string, group: string, icon: string, content: ReactNode): LessonStepDefinition {

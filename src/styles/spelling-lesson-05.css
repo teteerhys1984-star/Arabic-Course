@@ -41,7 +41,7 @@
 .spell5-lesson h4 { margin-block: 1rem .4rem; color: var(--s5-ink); }
 
 .spell5-section-mark { display: inline-block; margin-block: 0 .6rem; padding: .25rem .8rem; border-inline-start: 4px solid var(--s5-amber); background: #fff4e0; color: var(--s5-ink); font-weight: 700; border-radius: 4px; }
-.spell5-eyebrow { color: var(--s5-amber); font-size: .85rem; font-weight: 700; margin-block: .3rem; }
+.spell5-eyebrow { color: var(--s5-amber); font-size: .9rem; font-weight: 700; margin-block: .3rem; }
 .spell5-muted { color: var(--s5-muted); }
 .spell5-sr {
   position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden;
@@ -130,7 +130,7 @@
   margin-block: 1.1rem; padding: .9rem 1.1rem;
   border-inline-start: 4px solid #b9862f; border-radius: 4px 14px 14px 4px; background: #f8f3e7;
 }
-.spell5-note__label { display: block; color: var(--s5-amber); font-size: .85rem; }
+.spell5-note__label { display: block; color: var(--s5-amber); font-size: .9rem; }
 .spell5-note p { margin-block: .45rem 0; }
 
 .spell5-correction {
@@ -142,7 +142,7 @@
   margin: .3rem 0 .6rem; padding: .5rem .8rem; border-inline-start: 3px solid #c79aab;
   background: #fff; border-radius: 4px 10px 10px 4px; color: var(--s5-ink);
 }
-.spell5-correction__tag { display: inline-block; padding: 0 .5rem; border-radius: 999px; background: var(--s5-maqsura-soft); color: var(--s5-maqsura); font-size: .8rem; font-weight: 700; }
+.spell5-correction__tag { display: inline-block; padding: 0 .5rem; border-radius: 999px; background: var(--s5-maqsura-soft); color: var(--s5-maqsura); font-size: .9rem; font-weight: 700; }
 .spell5-correction p { margin-block: .35rem; }
 
 .spell5-definition {
@@ -197,7 +197,7 @@
 .spell5-letter--ya { border-style: solid; border-color: var(--s5-ya); background: var(--s5-ya-soft); color: var(--s5-ya); }
 .spell5-letter--qaima { border: 2px solid var(--s5-qaima); background: var(--s5-qaima-soft); color: var(--s5-qaima); }
 .spell5-letter--maqsura { border: 2px solid var(--s5-maqsura); background: var(--s5-maqsura-soft); color: var(--s5-maqsura); }
-.spell5-letters__count { margin-inline-start: .3rem; padding: 0 .45rem; border-radius: 999px; background: var(--s5-ink); color: #fff; font-size: .8rem; }
+.spell5-letters__count { margin-inline-start: .3rem; padding: 0 .45rem; border-radius: 999px; background: var(--s5-ink); color: #fff; font-size: .9rem; }
 .spell5-count-list { list-style: none; padding: 0; display: grid; gap: .7rem; }
 .spell5-count-list li { display: grid; gap: .3rem; padding-block-end: .6rem; border-block-end: 1px dotted var(--s5-line); }
 .spell5-count-list .spell5-word { font-size: 1.35rem; }
@@ -235,7 +235,7 @@
 .spell5-cell--wrong { color: var(--s5-bad); }
 .spell5-cell--right { color: var(--s5-ok); }
 .spell5-row--added th, .spell5-row--added td { background: #fbfaf3; }
-.spell5-badge { display: inline-block; padding: .05rem .55rem; border-radius: 999px; font-size: .8rem; font-weight: 700; white-space: nowrap; }
+.spell5-badge { display: inline-block; padding: .05rem .55rem; border-radius: 999px; font-size: .9rem; font-weight: 700; white-space: nowrap; }
 .spell5-badge--direct { background: var(--s5-ok-soft); color: var(--s5-ok); }
 .spell5-badge--indirect { background: var(--s5-amber-soft); color: var(--s5-amber); }
 .spell5-badge--dictionary { background: var(--s5-maqsura-soft); color: var(--s5-maqsura); border: 1px dashed currentColor; }
@@ -400,6 +400,19 @@
   .spell5-table th, .spell5-table td { padding: .5rem .6rem; }
   .spell5-memory__core { border-radius: 18px; }
 }
+/* الجداول رباعية الأعمدة: في الشاشات الضيقة يصير كل صف بطاقة مكدّسة، وكل خلية تحمل اسم عمودها،
+   بدل تمرير أفقي وخلايا تضيق إلى كلمة في السطر. رأس الجدول يبقى متاحًا لقارئات الشاشة. */
+@media (max-width: 560px) {
+  .spell5-table--stack, .spell5-table--stack tbody, .spell5-table--stack tr,
+  .spell5-table--stack tbody th, .spell5-table--stack td { display: block; inline-size: 100%; box-sizing: border-box; }
+  .spell5-table--stack thead { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .spell5-table--stack tr { border-block-end: 2px solid var(--s5-line); }
+  .spell5-table--stack tr:last-child { border-block-end: 0; }
+  .spell5-table--stack tbody th { border-block-end: 1px dashed var(--s5-line); font-size: 1.1rem; }
+  .spell5-table--stack td { border-block-end: 0; padding-block: .35rem; }
+  .spell5-table--stack td[data-label]::before { content: attr(data-label); display: block; margin-block-end: .15rem; color: var(--s5-muted); font-size: .9rem; font-weight: 700; }
+}
+
 @media (prefers-reduced-motion: reduce) {
   .spell5-lesson *, .spell5-lesson *::before { transition: none !important; animation: none !important; }
 }

@@ -128,6 +128,15 @@ describe('spelling 5 — التسجيل والمسار وعرض المصدر', (
       expect(table.querySelectorAll('tbody tr')).toHaveLength(rows)
       expect(table.querySelectorAll('th[scope="row"]')).toHaveLength(rows)
       expect(table.closest('[role="region"]')).toHaveAttribute('tabindex', '0')
+      // الجداول رباعية الأعمدة تتكدّس في الشاشات الضيقة؛ كل خلية يجب أن تحمل اسم عمودها المطابق للرأس.
+      const stacked = ['spell5-table-nouns-verified', 'spell5-table-verbs', 'spell5-table-verbs-count'].includes(testId)
+      expect(table.classList.contains('spell5-table--stack')).toBe(stacked)
+      if (stacked) {
+        const headers = [...table.querySelectorAll('thead th')].map((th) => th.textContent)
+        for (const tr of table.querySelectorAll('tbody tr')) {
+          expect([...tr.querySelectorAll('td')].map((td) => td.getAttribute('data-label'))).toEqual(headers.slice(1))
+        }
+      }
     }
     await user.click(openStep(S.nouns.tableHeading))
     const verified = screen.getByTestId('spell5-table-nouns-verified')
@@ -317,6 +326,131 @@ describe('spelling 5 — الأنشطة بلوحة المفاتيح مع إعا�
     await user.click(within(card).getByRole('button', { name: 'تحقق من الإجابة' }))
     const status = within(card).getByRole('status')
     for (const label of ['الخطأ', 'الصواب', 'القاعدة', 'الدليل', 'لماذا البديل خطأ؟', 'كيف أتجنّبه؟']) expect(status).toHaveTextContent(label)
+  })
+})
+
+describe('spelling 5 — الإجابات تبقى عند مغادرة الخطوة والعودة إليها، والمسح بزر الإعادة فقط', () => {
+  const OTHER_STEP = 'ثانيًا: ما الألف اللينة؟'
+  async function leaveAndReturn(user: User, stepName: string) {
+    await user.click(openStep(OTHER_STEP))
+    expect(activeStep()).toHaveAttribute('id', 'spell5-layyina')
+    await user.click(openStep(stepName))
+  }
+
+  it('التمهيد: التوقّعات والكشف تبقى بعد العودة', async () => {
+    const user = userEvent.setup()
+    openLesson()
+    const tile = screen.getByTestId(`spell5-tile-${C.heroWords[0].id}`)
+    await user.click(within(tile).getAllByRole('button')[0])
+    await user.click(screen.getByRole('button', { name: 'اكشف الشكل الصحيح' }))
+    await leaveAndReturn(user, 'أولًا: تمهيد ومراجعة')
+    expect(screen.getByTestId('spell5-table-warmup')).toBeInTheDocument()
+    expect(within(screen.getByTestId(`spell5-tile-${C.heroWords[0].id}`)).getAllByRole('button')[0]).toHaveAttribute('aria-pressed', 'true')
+  })
+
+  it('مختبرا الأسماء والأفعال المتدرّجان: الحالة المختارة والمراحل المنجزة تبقى، و«إعادة المختبر» تمسح', async () => {
+    const user = userEvent.setup()
+    openLesson()
+    for (const [labId, title, cases, keys] of [
+      ['spell5-lab-noun-origin', 'مختبر أصل الألف في الأسماء', C.nounOriginLab, NOUN_ORIGIN_KEYS],
+      ['spell5-lab-verb', 'مختبر من الماضي إلى المضارع', C.verbPresentLab, VERB_KEYS],
+    ] as const) {
+      await user.click(openStep(title))
+      const word = cases[1]
+      await user.click(within(screen.getByTestId(labId)).getByRole('button', { name: new RegExp(word.word.replace('؟', '\\؟')) }))
+      const first = screen.getByTestId(`${labId}-stage-${word.id}-${word.stages[0].id}`)
+      await user.click(within(first).getByRole('radio', { name: new RegExp(`^${keys[word.id][0]}`) }))
+      await user.click(within(first).getByRole('button', { name: 'تحقق من هذه المرحلة' }))
+      const second = () => screen.getByTestId(`${labId}-stage-${word.id}-${word.stages[1].id}`)
+      expect(within(second()).getAllByRole('radio').length).toBeGreaterThan(0)
+
+      await leaveAndReturn(user, title)
+      const lab = screen.getByTestId(labId)
+      expect(within(lab).getByRole('button', { name: new RegExp(word.word.replace('؟', '\\؟')) })).toHaveAttribute('aria-pressed', 'true')
+      expect(screen.getByTestId(`${labId}-stage-${word.id}-${word.stages[0].id}`)).toHaveTextContent(`✓ ${keys[word.id][0]}`)
+      expect(within(second()).getAllByRole('radio').length).toBeGreaterThan(0)
+
+      await user.click(within(lab).getByRole('button', { name: 'إعادة المختبر' }))
+      expect(within(second()).queryAllByRole('radio')).toHaveLength(0)
+      expect(second()).toHaveTextContent('تظهر بعد إتمام المرحلة السابقة')
+    }
+  }, 30_000)
+
+  it('تصنيف الأسماء وبناء التفسير: الاختيار والتصحيح يبقيان', async () => {
+    const user = userEvent.setup()
+    openLesson()
+    await user.click(openStep('مختبر تصنيف الأسماء غير الثلاثية'))
+    let card = screen.getByTestId('spell5-practice-dawa')
+    await user.click(within(card).getByRole('radio', { name: /ألف مقصورة/ }))
+    await user.click(within(within(card).getByRole('radiogroup', { name: 'دعو؟ — السبب' })).getByRole('radio', { name: 'أكثر من ثلاثة أحرف ولم تسبق الألف ياء' }))
+    await user.click(within(card).getByRole('button', { name: 'تحقق من الإجابة' }))
+    await leaveAndReturn(user, 'مختبر تصنيف الأسماء غير الثلاثية')
+    card = screen.getByTestId('spell5-practice-dawa')
+    expect(within(card).getByRole('radio', { name: /ألف مقصورة/ })).toBeChecked()
+    expect(within(card).getByRole('status')).toHaveTextContent('إجابة صحيحة')
+
+    await user.click(openStep('مختبر بناء التفسير'))
+    card = screen.getByTestId('spell5-practice-irtada')
+    await user.click(within(card).getByRole('radio', { name: 'ارتضى' }))
+    await user.click(within(card).getByRole('radio', { name: 'لأن أصل الألف ياء' }))
+    await user.click(within(card).getByRole('button', { name: 'تحقق من الإجابة والسبب' }))
+    await leaveAndReturn(user, 'مختبر بناء التفسير')
+    card = screen.getByTestId('spell5-practice-irtada')
+    expect(within(card).getByRole('radio', { name: 'ارتضى' })).toBeChecked()
+    expect(within(card).getByRole('status')).toHaveTextContent('الكتابة صحيحة، والتعليل يحتاج إلى مراجعة')
+  })
+
+  it('فرز الحروف وخريطة القرار: النتيجة والمسار المنجز يبقيان', async () => {
+    const user = userEvent.setup()
+    openLesson()
+    await user.click(openStep('مختبر فرز الحروف والأسماء المبنية'))
+    for (const item of C.particleLab) {
+      const row = screen.getByTestId(`spell5-particle-${item.id}`)
+      await user.click(within(row).getByRole('button', { name: PARTICLE_KEYS[item.id] === 'ا' ? /ألف قائمة/ : /ألف مقصورة/ }))
+    }
+    await user.click(screen.getByRole('button', { name: 'تحقق من الفرز' }))
+    await leaveAndReturn(user, 'مختبر فرز الحروف والأسماء المبنية')
+    expect(screen.getByTestId('spell5-particles-score')).toHaveTextContent('١١ من ١١')
+
+    await user.click(openStep(S.map.heading))
+    const word = C.treeWords.find((w) => w.type === 'حرف')!
+    let tree = screen.getByTestId('spell5-lab-tree')
+    const picker = () => within(within(screen.getByTestId('spell5-lab-tree')).getByRole('group', { name: 'اختر كلمة لتمريرها في الخريطة' })).getByRole('button', { name: new RegExp(`^${word.word}`) })
+    await user.click(picker())
+    for (const answer of [word.type, word.result]) {
+      const group = within(tree).getAllByRole('group').at(-1)!
+      await user.click(within(group).getByRole('button', { name: answer === 'ا' ? /ألف قائمة/ : answer === 'ى' ? /ألف مقصورة/ : new RegExp(`^${answer}$`) }))
+    }
+    expect(screen.getByTestId('spell5-tree-result')).toBeInTheDocument()
+    await leaveAndReturn(user, S.map.heading)
+    tree = screen.getByTestId('spell5-lab-tree')
+    expect(picker()).toHaveAttribute('aria-pressed', 'true')
+    expect(screen.getByTestId('spell5-tree-result')).toBeInTheDocument()
+    await user.click(within(tree).getByRole('button', { name: 'إعادة الخريطة' }))
+    expect(screen.queryByTestId('spell5-tree-result')).not.toBeInTheDocument()
+  })
+
+  it('تدريب المادة: الإجابات والتصحيح يبقيان بعد العودة', async () => {
+    const user = userEvent.setup()
+    openLesson()
+    await user.click(openStep(S.practice.heading))
+    const item = C.practiceQuestions[0]
+    await user.click(within(screen.getByTestId(`spell5-practice-${item.id}`)).getByRole('radio', { name: PRACTICE_KEYS[item.id] }))
+    await leaveAndReturn(user, S.practice.heading)
+    expect(within(screen.getByTestId(`spell5-practice-${item.id}`)).getByRole('radio', { name: PRACTICE_KEYS[item.id] })).toBeChecked()
+  })
+
+  it('خريطة الحفظ: الفرع الموسّع يبقى مفتوحًا بعد «العودة إلى الشرح» ثم الرجوع إلى الملخص', async () => {
+    const user = userEvent.setup()
+    openLesson()
+    await user.click(openStep('ملخص'))
+    let card = screen.getByTestId('spell5-summary-tri-verb')
+    await user.click(within(card).getByRole('button', { name: 'الشرح الموسّع' }))
+    await user.click(within(card).getByTestId('spell5-backlink-verbs-tri'))
+    expect(activeStep()).toHaveAttribute('id', 'spell5-verbs-tri')
+    await user.click(openStep('ملخص'))
+    card = screen.getByTestId('spell5-summary-tri-verb')
+    expect(within(card).getByRole('button', { name: 'الشرح الموسّع' })).toHaveAttribute('aria-expanded', 'true')
   })
 })
 

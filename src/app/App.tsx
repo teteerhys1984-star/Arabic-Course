@@ -1,3 +1,4 @@
+import { LessonSpellingTen } from '../lessons/LessonSpellingTen'
 import { LessonSpellingNine } from '../lessons/LessonSpellingNine'
 import { CourseHome } from './CourseHome'
 import { SectionPage } from './SectionPage'
@@ -79,7 +80,9 @@ function LessonPage({ lesson }: { lesson: LessonMeta }) {
   const finishLesson = () => navigate({ name: 'section', sectionId: lesson.sectionId })
 
   const lessonContent =
-    lesson.id === 'spelling-lesson-05' ? (
+    lesson.id === 'spelling-lesson-10' ? (
+      <LessonSpellingTen onFinish={finishLesson} />
+    ) : lesson.id === 'spelling-lesson-05' ? (
       <LessonSpellingFive onFinish={finishLesson} />
     ) : lesson.id === 'spelling-lesson-09' ? (
       <LessonSpellingNine onFinish={finishLesson} />

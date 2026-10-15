@@ -27,7 +27,7 @@ describe('spelling lesson 6 — content, source coverage, and assessment bluepri
     const spellings = getSectionLessons('spelling')
     expect(spellings.map((lesson) => lesson.id)).toEqual([
       'spelling-lesson-01', 'spelling-lesson-02', 'spelling-lesson-03',
-      'spelling-lesson-04', 'spelling-lesson-05', 'spelling-lesson-06', 'spelling-lesson-07', 'spelling-lesson-08', 'spelling-lesson-09',
+      'spelling-lesson-04', 'spelling-lesson-05', 'spelling-lesson-06', 'spelling-lesson-07', 'spelling-lesson-08', 'spelling-lesson-09', 'spelling-lesson-10',
     ])
     const five = lessonRegistry.findIndex((lesson) => lesson.id === 'spelling-lesson-05')
     expect(lessonRegistry[five + 1]).toMatchObject({

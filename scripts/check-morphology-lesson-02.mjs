@@ -8,11 +8,11 @@
  *
  * هذا التدقيق لا يُضعف أي ضمان من ضمانات الدرس الأول؛ فالأدلة الخاصة بالدرس
  * الأول (check-morphology-lesson-01 وcheck-morphology-source) هي المرجع، وقد
- * ضُيّقت تدريجيًا مع بناء الدروس التالية لتصبح قسم الصرف عشرة دروس (١–١٠) مع
- * استبعاد الدرس الحادي عشر (موثّق في docs/morphology-lesson-02-audit.md و
+ * ضُيّقت تدريجيًا مع بناء الدروس التالية لتصبح قسم الصرف أحد عشر درسًا (١–١١) مع
+ * استبعاد الدرس الثاني عشر (موثّق في docs/morphology-lesson-02-audit.md و
  * docs/morphology-lesson-05-audit.md وdocs/morphology-lesson-06-audit.md و
  * docs/morphology-lesson-07-audit.md وdocs/morphology-lesson-08-audit.md و
- * docs/morphology-lesson-10-audit.md).
+ * docs/morphology-lesson-10-audit.md وdocs/morphology-lesson-11-source-audit.md).
  */
 import { readFileSync, existsSync } from 'node:fs'
 
@@ -55,14 +55,14 @@ const count = (text, needle) => text.split(needle).length - 1
 if (count(registry, "id: 'morphology-lesson-02'") !== 1) {
   failures.push('morphology-lesson-02 must be registered exactly once.')
 }
-// النطاق الحالي: الصرف ١–١٠ فقط (docs/morphology-lesson-10-audit.md).
+// النطاق الحالي: الصرف ١–١١ فقط (docs/morphology-lesson-11-source-audit.md).
 failures.push(...morphologyScopeIssues(registry, app))
-if (count(registry, "sectionId: 'morphology'") !== 10) {
-  failures.push('Section «morphology» must contain exactly ten lessons (١–١٠).')
+if (count(registry, "sectionId: 'morphology'") !== 11) {
+  failures.push('Section «morphology» must contain exactly eleven lessons (١–١١).')
 }
-// شرط مستقل عن شرط العدّ أعلاه: الدرس الحادي عشر غير مسجَّل ولا مبنيّ.
+// شرط مستقل عن شرط العدّ أعلاه: ملفات الدرس الثاني لا تشير إلى الدرس الحادي عشر فما بعده.
 if (/morphology-lesson-11|morphology-lesson-[2-9]\d/.test(lesson + content)) {
-  failures.push('No eleventh morphology lesson may be registered or built yet.')
+  failures.push('Lesson 2 files must not reference morphology lesson 11 or later.')
 }
 
 const start = registry.indexOf("id: 'morphology-lesson-02'")
@@ -706,7 +706,7 @@ if (failures.length) {
   process.exit(1)
 }
 console.log(
-  `Morphology lesson 2 check passed: registered in الصرف as lesson ٢ (ten lessons ١–١٠, no eleventh), ` +
+  `Morphology lesson 2 check passed: registered in الصرف as lesson ٢ (eleven lessons ١–١١, no twelfth), ` +
     `34 flow steps (30 explicit + 4 test pages), eight source objectives, twelve source sections, ` +
     `five trainings (15/10/5/6/8) with complete keys, a 26-question / 30-mark test in four pages ` +
     `(26 automatic + 4 manual, first five of eight counted), the four approved corrections applied and ` +

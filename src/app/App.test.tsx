@@ -2185,6 +2185,7 @@ describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف
       '#/lesson/morphology-lesson-08',
       '#/lesson/morphology-lesson-09',
       '#/lesson/morphology-lesson-10',
+      '#/lesson/morphology-lesson-11',
     ])
     expect(screen.getByRole('link', { name: 'مدخل إلى علم الصرف' })).toHaveAttribute(
       'href',
@@ -2221,6 +2222,10 @@ describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف
     expect(screen.getByRole('link', { name: 'أنواع المصادر وأوزانها' })).toHaveAttribute(
       'href',
       '#/lesson/morphology-lesson-10',
+    )
+    expect(screen.getByRole('link', { name: 'اسم الفاعل: كيف نعرف مَن قام بالفعل؟' })).toHaveAttribute(
+      'href',
+      '#/lesson/morphology-lesson-11',
     )
     expect(screen.queryByRole('heading', { name: 'لا توجد دروس مضافة إلى هذا القسم بعد.' })).not.toBeInTheDocument()
   })

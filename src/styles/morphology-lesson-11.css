@@ -1,0 +1,291 @@
+/* الدرس الحادي عشر من قسم الصرف فقط: اسم الفاعل. لا تعديل على دروس سابقة.
+   ترميز لوني ثابت: الفعل أزرق، اسم الفاعل أخضر مزرقّ، المصدر كهرماني، اسم المفعول برقوقي. */
+.morph11-lesson {
+  --morph11-ink: #1f4a4a;
+  --morph11-soft: #e6f2f0;
+  --morph11-verb: #24425e;
+  --morph11-verb-soft: #e9eff6;
+  --morph11-doer: #0f5c55;
+  --morph11-doer-soft: #dff1ed;
+  --morph11-masdar: #6b3f10;
+  --morph11-masdar-soft: #f8eeda;
+  --morph11-object: #5a2a5f;
+  --morph11-object-soft: #f3e8f4;
+  --morph11-weight: #4a2a6b;
+  --morph11-weight-soft: #efe9f8;
+  --morph11-accent: #8a5a1c;
+  --morph11-line: #c2d8d3;
+  --morph11-muted: #43575a;
+  line-height: 1.95;
+  word-break: normal;
+  overflow-wrap: normal;
+}
+
+.morph11-lesson .lesson-step__heading h2,
+.morph11-lesson .lesson-outline__lesson-title { color: var(--morph11-ink); }
+.morph11-lesson .lesson-outline__progress-fill { background: var(--morph11-ink); }
+.morph11-lesson .lesson-flow__stage { animation-duration: 150ms; }
+.morph11-lesson .button--secondary { background: var(--morph11-ink); }
+.morph11-lesson .button--ghost { margin-block-start: 0; color: var(--morph11-ink); }
+.morph11-lesson :is(button, select, input, textarea, summary, a, [tabindex='0']):focus-visible {
+  outline: 3px solid var(--morph11-accent);
+  outline-offset: 4px;
+}
+.morph11-lesson h4 { margin-block: 1rem .4rem; }
+.morph11-eyebrow { color: var(--morph11-accent); font-size: .82rem; font-weight: 700; margin-block: 1.1rem .3rem; }
+.morph11-muted { color: var(--morph11-muted); font-size: .88rem; }
+.morph11-sr { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+
+/* ---------- البطل ---------- */
+.morph11-hero {
+  padding: clamp(1.1rem, 3vw, 2rem);
+  border: 1px solid var(--morph11-line);
+  border-block-start: 4px solid var(--morph11-doer);
+  border-radius: 24px 24px 8px 24px;
+  background: linear-gradient(135deg, #eef7f4, #fffdf7);
+}
+.morph11-badge { display: inline-block; margin: 0; padding: .2rem .8rem; border-radius: 999px; background: var(--morph11-doer-soft); color: var(--morph11-doer); font-weight: 700; font-size: .88rem; }
+.morph11-hero h3 { margin-block: .6rem .2rem; color: var(--morph11-ink); font: 700 clamp(1.5rem, 3.4vw, 2.2rem)/1.9 'Noto Naskh Arabic', serif; }
+.morph11-hero h4 { margin-block: 1rem .2rem; color: var(--morph11-ink); }
+.morph11-hero__trio { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .7rem; margin-block-start: 1.2rem; }
+.morph11-hero__trio article { display: grid; place-items: center; gap: .3rem; min-inline-size: 0; padding: .9rem .4rem; border: 1px solid var(--morph11-line); border-radius: 14px; background: #fffefa; text-align: center; }
+.morph11-hero__trio small { color: var(--morph11-muted); }
+.morph11-hero__trio .morph11-word { font-size: clamp(1.3rem, 3vw, 1.9rem); }
+.morph11-hero__focus { border: 2px solid var(--morph11-doer) !important; box-shadow: 0 6px 18px rgb(15 92 85 / 12%); }
+
+/* ---------- صناديق مشتركة ---------- */
+.morph11-clarification {
+  margin-block: 1.2rem;
+  padding: .9rem 1.1rem;
+  border-inline-start: 3px solid #b08a4c;
+  border-radius: 4px 14px 14px 4px;
+  background: #f7f3e8;
+}
+.morph11-clarification > strong { color: var(--morph11-accent); font-size: .82rem; }
+.morph11-clarification p { margin-block: .4rem 0; }
+.morph11-definition { margin-block: 1rem; padding: 1rem 1.25rem; border: 1px solid var(--morph11-line); border-inline-start: 4px solid var(--morph11-doer); border-radius: 16px; background: var(--morph11-soft); color: var(--morph11-ink); font-weight: 600; }
+.morph11-definition p { margin: 0; }
+.morph11-notice { margin-block: 1rem; padding: .9rem 1.1rem; border: 1px dashed #b08a4c; border-radius: 12px; background: #fdf8ec; color: #5a3f15; }
+.morph11-notice p { margin: 0; }
+.morph11-rule { margin-block: 1.2rem; padding: 1rem 1.2rem; border-radius: 14px; background: var(--morph11-doer); color: #fff; font-weight: 600; }
+.morph11-rule p { margin: 0; }
+.morph11-list { padding-inline-start: 1.5rem; margin-block: .7rem; }
+.morph11-list li { padding-block: .25rem; }
+.morph11-list li::marker { color: var(--morph11-accent); }
+.morph11-objectives { display: grid; gap: .55rem; padding: 0; margin-block: 1rem; list-style: none; counter-reset: objective; }
+.morph11-objectives li { counter-increment: objective; display: flex; gap: .7rem; align-items: baseline; padding: .7rem 1rem; border: 1px solid var(--morph11-line); border-radius: 12px; background: var(--paper); }
+.morph11-objectives li::before { content: counter(objective, arabic-indic); flex: none; display: inline-grid; place-items: center; inline-size: 1.9rem; block-size: 1.9rem; border-radius: 50%; background: var(--morph11-doer-soft); color: var(--morph11-doer); font-weight: 700; }
+
+/* ---------- الكلمات: لا تُقطع الكلمة ولا تُقصّ حركاتها ---------- */
+.morph11-word, .morph11-pair, .morph11-sentence bdi {
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  letter-spacing: normal;
+  unicode-bidi: isolate;
+}
+.morph11-word {
+  display: inline-block;
+  padding-inline: .3rem;
+  border-radius: 6px;
+  font: 700 1.3rem/2.3 'Noto Naskh Arabic', 'Times New Roman', serif;
+}
+.morph11-word--verb { color: var(--morph11-verb); background: var(--morph11-verb-soft); }
+.morph11-word--doer { color: var(--morph11-doer); background: var(--morph11-doer-soft); }
+.morph11-word--masdar { color: var(--morph11-masdar); background: var(--morph11-masdar-soft); }
+.morph11-word--object { color: var(--morph11-object); background: var(--morph11-object-soft); }
+.morph11-word--weight { color: var(--morph11-weight); background: var(--morph11-weight-soft); }
+.morph11-pair { display: inline; }
+.morph11-arrow { color: var(--morph11-muted); unicode-bidi: isolate; }
+.morph11-sentence { margin-block: .45rem; font: 600 1.15rem/2.3 'Noto Naskh Arabic', serif; color: var(--morph11-ink); }
+.morph11-sentence bdi { white-space: normal; }
+
+/* ---------- التمهيد ---------- */
+.morph11-sentences { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-block: 1rem; }
+.morph11-sentence-card { min-inline-size: 0; padding: .9rem 1rem; border: 1px solid var(--morph11-line); border-radius: 14px; background: var(--paper); }
+.morph11-sentence-card h3 { margin: 0; font-size: .9rem; color: var(--morph11-muted); }
+.morph11-sentence-card p:last-child { margin: 0; font-size: .92rem; }
+.morph11-sentence-card--verb { border-block-start: 4px solid var(--morph11-verb); }
+.morph11-sentence-card--doer { border-block-start: 4px solid var(--morph11-doer); }
+.morph11-sentence-card--masdar { border-block-start: 4px solid var(--morph11-masdar); }
+
+/* ---------- الجداول ---------- */
+.morph11-table-scroll { max-inline-size: 100%; overflow-x: auto; margin-block: 1rem; border: 1px solid var(--morph11-line); border-radius: 14px; background: var(--paper); }
+.morph11-table { inline-size: 100%; border-collapse: collapse; font-size: .95rem; }
+.morph11-table caption { padding: .85rem 1rem; color: var(--morph11-ink); font-weight: 700; text-align: start; background: var(--morph11-soft); }
+.morph11-table :is(th, td) { padding: .6rem .85rem; text-align: start; vertical-align: middle; border-block-end: 1px solid #dbe9e5; }
+.morph11-table thead th { color: var(--morph11-muted); font-size: .84rem; background: #f4faf8; }
+.morph11-table tbody tr:nth-child(even) { background: #f6fbf9; }
+.morph11-table tbody tr:last-child :is(th, td) { border-block-end: 0; }
+.morph11-table tbody th { font-weight: 600; color: var(--morph11-ink); }
+.morph11-table .morph11-word { font-size: 1.18rem; }
+.morph11-row--focus { outline: 2px solid var(--morph11-doer); outline-offset: -2px; }
+.morph11-cell--sentence bdi { font-family: 'Noto Naskh Arabic', serif; line-height: 2.2; }
+.morph11-table--states tbody th { font-size: .86rem; font-weight: 600; min-inline-size: 9rem; }
+.morph11-table--wide { min-inline-size: 640px; }
+
+/* ---------- الصياغة ---------- */
+.morph11-pairs { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .6rem; padding: 0; margin-block: 1rem; list-style: none; }
+.morph11-pairs li { min-inline-size: 0; padding: .55rem .8rem; border: 1px solid var(--morph11-line); border-radius: 12px; background: var(--paper); text-align: center; }
+.morph11-weight-box { margin-block: 1rem; padding: 1.1rem 1.3rem; border: 2px solid var(--morph11-weight); border-radius: 18px; background: var(--morph11-weight-soft); text-align: center; }
+.morph11-weight-box p { margin-block: .3rem; }
+.morph11-weight-box small { color: var(--morph11-weight); font-weight: 700; }
+.morph11-weight-box .morph11-list { text-align: start; display: inline-block; }
+.morph11-weight-box__weight .morph11-word { font-size: clamp(2rem, 6vw, 2.8rem); line-height: 2.1; background: #fff; padding-inline: 1rem; }
+
+.morph11-anatomy { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .5rem; padding: 0; margin-block: .6rem 0; list-style: none; }
+.morph11-anatomy__part { display: grid; justify-items: center; gap: .15rem; min-inline-size: 0; padding: .7rem .35rem; border: 1px solid var(--morph11-line); border-radius: 12px; background: #fff; text-align: center; }
+.morph11-anatomy__weight { color: var(--morph11-weight); font: 700 1.7rem/2.2 'Noto Naskh Arabic', serif; }
+.morph11-anatomy__word { color: var(--morph11-doer); font: 700 1.7rem/2.2 'Noto Naskh Arabic', serif; }
+.morph11-anatomy__part strong { font-size: .86rem; color: var(--morph11-ink); }
+.morph11-anatomy__part small { font-size: .76rem; color: var(--morph11-muted); line-height: 1.7; }
+.morph11-anatomy__part--alif { border-style: dashed; background: #fffaf0; }
+.morph11-anatomy__part--ain { border-color: var(--morph11-doer); }
+
+.morph11-steps { display: grid; gap: .8rem; padding: 0; margin-block: 1rem; list-style: none; counter-reset: step; }
+.morph11-steps > li { counter-increment: step; position: relative; padding: .8rem 1rem .8rem 1rem; padding-inline-start: 3.3rem; border: 1px solid var(--morph11-line); border-radius: 14px; background: var(--paper); }
+.morph11-steps > li::before { content: counter(step); position: absolute; inset-inline-start: .9rem; inset-block-start: .85rem; display: grid; place-items: center; inline-size: 1.8rem; block-size: 1.8rem; border-radius: 50%; background: var(--morph11-doer); color: #fff; font-weight: 700; }
+.morph11-steps strong { color: var(--morph11-ink); }
+.morph11-steps p { margin-block: .25rem 0; }
+.morph11-steps__big bdi { font: 700 1.45rem/2.3 'Noto Naskh Arabic', serif; color: var(--morph11-doer); }
+
+.morph11-time { display: grid; gap: .5rem; padding: 0; margin-block: .8rem; list-style: none; }
+.morph11-time li { padding: .6rem 1rem; border-inline-start: 4px solid var(--morph11-doer); border-radius: 4px 12px 12px 4px; background: var(--paper); font: 600 1.1rem/2.2 'Noto Naskh Arabic', serif; }
+
+.morph11-chips { display: flex; flex-wrap: wrap; gap: .5rem; padding: 0; margin-block: .8rem; list-style: none; }
+.morph11-chain-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; margin-block: 1rem; }
+.morph11-example-card { min-inline-size: 0; padding: .9rem 1rem; border: 1px solid var(--morph11-line); border-radius: 14px; background: var(--paper); }
+.morph11-example-card h3 { margin: 0 0 .4rem; font-size: 1rem; color: var(--morph11-ink); }
+.morph11-chain { display: flex; flex-wrap: wrap; align-items: stretch; gap: .35rem; padding: 0; margin-block: .5rem; list-style: none; }
+.morph11-chain li { display: grid; justify-items: center; align-content: center; min-inline-size: 0; padding: .3rem .55rem; border: 1px solid var(--morph11-line); border-radius: 10px; background: #fbfdfc; }
+.morph11-chain li + li::before { content: '←'; position: relative; inset-inline-start: 0; color: var(--morph11-muted); font-size: .9rem; line-height: 1; }
+.morph11-chain li:last-child { border-color: var(--morph11-doer); background: var(--morph11-doer-soft); }
+.morph11-chain small { color: var(--morph11-muted); font-size: .74rem; line-height: 1.6; }
+.morph11-chain .morph11-word { font-size: 1.2rem; background: transparent; }
+.morph11-change { margin-block: .3rem; font-size: .9rem; color: var(--morph11-doer); font-weight: 600; }
+.morph11-remember { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.morph11-remember p { margin: 0; padding: .8rem 1rem; border: 1px solid var(--morph11-line); border-radius: 12px; background: var(--morph11-soft); font-weight: 600; }
+.morph11-contrast { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; margin-block: .8rem; }
+.morph11-contrast article { display: grid; justify-items: center; gap: .2rem; min-inline-size: 0; padding: .8rem .6rem; border: 1px solid var(--morph11-line); border-radius: 14px; background: #fff; text-align: center; }
+.morph11-contrast .morph11-word { font-size: clamp(1.7rem, 5vw, 2.3rem); line-height: 2.3; }
+.morph11-contrast small { color: var(--morph11-muted); font-size: .84rem; line-height: 1.8; }
+
+/* ---------- التمييز والمقارنة والأخطاء ---------- */
+.morph11-analyses { display: grid; gap: .9rem; margin-block: 1rem; }
+.morph11-analysis { min-inline-size: 0; padding: .9rem 1.1rem; border: 1px solid var(--morph11-line); border-radius: 14px; background: var(--paper); }
+.morph11-four { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .6rem; margin-block-start: .5rem; }
+.morph11-four__card { display: grid; justify-items: center; align-content: start; gap: .2rem; min-inline-size: 0; padding: .7rem .5rem; border: 1px solid var(--morph11-line); border-radius: 12px; background: #fff; text-align: center; }
+.morph11-four__card small { font-weight: 700; color: var(--morph11-ink); font-size: .8rem; }
+.morph11-four__card p { margin: 0; font-size: .8rem; line-height: 1.8; }
+.morph11-four__card--verb { border-block-start: 4px solid var(--morph11-verb); }
+.morph11-four__card--event { border-block-start: 4px solid var(--morph11-masdar); }
+.morph11-four__card--doer { border-block-start: 4px solid var(--morph11-doer); }
+.morph11-four__card--done { border-block-start: 4px solid var(--morph11-object); }
+.morph11-mistakes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-block: 1rem; }
+.morph11-mistake { min-inline-size: 0; border: 1px solid var(--morph11-line); border-radius: 14px; overflow: clip; background: var(--paper); }
+.morph11-mistake p { margin: 0; padding: .75rem 1rem; }
+.morph11-mistake__wrong { background: #fdf0ec; color: #7a2b1a; }
+.morph11-mistake__right { background: #edf7f2; color: #1d5640; }
+
+/* ---------- التدريب والختامي والواجب ---------- */
+.morph11-training-head { margin-block: 1rem; padding: 1rem 1.1rem; border: 1px solid var(--morph11-line); border-radius: 16px; background: var(--morph11-soft); }
+.morph11-training-head h3 { margin: 0; color: var(--morph11-ink); font-size: 1.05rem; }
+.morph11-counter { margin: .2rem 0; font-size: 1.6rem; font-weight: 700; color: var(--morph11-doer); }
+.morph11-progress { block-size: 10px; border-radius: 999px; background: #fff; border: 1px solid var(--morph11-line); overflow: hidden; }
+.morph11-progress span { display: block; block-size: 100%; background: var(--morph11-doer); transition: inline-size .2s ease; }
+.morph11-practice-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 1rem; margin-block: 1rem; }
+.morph11-practice-card { min-inline-size: 0; margin: 0; padding: 1rem; border: 1px solid var(--morph11-line); border-radius: 15px; background: var(--paper); }
+.morph11-practice-card legend { max-inline-size: 100%; padding-inline: .3rem; font-weight: 600; line-height: 2.1; }
+.morph11-number { display: inline-grid; place-items: center; min-inline-size: 1.7rem; block-size: 1.7rem; border-radius: 50%; background: var(--morph11-doer-soft); color: var(--morph11-doer); font-weight: 700; font-size: .85rem; }
+.morph11-final-prompt { margin-block: 0 .6rem; font-weight: 600; line-height: 2.2; }
+.morph11-radio-options { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .4rem .6rem; }
+.morph11-radio-options label { display: flex; align-items: center; gap: .45rem; min-block-size: 48px; padding: .3rem .75rem; border: 1px solid var(--morph11-line); border-radius: 10px; cursor: pointer; background: #fff; }
+.morph11-radio-options label:has(input:checked) { border-color: var(--morph11-doer); background: var(--morph11-doer-soft); }
+.morph11-radio-options input { inline-size: 18px; block-size: 18px; flex-shrink: 0; accent-color: var(--morph11-doer); }
+.morph11-radio-options .morph11-word { font-size: 1.12rem; background: transparent; padding-inline: 0; }
+.morph11-input { inline-size: 100%; max-inline-size: 100%; min-block-size: 48px; padding: .45rem .7rem; border: 1px solid #9fbcb5; border-radius: 9px; background: #fff; color: var(--morph11-ink); font: inherit; line-height: 2; }
+.morph11-input--word { font: 700 1.2rem/2.2 'Noto Naskh Arabic', serif; }
+textarea.morph11-input { resize: vertical; }
+.morph11-feedback { margin-block-start: .8rem; padding: .8rem 1rem; border: 1px solid #dbcba9; border-radius: 10px; background: #fbf5e9; color: #5e4019; font-size: .9rem; }
+.morph11-feedback--correct { border-color: #a9cfc2; background: #eef7f3; color: #1d5640; }
+.morph11-feedback--wrong { border-color: #e2b4a7; background: #fdf1ed; color: #7a2b1a; }
+.morph11-feedback--model { border-color: var(--morph11-line); background: var(--morph11-soft); color: var(--morph11-ink); }
+.morph11-feedback p { margin-block: .35rem 0; }
+.morph11-final-section h3 { margin-block: 1.4rem .2rem; color: var(--morph11-ink); font-size: 1.05rem; }
+.morph11-cell-feedback { margin: .35rem 0 0; font-size: .82rem; line-height: 1.8; }
+.morph11-cell-feedback--correct { color: #1d5640; }
+.morph11-cell-feedback--wrong { color: #8a2f1b; }
+.morph11-cell-feedback--unanswered { color: var(--morph11-muted); }
+.morph11-homework-wrap { margin-block: 1rem; border: 1px solid var(--morph11-line); border-radius: 14px; background: var(--paper); }
+.morph11-table--homework td { min-inline-size: 9rem; }
+
+.morph11-actions { display: flex; flex-wrap: wrap; align-items: center; gap: .7rem; margin-block: 1.2rem .4rem; }
+.morph11-result { margin-block: 1rem; padding: 1.1rem 1.2rem; border-radius: 14px; background: var(--morph11-soft); }
+.morph11-result h3 { margin-block: 0 .3rem; color: var(--morph11-ink); }
+.morph11-score { margin-block: .2rem .4rem; font-size: 2.3rem; font-weight: 700; color: var(--morph11-ink); }
+
+/* ---------- الخلاصة والمعاينة ---------- */
+.morph11-summary { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .9rem; margin-block: 1rem; }
+.morph11-summary__card { min-inline-size: 0; padding: 1rem 1.1rem; border: 1px solid var(--morph11-line); border-radius: 16px; background: var(--paper); }
+.morph11-summary__card h3 { margin: 0 0 .4rem; font-size: 1.05rem; color: var(--morph11-doer); }
+.morph11-summary__card p { margin: 0; font-weight: 600; }
+.morph11-summary__card--definition { border-block-start: 4px solid var(--morph11-doer); }
+.morph11-summary__card--triliteral { border-block-start: 4px solid var(--morph11-weight); }
+.morph11-summary__card--non-triliteral { border-block-start: 4px solid var(--morph11-verb); }
+.morph11-summary__card--derivatives { border-block-start: 4px solid var(--morph11-masdar); }
+.morph11-next { padding: 1.1rem 1.2rem; border: 1px dashed var(--morph11-object); border-radius: 16px; background: var(--morph11-object-soft); }
+.morph11-next .morph11-pairs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+/* ---------- الاختبار المستقل ومنطقة المعلم ---------- */
+.morph11-submit, .morph11-locked { padding: clamp(1rem, 3vw, 1.7rem); border: 1px solid var(--morph11-line); border-radius: 18px; background: var(--paper); }
+.morph11-locked { border-inline-start: 4px solid var(--morph11-accent); }
+.morph11-lesson .test-field--choice bdi { word-break: normal; overflow-wrap: normal; line-height: 2.2; }
+.morph11-lesson .test-field--select select { line-height: 2; }
+.morph11-teacher-section { margin-block: .8rem; border: 1px solid var(--morph11-line); border-radius: 12px; background: var(--paper); }
+.morph11-teacher-section > summary { padding: .9rem 1rem; color: var(--morph11-ink); font-weight: 700; cursor: pointer; }
+.morph11-teacher-section[open] > summary { border-block-end: 1px solid var(--morph11-line); border-radius: 12px 12px 0 0; background: var(--morph11-soft); }
+.morph11-teacher-section > div { min-inline-size: 0; padding: .5rem 1rem 1rem; }
+.morph11-teacher-answer { padding-block: .6rem; border-block-end: 1px solid var(--morph11-line); }
+.morph11-teacher a { overflow-wrap: anywhere; text-underline-offset: .2em; }
+
+/* ---------- الاستجابة ---------- */
+@media (max-width: 900px) {
+  .morph11-sentences { grid-template-columns: minmax(0, 1fr); }
+  .morph11-four { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .morph11-practice-grid, .morph11-chain-grid, .morph11-mistakes, .morph11-summary, .morph11-remember { grid-template-columns: minmax(0, 1fr); }
+  .morph11-pairs { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .morph11-table :is(th, td) { padding: .5rem .45rem; }
+  .morph11-table { font-size: .88rem; }
+  .morph11-table .morph11-word { font-size: 1.08rem; }
+  .morph11-teacher-section > div { padding-inline: .65rem; }
+  .morph11-anatomy__weight, .morph11-anatomy__word { font-size: 1.45rem; }
+}
+/* الواجب على الشاشات الضيقة: كل صف بطاقة مستقلة تحمل اسم العمود، فلا تمرير أفقي ولا قصّ للحقول. */
+@media (max-width: 560px) {
+  .morph11-table--homework thead { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); }
+  .morph11-table--homework, .morph11-table--homework tbody, .morph11-table--homework tr { display: block; inline-size: 100%; }
+  .morph11-table--homework tr { padding: .7rem .8rem; border-block-end: 1px solid var(--morph11-line); }
+  .morph11-table--homework tr:last-child { border-block-end: 0; }
+  .morph11-table--homework :is(th, td) { display: grid; gap: .2rem; padding: .3rem 0; border: 0; min-inline-size: 0; }
+  .morph11-table--homework :is(th, td)::before { content: attr(data-label); color: var(--morph11-muted); font-size: .78rem; font-weight: 700; }
+  .morph11-table--homework tbody tr:nth-child(even) { background: transparent; }
+}
+@media (max-width: 480px) {
+  .morph11-hero__trio { gap: .4rem; }
+  .morph11-hero__trio article { padding: .7rem .2rem; }
+  .morph11-hero__trio small { font-size: .72rem; }
+  .morph11-pairs, .morph11-next .morph11-pairs { grid-template-columns: minmax(0, 1fr); }
+  .morph11-anatomy { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .4rem; }
+  .morph11-four { grid-template-columns: minmax(0, 1fr); }
+  .morph11-clarification { padding: .8rem; }
+  .morph11-actions { flex-direction: column; align-items: stretch; }
+  .morph11-actions .button { inline-size: 100%; }
+  .morph11-word { font-size: 1.18rem; }
+  .morph11-steps > li { padding-inline-start: 2.9rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .morph11-lesson .lesson-flow__stage { animation: none; }
+  .morph11-progress span, .morph11-lesson :is(.lesson-outline__item, .lesson-outline__progress-fill) { transition: none; }
+}

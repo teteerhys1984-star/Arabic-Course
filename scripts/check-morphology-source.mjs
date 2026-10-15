@@ -11,7 +11,7 @@
  *  - الأسئلة الخمسة والأربعون بترقيمها وترتيبها ونصها وخياراتها ومجموعاتها؛
  *  - الأجوبة المعتمدة من منطقة المعلم للأسئلة 1–40؛
  *  - أخطاء المعلم الخمسة، والمراجعة، والعلاجي، والتحدي؛
- *  - التسجيل في قسم الصرف، وعدد دروس كل قسم (عشرة دروس للصرف)، وعدم وجود الدرس الحادي عشر، وكلمة مرور المعلم.
+ *  - التسجيل في قسم الصرف، وعدد دروس كل قسم (أحد عشر درسًا للصرف)، وعدم وجود الدرس الثاني عشر، وكلمة مرور المعلم.
  *
  * يُشغَّل بالأمر: npm run check:morphology-source
  */
@@ -349,9 +349,9 @@ eq('Challenge note', C.challengeNote, L.find((l) => l.includes('تنبيه لل�
 // ================================================================
 const count = (text, needle) => text.split(needle).length - 1
 if (count(registry, "id: 'morphology-lesson-01'") !== 1) fail('morphology-lesson-01 must be registered exactly once')
-// النطاق الحالي: الصرف ١–١٠ فقط (docs/morphology-lesson-10-audit.md).
+// النطاق الحالي: الصرف ١–١١ فقط (docs/morphology-lesson-11-source-audit.md).
 failures.push(...morphologyScopeIssues(registry, read('src/app/App.tsx')))
-if (count(registry, "sectionId: 'morphology'") !== 10) fail('Section «morphology» must contain exactly ten lessons (١–١٠)')
+if (count(registry, "sectionId: 'morphology'") !== 11) fail('Section «morphology» must contain exactly eleven lessons (١–١١)')
 // Adding grammar lesson 11 changes this section count only; preserve the original ten ids in order.
 const basicsIds = [...registry.matchAll(/\{\s*id: '(lesson-\d+)',[\s\S]*?sectionId: 'basics-grammar'/g)].map((match) => match[1])
 const expectedBasicsIds = Array.from({ length: 11 }, (_, index) => `lesson-${index + 1}`)
@@ -360,8 +360,8 @@ if (JSON.stringify(basicsIds) !== JSON.stringify(expectedBasicsIds) || count(reg
 }
 const morphEntry = registry.slice(registry.indexOf("id: 'morphology-lesson-01'"), registry.indexOf("id: 'morphology-lesson-01'") + 500)
 if (!/number: '١'/.test(morphEntry) || !/title: 'مدخل إلى علم الصرف'/.test(morphEntry)) fail('Lesson 1 must be numbered ١ with the source title')
-// شرط مستقل عن شرط العدّ أعلاه: الدرس الحادي عشر غير مسجَّل ولا مبنيّ.
-if (/morphology-lesson-11|morphology-lesson-[2-9]\d/.test(lesson + content)) fail('Lesson 11 must not be registered or built yet')
+// شرط مستقل عن شرط العدّ أعلاه: ملفات الدرس الأول لا تشير إلى الدرس الحادي عشر فما بعده.
+if (/morphology-lesson-11|morphology-lesson-[2-9]\d/.test(lesson + content)) fail('Lesson 1 files must not reference morphology lesson 11 or later')
 if (/LessonMorphologyTwo|morphology-lesson-02/.test(lesson + content)) fail('Lesson 1 files must not reference Lesson 2')
 if (!/morphology-lesson-01/.test(read('src/app/App.tsx'))) fail('The stable route morphology-lesson-01 must be wired in App.tsx')
 
@@ -550,5 +550,5 @@ if (failures.length) {
 console.log(
   `Morphology source audit passed against ${srcPath}: 12 objectives, 8 worked examples, 15 activity words, ` +
     '3 family lists, 8 mind-map nodes, 9 golden rules, 6 tools, 45 questions in source order with prompts/options/groups, ' +
-    'answer keys 1–40, 5 teacher mistakes, 11 review rows, remediation and challenge, one Lesson 1 registration, eleven basics lessons (original 1–10 unchanged), exactly ten lessons in الصرف (١–١٠), no morphology lesson 11.',
+    'answer keys 1–40, 5 teacher mistakes, 11 review rows, remediation and challenge, one Lesson 1 registration, eleven basics lessons (original 1–10 unchanged), exactly eleven lessons in الصرف (١–١١), no morphology lesson 12.',
 )

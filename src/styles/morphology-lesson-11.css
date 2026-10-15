@@ -120,8 +120,10 @@
 .morph11-table tbody th { font-weight: 600; color: var(--morph11-ink); }
 .morph11-table .morph11-word { font-size: 1.18rem; }
 .morph11-row--focus { outline: 2px solid var(--morph11-doer); outline-offset: -2px; }
-.morph11-cell--sentence bdi { font-family: 'Noto Naskh Arabic', serif; line-height: 2.2; }
+.morph11-cell--sentence bdi { font-family: 'Noto Naskh Arabic', serif; font-size: 1.12em; line-height: 2.2; }
 .morph11-table--states tbody th { font-size: .86rem; font-weight: 600; min-inline-size: 9rem; }
+/* عبارات مثل «رامي السهم»: تلتفّ بين الكلمتين فقط (لا كسر داخل الكلمة) بدل فرض تمرير أفقي. */
+.morph11-table--states td .morph11-word { white-space: normal; overflow-wrap: normal; word-break: keep-all; }
 .morph11-table--wide { min-inline-size: 640px; }
 
 /* ---------- الصياغة ---------- */
@@ -284,6 +286,8 @@ textarea.morph11-input { resize: vertical; }
   .morph11-actions .button { inline-size: 100%; }
   .morph11-word { font-size: 1.18rem; }
   .morph11-steps > li { padding-inline-start: 2.9rem; }
+  .morph11-table--states tbody th { min-inline-size: 5.5rem; }
+  .morph11-table--states :is(th, td) { padding-inline: .4rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .morph11-lesson .lesson-flow__stage { animation: none; }

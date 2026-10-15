@@ -16,6 +16,7 @@ import { LessonSeven } from '../lessons/LessonSeven'
 import { LessonEight } from '../lessons/LessonEight'
 import { LessonNine } from '../lessons/LessonNine'
 import { LessonTen } from '../lessons/LessonTen'
+import { LessonEleven } from '../lessons/LessonEleven'
 import { LessonMorphologyOne } from '../lessons/LessonMorphologyOne'
 import { LessonMorphologyTwo } from '../lessons/LessonMorphologyTwo'
 import { LessonMorphologyThree } from '../lessons/LessonMorphologyThree'
@@ -120,6 +121,8 @@ function LessonPage({ lesson }: { lesson: LessonMeta }) {
       <LessonMorphologyTwo onFinish={finishLesson} />
     ) : lesson.id === 'morphology-lesson-01' ? (
       <LessonMorphologyOne onFinish={finishLesson} />
+    ) : lesson.id === 'lesson-11' ? (
+      <LessonEleven onFinish={finishLesson} />
     ) : lesson.id === 'lesson-10' ? (
       <LessonTen onFinish={finishLesson} />
     ) : lesson.id === 'lesson-9' ? (

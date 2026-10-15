@@ -1,0 +1,183 @@
+/* Lesson 11 only. The shared shell, test engine, teacher gate and routing stay unchanged. */
+.eleven-lesson {
+  direction: rtl;
+  color: #19372f;
+  font-size: 1.06rem;
+  line-height: 1.95;
+  min-width: 0;
+}
+
+.eleven-stack {
+  display: grid;
+  gap: 1.15rem;
+  min-width: 0;
+}
+
+.eleven-stack > p { margin: 0; }
+.eleven-stack h3, .eleven-stack h4, .eleven-stack h5 { line-height: 1.55; }
+.eleven-stack h3 { font-size: 1.35rem; margin: 0; }
+.eleven-stack h4 { font-size: 1.14rem; margin: 0 0 .55rem; }
+.eleven-stack h5 { font-size: 1.05rem; margin: .5rem 0; }
+.eleven-stack ul, .eleven-stack ol { padding-inline-start: 1.5rem; margin: .35rem 0; }
+.eleven-stack li { margin-block: .35rem; }
+
+.eleven-hero {
+  background: linear-gradient(128deg, #134738, #176e56);
+  color: #fffefa;
+  border-radius: 1.25rem;
+  padding: clamp(1.25rem, 4vw, 2.25rem);
+}
+.eleven-hero .card__eyebrow { color: #ffe2a3; font-size: .9rem; }
+.eleven-hero h3 { font: 700 clamp(1.8rem, 4vw, 2.65rem)/1.6 'Noto Naskh Arabic', serif; }
+.eleven-hero__subtitle { font-size: clamp(1.15rem, 3vw, 1.45rem); font-weight: 700; color: #e8f9f0; }
+.eleven-hero p:last-child { margin-block-end: 0; }
+
+.eleven-panel, .eleven-example, .eleven-mark, .eleven-homework__answers {
+  background: #fffefa;
+  border: 1px solid #c4d6cd;
+  border-radius: 1rem;
+  padding: clamp(1rem, 2.8vw, 1.35rem);
+  min-width: 0;
+}
+.eleven-panel > :last-child, .eleven-example > :last-child, .eleven-mark > :last-child { margin-block-end: 0; }
+.eleven-panel h3 { color: #154738; }
+.eleven-note {
+  background: #f7f1dd;
+  border: 1px solid #c9a65e;
+  border-inline-start: .3rem solid #8b5b0e;
+  border-radius: .8rem;
+  padding: 1rem 1.2rem;
+  min-width: 0;
+  color: #342d1e;
+}
+.eleven-note h4 { color: #684211; }
+.eleven-note p { margin: .4rem 0; }
+.eleven-note p:last-child { margin-block-end: 0; }
+.eleven-checks { display: grid; gap: .35rem; }
+.eleven-checks li::marker, .eleven-method li::marker { color: #176b51; font-weight: 700; }
+
+.eleven-examples { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; min-width: 0; }
+.eleven-example { background: #f8fbf9; }
+.eleven-example p { margin: .4rem 0; }
+.eleven-example__sentence {
+  font: 700 clamp(1.4rem, 3vw, 1.8rem)/2 'Noto Naskh Arabic', serif;
+  color: #124b3d;
+  margin: 0 0 .45rem !important;
+}
+.eleven-example__analysis { color: #203e35; }
+.eleven-focus {
+  display: inline;
+  font-family: 'Noto Naskh Arabic', serif;
+  font-weight: 700;
+  line-height: inherit;
+  background: #e2f3db;
+  color: #0b5136;
+  border-radius: .18em;
+  padding-inline: .13em;
+  unicode-bidi: isolate;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+.eleven-focus bdi { unicode-bidi: isolate; }
+
+.eleven-marks { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; min-width: 0; }
+.eleven-mark { background: #f4f9f5; border-color: #b4cfc0; }
+.eleven-mark h4 { color: #124b3d; }
+.eleven-mark p { margin: .3rem 0; }
+.eleven-mark p:nth-of-type(1) { font: 700 1.35rem/2 'Noto Naskh Arabic', serif; }
+.eleven-mark__glyph { display: inline-block; font: 700 2.4rem/1.7 'Noto Naskh Arabic', serif; color: #165e46; }
+
+.eleven-table-wrap {
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  border: 1px solid #b9d0c4;
+  border-radius: .85rem;
+  background: #fffefa;
+  overflow: hidden;
+}
+.eleven-table {
+  width: 100%;
+  table-layout: fixed;
+  border-collapse: collapse;
+  text-align: start;
+  line-height: 2;
+  color: #20382f;
+}
+.eleven-table caption {
+  caption-side: top;
+  text-align: start;
+  padding: .9rem 1.1rem;
+  font-weight: 700;
+  color: #194c3c;
+  background: #edf5ed;
+}
+.eleven-table th, .eleven-table td {
+  text-align: start;
+  vertical-align: top;
+  border-block-start: 1px solid #d0ded3;
+  padding: .7rem .85rem;
+  overflow-wrap: break-word;
+  word-break: normal;
+  min-width: 0;
+}
+.eleven-table thead th { background: #f0f6f1; color: #124738; }
+.eleven-table tbody th { font-weight: 700; color: #124738; }
+.eleven-table__glyph { font: 700 1.5rem/1.6 'Noto Naskh Arabic', serif; color: #124738; }
+.eleven-table--parsing th:first-child { width: 18%; }
+.eleven-table--parsing th:nth-child(2) { width: 21%; }
+.eleven-table--parsing tbody th { font: 700 1.35rem/1.9 'Noto Naskh Arabic', serif; }
+
+.eleven-homework__item { font: 700 1.45rem/2 'Noto Naskh Arabic', serif; }
+.eleven-homework__answers { background: #f1f8f2; }
+.eleven-homework__answers li { margin-block: .55rem; }
+.eleven-homework__answers .eleven-table-wrap { background: #fffefa; }
+.eleven-small-note { font-size: .94rem; color: #3c574b; }
+.eleven-actions { display: flex; flex-wrap: wrap; gap: .75rem; margin-block: 1rem; }
+.eleven-result { background: #e4f3e9; border: 1px solid #72ac86; border-radius: .8rem; padding: 1rem 1.15rem; }
+.eleven-result p { margin: .4rem 0; }
+.eleven-teacher-group { padding-block: .75rem; border-block-start: 1px solid #c4d6cd; }
+.eleven-teacher-list > li { margin-block: .9rem; padding-block-end: .65rem; border-block-end: 1px solid #d2e1d7; }
+.eleven-teacher-list p { margin: .35rem 0; }
+.eleven-lesson .test-question__sentence { font: 700 1.3rem/2 'Noto Naskh Arabic', serif; }
+.eleven-lesson .test-field--choice label { min-height: 44px; }
+.eleven-lesson .test-question__prompt, .eleven-lesson .test-field--choice bdi { line-height: 1.95; }
+
+@media (max-width: 800px) {
+  .eleven-examples { grid-template-columns: 1fr; }
+}
+
+/* Tables become labelled, vertically stacked rows, not clipped horizontal scrollers. */
+@media (max-width: 680px) {
+  .eleven-lesson { font-size: 1.04rem; }
+  .eleven-marks { grid-template-columns: 1fr; }
+  .eleven-table, .eleven-table thead, .eleven-table tbody, .eleven-table tr, .eleven-table th, .eleven-table td { display: block; width: 100%; }
+  .eleven-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; }
+  .eleven-table tbody tr { padding: .6rem .75rem; border-block-start: 1px solid #b9d0c4; }
+  .eleven-table tbody th, .eleven-table tbody td {
+    display: grid;
+    grid-template-columns: minmax(6.5rem, 34%) minmax(0, 1fr);
+    column-gap: .65rem;
+    align-items: start;
+    padding: .35rem .15rem;
+    border: 0;
+    background: transparent;
+  }
+  .eleven-table tbody th::before, .eleven-table tbody td::before {
+    content: attr(data-label);
+    font: 700 .87rem/2 'Noto Kufi Arabic', system-ui, sans-serif;
+    color: #345247;
+  }
+  .eleven-table--parsing th:first-child, .eleven-table--parsing th:nth-child(2) { width: 100%; }
+  .eleven-table caption { display: block; width: 100%; padding: .85rem; }
+  .eleven-actions > .button, .eleven-homework > .button { width: 100%; }
+  /* Shared page actions wrap into an off-screen second flex column on mobile
+     because their result has flex-basis: 100%. Keep this fix scoped to lesson 11. */
+  .eleven-lesson .test-page__actions { flex-wrap: nowrap; }
+  .eleven-lesson .test-page__summary { flex-basis: auto; width: 100%; min-width: 0; }
+}
+
+@media (max-width: 390px) {
+  .eleven-table tbody th, .eleven-table tbody td { display: block; }
+  .eleven-table tbody th::before, .eleven-table tbody td::before { display: block; }
+}

@@ -39,6 +39,7 @@ import { testDefinition as lessonSevenTest } from '../../lessons/LessonSeven'
 import { testDefinition as lessonEightTest } from '../../lessons/LessonEight'
 import { testDefinition as lessonNineTest } from '../../lessons/LessonNine'
 import { testDefinition as lessonTenTest } from '../../lessons/LessonTen'
+import { testDefinition as lessonElevenTest } from '../../lessons/LessonEleven'
 import { testDefinition as morphologyOneTest } from '../../lessons/LessonMorphologyOne'
 import { testDefinition as morphologyTwoTest } from '../../lessons/LessonMorphologyTwo'
 import { testDefinition as morphologyThreeTest } from '../../lessons/LessonMorphologyThree'
@@ -70,6 +71,7 @@ const lessonTests: Array<{ lesson: string; test: TestDefinition; expectedQuestio
   { lesson: 'lesson-8', test: lessonEightTest, expectedQuestions: 20 },
   { lesson: 'lesson-9', test: lessonNineTest, expectedQuestions: 20 },
   { lesson: 'lesson-10', test: lessonTenTest, expectedQuestions: 20 },
+  { lesson: 'lesson-11', test: lessonElevenTest, expectedQuestions: 20 },
   { lesson: 'morphology-lesson-01', test: morphologyOneTest, expectedQuestions: 45 },
   { lesson: 'morphology-lesson-02', test: morphologyTwoTest, expectedQuestions: 26 },
   { lesson: 'morphology-lesson-03', test: morphologyThreeTest, expectedQuestions: 20 },
@@ -93,10 +95,10 @@ const lessonTests: Array<{ lesson: string; test: TestDefinition; expectedQuestio
 ]
 
 describe('lesson test conformance — the shared platform schema', () => {
-  it('covers every registered lesson (30 lessons)', () => {
+  it('covers every registered lesson (31 lessons)', () => {
     expect(lessonTests.map((entry) => entry.lesson).sort()).toEqual(lessonRegistry.filter((entry) => entry.available).map((entry) => entry.id).sort())
-    expect(lessonTests).toHaveLength(30)
-    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(30)
+    expect(lessonTests).toHaveLength(31)
+    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(31)
   })
 
   it.each(lessonTests.map((entry) => [entry.lesson, entry] as const))(

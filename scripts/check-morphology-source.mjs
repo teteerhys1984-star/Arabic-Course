@@ -352,7 +352,12 @@ if (count(registry, "id: 'morphology-lesson-01'") !== 1) fail('morphology-lesson
 // النطاق الحالي: الصرف ١–١٠ فقط (docs/morphology-lesson-10-audit.md).
 failures.push(...morphologyScopeIssues(registry, read('src/app/App.tsx')))
 if (count(registry, "sectionId: 'morphology'") !== 10) fail('Section «morphology» must contain exactly ten lessons (١–١٠)')
-if (count(registry, "sectionId: 'basics-grammar'") !== 10) fail('Section «basics-grammar» must keep exactly ten lessons')
+// Adding grammar lesson 11 changes this section count only; preserve the original ten ids in order.
+const basicsIds = [...registry.matchAll(/\{\s*id: '(lesson-\d+)',[\s\S]*?sectionId: 'basics-grammar'/g)].map((match) => match[1])
+const expectedBasicsIds = Array.from({ length: 11 }, (_, index) => `lesson-${index + 1}`)
+if (JSON.stringify(basicsIds) !== JSON.stringify(expectedBasicsIds) || count(registry, "sectionId: 'basics-grammar'") !== 11) {
+  fail('Section «basics-grammar» must keep lessons 1–10 in order and add lesson 11 exactly once after them')
+}
 const morphEntry = registry.slice(registry.indexOf("id: 'morphology-lesson-01'"), registry.indexOf("id: 'morphology-lesson-01'") + 500)
 if (!/number: '١'/.test(morphEntry) || !/title: 'مدخل إلى علم الصرف'/.test(morphEntry)) fail('Lesson 1 must be numbered ١ with the source title')
 // شرط مستقل عن شرط العدّ أعلاه: الدرس الحادي عشر غير مسجَّل ولا مبنيّ.
@@ -545,5 +550,5 @@ if (failures.length) {
 console.log(
   `Morphology source audit passed against ${srcPath}: 12 objectives, 8 worked examples, 15 activity words, ` +
     '3 family lists, 8 mind-map nodes, 9 golden rules, 6 tools, 45 questions in source order with prompts/options/groups, ' +
-    'answer keys 1–40, 5 teacher mistakes, 11 review rows, remediation and challenge, one Lesson 1 registration, ten basics lessons, exactly ten lessons in الصرف (١–١٠), no Lesson 11.',
+    'answer keys 1–40, 5 teacher mistakes, 11 review rows, remediation and challenge, one Lesson 1 registration, eleven basics lessons (original 1–10 unchanged), exactly ten lessons in الصرف (١–١٠), no morphology lesson 11.',
 )

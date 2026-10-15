@@ -49,7 +49,7 @@ describe('Platform home (section index) and section pages', () => {
     expect(screen.queryByRole('link', { name: 'الاسم والفعل والحرف' })).not.toBeInTheDocument()
   })
 
-  it('lists the ten lesson cards, in registry order, inside the الأساسيات والنحو section', () => {
+  it('lists the eleven lesson cards, preserving the first ten routes in registry order, inside الأساسيات والنحو', () => {
     window.location.hash = '#/sections/basics-grammar'
     render(<App />)
 
@@ -57,6 +57,7 @@ describe('Platform home (section index) and section pages', () => {
     expect(screen.getByRole('heading', { name: 'الاسم والفعل والحرف', level: 3 })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'المبتدأ والخبر', level: 3 })).toBeInTheDocument()
     expect(screen.getByRole('heading', { name: 'إنَّ وأخواتها', level: 3 })).toBeInTheDocument()
+    expect(screen.getByRole('heading', { name: 'علامات الإعراب الأصلية — كيف نعرف حركة آخر الكلمة؟', level: 3 })).toBeInTheDocument()
 
     // Every lesson card is one real link to its unchanged hash route, in registry order.
     const lessonLinks = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
@@ -71,11 +72,13 @@ describe('Platform home (section index) and section pages', () => {
       '#/lesson/lesson-8',
       '#/lesson/lesson-9',
       '#/lesson/lesson-10',
+      '#/lesson/lesson-11',
     ])
     expect(screen.getByRole('link', { name: 'الاسم والفعل والحرف' })).toHaveAttribute('href', '#/lesson/lesson-1')
     expect(screen.getByRole('link', { name: 'كان وأخواتها' })).toHaveAttribute('href', '#/lesson/lesson-9')
     expect(screen.getByRole('link', { name: 'إنَّ وأخواتها' })).toHaveAttribute('href', '#/lesson/lesson-10')
-    expect(screen.getAllByText(/ابدأ الدرس/)).toHaveLength(10)
+    expect(screen.getByRole('link', { name: 'علامات الإعراب الأصلية — كيف نعرف حركة آخر الكلمة؟' })).toHaveAttribute('href', '#/lesson/lesson-11')
+    expect(screen.getAllByText(/ابدأ الدرس/)).toHaveLength(11)
 
     // Breadcrumb trail: اللغة العربية ← الأساسيات والنحو.
     const trail = screen.getByRole('navigation', { name: 'مسار التنقل' })
@@ -1239,7 +1242,7 @@ describe('Lesson 8 as a native multi-step lesson (الأسماء الخمسة)',
   it('does not regress Lessons 1–7 after adding the eighth lesson', () => {
     window.location.hash = '#/sections/basics-grammar'
     const { unmount } = render(<App />)
-    expect(within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')).toHaveLength(10)
+    expect(within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')).toHaveLength(11)
     unmount()
 
     goToLesson('lesson-1')
@@ -1834,7 +1837,7 @@ describe('Lesson 9 as a native multi-step lesson (كان وأخواتها)', () 
   it('does not regress Lessons 1–9 after adding the tenth lesson', () => {
     window.location.hash = '#/sections/basics-grammar'
     const { unmount } = render(<App />)
-    expect(within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')).toHaveLength(10)
+    expect(within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')).toHaveLength(11)
     unmount()
 
     goToLesson('lesson-2')
@@ -2222,11 +2225,15 @@ describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف
     expect(screen.queryByRole('heading', { name: 'لا توجد دروس مضافة إلى هذا القسم بعد.' })).not.toBeInTheDocument()
   })
 
-  it('keeps the basics section at ten lessons and no morphology lesson in its list', () => {
+  it('keeps the basics section at eleven lessons and no morphology lesson in its list', () => {
     window.location.hash = '#/sections/basics-grammar'
     render(<App />)
     const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
-    expect(links).toHaveLength(10)
+    expect(links).toHaveLength(11)
+    expect(links.slice(0, 10).map((link) => link.getAttribute('href'))).toEqual(
+      Array.from({ length: 10 }, (_, index) => `#/lesson/lesson-${index + 1}`),
+    )
+    expect(links[10]).toHaveAttribute('href', '#/lesson/lesson-11')
     expect(links.some((link) => link.getAttribute('href')?.includes('morphology'))).toBe(false)
   })
 

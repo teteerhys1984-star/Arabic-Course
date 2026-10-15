@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 
-const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx', 'LessonEight.tsx', 'LessonNine.tsx', 'LessonTen.tsx', 'lesson-ten/content.ts'].map((name) => `src/lessons/${name}`)
+const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx', 'LessonEight.tsx', 'LessonNine.tsx', 'LessonTen.tsx', 'lesson-ten/content.ts', 'LessonEleven.tsx', 'lesson-eleven/content.ts'].map((name) => `src/lessons/${name}`)
 const sources = Object.fromEntries(lessonPaths.map((path) => [path, readFileSync(path, 'utf8')]))
 const failures = []
 
@@ -98,6 +98,19 @@ requirePhrase('src/lessons/lesson-ten/content.ts', 'كأنَّ: حرف تشبي�
 requirePhrase('src/lessons/lesson-ten/content.ts', 'لكنَّ: حرف استدراك ونصب مبني على الفتح لا محل له من الإعراب.')
 requirePhrase('src/lessons/lesson-ten/content.ts', 'النجاحَ: اسم ليتَ منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.')
 requirePhrase('src/lessons/lesson-ten/content.ts', 'قريبٌ: خبر ليتَ مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')
+
+// Lesson 11: the worked example and EVERY word of the complete homework parsing.
+// The source-audit tests also verify order, number of words, and case distinctions.
+for (const phrase of [
+  'قرأَ: فعل ماضٍ مبني على الفتح الظاهر على آخره؛ الفتحة حركة بناء لا نصب.',
+  'الطالبُ: فاعل مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.',
+  'القصةَ: مفعول به منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.',
+  'في: حرف جر مبني لا محل له من الإعراب.',
+  'المكتبةِ: اسم مجرور بـ«في»، وعلامة جره الكسرة الظاهرة على آخره.',
+  'كتبَ: فعل ماضٍ مبني على الفتح الظاهر على آخره؛ ليس منصوبًا.',
+  'الدرسَ: مفعول به منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.',
+  'الدفترِ: اسم مجرور بـ«في»، وعلامة جره الكسرة الظاهرة على آخره.',
+]) requirePhrase('src/lessons/lesson-eleven/content.ts', phrase)
 
 requirePhrase('src/lessons/LessonNine.tsx', 'أبوك: اسم كان مرفوع، وعلامة رفعه الواو نيابة عن الضمة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
 requirePhrase('src/lessons/LessonNine.tsx', 'كريمًا: خبر كان منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.')

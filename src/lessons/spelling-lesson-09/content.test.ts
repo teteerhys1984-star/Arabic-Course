@@ -7,9 +7,9 @@ import { sections, practice, quiz, homework, comparison, commonErrors, testDefin
 
 const expectedExamAnswers = ['ركضوا','ينمو','يسافرون','أنصتوا','دوّنوه','تكرموا','ينسوا','ترفعوا','يفوزوا','يرجو','حذف النون','واو الجماعة متبوعة بالنون','الهاء جاءت بعد واو الجماعة','لن تنجحوا دون تدريب','ضمير متصل في محل رفع فاعل','المصلح يسمو بأخلاقه.','أنتم تحافظون / لا تهملوا','الرجل يدعوا جاره إلى الخير.','احفظوا','جزم بحذف النون، ولا ألف قبل الهاء']
 describe('spelling 09 content and reviewed answer key', () => {
-  it('registers all nine in order and creates no tenth lesson or unit test', () => {
-    expect(lessonRegistry.filter(l => l.sectionId === 'spelling').map(l => l.id)).toEqual(Array.from({length:9}, (_,i) => `spelling-lesson-0${i+1}`))
-    expect(lessonRegistry.some(l => l.id === 'spelling-lesson-10' || l.id.includes('unit'))).toBe(false)
+  it('registers all ten in order and creates no eleventh lesson or unit test', () => {
+    expect(lessonRegistry.filter(l => l.sectionId === 'spelling').map(l => l.id)).toEqual([...Array.from({length:9}, (_,i) => `spelling-lesson-0${i+1}`), 'spelling-lesson-10'])
+    expect(lessonRegistry.some(l => l.id === 'spelling-lesson-11' || l.id.includes('unit'))).toBe(false)
   })
   it('preserves source, covers inventory and leaves earlier teaching files byte-identical', () => {
     const inventory = JSON.parse(readFileSync('docs/spelling-lesson-09-source-inventory.json','utf8'))

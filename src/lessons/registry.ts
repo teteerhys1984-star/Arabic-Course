@@ -514,6 +514,19 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['اسم الفاعل من الثلاثي', 'اسم الفاعل من غير الثلاثي', 'اسم الفاعل من المعتلّ', 'التمييز والمقارنة'],
   },
+  {
+    id: 'morphology-lesson-12',
+    sectionId: 'morphology',
+    number: '١٢',
+    eyebrow: 'اسم المفعول',
+    title: 'اسم المفعول: كيف نعرف مَن وقع عليه الفعل؟',
+    documentTitle: 'الدرس الثاني عشر: اسم المفعول',
+    summary: 'تعريف اسم المفعول والتمييز بينه وبين اسم الفاعل والمصدر، وصياغته من الثلاثي وغير الثلاثي، وأمثلة المعتلّ المدقّقة، وتحدٍّ من ٨ أسئلة واختبار مستقل من ١٥ سؤالًا بحلول مفصّلة.',
+    duration: '٨٠',
+    strand: 'الصرف',
+    available: true,
+    parts: ['من الثلاثي', 'من غير الثلاثي', 'الأفعال المعتلّة', 'التحليل والمقارنة'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

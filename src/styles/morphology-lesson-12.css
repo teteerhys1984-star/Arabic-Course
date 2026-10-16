@@ -1,0 +1,190 @@
+/* الدرس ١٢ من الصرف: اسم المفعول. الأنماط معزولة عن الدروس السابقة. */
+.sarf12-lesson {
+  --sarf12-ink: #203f50;
+  --sarf12-line: #c5d5dc;
+  --sarf12-muted: #40545f;
+  --sarf12-verb: #1f4664;
+  --sarf12-verb-soft: #e9f0f5;
+  --sarf12-active: #145d50;
+  --sarf12-active-soft: #e3f2ed;
+  --sarf12-passive: #603461;
+  --sarf12-passive-soft: #f2eaf3;
+  --sarf12-source: #734a0d;
+  --sarf12-source-soft: #f7f0df;
+  --sarf12-weight: #3f3e78;
+  --sarf12-weight-soft: #efeffa;
+  --sarf12-accent: #8b4f16;
+  color: var(--ink, #283b43);
+  line-height: 1.95;
+  overflow-wrap: anywhere;
+}
+
+.sarf12-lesson .lesson-step__heading h2,
+.sarf12-lesson .lesson-outline__lesson-title { color: var(--sarf12-ink); }
+.sarf12-lesson .lesson-outline__progress-fill { background: var(--sarf12-passive); }
+.sarf12-lesson .lesson-flow__stage { animation-duration: 160ms; }
+.sarf12-lesson :is(button, select, input, textarea, summary, a, [tabindex='0']):focus-visible {
+  outline: 3px solid var(--sarf12-accent);
+  outline-offset: 4px;
+}
+.sarf12-lesson .button--secondary { background: var(--sarf12-ink); }
+.sarf12-lesson .button--ghost { color: var(--sarf12-ink); }
+.sarf12-lesson h4 { margin-block: 1rem .35rem; }
+.sarf12-stack { display: grid; gap: .8rem; min-inline-size: 0; }
+.sarf12-badge { display: inline-block; padding: .2rem .8rem; border-radius: 999px; color: var(--sarf12-ink); background: #e7eef2; font-weight: 700; }
+.sarf12-hero {
+  padding: clamp(1rem, 3vw, 1.8rem);
+  border: 1px solid var(--sarf12-line);
+  border-block-start: 5px solid var(--sarf12-passive);
+  border-radius: 22px 22px 8px 22px;
+  background: linear-gradient(135deg, #f2f7fa, #fffaf1);
+}
+.sarf12-hero h3 { margin-block: .6rem .4rem; color: var(--sarf12-ink); font: 700 clamp(1.45rem, 3.5vw, 2.1rem)/1.8 'Noto Naskh Arabic', serif; }
+.sarf12-hero > p:not(.sarf12-badge) { max-inline-size: 72ch; }
+.sarf12-opening-trio { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .65rem; margin-block: 1rem; }
+.sarf12-opening-card { display: grid; justify-items: center; align-content: start; gap: .25rem; min-inline-size: 0; padding: .8rem .55rem; border: 1px solid var(--sarf12-line); border-block-start-width: 4px; border-radius: 14px; background: #fff; text-align: center; }
+.sarf12-opening-card--verb { border-block-start-color: var(--sarf12-verb); }
+.sarf12-opening-card--active { border-block-start-color: var(--sarf12-active); }
+.sarf12-opening-card--passive { border-block-start-color: var(--sarf12-passive); }
+.sarf12-opening-card--source { border-block-start-color: var(--sarf12-source); }
+.sarf12-opening-card > span { color: var(--sarf12-muted); font-weight: 700; font-size: .83rem; }
+.sarf12-opening-card p { margin: 0; color: var(--sarf12-muted); font-size: .88rem; }
+.sarf12-word, .sarf12-sentence {
+  display: inline-block;
+  white-space: nowrap;
+  word-break: normal;
+  overflow-wrap: normal;
+  letter-spacing: normal;
+  unicode-bidi: isolate;
+  line-height: 2.3;
+}
+.sarf12-word { padding-inline: .3rem; border-radius: 7px; font: 700 1.2rem/2.3 'Noto Naskh Arabic', 'Times New Roman', serif; }
+.sarf12-word--verb { color: var(--sarf12-verb); background: var(--sarf12-verb-soft); }
+.sarf12-word--active { color: var(--sarf12-active); background: var(--sarf12-active-soft); }
+.sarf12-word--passive { color: var(--sarf12-passive); background: var(--sarf12-passive-soft); }
+.sarf12-word--source { color: var(--sarf12-source); background: var(--sarf12-source-soft); }
+.sarf12-word--weight { color: var(--sarf12-weight); background: var(--sarf12-weight-soft); }
+.sarf12-sentence { white-space: normal; font: 600 1.02rem/2.3 'Noto Naskh Arabic', serif; color: var(--sarf12-ink); }
+.sarf12-objectives { display: grid; gap: .5rem; padding-inline-start: 1.5rem; }
+.sarf12-objectives li::marker, .sarf12-list li::marker { color: var(--sarf12-accent); }
+.sarf12-definition { padding: 1rem 1.15rem; border: 1px solid var(--sarf12-line); border-inline-start: 4px solid var(--sarf12-passive); border-radius: 15px; background: #eff5f6; }
+.sarf12-definition h3 { margin: 0 0 .35rem; color: var(--sarf12-ink); font-size: 1.05rem; }
+.sarf12-definition p { margin: 0; }
+.sarf12-definition--weight { border-inline-start-color: var(--sarf12-weight); background: var(--sarf12-weight-soft); }
+.sarf12-list { margin-block: .4rem; padding-inline-start: 1.4rem; }
+.sarf12-list li { padding-block: .18rem; }
+.sarf12-note { padding: .8rem 1rem; border-inline-start: 4px solid var(--sarf12-accent); border-radius: 5px 12px 12px 5px; background: #fbf5e9; color: #4f3b23; }
+.sarf12-note strong { color: #653a10; }
+.sarf12-example-line { display: flex; flex-wrap: wrap; align-items: center; gap: .35rem; }
+.sarf12-weight-map { display: grid; grid-template-columns: minmax(0, 1fr) auto minmax(0, 1fr) auto minmax(0, 1fr); align-items: center; gap: .55rem; padding: .9rem; border: 1px solid var(--sarf12-line); border-radius: 15px; background: #fff; }
+.sarf12-weight-map article { display: grid; justify-items: center; min-inline-size: 0; text-align: center; }
+.sarf12-weight-map article > span { color: var(--sarf12-muted); font-size: .82rem; font-weight: 700; }
+.sarf12-weight-map .sarf12-word { font-size: clamp(1.05rem, 3vw, 1.5rem); }
+.sarf12-map-arrow { color: var(--sarf12-muted); font-size: 1.4rem; unicode-bidi: isolate; }
+.sarf12-weight-result { padding: .35rem; border: 2px solid var(--sarf12-passive); border-radius: 12px; }
+.sarf12-table-wrap { max-inline-size: 100%; min-inline-size: 0; margin-block: .6rem; border: 1px solid var(--sarf12-line); border-radius: 13px; background: #fff; }
+.sarf12-table { width: 100%; border-collapse: collapse; table-layout: fixed; font-size: .9rem; }
+.sarf12-table caption { padding: .75rem .9rem; color: var(--sarf12-ink); background: #edf3f5; font-weight: 700; text-align: start; }
+.sarf12-table :is(th, td) { padding: .55rem .65rem; border-block-end: 1px solid #dce6e9; text-align: start; vertical-align: top; overflow-wrap: anywhere; }
+.sarf12-table thead th { color: var(--sarf12-ink); background: #f5f8f9; font-size: .82rem; }
+.sarf12-table tbody th { color: var(--sarf12-ink); font-weight: 700; }
+.sarf12-table tbody tr:nth-child(even) { background: #fafcfc; }
+.sarf12-table tbody tr:last-child :is(th, td) { border-block-end: 0; }
+.sarf12-table .sarf12-word { font-size: 1.08rem; }
+.sarf12-table .sarf12-sentence { white-space: normal; }
+.sarf12-context { display: inline-block; margin-block-start: .3rem; color: var(--sarf12-muted); font-size: .88rem; }
+.sarf12-context strong { color: var(--sarf12-ink); }
+.sarf12-table-hint, .sarf12-muted { color: var(--sarf12-muted); font-size: .87rem; }
+.sarf12-contrast { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: .7rem; margin-block: .8rem; }
+.sarf12-contrast article { display: grid; justify-items: center; align-content: start; gap: .2rem; min-inline-size: 0; padding: .8rem .5rem; border: 1px solid var(--sarf12-line); border-radius: 13px; background: #fff; text-align: center; }
+.sarf12-contrast article strong { color: var(--sarf12-ink); font-size: .83rem; }
+.sarf12-contrast article span { color: var(--sarf12-muted); font-size: .84rem; }
+.sarf12-contrast .sarf12-word { font-size: clamp(1.2rem, 3.8vw, 1.75rem); }
+.sarf12-contrast--three { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+.sarf12-identify-steps { display: grid; gap: .5rem; padding-inline-start: 1.5rem; }
+.sarf12-identify-steps li { padding-inline: .2rem; }
+.sarf12-analysis-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.sarf12-analysis-card { min-inline-size: 0; padding: .85rem 1rem; border: 1px solid var(--sarf12-line); border-radius: 13px; background: #fff; }
+.sarf12-analysis-card h3 { margin: 0 0 .4rem; font-size: 1rem; }
+.sarf12-analysis-card p { margin-block: .35rem; }
+.sarf12-analysis-answer { padding: .5rem .65rem; border-inline-start: 3px solid var(--sarf12-passive); background: var(--sarf12-passive-soft); }
+.sarf12-mistakes { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.sarf12-mistake { position: relative; min-inline-size: 0; padding: .7rem .9rem .7rem 2.8rem; border: 1px solid var(--sarf12-line); border-radius: 12px; background: #fff; }
+.sarf12-mistake p { margin-block: .25rem; }
+.sarf12-mistake-number { position: absolute; inset-inline-start: .65rem; inset-block-start: .75rem; display: grid; place-items: center; inline-size: 1.65rem; block-size: 1.65rem; border-radius: 50%; color: #fff; background: var(--sarf12-ink); font-weight: 700; }
+.sarf12-assessment { min-inline-size: 0; padding: clamp(.8rem, 2.6vw, 1.4rem); border: 1px solid var(--sarf12-line); border-radius: 16px; background: #f9fbfb; }
+.sarf12-progress { padding: .55rem .8rem; border-inline-start: 4px solid var(--sarf12-passive); border-radius: 8px; background: #f1edf4; font-weight: 700; }
+.sarf12-result { margin-block: .8rem; padding: 1rem; border: 1px solid var(--sarf12-line); border-radius: 13px; background: #edf5f2; }
+.sarf12-result h3 { margin-block: 0 .25rem; color: var(--sarf12-ink); }
+.sarf12-score { margin: .1rem 0; color: var(--sarf12-ink); font-size: 2rem; font-weight: 800; }
+.sarf12-lesson .test-field--choice label { min-inline-size: 0; }
+.sarf12-lesson .test-field--choice label > span { max-inline-size: 100%; white-space: normal; line-height: 2.25; overflow-wrap: anywhere; }
+.sarf12-lesson .test-question__prompt, .sarf12-lesson .test-question__sentence { line-height: 2.25; }
+.sarf12-lesson .test-field--select select { max-inline-size: 100%; line-height: 2; }
+.sarf12-homework-label { display: block; min-inline-size: 0; }
+.sarf12-homework-label input { box-sizing: border-box; inline-size: 100%; max-inline-size: 100%; min-block-size: 46px; padding: .4rem .6rem; border: 1px solid #9fb3bd; border-radius: 9px; color: var(--sarf12-ink); background: #fff; font: 600 1rem/2 'Noto Naskh Arabic', serif; }
+.sarf12-visually-hidden { position: absolute; inline-size: 1px; block-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+.sarf12-summary-cards { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .7rem; }
+.sarf12-summary-cards article { display: flex; align-items: flex-start; gap: .65rem; min-inline-size: 0; padding: .8rem; border: 1px solid var(--sarf12-line); border-radius: 12px; background: #fff; }
+.sarf12-summary-cards article > span { flex: none; display: grid; place-items: center; inline-size: 1.7rem; block-size: 1.7rem; border-radius: 50%; color: #fff; background: var(--sarf12-passive); font-weight: 700; }
+.sarf12-summary-cards p { margin: 0; }
+.sarf12-next-step { padding: 1rem; border: 1px dashed var(--sarf12-passive); border-radius: 14px; background: var(--sarf12-passive-soft); }
+.sarf12-next-step h3 { color: var(--sarf12-passive); }
+.sarf12-submit .button + .button { margin-inline-start: .5rem; }
+.sarf12-teacher-section { margin-block: .7rem; border: 1px solid var(--sarf12-line); border-radius: 12px; background: #fff; }
+.sarf12-teacher-section > summary { padding: .8rem 1rem; color: var(--sarf12-ink); font-weight: 700; cursor: pointer; }
+.sarf12-teacher-section[open] > summary { border-block-end: 1px solid var(--sarf12-line); background: #eff5f6; }
+.sarf12-teacher-section > div { min-inline-size: 0; padding: .5rem .8rem 1rem; }
+.sarf12-teacher-vowels { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .6rem; margin-block: .7rem; }
+.sarf12-teacher-vowels p { margin: 0; padding: .6rem; border: 1px solid var(--sarf12-line); border-radius: 10px; }
+.sarf12-teacher a { display: inline-block; margin-block: .6rem; overflow-wrap: anywhere; text-underline-offset: .2em; }
+.sarf12-lesson :is(button, input, select, textarea, a, summary) { min-block-size: 44px; }
+.sarf12-visually-hidden { min-block-size: 0 !important; }
+
+@media (max-width: 900px) {
+  .sarf12-opening-trio { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .sarf12-contrast { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 700px) {
+  .sarf12-analysis-grid, .sarf12-mistakes, .sarf12-summary-cards, .sarf12-teacher-vowels { grid-template-columns: minmax(0, 1fr); }
+  .sarf12-table :is(th, td) { padding: .45rem .5rem; }
+  .sarf12-lesson .test-field--choice { display: grid; grid-template-columns: minmax(0, 1fr); }
+  .sarf12-lesson .test-field--choice label { inline-size: 100%; box-sizing: border-box; }
+  .sarf12-submit .button + .button { margin-inline-start: 0; margin-block-start: .5rem; }
+}
+
+/* At 390px, tables become labelled cards rather than forcing horizontal scrolling. */
+@media (max-width: 560px) {
+  .sarf12-table-wrap { border: 0; background: transparent; }
+  .sarf12-table { display: block; table-layout: auto; }
+  .sarf12-table caption { display: block; border: 1px solid var(--sarf12-line); border-radius: 11px; text-align: start; }
+  .sarf12-table thead { position: absolute; inline-size: 1px; block-size: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
+  .sarf12-table tbody { display: grid; gap: .65rem; padding-block-start: .55rem; }
+  .sarf12-table tbody tr { display: block; min-inline-size: 0; padding: .45rem .7rem; border: 1px solid var(--sarf12-line); border-radius: 12px; background: #fff; }
+  .sarf12-table tbody tr:nth-child(even) { background: #fff; }
+  .sarf12-table tbody :is(th, td) { display: grid; grid-template-columns: minmax(5.2rem, 33%) minmax(0, 1fr); align-items: start; gap: .35rem; inline-size: auto; min-inline-size: 0; padding: .35rem 0; border: 0; text-align: start; overflow-wrap: anywhere; }
+  .sarf12-table tbody :is(th, td)::before { content: attr(data-label); color: var(--sarf12-muted); font-size: .76rem; font-weight: 700; line-height: 2; }
+  .sarf12-table tbody tr > :last-child { border-block-end: 0; }
+  .sarf12-table .sarf12-word { font-size: 1.05rem; }
+  .sarf12-word { font-size: 1.12rem; }
+  .sarf12-weight-map { grid-template-columns: minmax(0, 1fr); }
+  .sarf12-map-arrow { transform: rotate(-90deg); line-height: 1; }
+  .sarf12-opening-trio { gap: .45rem; }
+  .sarf12-opening-card { padding-inline: .35rem; }
+  .sarf12-opening-card p { font-size: .8rem; }
+  .sarf12-lesson .test-page__header { align-items: flex-start; flex-wrap: wrap; }
+  .sarf12-lesson .test-question { min-inline-size: 0; }
+  .sarf12-lesson .test-question legend { max-inline-size: 100%; overflow-wrap: anywhere; }
+  .sarf12-lesson .button { inline-size: 100%; }
+  .sarf12-actions { align-items: stretch; }
+}
+
+@media (max-width: 380px) {
+  .sarf12-opening-trio, .sarf12-contrast, .sarf12-contrast--three { grid-template-columns: minmax(0, 1fr); }
+  .sarf12-table tbody :is(th, td) { grid-template-columns: minmax(4.7rem, 31%) minmax(0, 1fr); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .sarf12-lesson .lesson-flow__stage { animation: none; }
+  .sarf12-lesson .lesson-outline__item,
+  .sarf12-lesson .lesson-outline__progress-fill { transition: none; }
+}

@@ -2169,7 +2169,7 @@ describe('Lesson 10 as a native multi-step lesson (إنَّ وأخواتها)', 
 describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف', () => {
   const morphTitle = 'الدرس الأول: مدخل إلى علم الصرف'
 
-  it('shows the ten lesson cards under الصرف, each linking to its own route', () => {
+  it('shows the twelve lesson cards under الصرف, each linking to its own route', () => {
     window.location.hash = '#/sections/morphology'
     render(<App />)
 
@@ -2187,6 +2187,7 @@ describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف
       '#/lesson/morphology-lesson-09',
       '#/lesson/morphology-lesson-10',
       '#/lesson/morphology-lesson-11',
+      '#/lesson/morphology-lesson-12',
     ])
     expect(screen.getByRole('link', { name: 'مدخل إلى علم الصرف' })).toHaveAttribute(
       'href',
@@ -2227,6 +2228,10 @@ describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف
     expect(screen.getByRole('link', { name: 'اسم الفاعل: كيف نعرف مَن قام بالفعل؟' })).toHaveAttribute(
       'href',
       '#/lesson/morphology-lesson-11',
+    )
+    expect(screen.getByRole('link', { name: 'اسم المفعول: كيف نعرف مَن وقع عليه الفعل؟' })).toHaveAttribute(
+      'href',
+      '#/lesson/morphology-lesson-12',
     )
     expect(screen.queryByRole('heading', { name: 'لا توجد دروس مضافة إلى هذا القسم بعد.' })).not.toBeInTheDocument()
   })

@@ -11,7 +11,7 @@ import { existsSync, readFileSync } from 'node:fs'
  *  - the lesson is a native multi-step flow (LessonFlow), not one long page;
  *  - the exam never reveals answers before submission (solutions gated, no inline correction);
  *  - the Teacher Area is present and gated by the approved teacher password;
- *  - lesson 1 content stays independent; the current scope permits lessons 01–11 only.
+ *  - lesson 1 content stays independent; the current scope permits morphology lessons 01–12 only.
  */
 
 import { morphologyScopeIssues } from './morphology-scope.mjs'
@@ -41,8 +41,8 @@ if (!/sectionId: 'morphology'/.test(entry)) failures.push('morphology-lesson-01 
 if (!/number: '١'/.test(entry)) failures.push('morphology-lesson-01 must be numbered ١ inside its section.')
 if (!/title: 'مدخل إلى علم الصرف'/.test(entry)) failures.push('morphology-lesson-01 title must be «مدخل إلى علم الصرف».')
 if (!/available: true/.test(entry)) failures.push('morphology-lesson-01 must be available.')
-// نطاق الدرس الحادي عشر: دروس الصرف ١–١١ فقط، دون درس ثانٍ عشر أو اختبار وحدة.
-// راجع docs/morphology-lesson-11-source-audit.md. بقية حراس محتوى الدرس الأول دون تغيير.
+// نطاق الصرف بعد الإضافة: الدروس ١–١٢ فقط، دون درس ثالث عشر أو اختبار وحدة.
+// بقية حراس محتوى الدرس الأول مستقلة عن هذا التسجيل.
 failures.push(...morphologyScopeIssues(registry, app))
 if (/morphology-lesson-11|morphology-lesson-[2-9]\d/.test(content + lesson)) {
   failures.push('Lesson 1 files must not reference morphology lesson 11 or later.')

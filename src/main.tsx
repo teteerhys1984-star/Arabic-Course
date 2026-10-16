@@ -27,6 +27,7 @@ import './styles/morphology-lesson-08.css'
 import './styles/morphology-lesson-09.css'
 import './styles/morphology-lesson-10.css'
 import './styles/morphology-lesson-11.css'
+import './styles/morphology-lesson-12.css'
 import './styles/test-framework.css'
 import './styles/contact.css'
 

@@ -53,6 +53,7 @@ import { testDefinition as morphologyEightTest } from '../../lessons/LessonMorph
 import { testDefinition as morphologyNineTest } from '../../lessons/LessonMorphologyNine'
 import { testDefinition as morphologyTenTest } from '../../lessons/LessonMorphologyTen'
 import { testDefinition as morphologyElevenTest } from '../../lessons/LessonMorphologyEleven'
+import { testDefinition as morphologyTwelveTest } from '../../lessons/LessonMorphologyTwelve'
 import { testDefinition as spellingOneTest } from '../../lessons/LessonSpellingOne'
 import { testDefinition as spellingTwoTest } from '../../lessons/LessonSpellingTwo'
 import { testDefinition as spellingThreeTest } from '../../lessons/LessonSpellingThree'
@@ -87,6 +88,7 @@ const lessonTests: Array<{ lesson: string; test: TestDefinition; expectedQuestio
   { lesson: 'morphology-lesson-09', test: morphologyNineTest, expectedQuestions: 20 },
   { lesson: 'morphology-lesson-10', test: morphologyTenTest, expectedQuestions: 20 },
   { lesson: 'morphology-lesson-11', test: morphologyElevenTest, expectedQuestions: 20 },
+  { lesson: 'morphology-lesson-12', test: morphologyTwelveTest, expectedQuestions: 15 },
   { lesson: 'spelling-lesson-01', test: spellingOneTest, expectedQuestions: 30 },
   { lesson: 'spelling-lesson-02', test: spellingTwoTest, expectedQuestions: 25 },
   { lesson: 'spelling-lesson-03', test: spellingThreeTest, expectedQuestions: 26 },
@@ -101,10 +103,10 @@ const lessonTests: Array<{ lesson: string; test: TestDefinition; expectedQuestio
 ]
 
 describe('lesson test conformance — the shared platform schema', () => {
-  it('covers every registered lesson (34 lessons)', () => {
+  it('covers every registered lesson (35 lessons)', () => {
     expect(lessonTests.map((entry) => entry.lesson).sort()).toEqual(lessonRegistry.filter((entry) => entry.available).map((entry) => entry.id).sort())
-    expect(lessonTests).toHaveLength(34)
-    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(34)
+    expect(lessonTests).toHaveLength(35)
+    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(35)
   })
 
   it.each(lessonTests.map((entry) => [entry.lesson, entry] as const))(

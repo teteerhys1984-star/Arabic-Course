@@ -1,6 +1,6 @@
 {
   "baseCommit": "e59d39ea196dbe542e3ac8ec7275248f51e57b01",
-  "registrySha256": "c08f410995d66240dbc27d17c401c0bdfeefd7f8d11412204f815099516e29c3",
+  "registrySha256": "6b5553d93608c3c599c98a8ce1643896cb4be3e4d46b468b916855b02db3dea0",
   "previousRuntimeSha256": {
     "src/lessons/LessonEight.tsx": "fb63a1a980eeabe2d13b2366f9f23d8c3dc3007eec1e735f416f7fa5f2c753cb",
     "src/lessons/LessonEleven.tsx": "543efb845e85375eca4503c76911219e15ff99b819c04e9464511932797c4113",

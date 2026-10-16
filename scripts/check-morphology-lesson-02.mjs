@@ -7,12 +7,9 @@
  * الاختبار (٤ صفحات، ٢٦ سؤالًا، ٣٠ درجة) ومن التسجيل والتوجيه والأنشطة.
  *
  * هذا التدقيق لا يُضعف أي ضمان من ضمانات الدرس الأول؛ فالأدلة الخاصة بالدرس
- * الأول (check-morphology-lesson-01 وcheck-morphology-source) هي المرجع، وقد
- * ضُيّقت تدريجيًا مع بناء الدروس التالية لتصبح قسم الصرف أحد عشر درسًا (١–١١) مع
- * استبعاد الدرس الثاني عشر (موثّق في docs/morphology-lesson-02-audit.md و
- * docs/morphology-lesson-05-audit.md وdocs/morphology-lesson-06-audit.md و
- * docs/morphology-lesson-07-audit.md وdocs/morphology-lesson-08-audit.md و
- * docs/morphology-lesson-10-audit.md وdocs/morphology-lesson-11-source-audit.md).
+ * الأول (check-morphology-lesson-01 وcheck-morphology-source) هي المرجع. أُضيف الدرس
+ * الثاني عشر مستقلًا مع إبقاء فحوص محتوى هذا الدرس كما هي؛ تحقّق حدود القسم المشتركة
+ * من ١–١٢ ومن غياب الدرس الثالث عشر واختبار الوحدة.
  */
 import { readFileSync, existsSync } from 'node:fs'
 
@@ -55,10 +52,10 @@ const count = (text, needle) => text.split(needle).length - 1
 if (count(registry, "id: 'morphology-lesson-02'") !== 1) {
   failures.push('morphology-lesson-02 must be registered exactly once.')
 }
-// النطاق الحالي: الصرف ١–١١ فقط (docs/morphology-lesson-11-source-audit.md).
+// الحارس المشترك يسمح الآن بدروس الصرف ١–١٢ فقط، من دون درس ثالث عشر أو اختبار وحدة.
 failures.push(...morphologyScopeIssues(registry, app))
-if (count(registry, "sectionId: 'morphology'") !== 11) {
-  failures.push('Section «morphology» must contain exactly eleven lessons (١–١١).')
+if (count(registry, "sectionId: 'morphology'") !== 12) {
+  failures.push('Section «morphology» must contain exactly twelve lessons (١–١٢).')
 }
 // شرط مستقل عن شرط العدّ أعلاه: ملفات الدرس الثاني لا تشير إلى الدرس الحادي عشر فما بعده.
 if (/morphology-lesson-11|morphology-lesson-[2-9]\d/.test(lesson + content)) {
@@ -706,7 +703,7 @@ if (failures.length) {
   process.exit(1)
 }
 console.log(
-  `Morphology lesson 2 check passed: registered in الصرف as lesson ٢ (eleven lessons ١–١١, no twelfth), ` +
+  `Morphology lesson 2 check passed: registered in الصرف as lesson ٢ (twelve lessons ١–١٢, no thirteenth), ` +
     `34 flow steps (30 explicit + 4 test pages), eight source objectives, twelve source sections, ` +
     `five trainings (15/10/5/6/8) with complete keys, a 26-question / 30-mark test in four pages ` +
     `(26 automatic + 4 manual, first five of eight counted), the four approved corrections applied and ` +

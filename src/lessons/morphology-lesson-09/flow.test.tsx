@@ -54,7 +54,7 @@ describe('morphology 09 — المسار والتسجيل وعرض المصدر'
     render(<App />)
     const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
     expect(links.map((link) => link.getAttribute('href'))).toEqual(
-      Array.from({ length: 11 }, (_, index) => `#/lesson/morphology-lesson-${String(index + 1).padStart(2, '0')}`),
+      Array.from({ length: 12 }, (_, index) => `#/lesson/morphology-lesson-${String(index + 1).padStart(2, '0')}`),
     )
     await user.click(screen.getByRole('link', { name: C.lessonTitle }))
     expect(await screen.findByRole('heading', { name: S.header.firstTitle, level: 2 })).toBeInTheDocument()
@@ -149,11 +149,12 @@ describe('morphology 09 — المسار والتسجيل وعرض المصدر'
     })
   })
 
-  it('يرفض الرابط المباشر للدرس الثاني عشر', () => {
+  it('opens the separately registered morphology lesson 12 by its direct route', () => {
     window.location.hash = '#/lesson/morphology-lesson-12'
     render(<App />)
-    expect(screen.getByRole('heading', { name: 'الدرس غير متاح' })).toBeInTheDocument()
-    expect(document.querySelector('.lesson-step')).toBeNull()
+    expect(screen.getByRole('heading', { name: 'اسم المفعول: كيف نعرف مَن وقع عليه الفعل؟', level: 3 })).toBeInTheDocument()
+    expect(document.querySelector('.lesson-page')).toHaveAttribute('dir', 'rtl')
+    expect(document.querySelector('.lesson-step')).toBeInTheDocument()
   })
 })
 

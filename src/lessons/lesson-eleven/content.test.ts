@@ -44,13 +44,13 @@ describe('lesson 11 — registration and audited source coverage', () => {
     expect(basics.slice(0, 10).map((entry) => entry.number)).toEqual(['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '١٠'])
     expect(basics[9]).toMatchObject({ id: 'lesson-10', title: 'إنَّ وأخواتها', available: true })
     expect(basics[10]).toMatchObject({ sectionId: 'basics-grammar', number: '١١', eyebrow: 'علامات الإعراب الأصلية', available: true })
-    expect(getSectionLessons('spelling')).toHaveLength(10)
+    expect(getSectionLessons('spelling')).toHaveLength(11)
     expect(getSectionLessons('morphology')).toHaveLength(11)
     expect(getSectionLessons('rhetoric')).toHaveLength(0)
     expect(getSectionLessons('reading-expression')).toHaveLength(0)
-    expect(lessonRegistry).toHaveLength(32)
-    expect(new Set(lessonRegistry.map((entry) => entry.id)).size).toBe(32)
-    expect(lessonRegistry.some((entry) => ['lesson-12', 'spelling-lesson-11'].includes(entry.id) || /unit/i.test(entry.id))).toBe(false)
+    expect(lessonRegistry).toHaveLength(33)
+    expect(new Set(lessonRegistry.map((entry) => entry.id)).size).toBe(33)
+    expect(lessonRegistry.some((entry) => ['lesson-12', 'spelling-lesson-12'].includes(entry.id) || /unit/i.test(entry.id))).toBe(false)
   })
 
   it('retains the five objectives, four original signs and each worked example group', () => {

@@ -38,7 +38,7 @@ describe('spelling lesson 6 — registration and lesson flow', () => {
     const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
       '#/lesson/spelling-lesson-01', '#/lesson/spelling-lesson-02', '#/lesson/spelling-lesson-03',
-      '#/lesson/spelling-lesson-04', '#/lesson/spelling-lesson-05', '#/lesson/spelling-lesson-06', '#/lesson/spelling-lesson-07', '#/lesson/spelling-lesson-08', '#/lesson/spelling-lesson-09', '#/lesson/spelling-lesson-10',
+      '#/lesson/spelling-lesson-04', '#/lesson/spelling-lesson-05', '#/lesson/spelling-lesson-06', '#/lesson/spelling-lesson-07', '#/lesson/spelling-lesson-08', '#/lesson/spelling-lesson-09', '#/lesson/spelling-lesson-10', '#/lesson/spelling-lesson-11',
     ])
     await user.click(links[5])
     expect(await screen.findByRole('heading', { name: 'رحلة إلى كرسي الهمزة!', level: 2 })).toBeInTheDocument()

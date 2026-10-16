@@ -40,7 +40,7 @@ describe('spelling lesson 08 — content, source audit, and registration', () =>
     }
   })
 
-  it('registers spelling-lesson-08 after spelling-lesson-07, keeps lessons 1–7 intact, registers lessons 9 and 10 and adds no lesson 11 or unit test', () => {
+  it('registers spelling-lesson-08 after spelling-lesson-07, keeps lessons 1–7 intact, registers lessons 9–11 and adds no lesson 12 or unit test', () => {
     const spellingLessons = lessonRegistry.filter((lesson) => lesson.sectionId === 'spelling')
     expect(spellingLessons.map((lesson) => lesson.id)).toEqual([
       'spelling-lesson-01',
@@ -53,6 +53,7 @@ describe('spelling lesson 08 — content, source audit, and registration', () =>
       'spelling-lesson-08',
       'spelling-lesson-09',
       'spelling-lesson-10',
+      'spelling-lesson-11',
     ])
     expect(spellingLessons[7]).toMatchObject({
       id: 'spelling-lesson-08',
@@ -63,7 +64,8 @@ describe('spelling lesson 08 — content, source audit, and registration', () =>
     })
     expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-09')).toBe(true)
     expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-10')).toBe(true)
-    expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-11')).toBe(false)
+    expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-11')).toBe(true)
+    expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-12')).toBe(false)
     expect(lessonRegistry.some((lesson) => lesson.id.includes('unit'))).toBe(false)
   })
 

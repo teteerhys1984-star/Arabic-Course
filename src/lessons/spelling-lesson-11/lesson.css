@@ -1,0 +1,970 @@
+/* ==========================================================================
+   الدرس الحادي عشر: «التنوين وأنواعه وكيفية كتابته»
+   الهوية البصرية: «مختبر علامات التنوين».
+
+   فكرة المختبر: للعلامات الثلاث ثلاث أدوات بألوان ثابتة في كل الدرس
+     الضم  → العنبري   (damm)
+     الفتح → الفيروزي  (fath)
+     الكسر → التوتي    (kasr)
+   والبنية نفسها مختلفة عن الدروس السابقة: منصة مختبر بشرائح (hero + panels)،
+   شريط علامات، بطاقات كلمات مع إبراز الحرف الأخير، صفوف تجارب لكل كلمة،
+   وأزرار قرار إملائي — لا مجرد ألوان جديدة لقالب الدرس العاشر.
+
+   ملاحظات إتاحة مطبقة هنا:
+     • لا اتجاهات فيزيائية في الأنماط: start/end فقط.
+     • ارتفاع أسطر سخيّ للعلامات (1.9–1.95) حتى لا تُقصّ الفتحتان/الضمّتان.
+     • أهداف اللمس ≥ 44px وحدود تركيز واضحة، مع احترام تقليل الحركة.
+   ========================================================================== */
+
+.tanween-lab-lesson {
+  --tl-ink: #2b2350;
+  --tl-ink-soft: #55506e;
+  --tl-accent: #593f9e;
+  --tl-accent-soft: #efeafc;
+  --tl-paper: #fdfcff;
+  --tl-panel: #ffffff;
+  --tl-line: #d9d5ea;
+  --tl-line-strong: #b8b1d6;
+  --tl-damm: #8a5200;
+  --tl-damm-soft: #fdf1dc;
+  --tl-fath: #0f5f68;
+  --tl-fath-soft: #e3f2f3;
+  --tl-kasr: #8a2b5f;
+  --tl-kasr-soft: #fbe9f1;
+  --tl-ok: #14603f;
+  --tl-ok-soft: #e6f5ec;
+  --tl-bad: #9c2a2a;
+  --tl-bad-soft: #fbecec;
+  --tl-radius: 16px;
+  --tl-shadow: 0 10px 24px rgba(43, 35, 80, 0.09);
+  /* ورق المختبر: شبكة خفيفة تُذكّر بورق التجارب */
+  --tl-grid: repeating-linear-gradient(
+    to left,
+    rgba(89, 63, 158, 0.07) 0,
+    rgba(89, 63, 158, 0.07) 1px,
+    transparent 1px,
+    transparent 22px
+  );
+
+  color: var(--tl-ink);
+  font-size: 1.02rem;
+  line-height: 1.95;
+  min-width: 0;
+}
+
+/* العلامات المشكولة تحتاج خطًا يتّسع للحركات */
+.tanween-lab-lesson bdi,
+.tanween-lab-lesson .tl-specimen__word,
+.tanween-lab-lesson .tl-lab__word,
+.tanween-lab-lesson .tl-palette__glyph,
+.tanween-lab-lesson .tl-mark-card__glyph {
+  font-family: 'Noto Naskh Arabic', 'Amiri', 'Times New Roman', serif;
+  unicode-bidi: isolate;
+}
+
+/* ---------------- التخطيط والشرائح ---------------- */
+
+.tl-stack {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.tl-hero {
+  background: var(--tl-panel);
+  background-image: var(--tl-grid);
+  border: 1px solid var(--tl-line);
+  border-inline-start: 8px solid var(--tl-accent);
+  border-radius: var(--tl-radius);
+  box-shadow: var(--tl-shadow);
+  padding: 1.1rem 1.2rem;
+}
+
+.tl-hero h3 {
+  color: var(--tl-ink);
+  margin: 0.15rem 0 0.4rem;
+}
+
+.tl-hero p {
+  margin: 0 0 0.5rem;
+}
+
+.tl-hero__lead {
+  color: var(--tl-accent);
+  font-size: 1.05rem;
+  font-weight: 700;
+}
+
+.tl-card {
+  background: var(--tl-accent-soft);
+  border: 1px solid var(--tl-line-strong);
+  border-radius: var(--tl-radius);
+  padding: 1rem 1.1rem;
+}
+
+.tl-card h4 {
+  color: var(--tl-accent);
+  margin: 0 0 0.5rem;
+}
+
+.tl-note {
+  background: #f7f5ff;
+  border: 1px dashed var(--tl-line-strong);
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+}
+
+.tl-note h4 {
+  color: var(--tl-ink-soft);
+  margin: 0 0 0.3rem;
+}
+
+.tl-hint {
+  background: var(--tl-damm-soft);
+  border-inline-start: 5px solid var(--tl-damm);
+  border-radius: 12px;
+  color: var(--tl-damm);
+  margin: 0;
+  padding: 0.6rem 0.85rem;
+}
+
+.tl-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+/* ---------------- لوحات المعلومات ---------------- */
+
+.tl-callout {
+  background: var(--tl-accent-soft);
+  border-inline-start: 6px solid var(--tl-accent);
+  border-radius: 12px;
+  padding: 0.9rem 1rem;
+}
+
+.tl-callout h4 {
+  color: var(--tl-accent);
+  margin: 0 0 0.4rem;
+}
+
+.tl-callout p {
+  margin: 0;
+}
+
+.tl-callout p + p {
+  margin-top: 0.4rem;
+}
+
+.tl-callout--rule {
+  background: var(--tl-fath-soft);
+  border-inline-start-color: var(--tl-fath);
+}
+
+.tl-callout--rule h4 {
+  color: var(--tl-fath);
+}
+
+.tl-callout--memory {
+  background: var(--tl-damm-soft);
+  border-inline-start-color: var(--tl-damm);
+}
+
+.tl-callout--memory h4 {
+  color: var(--tl-damm);
+}
+
+.tl-callout--precision {
+  background: var(--tl-kasr-soft);
+  border-inline-start-color: var(--tl-kasr);
+}
+
+.tl-callout--precision h4 {
+  color: var(--tl-kasr);
+}
+
+.tl-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  margin: 0;
+  padding-inline-start: 1.2rem;
+}
+
+.tl-list li::marker {
+  color: var(--tl-accent);
+  font-weight: 700;
+}
+
+.tl-list--solutions {
+  padding-inline-start: 1.4rem;
+}
+
+.tl-protocol {
+  counter-reset: tl-step;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.tl-protocol li {
+  background: var(--tl-panel);
+  border: 1px solid var(--tl-line);
+  border-inline-start: 6px solid var(--tl-accent);
+  border-radius: 12px;
+  padding: 0.65rem 0.9rem;
+}
+
+.tl-protocol strong {
+  color: var(--tl-accent);
+}
+
+/* ---------------- شريط العلامات الثلاث ---------------- */
+
+.tl-palette {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tl-palette__tile {
+  background: var(--tl-panel);
+  border: 2px solid var(--tl-line);
+  border-radius: var(--tl-radius);
+  display: flex;
+  flex-direction: column;
+  gap: 0.15rem;
+  padding: 0.9rem 0.8rem;
+  text-align: center;
+}
+
+.tl-palette__glyph {
+  display: block;
+  font-size: clamp(1.7rem, 6vw, 2.6rem);
+  font-weight: 700;
+  line-height: 1.9;
+  padding-block: 0.15rem;
+}
+
+.tl-palette__name {
+  font-weight: 700;
+  margin: 0;
+}
+
+.tl-palette__sign,
+.tl-palette__examples {
+  color: var(--tl-ink-soft);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.tl-palette__tile--damm {
+  background: var(--tl-damm-soft);
+  border-color: var(--tl-damm);
+}
+
+.tl-palette__tile--damm .tl-palette__glyph,
+.tl-palette__tile--damm .tl-palette__name {
+  color: var(--tl-damm);
+}
+
+.tl-palette__tile--fath {
+  background: var(--tl-fath-soft);
+  border-color: var(--tl-fath);
+}
+
+.tl-palette__tile--fath .tl-palette__glyph,
+.tl-palette__tile--fath .tl-palette__name {
+  color: var(--tl-fath);
+}
+
+.tl-palette__tile--kasr {
+  background: var(--tl-kasr-soft);
+  border-color: var(--tl-kasr);
+}
+
+.tl-palette__tile--kasr .tl-palette__glyph,
+.tl-palette__tile--kasr .tl-palette__name {
+  color: var(--tl-kasr);
+}
+
+/* ---------------- بطاقات الكلمة نفسها: كتابٌ / كتابًا / كتابٍ ---------------- */
+
+.tl-specimens {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tl-specimen {
+  background: var(--tl-panel);
+  background-image: var(--tl-grid);
+  border: 1px solid var(--tl-line);
+  border-radius: var(--tl-radius);
+  margin: 0;
+  padding: 0.85rem 0.8rem;
+  text-align: center;
+}
+
+.tl-specimen__type {
+  color: var(--tl-accent);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.tl-specimen__word {
+  font-size: clamp(1.7rem, 7vw, 2.4rem);
+  font-weight: 700;
+  line-height: 1.95;
+  margin: 0.15rem 0 0.35rem;
+}
+
+.tl-specimen__stem {
+  color: var(--tl-ink);
+}
+
+.tl-specimen__tail {
+  background: #fff3d6;
+  border-radius: 8px;
+  box-shadow: 0 0 0 2px #e0b45f inset;
+  color: var(--tl-damm);
+  padding-inline: 0.12rem;
+}
+
+.tl-specimen:nth-of-type(2) .tl-specimen__tail {
+  background: var(--tl-fath-soft);
+  box-shadow: 0 0 0 2px var(--tl-fath) inset;
+  color: var(--tl-fath);
+}
+
+.tl-specimen:nth-of-type(3) .tl-specimen__tail {
+  background: var(--tl-kasr-soft);
+  box-shadow: 0 0 0 2px var(--tl-kasr) inset;
+  color: var(--tl-kasr);
+}
+
+.tl-specimen__glyph,
+.tl-specimen__note {
+  color: var(--tl-ink-soft);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+/* ---------------- بطاقات الأنواع الثلاثة ---------------- */
+
+.tl-marks {
+  display: grid;
+  gap: 0.75rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tl-mark-card {
+  background: var(--tl-panel);
+  border: 2px solid var(--tl-line);
+  border-radius: var(--tl-radius);
+  padding: 0.9rem 0.85rem;
+  text-align: center;
+}
+
+.tl-mark-card h4 {
+  margin: 0.2rem 0 0.35rem;
+}
+
+.tl-mark-card p {
+  color: var(--tl-ink-soft);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.tl-mark-card__glyph {
+  display: block;
+  font-size: clamp(1.7rem, 6vw, 2.5rem);
+  font-weight: 700;
+  line-height: 1.9;
+  padding-block: 0.15rem;
+}
+
+.tl-mark-card__examples {
+  margin-top: 0.35rem !important;
+}
+
+.tl-mark-card--damm {
+  background: var(--tl-damm-soft);
+  border-color: var(--tl-damm);
+}
+
+.tl-mark-card--damm .tl-mark-card__glyph,
+.tl-mark-card--damm h4 {
+  color: var(--tl-damm);
+}
+
+.tl-mark-card--fath {
+  background: var(--tl-fath-soft);
+  border-color: var(--tl-fath);
+}
+
+.tl-mark-card--fath .tl-mark-card__glyph,
+.tl-mark-card--fath h4 {
+  color: var(--tl-fath);
+}
+
+.tl-mark-card--kasr {
+  background: var(--tl-kasr-soft);
+  border-color: var(--tl-kasr);
+}
+
+.tl-mark-card--kasr .tl-mark-card__glyph,
+.tl-mark-card--kasr h4 {
+  color: var(--tl-kasr);
+}
+
+/* ---------------- جداول المختبر ---------------- */
+
+.tl-table-wrap {
+  min-width: 0;
+  overflow-x: auto;
+}
+
+.tl-table {
+  border-collapse: collapse;
+  font-size: 0.98rem;
+  width: 100%;
+}
+
+.tl-table caption {
+  color: var(--tl-ink-soft);
+  font-size: 0.95rem;
+  padding-bottom: 0.5rem;
+  text-align: start;
+}
+
+.tl-table th,
+.tl-table td {
+  border: 1px solid var(--tl-line);
+  padding: 0.55rem 0.65rem;
+  text-align: start;
+  vertical-align: top;
+  word-break: normal;
+}
+
+.tl-table th {
+  background: var(--tl-accent-soft);
+  color: var(--tl-accent);
+}
+
+.tl-table td bdi {
+  font-size: 1.15rem;
+  line-height: 1.95;
+}
+
+.tl-table tbody tr:nth-child(even) td {
+  background: #faf9ff;
+}
+
+/* تباين بسيط بين جدول الجمل وجدول النون الأصلية */
+.tl-table--sentences th:first-child,
+.tl-table--nun th:first-child {
+  width: 30%;
+}
+
+.tl-table--nun td:first-child {
+  font-weight: 700;
+}
+
+/* ---------------- مختبر اختيار العلامة ---------------- */
+
+.tl-lab {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.tl-lab__row {
+  background: var(--tl-panel);
+  background-image: var(--tl-grid);
+  border: 1px solid var(--tl-line);
+  border-radius: var(--tl-radius);
+  display: flex;
+  flex-direction: column;
+  gap: 0.45rem;
+  min-width: 0;
+  padding: 0.9rem 1rem;
+}
+
+.tl-lab__context,
+.tl-lab__position {
+  color: var(--tl-ink-soft);
+  font-size: 0.95rem;
+  margin: 0;
+}
+
+.tl-lab__context bdi {
+  color: var(--tl-ink);
+  font-size: 1.05rem;
+}
+
+.tl-lab__word {
+  font-size: clamp(1.7rem, 6vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.95;
+  margin: 0;
+  min-height: 2.6rem;
+}
+
+.tl-lab__base {
+  color: var(--tl-ink-soft);
+  font-weight: 600;
+}
+
+.tl-lab__applied {
+  color: var(--tl-ok);
+  font-weight: 700;
+}
+
+.tl-lab__marks,
+.tl-challenge__actions,
+.tl-decision__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.tl-mark-button,
+.tl-choice-button {
+  align-items: center;
+  background: var(--tl-panel);
+  border: 2px solid var(--tl-line-strong);
+  border-radius: 12px;
+  color: var(--tl-ink);
+  cursor: pointer;
+  display: inline-flex;
+  font-family: inherit;
+  font-size: 1.05rem;
+  gap: 0.45rem;
+  justify-content: center;
+  min-height: 44px;
+  padding: 0.4rem 0.9rem;
+}
+
+.tl-mark-button bdi {
+  font-size: 1.5rem;
+  line-height: 1.9;
+}
+
+.tl-mark-button[aria-pressed='true'],
+.tl-choice-button[aria-pressed='true'] {
+  background: var(--tl-accent-soft);
+  border-color: var(--tl-accent);
+  box-shadow: 0 0 0 3px rgba(89, 63, 158, 0.18);
+  font-weight: 700;
+}
+
+.tl-mark-button[aria-pressed='true'].tl-mark-button--damm {
+  background: var(--tl-damm-soft);
+  border-color: var(--tl-damm);
+  box-shadow: 0 0 0 3px rgba(138, 82, 0, 0.18);
+}
+
+.tl-mark-button[aria-pressed='true'].tl-mark-button--fath {
+  background: var(--tl-fath-soft);
+  border-color: var(--tl-fath);
+  box-shadow: 0 0 0 3px rgba(15, 95, 104, 0.18);
+}
+
+.tl-mark-button[aria-pressed='true'].tl-mark-button--kasr {
+  background: var(--tl-kasr-soft);
+  border-color: var(--tl-kasr);
+  box-shadow: 0 0 0 3px rgba(138, 43, 95, 0.18);
+}
+
+/* ---------------- تحدّي النون الأصلية والتنوين ---------------- */
+
+.tl-challenge {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tl-challenge__card {
+  background: var(--tl-panel);
+  border: 1px solid var(--tl-line);
+  border-radius: var(--tl-radius);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+}
+
+.tl-challenge__word {
+  font-size: clamp(1.7rem, 6vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.95;
+  margin: 0;
+  text-align: center;
+}
+
+/* ---------------- نشاط قرار الألف ---------------- */
+
+.tl-decision {
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+}
+
+.tl-decision__row {
+  background: var(--tl-panel);
+  border: 1px solid var(--tl-line);
+  border-radius: var(--tl-radius);
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.9rem 1rem;
+}
+
+.tl-decision__word {
+  font-size: clamp(1.7rem, 6vw, 2.1rem);
+  font-weight: 700;
+  line-height: 1.95;
+  margin: 0;
+}
+
+.tl-decision__result {
+  font-size: 1.1rem;
+  margin: 0 0 0.35rem;
+}
+
+.tl-decision__result strong {
+  color: var(--tl-ok);
+  font-size: 1.35rem;
+  line-height: 1.95;
+}
+
+/* ---------------- بطاقات حالات ألف تنوين الفتح ---------------- */
+
+.tl-cases {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tl-case {
+  background: var(--tl-panel);
+  border: 1px solid var(--tl-line);
+  border-inline-start: 6px solid var(--tl-line-strong);
+  border-radius: var(--tl-radius);
+  padding: 0.85rem 1rem;
+}
+
+.tl-case h4 {
+  color: var(--tl-accent);
+  margin: 0 0 0.35rem;
+}
+
+.tl-case--keep {
+  border-inline-start-color: var(--tl-bad);
+}
+
+.tl-case--add {
+  border-inline-start-color: var(--tl-ok);
+}
+
+.tl-case__rule {
+  font-weight: 700;
+  margin: 0 0 0.3rem;
+}
+
+.tl-case__reason {
+  color: var(--tl-ink-soft);
+  font-size: 0.97rem;
+  margin: 0 0 0.4rem;
+}
+
+.tl-case__examples {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0;
+  padding-inline-start: 1.1rem;
+}
+
+.tl-case__base {
+  color: var(--tl-ink-soft);
+}
+
+.tl-case__result {
+  color: var(--tl-ok);
+}
+
+/* ---------------- تحليل الأمثلة ---------------- */
+
+.tl-analyses {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.tl-analysis {
+  background: var(--tl-panel);
+  border: 1px solid var(--tl-line);
+  border-radius: var(--tl-radius);
+  padding: 0.85rem 0.95rem;
+}
+
+.tl-analysis h4 {
+  margin: 0 0 0.4rem;
+}
+
+.tl-analysis h4 bdi {
+  font-size: 1.3rem;
+  line-height: 1.95;
+}
+
+.tl-analysis__steps {
+  color: var(--tl-ink-soft);
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+  margin: 0 0 0.45rem;
+  padding-inline-start: 1.1rem;
+}
+
+.tl-analysis__result {
+  background: var(--tl-ok-soft);
+  border-radius: 10px;
+  color: var(--tl-ok);
+  margin: 0;
+  padding: 0.4rem 0.6rem;
+}
+
+.tl-analysis__result bdi {
+  font-size: 1.15rem;
+  line-height: 1.95;
+}
+
+/* ---------------- بطاقات الأخطاء الشائعة ---------------- */
+
+.tl-errors {
+  display: grid;
+  gap: 0.85rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.tl-error {
+  background: var(--tl-panel);
+  border: 1px solid var(--tl-line);
+  border-radius: var(--tl-radius);
+  padding: 0.9rem 1rem;
+}
+
+.tl-error__pair {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  margin-bottom: 0.5rem;
+}
+
+.tl-error__pair p {
+  font-size: 1.15rem;
+  margin: 0;
+}
+
+.tl-error__reason {
+  color: var(--tl-ink-soft);
+  font-size: 0.97rem;
+  margin: 0;
+}
+
+.tl-tag {
+  border: 1px solid var(--tl-line-strong);
+  border-radius: 999px;
+  font-size: 0.9rem;
+  font-weight: 700;
+  padding: 0.1rem 0.6rem;
+}
+
+.tl-tag--bad {
+  background: var(--tl-bad-soft);
+  border-color: var(--tl-bad);
+  color: var(--tl-bad);
+}
+
+.tl-tag--good {
+  background: var(--tl-ok-soft);
+  border-color: var(--tl-ok);
+  color: var(--tl-ok);
+}
+
+.tl-tag--yes {
+  background: var(--tl-ok-soft);
+  border-color: var(--tl-ok);
+  color: var(--tl-ok);
+}
+
+.tl-tag--no {
+  background: var(--tl-accent-soft);
+  border-color: var(--tl-accent);
+  color: var(--tl-accent);
+}
+
+/* ---------------- تغذية راجعة سببية ---------------- */
+
+.tl-feedback {
+  border-radius: 12px;
+  font-size: 0.99rem;
+  margin: 0;
+  padding: 0.65rem 0.85rem;
+}
+
+.tl-feedback p {
+  margin: 0;
+}
+
+.tl-feedback--ok {
+  background: var(--tl-ok-soft);
+  border-inline-start: 5px solid var(--tl-ok);
+  color: var(--tl-ok);
+}
+
+.tl-feedback--bad {
+  background: var(--tl-bad-soft);
+  border-inline-start: 5px solid var(--tl-bad);
+  color: var(--tl-bad);
+}
+
+.tl-feedback strong {
+  color: inherit;
+}
+
+.tl-practice-rules {
+  margin-top: 0.5rem;
+}
+
+/* ---------------- إتاحة الوصول ---------------- */
+
+.tanween-lab-lesson :focus-visible {
+  outline: 3px solid var(--tl-accent);
+  outline-offset: 2px;
+}
+
+.tanween-lab-lesson button {
+  font-family: inherit;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tanween-lab-lesson * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+  }
+}
+
+/* ---------------- الاستجابة ---------------- */
+
+@media (max-width: 900px) {
+  .tl-marks,
+  .tl-specimens,
+  .tl-analyses {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .tanween-lab-lesson {
+    font-size: 1rem;
+  }
+
+  .tl-palette {
+    grid-template-columns: 1fr;
+  }
+
+  .tl-marks,
+  .tl-specimens,
+  .tl-challenge,
+  .tl-cases,
+  .tl-analyses,
+  .tl-errors {
+    grid-template-columns: 1fr;
+  }
+
+  /* الجداول تتحول إلى بطاقات: العنوان يُعاد من data-label فوق كل خلية */
+  .tl-table caption {
+    /* «table-caption» داخل جدول صار display:block ينكمش إلى عمود ضيّق،
+       فيُعرض العنوان ككتلة بعرض كامل قبل البطاقات. */
+    display: block;
+    text-align: start;
+    width: 100%;
+  }
+
+  .tl-table thead {
+    border: 0;
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  .tl-table,
+  .tl-table tbody,
+  .tl-table tr,
+  .tl-table td {
+    display: block;
+    width: 100%;
+  }
+
+  .tl-table tr {
+    border: 1px solid var(--tl-line);
+    border-radius: 12px;
+    margin-bottom: 0.75rem;
+    overflow: hidden;
+  }
+
+  .tl-table td {
+    border: 0;
+    border-bottom: 1px dashed var(--tl-line);
+    padding: 0.5rem 0.65rem;
+    word-break: normal;
+  }
+
+  .tl-table td:last-child {
+    border-bottom: 0;
+  }
+
+  .tl-table td::before {
+    color: var(--tl-accent);
+    content: attr(data-label) ': ';
+    display: block;
+    font-size: 0.9rem;
+    font-weight: 700;
+  }
+
+  .tl-mark-button,
+  .tl-choice-button {
+    flex: 1 1 auto;
+  }
+}
+
+@media (max-width: 420px) {
+  .tl-lab__row,
+  .tl-challenge__card,
+  .tl-decision__row,
+  .tl-error,
+  .tl-case,
+  .tl-analysis,
+  .tl-hero,
+  .tl-card {
+    padding-inline: 0.8rem;
+  }
+
+  .tl-mark-button,
+  .tl-choice-button {
+    font-size: 1rem;
+    padding-inline: 0.6rem;
+    width: 100%;
+  }
+}

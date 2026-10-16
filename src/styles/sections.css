@@ -232,13 +232,14 @@
   stroke-linecap: round;
   stroke-linejoin: round;
 }
-/* Empty sections state their count calmly — factual, never broken-looking. */
+/* Empty sections state their count calmly — factual, never broken-looking.
+   ink-soft (not muted) keeps the >= 4.5:1 contrast on the cream chip. */
 .section-card__count--empty {
   padding: .3rem .8rem;
   border: 1px dashed var(--cream-deep);
   border-radius: 999px;
   background: var(--cream);
-  color: var(--muted);
+  color: var(--ink-soft);
   font-weight: 600;
 }
 
@@ -383,7 +384,8 @@
 }
 .section-empty__text {
   max-width: 500px;
-  color: var(--muted);
+  /* ink-soft keeps >= 4.5:1 contrast on the panel's cream gradient end. */
+  color: var(--ink-soft);
   font-size: .88rem;
   margin-block-end: 1rem;
 }

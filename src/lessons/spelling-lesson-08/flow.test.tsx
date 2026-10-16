@@ -33,6 +33,7 @@ describe('spelling lesson 08 — interactive flow, independent test, solutions, 
       '#/lesson/spelling-lesson-08',
       '#/lesson/spelling-lesson-09',
       '#/lesson/spelling-lesson-10',
+      '#/lesson/spelling-lesson-11',
     ])
 
     await user.click(links[7])

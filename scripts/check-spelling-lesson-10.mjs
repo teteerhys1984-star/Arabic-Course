@@ -39,14 +39,15 @@ assert(
   'route dispatch',
 )
 assert(
-  !registry.includes("id: 'spelling-lesson-11'") &&
-    !existsSync('src/lessons/LessonSpellingEleven.tsx') &&
-    !existsSync('src/lessons/spelling-lesson-11'),
-  'no eleventh lesson',
+  registry.includes("id: 'spelling-lesson-11'") &&
+    !registry.includes("id: 'spelling-lesson-12'") &&
+    !existsSync('src/lessons/LessonSpellingTwelve.tsx') &&
+    !existsSync('src/lessons/spelling-lesson-12'),
+  'eleventh registered; no twelfth lesson',
 )
 assert(
   !registry.includes("id: 'spelling-unit") &&
-    !lesson.includes('href="#/lesson/spelling-lesson-11'),
+    !lesson.includes('href="#/lesson/spelling-lesson-12'),
   'no unit test or broken next link',
 )
 

@@ -1,0 +1,144 @@
+{
+  "sourceSha256": "f5a7a346ec78cc9b86f0aae38a06caa349a40d6dad9ca27da9e5f3e76baab3a1",
+  "baselineCommit": "2229628",
+  "previousContentSha256": {
+    "docs/source/spelling-lesson-04.md": "4604cddb68f96985c9fbe7f3437f668c33c1f416c38641d855628fe962acb317",
+    "docs/source/spelling-lesson-05.md": "feb9768725ff859c4dc7e4618030c64b77d63e081379488fa65823f2afe8aca1",
+    "docs/source/spelling-lesson-06.md": "45748bbca21a289d26271357447b8682079ea824c6fef52c46159725a22db393",
+    "docs/source/spelling-lesson-07.md": "94dd9a0d39037f6d78cd3b318fd0a9169d446aba07ccd81168b482cc08dd9a6d",
+    "docs/source/spelling-lesson-08.md": "334b391edb05c4cd378226bebada454079d69472f893e9d3315376e6b1d430ec",
+    "docs/source/spelling-lesson-09.md": "662ebc15be744d745eef642173d8c510de2bb88f54d580c0ca38ac0211cc74fd",
+    "docs/source/spelling-lesson-10.md": "fa73eb510bb19647178556f82c2eb9cb1c5f1fc742e1fb59f72449c4f386ed59",
+    "src/lessons/LessonSpellingOne.tsx": "2dde2995180f0d9be03cde1626c36d77da4377b54f3a8dceecdcd93b9d85c604",
+    "src/lessons/LessonSpellingTwo.tsx": "29f6c6574846c1af49ec6bca03950e75939d96b4536b547f436688a43bc818bf",
+    "src/lessons/LessonSpellingThree.tsx": "2388c81ab18eb6799118589391179539cd6f888deb7f157c98dedf198cb1ad64",
+    "src/lessons/LessonSpellingFour.tsx": "97541fbd2a80a7eb846060cae0104e269c1016fd0a032f44589c964ad145b767",
+    "src/lessons/LessonSpellingFive.tsx": "a19311c22cf7fc2e640234749780ce789030dd54a094a511902481c50271d12a",
+    "src/lessons/LessonSpellingSix.tsx": "395d4e0a2e3709f737b994dc254bb63fac53d81d773e9b31b9ea12e2e5395505",
+    "src/lessons/LessonSpellingSeven.tsx": "a487feb87082a5d2dc663f76e9357ef03536e8f7b2f6916291f516af8a5d512d",
+    "src/lessons/LessonSpellingEight.tsx": "754a968b39cd5ad33e6c08f79e70668816db1acabd706ade133ccbacc2ed509a",
+    "src/lessons/LessonSpellingNine.tsx": "67709ac70f4dbb1edc06af45714660bed27c3250b0fcb5d404e7af40b0e34dd7",
+    "src/lessons/LessonSpellingTen.tsx": "7ce2891c2fd38d16847b81ebe7b3db96eb3433d4722a180316fa2d8b77993ca1",
+    "src/lessons/spelling-lesson-01/content.ts": "28cec433b47f4b998518651460112ffbd6e76026a07cccb82c719c4b5c3570dc",
+    "src/lessons/spelling-lesson-02/content.ts": "1ed3be83b36e37a7002e9ec7a240c38816aa9847e1d496b28b1cc96017644e23",
+    "src/lessons/spelling-lesson-03/content.ts": "c657de8ef012d649d7c2012e3536594d6777826f5bbe648898a7bb1bb068fee1",
+    "src/lessons/spelling-lesson-04/content.ts": "f69adcf44caa2da665821d4b93b771586ad622b267202e1a36726216e1fc083c",
+    "src/lessons/spelling-lesson-05/content.ts": "6c6bb5a65b3dd461ee2bc654906f371b4841aedd5ca07f8a03a6dfc08c34881b",
+    "src/lessons/spelling-lesson-06/content.ts": "a59bf4a5c3e81d1e506e06537f81282d338af30315aefb34449adc60e8281b7f",
+    "src/lessons/spelling-lesson-07/content.ts": "f4309662e99772ef61a8e710178922282565be22b6a4e35e4c3eaa9b368688d5",
+    "src/lessons/spelling-lesson-08/content.ts": "85f88ae8ef8bac38699bc3bc4a2333d54f39d0fa668522e7e19cce070412c46b",
+    "src/lessons/spelling-lesson-09/content.ts": "d98ff478d70923ae12441cfaea131c6cf51a5f89e3b3a9f488f3e501f28bd04e",
+    "src/lessons/spelling-lesson-10/content.ts": "01216221c2f89911bd2b27fe3f3f83a616addf7cbaddf57d9d564ac1ee1fb7f3",
+    "src/lessons/spelling-lesson-07/lesson.css": "7d11bdc0c8522f742bfaed74c474878ade57eca662739966c9fecddaa250f8ca",
+    "src/lessons/spelling-lesson-08/lesson.css": "b9a04de99305e53bf9f9c1dc51e720a38147191df9f618eb2dfaecc30bdde997",
+    "src/lessons/spelling-lesson-09/lesson.css": "742346455ec3ab23986b7c4eeb6639fc66b71afa9bc0857581495aaf138482ca",
+    "src/lessons/spelling-lesson-10/lesson.css": "3cb1dd7a93a6f9d155fc8743834a342fbd0690068c5f2f6c672685d37606d53d",
+    "src/lessons/spelling-lesson-06.css": "a5a55418a316d312224ea4f9a63ba2bb6bb3666b538f86dd0372efe93551596a",
+    "src/styles/spelling-lesson-05.css": "07973ce294d70378d078cb604c0415fc3302d353ed53d97d63bf198d343d0c8d"
+  },
+  "coverage": [
+    {
+      "section": "الأهداف والمدخل",
+      "terms": [
+        "أهداف الدرس",
+        "معرفة معنى التنوين",
+        "تجنّب الأخطاء الإملائية الشائعة"
+      ]
+    },
+    {
+      "section": "تعريف التنوين",
+      "terms": [
+        "نون ساكنة زائدة",
+        "كتابٌ",
+        "كتابًا",
+        "كتابٍ",
+        "يكتبٌ",
+        "اكتبٍ",
+        "كتابْ"
+      ]
+    },
+    {
+      "section": "أنواع التنوين الثلاثة",
+      "terms": [
+        "تنوين الضم",
+        "تنوين الفتح",
+        "تنوين الكسر",
+        "طالبٌ",
+        "قلمٌ",
+        "منزلٌ",
+        "قلمًا",
+        "طالبٍ",
+        "منزلٍ",
+        "كتابن"
+      ]
+    },
+    {
+      "section": "اختيار نوع التنوين",
+      "terms": [
+        "هذا طالبٌ مجتهدٌ.",
+        "رأيتُ طالبًا مجتهدًا.",
+        "سلّمتُ على طالبٍ مجتهدٍ.",
+        "خبر مرفوع",
+        "مفعول به",
+        "مجرورة"
+      ]
+    },
+    {
+      "section": "ألف تنوين الفتح",
+      "terms": [
+        "بابًا",
+        "بيتًا",
+        "درسًا",
+        "دفترًا",
+        "طريقًا"
+      ]
+    },
+    {
+      "section": "التاء المربوطة",
+      "terms": [
+        "مدرسةً",
+        "شجرةً",
+        "قصةً",
+        "سيارةً",
+        "قصةًا"
+      ]
+    },
+    {
+      "section": "الألف الأصلية والمقصورة",
+      "terms": [
+        "عصًا",
+        "فتًى",
+        "هدًى"
+      ]
+    },
+    {
+      "section": "الهمزة المتطرفة",
+      "terms": [
+        "سماءً",
+        "بناءً",
+        "مساءً",
+        "مبدأً",
+        "ملجأً",
+        "خطأً",
+        "سماءًا"
+      ]
+    },
+    {
+      "section": "التنوين والنون الأصلية",
+      "terms": [
+        "بستان",
+        "ميزان",
+        "إنسان",
+        "نون أصلية",
+        "بستانٌ"
+      ]
+    },
+    {
+      "section": "الخلاصة والدرس التالي",
+      "terms": [
+        "خلاصة الدرس",
+        "علامات الحذف والزيادة"
+      ]
+    }
+  ]
+}

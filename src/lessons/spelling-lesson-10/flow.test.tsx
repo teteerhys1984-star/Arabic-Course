@@ -18,13 +18,13 @@ beforeEach(() => {
 })
 
 describe('spelling lesson 10 — interactive flow, tests, solutions, and teacher space', () => {
-  it('opens from spelling section, has 22 steps and seven groups, and no broken eleventh route', async () => {
+  it('opens from spelling section, has 22 steps and seven groups, and the eleventh lesson is registered after it', async () => {
     const user = userEvent.setup()
     window.location.hash = '#/sections/spelling'
     const { unmount } = render(<App />)
 
     const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
-    expect(links).toHaveLength(10)
+    expect(links).toHaveLength(11)
     await user.click(links[9])
     expect(window.location.hash).toBe('#/lesson/spelling-lesson-10')
 
@@ -44,10 +44,10 @@ describe('spelling lesson 10 — interactive flow, tests, solutions, and teacher
     expect(screen.getByRole('table')).toBeInTheDocument()
 
     await user.click(jump('خلاصة الدرس'))
-    expect(document.querySelector('.lesson-step')!.querySelector('a[href*="spelling-lesson-11"]')).toBeNull()
+    expect(document.querySelector('.lesson-step')!.querySelector('a[href*="spelling-lesson-12"]')).toBeNull()
 
     unmount()
-    window.location.hash = '#/lesson/spelling-lesson-11'
+    window.location.hash = '#/lesson/spelling-lesson-12'
     render(<App />)
     expect(screen.getByRole('heading', { name: 'الدرس غير متاح' })).toBeInTheDocument()
   })

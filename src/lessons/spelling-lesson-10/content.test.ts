@@ -44,7 +44,7 @@ const expectedExamAnswers = [
 ]
 
 describe('spelling lesson 10 — content, source coverage, and independent test key', () => {
-  it('registers all ten spelling lessons in order and creates no eleventh lesson or unit test', () => {
+  it('registers all eleven spelling lessons in order and creates no twelfth lesson or unit test', () => {
     const spellingLessons = lessonRegistry.filter((l) => l.sectionId === 'spelling')
     expect(spellingLessons.map((l) => l.id)).toEqual([
       'spelling-lesson-01',
@@ -57,8 +57,9 @@ describe('spelling lesson 10 — content, source coverage, and independent test 
       'spelling-lesson-08',
       'spelling-lesson-09',
       'spelling-lesson-10',
+      'spelling-lesson-11',
     ])
-    expect(lessonRegistry.some((l) => l.id === 'spelling-lesson-11' || l.id.includes('unit'))).toBe(false)
+    expect(lessonRegistry.some((l) => l.id === 'spelling-lesson-12' || l.id.includes('unit'))).toBe(false)
   })
 
   it('preserves source fidelity, covers inventory and leaves previous lessons byte-identical', () => {

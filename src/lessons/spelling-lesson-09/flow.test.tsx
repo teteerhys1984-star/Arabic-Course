@@ -14,7 +14,7 @@ describe('spelling 09 shared lesson flow',()=>{
     const user=userEvent.setup(); window.location.hash='#/sections/spelling'
     const {unmount}=render(<App />)
     const links=within(screen.getByRole('list',{name:'دروس القسم'})).getAllByRole('link')
-    expect(links).toHaveLength(10)
+    expect(links).toHaveLength(11)
     await user.click(links[8]); expect(window.location.hash).toBe('#/lesson/spelling-lesson-09')
     expect(document.querySelector('.spell9-lesson')).toHaveAttribute('dir','rtl')
     const outline=screen.getByRole('complementary',{name:'فهرس الدرس الجانبي'})
@@ -26,8 +26,8 @@ describe('spelling 09 shared lesson flow',()=>{
     await user.click(jump('جدول المقارنة'))
     expect(screen.getByRole('table')).toBeInTheDocument(); expect(screen.getAllByRole('columnheader')).toHaveLength(4)
     await user.click(jump('الخلاصة والقاعدة'))
-    expect(document.querySelector('.lesson-step')!.querySelector('a[href*="spelling-lesson-10"]')).toBeNull()
-    unmount(); window.location.hash='#/lesson/spelling-lesson-11'; render(<App />)
+    expect(document.querySelector('.lesson-step')!.querySelector('a[href*="spelling-lesson-12"]')).toBeNull()
+    unmount(); window.location.hash='#/lesson/spelling-lesson-12'; render(<App />)
     expect(screen.getByRole('heading',{name:'الدرس غير متاح'})).toBeInTheDocument()
   })
   it('uses keyboard-compatible shared practice and quiz with explanations only after checking; persists each independently',async()=>{

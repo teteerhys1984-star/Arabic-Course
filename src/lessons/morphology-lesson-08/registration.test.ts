@@ -41,7 +41,7 @@ describe('morphology 08 — registration and non-weakened source guards', () => 
     expect(new Set(lessonRegistry.map((lesson) => lesson.id)).size).toBe(lessonRegistry.length)
     expect(getSectionLessons('morphology').map((lesson) => lesson.number)).toEqual(['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '١٠', '١١'])
     expect(getSectionLessons('morphology')[7]).toMatchObject({ title: 'تصريف الأفعال والإسناد إلى الضمائر', available: true })
-    expect(getSectionLessons('basics-grammar').map((lesson) => lesson.id)).toEqual(Array.from({ length: 11 }, (_, index) => `lesson-${index + 1}`))
+    expect(getSectionLessons('basics-grammar').map((lesson) => lesson.id)).toEqual(Array.from({ length: 12 }, (_, index) => `lesson-${index + 1}`))
     expect(sectionRegistry.map((section) => section.id)).toEqual(['basics-grammar', 'morphology', 'spelling', 'rhetoric', 'reading-expression'])
   })
 

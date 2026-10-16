@@ -1,0 +1,57 @@
+.twelve-lesson { color: #203b36; font-size: 1.08rem; line-height: 2; overflow-wrap: anywhere; }
+.twelve-lesson *, .twelve-stack, .twelve-teaching { min-width: 0; }
+.twelve-lesson h3, .twelve-lesson h4 { line-height: 1.8; }
+.twelve-lesson h4 { font-size: 1.2rem; }
+.twelve-stack { display: grid; gap: 1.2rem; }
+.twelve-hero { padding: clamp(1.1rem, 4vw, 2rem); border-radius: 1.3rem; background: #163f3b; color: #fffaf0; border: 1px solid #163f3b; }
+.twelve-hero h3 { color: #fffaf0; font-size: clamp(1.5rem, 3vw, 2rem); }
+.twelve-hero p:first-child { color: #f6dea7; }
+.twelve-visual { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-block: 1.2rem; }
+.twelve-card { background: #fffefa; border: 1px solid #c9d9d3; border-radius: 1rem; padding: clamp(.9rem, 3vw, 1.5rem); }
+.twelve-card h4 { margin-block: .3rem .8rem; }
+.twelve-card li + li { margin-block-start: .55rem; }
+.twelve-visual .twelve-card { text-align: center; }
+.twelve-visual svg { width: 100%; height: auto; max-height: 110px; }
+.twelve-visual h4 { font-size: clamp(1.3rem, 4vw, 1.8rem); margin: 0; }
+.twelve-visual p { margin: 0; }
+.twelve-dual { --twelve-accent: #215a77; --twelve-tint: #eef7fb; }
+.twelve-masculine { --twelve-accent: #356044; --twelve-tint: #f0f7ec; }
+.twelve-feminine { --twelve-accent: #764875; --twelve-tint: #faf1f8; }
+.twelve-neutral { --twelve-accent: #5b502c; --twelve-tint: #fbf7ec; }
+.twelve-teaching { border-inline-start: .3rem solid var(--twelve-accent); padding-inline-start: clamp(.8rem, 2vw, 1.4rem); }
+.twelve-visual .twelve-card { color: var(--twelve-accent); background: var(--twelve-tint); border-block-start: .3rem solid var(--twelve-accent); }
+.twelve-goal { font-size: 1rem; padding: .75rem 1rem; border-radius: .5rem; background: #edf3ef; color: #254c41; }
+.twelve-note { background: #fcf5df; color: #53401d; border: 1px solid #c9ae6e; border-inline-start: .3rem solid #8c6425; border-radius: .75rem; padding: 1rem; margin-block: 1rem; }
+.twelve-examples { display: grid; gap: 1rem; }
+.twelve-examples h4 { color: var(--twelve-accent, #215345); font-size: 1.45rem; }
+.twelve-table-wrap { max-width: 100%; margin-block: 1rem; }
+.twelve-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; border: 1px solid #c3d2cd; border-radius: .8rem; overflow: hidden; font-size: 1rem; }
+.twelve-table caption { text-align: start; font-weight: 700; padding-block-end: .8rem; }
+.twelve-table th, .twelve-table td { text-align: start; vertical-align: top; padding: .85rem; border-block-end: 1px solid #c3d2cd; }
+.twelve-table thead th { background: #204e43; color: #fff; }
+.twelve-table tbody th { color: var(--twelve-accent, #254c41); background: var(--twelve-tint, #f1f5ef); }
+.twelve-table td { background: #fffefa; }
+.twelve-table td bdi, .twelve-table th small { display: block; margin-block-start: .45rem; }
+.twelve-table th small { font-weight: 400; font-size: .9rem; color: #344a43; }
+.twelve-table td bdi { font-size: 1.22rem; }
+.twelve-lesson .button { margin-block: .5rem; margin-inline-end: .5rem; white-space: normal; }
+.twelve-lesson :is(button, input, textarea):focus-visible { outline: 3px solid #215a77; outline-offset: 4px; }
+.twelve-lesson .test-field--choice label { min-height: 48px; align-items: center; }
+@media (max-width: 600px) {
+  .twelve-lesson { font-size: 1.04rem; }
+  .twelve-visual { grid-template-columns: 1fr; }
+  .twelve-visual .twelve-card { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: .3rem; }
+  .twelve-visual svg { grid-row: span 2; }
+  .twelve-table, .twelve-table tbody, .twelve-table tr { display: block; width: 100%; }
+  .twelve-table caption { display: block; width: 100%; box-sizing: border-box; padding: .8rem; }
+  .twelve-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .twelve-table th, .twelve-table td { display: block; width: 100%; box-sizing: border-box; }
+  .twelve-table td::before { content: attr(data-label) " — "; font-weight: 700; color: #344a43; }
+  .twelve-table tbody tr + tr { border-block-start: 3px solid #829f94; }
+  .twelve-table td bdi { display: inline; margin-inline-start: .5rem; }
+  .twelve-examples ol { padding-inline-start: 1.3rem; }
+}
+/* Scope readable shared-test metadata to this lesson; shared CSS is unchanged. */
+.twelve-lesson .test-page__hint,
+.twelve-lesson .test-question__type,
+.twelve-lesson .test-question__level { color: #40594f; }

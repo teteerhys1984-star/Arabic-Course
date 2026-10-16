@@ -49,7 +49,7 @@ describe('Platform home (section index) and section pages', () => {
     expect(screen.queryByRole('link', { name: 'الاسم والفعل والحرف' })).not.toBeInTheDocument()
   })
 
-  it('lists the eleven lesson cards, preserving the first ten routes in registry order, inside الأساسيات والنحو', () => {
+  it('lists the twelve lesson cards, preserving the first ten routes in registry order, inside الأساسيات والنحو', () => {
     window.location.hash = '#/sections/basics-grammar'
     render(<App />)
 
@@ -73,12 +73,13 @@ describe('Platform home (section index) and section pages', () => {
       '#/lesson/lesson-9',
       '#/lesson/lesson-10',
       '#/lesson/lesson-11',
+      '#/lesson/lesson-12',
     ])
     expect(screen.getByRole('link', { name: 'الاسم والفعل والحرف' })).toHaveAttribute('href', '#/lesson/lesson-1')
     expect(screen.getByRole('link', { name: 'كان وأخواتها' })).toHaveAttribute('href', '#/lesson/lesson-9')
     expect(screen.getByRole('link', { name: 'إنَّ وأخواتها' })).toHaveAttribute('href', '#/lesson/lesson-10')
     expect(screen.getByRole('link', { name: 'علامات الإعراب الأصلية — كيف نعرف حركة آخر الكلمة؟' })).toHaveAttribute('href', '#/lesson/lesson-11')
-    expect(screen.getAllByText(/ابدأ الدرس/)).toHaveLength(11)
+    expect(screen.getAllByText(/ابدأ الدرس/)).toHaveLength(12)
 
     // Breadcrumb trail: اللغة العربية ← الأساسيات والنحو.
     const trail = screen.getByRole('navigation', { name: 'مسار التنقل' })
@@ -1242,7 +1243,7 @@ describe('Lesson 8 as a native multi-step lesson (الأسماء الخمسة)',
   it('does not regress Lessons 1–7 after adding the eighth lesson', () => {
     window.location.hash = '#/sections/basics-grammar'
     const { unmount } = render(<App />)
-    expect(within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')).toHaveLength(11)
+    expect(within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')).toHaveLength(12)
     unmount()
 
     goToLesson('lesson-1')
@@ -1837,7 +1838,7 @@ describe('Lesson 9 as a native multi-step lesson (كان وأخواتها)', () 
   it('does not regress Lessons 1–9 after adding the tenth lesson', () => {
     window.location.hash = '#/sections/basics-grammar'
     const { unmount } = render(<App />)
-    expect(within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')).toHaveLength(11)
+    expect(within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')).toHaveLength(12)
     unmount()
 
     goToLesson('lesson-2')
@@ -2230,11 +2231,11 @@ describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف
     expect(screen.queryByRole('heading', { name: 'لا توجد دروس مضافة إلى هذا القسم بعد.' })).not.toBeInTheDocument()
   })
 
-  it('keeps the basics section at eleven lessons and no morphology lesson in its list', () => {
+  it('keeps the basics section at twelve lessons and no morphology lesson in its list', () => {
     window.location.hash = '#/sections/basics-grammar'
     render(<App />)
     const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
-    expect(links).toHaveLength(11)
+    expect(links).toHaveLength(12)
     expect(links.slice(0, 10).map((link) => link.getAttribute('href'))).toEqual(
       Array.from({ length: 10 }, (_, index) => `#/lesson/lesson-${index + 1}`),
     )

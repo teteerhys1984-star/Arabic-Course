@@ -54,7 +54,7 @@ describe('morphology 11 — التسجيل وحدود النطاق بعد إضا
     })
     expect(getSectionLessons('morphology')[9]).toMatchObject({ title: 'أنواع المصادر وأوزانها', available: true })
     expect(getSectionLessons('basics-grammar').map((lesson) => lesson.id)).toEqual(
-      Array.from({ length: 11 }, (_, index) => `lesson-${index + 1}`),
+      Array.from({ length: 12 }, (_, index) => `lesson-${index + 1}`),
     )
     expect(getSectionLessons('spelling').length).toBeGreaterThan(0)
     expect(sectionRegistry.map((section) => section.id)).toEqual([

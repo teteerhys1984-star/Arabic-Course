@@ -1,0 +1,324 @@
+{
+  "browser": "153.0.8010.0",
+  "viewports": [
+    {
+      "width": 390,
+      "height": 844,
+      "steps": 25,
+      "states": 31,
+      "maxDocumentWidth": 390,
+      "clippedText": 0
+    },
+    {
+      "width": 1280,
+      "height": 900,
+      "steps": 25,
+      "states": 31,
+      "maxDocumentWidth": 1280,
+      "clippedText": 0
+    }
+  ],
+  "runtimeErrors": [],
+  "axeStates": 62,
+  "axeConfirmedViolations": [],
+  "axeIncomplete": [
+    {
+      "width": 390,
+      "state": "step-3",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-4",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-5",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-6",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-7",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-9",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-12",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-13",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-15",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-16",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-17",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-18",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-19",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-20",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-23",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "step-24",
+      "rules": [
+        "color-contrast",
+        "duplicate-id-aria"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "challenge-correct",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "challenge-retry",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "exam-result",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "exam-solutions",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 390,
+      "state": "teacher-unlocked",
+      "rules": [
+        "color-contrast",
+        "duplicate-id-aria"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-3",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-4",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-5",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-6",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-7",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-9",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-12",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-13",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-15",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-16",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-17",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-18",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-19",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-20",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-23",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "step-24",
+      "rules": [
+        "color-contrast",
+        "duplicate-id-aria"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "challenge-correct",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "challenge-retry",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "exam-result",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "exam-solutions",
+      "rules": [
+        "color-contrast"
+      ]
+    },
+    {
+      "width": 1280,
+      "state": "teacher-unlocked",
+      "rules": [
+        "color-contrast",
+        "duplicate-id-aria"
+      ]
+    }
+  ]
+}

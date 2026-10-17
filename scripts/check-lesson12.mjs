@@ -9,9 +9,10 @@ assert.equal(registered.length, 1)
 assert.equal(registered[0].sectionId, 'basics-grammar')
 assert.equal(registered[0].number, '١٢')
 assert.equal(registered[0].available, true)
-assert.deepEqual(lessonRegistry.filter((l) => l.sectionId === 'basics-grammar').map((l) => l.id), Array.from({ length: 12 }, (_, i) => `lesson-${i + 1}`))
-assert(!lessonRegistry.some((l) => l.id === 'lesson-13' || /unit.*test/.test(l.id)))
-assert(!existsSync('src/lessons/LessonThirteen.tsx'))
+// Lesson 13 (a later independent task) extends the basics section after lesson 12; this
+// lesson's own scope contract now keeps lessons 1–13 in order and still forbids unit tests.
+assert.deepEqual(lessonRegistry.filter((l) => l.sectionId === 'basics-grammar').map((l) => l.id), Array.from({ length: 13 }, (_, i) => `lesson-${i + 1}`))
+assert(!lessonRegistry.some((l) => /unit.*test/.test(l.id)))
 assert.equal(coverage.length, 20)
 const component = readFileSync('src/lessons/LessonTwelve.tsx', 'utf8')
 const steps = new Set([...teachingSections.map((s) => s.id), ...Array.from(component.matchAll(/id: '([^']+)'/g), (m) => m[1]), 'exam-1'])
@@ -50,9 +51,15 @@ assert(readFileSync('src/app/App.tsx', 'utf8').includes('<LessonTwelve onFinish=
 const inventory = JSON.parse(readFileSync('docs/lesson-12-source-inventory.json', 'utf8'))
 const hash = (text) => createHash('sha256').update(text).digest('hex')
 const registry = readFileSync('src/lessons/registry.ts', 'utf8')
-assert.equal(hash(registry.replace(/  \{\n    id: 'lesson-12',[\s\S]*?\n  \},\n/, '')), inventory.registrySha256)
+// The inventory hash covers the registry with this lesson's entry removed. The later
+// lesson-13 entry is the added task's own registration, so it is removed too before
+// hashing — every other registry entry must remain byte-identical.
+const withoutEntries = registry
+  .replace(/  \{\n    id: 'lesson-12',[\s\S]*?\n  \},\n/, '')
+  .replace(/  \{\n    id: 'lesson-13',[\s\S]*?\n  \},\n/, '')
+assert.equal(hash(withoutEntries), inventory.registrySha256)
 assert(Object.keys(inventory.previousRuntimeSha256).length > 100)
 for (const [file, digest] of Object.entries(inventory.previousRuntimeSha256)) {
   assert.equal(hash(readFileSync(file, 'utf8')), digest, `Unrelated source changed: ${file}`)
 }
-console.log('Lesson 12 structural audit passed: unique basics registration, 20 axes, 8 verified challenge keys, 16 exam questions (5/5/3/3, 3 manual), 5 parsed applications, 4 homework solutions, teacher guide, disclosure controls, previous source unchanged, no lesson 13 or unit test.')
+console.log('Lesson 12 structural audit passed: unique basics registration, 20 axes, 8 verified challenge keys, 16 exam questions (5/5/3/3, 3 manual), 5 parsed applications, 4 homework solutions, teacher guide, disclosure controls, previous source unchanged, no unit test (lesson 13 is a later, independent registration).')

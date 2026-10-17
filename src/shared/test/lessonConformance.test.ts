@@ -1,4 +1,5 @@
 import { testDefinition as lessonTwelveTest } from '../../lessons/LessonTwelve'
+import { testDefinition as lessonThirteenTest } from '../../lessons/LessonThirteen'
 import { testDefinition as spellingTenTest } from '../../lessons/LessonSpellingTen'
 import { testDefinition as spellingElevenTest } from '../../lessons/LessonSpellingEleven'
 import { testDefinition as spellingTwelveTest } from '../../lessons/LessonSpellingTwelve'
@@ -77,6 +78,7 @@ const lessonTests: Array<{ lesson: string; test: TestDefinition; expectedQuestio
   { lesson: 'lesson-9', test: lessonNineTest, expectedQuestions: 20 },
   { lesson: 'lesson-10', test: lessonTenTest, expectedQuestions: 20 },
   { lesson: 'lesson-12', test: lessonTwelveTest, expectedQuestions: 16 },
+  { lesson: 'lesson-13', test: lessonThirteenTest, expectedQuestions: 20 },
   { lesson: 'lesson-11', test: lessonElevenTest, expectedQuestions: 20 },
   { lesson: 'morphology-lesson-01', test: morphologyOneTest, expectedQuestions: 45 },
   { lesson: 'morphology-lesson-02', test: morphologyTwoTest, expectedQuestions: 26 },
@@ -105,10 +107,10 @@ const lessonTests: Array<{ lesson: string; test: TestDefinition; expectedQuestio
 ]
 
 describe('lesson test conformance — the shared platform schema', () => {
-  it('covers every registered lesson (36 lessons)', () => {
+  it('covers every registered lesson (37 lessons)', () => {
     expect(lessonTests.map((entry) => entry.lesson).sort()).toEqual(lessonRegistry.filter((entry) => entry.available).map((entry) => entry.id).sort())
-    expect(lessonTests).toHaveLength(36)
-    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(36)
+    expect(lessonTests).toHaveLength(37)
+    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(37)
   })
 
   it.each(lessonTests.map((entry) => [entry.lesson, entry] as const))(

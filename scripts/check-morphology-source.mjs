@@ -352,11 +352,11 @@ if (count(registry, "id: 'morphology-lesson-01'") !== 1) fail('morphology-lesson
 // نطاق الصرف بعد إضافة الدرس ١٢؛ الحارس المشترك يمنع الدرس ١٣ واختبار الوحدة.
 failures.push(...morphologyScopeIssues(registry, read('src/app/App.tsx')))
 if (count(registry, "sectionId: 'morphology'") !== 12) fail('Section «morphology» must contain exactly twelve lessons (١–١٢)')
-// Adding grammar lesson 12 changes this section count only; preserve the original eleven ids in order.
+// Adding grammar lesson 12 then lesson 13 changes this section count only; preserve the earlier ids in order.
 const basicsIds = [...registry.matchAll(/\{\s*id: '(lesson-\d+)',[\s\S]*?sectionId: 'basics-grammar'/g)].map((match) => match[1])
-const expectedBasicsIds = Array.from({ length: 12 }, (_, index) => `lesson-${index + 1}`)
-if (JSON.stringify(basicsIds) !== JSON.stringify(expectedBasicsIds) || count(registry, "sectionId: 'basics-grammar'") !== 12) {
-  fail('Section «basics-grammar» must keep lessons 1–11 in order and add lesson 12 exactly once after them')
+const expectedBasicsIds = Array.from({ length: 13 }, (_, index) => `lesson-${index + 1}`)
+if (JSON.stringify(basicsIds) !== JSON.stringify(expectedBasicsIds) || count(registry, "sectionId: 'basics-grammar'") !== 13) {
+  fail('Section «basics-grammar» must keep lessons 1–12 in order and add lesson 13 exactly once after them')
 }
 const morphEntry = registry.slice(registry.indexOf("id: 'morphology-lesson-01'"), registry.indexOf("id: 'morphology-lesson-01'") + 500)
 if (!/number: '١'/.test(morphEntry) || !/title: 'مدخل إلى علم الصرف'/.test(morphEntry)) fail('Lesson 1 must be numbered ١ with the source title')
@@ -550,5 +550,5 @@ if (failures.length) {
 console.log(
   `Morphology source audit passed against ${srcPath}: 12 objectives, 8 worked examples, 15 activity words, ` +
     '3 family lists, 8 mind-map nodes, 9 golden rules, 6 tools, 45 questions in source order with prompts/options/groups, ' +
-    'answer keys 1–40, 5 teacher mistakes, 11 review rows, remediation and challenge, one Lesson 1 registration, twelve basics lessons (original 1–10 unchanged), exactly twelve lessons in الصرف (١–١٢), no morphology lesson 13 or unit assessment.',
+    'answer keys 1–40, 5 teacher mistakes, 11 review rows, remediation and challenge, one Lesson 1 registration, thirteen basics lessons (original 1–12 unchanged), exactly twelve lessons in الصرف (١–١٢), no morphology lesson 13 or unit assessment.',
 )

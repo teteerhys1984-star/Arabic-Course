@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 
-const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx', 'LessonEight.tsx', 'LessonNine.tsx', 'LessonTen.tsx', 'lesson-ten/content.ts', 'LessonEleven.tsx', 'lesson-eleven/content.ts'].map((name) => `src/lessons/${name}`)
+const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx', 'LessonEight.tsx', 'LessonNine.tsx', 'LessonTen.tsx', 'lesson-ten/content.ts', 'LessonEleven.tsx', 'lesson-eleven/content.ts', 'lesson-thirteen/content.ts'].map((name) => `src/lessons/${name}`)
 const sources = Object.fromEntries(lessonPaths.map((path) => [path, readFileSync(path, 'utf8')]))
 const failures = []
 
@@ -111,6 +111,25 @@ for (const phrase of [
   'الدرسَ: مفعول به منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.',
   'الدفترِ: اسم مجرور بـ«في»، وعلامة جره الكسرة الظاهرة على آخره.',
 ]) requirePhrase('src/lessons/lesson-eleven/content.ts', phrase)
+
+// Lesson 13 (علامات الإعراب الفرعية): the target-word parsings of the independent exam
+// and the adopted analyses that must never regress («مع» as an added adverb, not a
+// preposition; the connected باء; the feminine ta' disambiguation).
+for (const phrase of [
+  'الطالبانِ: فاعل مرفوع وعلامة رفعه الألف لأنه مثنّى.',
+  'المهندسينَ: مفعول به منصوب وعلامة نصبه الياء لأنه جمع مذكر سالم.',
+  'المعلّمَيْنِ: اسم مجرور بـ«على» وعلامة جرّه الياء لأنه مثنّى.',
+  'المجتهداتِ: مفعول به منصوب وعلامة نصبه الكسرة الظاهرة على آخره نيابةً عن الفتحة لأنه جمع مؤنث سالم.',
+  'المعلّمونَ: فاعل مرفوع وعلامة رفعه الواو لأنه جمع مذكر سالم.',
+  'الطالبَيْنِ: اسم مجرور بالباء وعلامة جرّه الياء لأنه مثنّى.',
+  'على: حرف جر مبني على السكون لا محل له من الإعراب.',
+  'معَ: ظرف منصوب وعلامة نصبه الفتحة الظاهرة على آخره، وهو مضاف؛ «مع» هنا ليست حرف جر.',
+  'الباء: حرف جر مبني على السكون لا محل له من الإعراب.',
+  'والتاء تاء التأنيث الساكنة لا محل لها من الإعراب، حُرّكت بالكسر في الوصل للتخلص من التقاء الساكنين؛ وليست تاء مخاطبة.',
+]) requirePhrase('src/lessons/lesson-thirteen/content.ts', phrase)
+if (/مع:\s*حرف جر/.test(sources['src/lessons/lesson-thirteen/content.ts'])) {
+  failures.push('lesson-thirteen/content.ts must never describe «مع» as a preposition.')
+}
 
 requirePhrase('src/lessons/LessonNine.tsx', 'أبوك: اسم كان مرفوع، وعلامة رفعه الواو نيابة عن الضمة؛ لأنه من الأسماء الخمسة، وهو مضاف.')
 requirePhrase('src/lessons/LessonNine.tsx', 'كريمًا: خبر كان منصوب، وعلامة نصبه الفتحة الظاهرة على آخره.')

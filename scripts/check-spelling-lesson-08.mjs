@@ -24,7 +24,7 @@ const checks = [
       app.includes("lesson.id === 'spelling-lesson-08'"),
     'ordered registration after spelling-lesson-07 and App route dispatch',
   ],
-  [registry.includes("id: 'spelling-lesson-09'") && registry.includes("id: 'spelling-lesson-10'") && registry.includes("id: 'spelling-lesson-11'") && !registry.includes("id: 'spelling-lesson-12'"), 'ninth through eleventh registered; no twelfth spelling lesson created'],
+  [registry.includes("id: 'spelling-lesson-09'") && registry.includes("id: 'spelling-lesson-10'") && registry.includes("id: 'spelling-lesson-11'") && registry.includes("id: 'spelling-lesson-12'") && !registry.includes("id: 'spelling-lesson-13'"), 'ninth through twelfth registered; no thirteenth spelling lesson created'],
   [practiceMatches.length === 8, 'eight interactive practice questions'],
   [eduQuizMatches.length === 10, 'ten educational quiz questions'],
   [examMatches.length === 20, 'twenty independent exam questions'],

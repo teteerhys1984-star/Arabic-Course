@@ -38,7 +38,7 @@ describe('spelling 07 content and registration', () => {
     expect(readFileSync('docs/spelling-lesson-07-audit.md', 'utf8')).toContain(hash)
   })
   it('keeps lessons 1–6 in order, adds 7 before 8, 9 and 10 and no unit assessment', () => {
-    expect(lessonRegistry.filter(l => l.sectionId === 'spelling').map(l => l.id)).toEqual([...Array.from({length: 9}, (_, i) => `spelling-lesson-0${i + 1}`), 'spelling-lesson-10', 'spelling-lesson-11'])
+    expect(lessonRegistry.filter(l => l.sectionId === 'spelling').map(l => l.id)).toEqual([...Array.from({length: 9}, (_, i) => `spelling-lesson-0${i + 1}`), 'spelling-lesson-10', 'spelling-lesson-11', 'spelling-lesson-12'])
     expect(testDefinition.id).toBe('spelling-lesson-07-independent')
     expect(readFileSync('src/lessons/LessonSpellingSeven.tsx', 'utf8')).not.toContain('unit-test')
   })

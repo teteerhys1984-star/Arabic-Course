@@ -33,7 +33,7 @@ describe('spelling lesson 11 — registration, flow, labs, tests and gated areas
     const { unmount } = render(<App />)
 
     const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
-    expect(links).toHaveLength(11)
+    expect(links).toHaveLength(12)
     expect(links[10]).toHaveAttribute('href', '#/lesson/spelling-lesson-11')
     await user.click(links[10])
     expect(window.location.hash).toBe('#/lesson/spelling-lesson-11')
@@ -56,10 +56,10 @@ describe('spelling lesson 11 — registration, flow, labs, tests and gated areas
     expect(screen.getAllByText(/قصة ← قصةً/).length).toBeGreaterThan(0)
 
     await user.click(jump('خلاصة الدرس'))
-    expect(document.querySelector('.lesson-step')!.querySelector('a[href*="spelling-lesson-12"]')).toBeNull()
+    expect(document.querySelector('.lesson-step')!.querySelector('a[href*="spelling-lesson-13"]')).toBeNull()
 
     unmount()
-    window.location.hash = '#/lesson/spelling-lesson-12'
+    window.location.hash = '#/lesson/spelling-lesson-13'
     render(<App />)
     expect(screen.getByRole('heading', { name: 'الدرس غير متاح' })).toBeInTheDocument()
   })

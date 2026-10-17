@@ -58,8 +58,9 @@ describe('spelling lesson 10 — content, source coverage, and independent test 
       'spelling-lesson-09',
       'spelling-lesson-10',
       'spelling-lesson-11',
+      'spelling-lesson-12',
     ])
-    expect(lessonRegistry.some((l) => l.id === 'spelling-lesson-12' || l.id.includes('unit'))).toBe(false)
+    expect(lessonRegistry.some((l) => l.id === 'spelling-lesson-13' || l.id.includes('unit'))).toBe(false)
   })
 
   it('preserves source fidelity, covers inventory and leaves previous lessons byte-identical', () => {

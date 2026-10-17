@@ -40,10 +40,11 @@ assert(
 )
 assert(
   registry.includes("id: 'spelling-lesson-11'") &&
-    !registry.includes("id: 'spelling-lesson-12'") &&
-    !existsSync('src/lessons/LessonSpellingTwelve.tsx') &&
-    !existsSync('src/lessons/spelling-lesson-12'),
-  'eleventh registered; no twelfth lesson',
+    registry.includes("id: 'spelling-lesson-12'") &&
+    !registry.includes("id: 'spelling-lesson-13'") &&
+    !existsSync('src/lessons/LessonSpellingThirteen.tsx') &&
+    !existsSync('src/lessons/spelling-lesson-13'),
+  'eleventh and twelfth registered; no thirteenth lesson',
 )
 assert(
   !registry.includes("id: 'spelling-unit") &&

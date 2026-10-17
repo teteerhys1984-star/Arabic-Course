@@ -12,14 +12,19 @@ const examOracle = ['مثنّى', 'جمع مذكر سالم', 'جمع مؤنث �
 describe('lesson 12 — audited source, registration and scope', () => {
   it('registers once after lesson 11 in basics only; retains every previous registry entry verbatim', () => {
     expect(lessonRegistry.filter((l) => l.id === 'lesson-12')).toEqual([expect.objectContaining({ number: '١٢', sectionId: 'basics-grammar', available: true })])
-    expect(getSectionLessons('basics-grammar').map((l) => l.id)).toEqual(Array.from({ length: 12 }, (_, i) => `lesson-${i + 1}`))
-    expect(lessonRegistry.some((l) => l.id === 'lesson-13' || /unit.*test/.test(l.id))).toBe(false)
+    expect(getSectionLessons('basics-grammar').map((l) => l.id)).toEqual(Array.from({ length: 13 }, (_, i) => `lesson-${i + 1}`))
+    // lesson-13 is a later, independent basics lesson; unit tests stay forbidden everywhere.
+    expect(lessonRegistry.some((l) => /unit.*test/.test(l.id))).toBe(false)
     const current = readFileSync('src/lessons/registry.ts', 'utf8')
     const inventory = JSON.parse(readFileSync('docs/lesson-12-source-inventory.json', 'utf8')) as { registrySha256: string; previousRuntimeSha256: Record<string, string> }
     const hash = (text: string) => createHash('sha256').update(text).digest('hex')
     const added = current.match(/ {2}\{\n {4}id: 'lesson-12',[\s\S]*?\n {2}\},\n/)
     expect(added).not.toBeNull()
-    expect(hash(current.replace(added![0], ''))).toBe(inventory.registrySha256)
+    const laterEntry = current.match(/ {2}\{\n {4}id: 'lesson-13',[\s\S]*?\n {2}\},\n/)
+    expect(laterEntry).not.toBeNull()
+    // The inventory hash covers the registry minus this lesson's entry; the later lesson-13
+    // registration is removed too — every other entry must remain byte-identical.
+    expect(hash(current.replace(added![0], '').replace(laterEntry![0], ''))).toBe(inventory.registrySha256)
     // Frozen base digests also work in CI's depth-one checkout without Git history.
     expect(Object.keys(inventory.previousRuntimeSha256).length).toBeGreaterThan(100)
     for (const [path, digest] of Object.entries(inventory.previousRuntimeSha256)) {

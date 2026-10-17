@@ -1,0 +1,62 @@
+.thirteen-lesson { color: #203b36; font-size: 1.08rem; line-height: 2; overflow-wrap: anywhere; }
+.thirteen-lesson *, .thirteen-stack, .thirteen-teaching { min-width: 0; }
+.thirteen-lesson h3, .thirteen-lesson h4 { line-height: 1.8; }
+.thirteen-lesson h4 { font-size: 1.2rem; }
+.thirteen-stack { display: grid; gap: 1.2rem; }
+.thirteen-hero { padding: clamp(1.1rem, 4vw, 2rem); border-radius: 1.3rem; background: #163f3b; color: #fffaf0; border: 1px solid #163f3b; }
+.thirteen-hero h3 { color: #fffaf0; font-size: clamp(1.5rem, 3vw, 2rem); }
+.thirteen-hero p:first-child { color: #f6dea7; }
+.thirteen-visual { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: .8rem; margin-block: 1.2rem; }
+.thirteen-card { background: #fffefa; border: 1px solid #c9d9d3; border-radius: 1rem; padding: clamp(.9rem, 3vw, 1.5rem); }
+.thirteen-card h4 { margin-block: .3rem .8rem; }
+.thirteen-card li + li { margin-block-start: .55rem; }
+.thirteen-visual .thirteen-card { text-align: center; }
+.thirteen-visual svg { width: 100%; height: auto; max-height: 110px; }
+.thirteen-visual h4 { font-size: clamp(1.3rem, 4vw, 1.8rem); margin: 0; }
+.thirteen-visual p { margin: 0; }
+.thirteen-dual { --thirteen-accent: #215a77; --thirteen-tint: #eef7fb; }
+.thirteen-masculine { --thirteen-accent: #356044; --thirteen-tint: #f0f7ec; }
+.thirteen-feminine { --thirteen-accent: #764875; --thirteen-tint: #faf1f8; }
+.thirteen-neutral { --thirteen-accent: #5b502c; --thirteen-tint: #fbf7ec; }
+.thirteen-teaching { border-inline-start: .3rem solid var(--thirteen-accent); padding-inline-start: clamp(.8rem, 2vw, 1.4rem); }
+.thirteen-visual .thirteen-card { color: var(--thirteen-accent, #215345); background: var(--thirteen-tint, #f4f7f2); border-block-start: .3rem solid var(--thirteen-accent, #215345); }
+.thirteen-goal { font-size: 1rem; padding: .75rem 1rem; border-radius: .5rem; background: #edf3ef; color: #254c41; }
+.thirteen-note { background: #fcf5df; color: #53401d; border: 1px solid #c9ae6e; border-inline-start: .3rem solid #8c6425; border-radius: .75rem; padding: 1rem; margin-block: 1rem; }
+.thirteen-examples { display: grid; gap: 1rem; }
+.thirteen-examples h4 { color: var(--thirteen-accent, #215345); font-size: 1.45rem; }
+.thirteen-focus { font-size: 1.02rem; color: #2c4a41; }
+.thirteen-wrong { color: #8a2f2f; font-size: 1.25rem; margin-block: .2rem; }
+.thirteen-right { color: #1f5b34; font-size: 1.25rem; margin-block: .2rem; }
+.thirteen-errors { display: grid; gap: 1rem; }
+.thirteen-table-wrap { max-width: 100%; margin-block: 1rem; }
+.thirteen-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; border: 1px solid #c3d2cd; border-radius: .8rem; overflow: hidden; font-size: 1rem; }
+.thirteen-table caption { text-align: start; font-weight: 700; padding-block-end: .8rem; }
+.thirteen-table th, .thirteen-table td { text-align: start; vertical-align: top; padding: .85rem; border-block-end: 1px solid #c3d2cd; }
+.thirteen-table thead th { background: #204e43; color: #fff; }
+.thirteen-table tbody th { color: var(--thirteen-accent, #254c41); background: var(--thirteen-tint, #f1f5ef); }
+.thirteen-table td { background: #fffefa; }
+.thirteen-table td bdi, .thirteen-table th small { display: block; margin-block-start: .45rem; }
+.thirteen-table th small { font-weight: 400; font-size: .9rem; color: #344a43; }
+.thirteen-table td bdi { font-size: 1.22rem; }
+.thirteen-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .8rem; }
+.thirteen-lesson .button { margin-block: .5rem; margin-inline-end: .5rem; white-space: normal; min-height: 48px; }
+.thirteen-lesson :is(button, input, textarea):focus-visible { outline: 3px solid #215a77; outline-offset: 4px; }
+.thirteen-lesson .test-field--choice label { min-height: 48px; align-items: center; }
+@media (max-width: 600px) {
+  .thirteen-lesson { font-size: 1.04rem; }
+  .thirteen-visual { grid-template-columns: 1fr; }
+  .thirteen-visual .thirteen-card { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: .3rem; }
+  .thirteen-visual svg { grid-row: span 2; }
+  .thirteen-table, .thirteen-table tbody, .thirteen-table tr { display: block; width: 100%; }
+  .thirteen-table caption { display: block; width: 100%; box-sizing: border-box; padding: .8rem; }
+  .thirteen-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .thirteen-table th, .thirteen-table td { display: block; width: 100%; box-sizing: border-box; }
+  .thirteen-table td::before { content: attr(data-label) " — "; font-weight: 700; color: #344a43; }
+  .thirteen-table tbody tr + tr { border-block-start: 3px solid #829f94; }
+  .thirteen-table td bdi { display: inline; margin-inline-start: .5rem; }
+  .thirteen-examples ol, .thirteen-table ol { padding-inline-start: 1.3rem; }
+}
+/* Scope readable shared-test metadata to this lesson; shared CSS is unchanged. */
+.thirteen-lesson .test-page__hint,
+.thirteen-lesson .test-question__type,
+.thirteen-lesson .test-question__level { color: #40594f; }

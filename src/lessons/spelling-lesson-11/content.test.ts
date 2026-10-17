@@ -35,8 +35,9 @@ const spellingLessonIds = [
   'spelling-lesson-07',
   'spelling-lesson-08',
   'spelling-lesson-09',
-  'spelling-lesson-10',
-  'spelling-lesson-11',
+      'spelling-lesson-10',
+      'spelling-lesson-11',
+      'spelling-lesson-12',
 ]
 
 /** مفاتيح الاختبار المستقل العشرين بعد مراجعة كل سؤال على حدة. */
@@ -64,7 +65,7 @@ const expectedExamAnswers = [
 ]
 
 describe('spelling lesson 11 — content, source coverage, and reviewed keys', () => {
-  it('registers the eleventh spelling lesson in order and creates no twelfth lesson or unit test', () => {
+  it('registers the eleventh spelling lesson in order and creates no thirteenth lesson or unit test', () => {
     const spellingLessons = lessonRegistry.filter((lesson) => lesson.sectionId === 'spelling')
     expect(spellingLessons.map((lesson) => lesson.id)).toEqual(spellingLessonIds)
     expect(spellingLessons[10]).toMatchObject({
@@ -76,7 +77,7 @@ describe('spelling lesson 11 — content, source coverage, and reviewed keys', (
       title: 'التنوين وأنواعه وكيفية كتابته',
     })
     expect(
-      lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-12' || lesson.id.includes('unit')),
+      lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-13' || lesson.id.includes('unit')),
     ).toBe(false)
   })
 

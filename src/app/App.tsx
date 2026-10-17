@@ -1,4 +1,5 @@
 import { LessonTwelve } from '../lessons/LessonTwelve'
+import { LessonSpellingTwelve } from '../lessons/LessonSpellingTwelve'
 import { LessonSpellingEleven } from '../lessons/LessonSpellingEleven'
 import { LessonSpellingTen } from '../lessons/LessonSpellingTen'
 import { LessonSpellingNine } from '../lessons/LessonSpellingNine'
@@ -89,6 +90,8 @@ function LessonPage({ lesson }: { lesson: LessonMeta }) {
       <LessonTwelve onFinish={finishLesson} />
     ) : lesson.id === 'spelling-lesson-11' ? (
       <LessonSpellingEleven onFinish={finishLesson} />
+    ) : lesson.id === 'spelling-lesson-12' ? (
+      <LessonSpellingTwelve onFinish={finishLesson} />
     ) : lesson.id === 'spelling-lesson-10' ? (
       <LessonSpellingTen onFinish={finishLesson} />
     ) : lesson.id === 'spelling-lesson-05' ? (

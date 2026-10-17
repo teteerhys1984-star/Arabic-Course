@@ -1,0 +1,787 @@
+/* ==========================================================================
+   الدرس الثاني عشر: «علامات الحذف والزيادة في الكلمات»
+   الهوية البصرية: «مختبر الحذف والزيادة».
+
+   فكرة المختبر: لونان ثابتان في كل الدرس يميّزان الظاهرتين
+     الحذف  → المرجاني (omit)
+     الزيادة → الفيروزي (add)
+   والبنية مستقلة عن الدروس السابقة: منصة مختبر بشرائح (hero + panels)،
+   شريط الكلمات، بطاقات المقارنة (صواب/خطأ بعلامتين ✓ و✗ لا باللون وحده)،
+   صفوف التحويل (قبل ← بعد)، ومنهج الخطوات الثلاث المرقّم.
+
+   ملاحظات إتاحة مطبقة هنا:
+     • لا اتجاهات فيزيائية في الأنماط: start/end فقط.
+     • ارتفاع أسطر سخيّ (1.9–1.95) حتى لا تُقصّ الحركات المشكّلة.
+     • أهداف اللمس ≥ 44px وحدود تركيز واضحة، مع احترام تقليل الحركة.
+     • الجداول تتحوّل إلى بطاقات بيانات على الشاشات الصغيرة
+       (attr(data-label)) فلا يُقتطع نص ولا يلزم تمرير أفقي.
+   ========================================================================== */
+
+.omit-add-lesson {
+  --ol-ink: #241d3f;
+  --ol-ink-soft: #57516f;
+  --ol-accent: #7a3b2e;
+  --ol-accent-soft: #faece7;
+  --ol-paper: #fffdfa;
+  --ol-panel: #ffffff;
+  --ol-line: #e4ddd4;
+  --ol-line-strong: #c9bfb0;
+  --ol-omit: #8f2d2d;
+  --ol-omit-soft: #fbeeed;
+  --ol-add: #0e5f63;
+  --ol-add-soft: #e2f1f2;
+  --ol-ok: #14603f;
+  --ol-ok-soft: #e7f5ee;
+  --ol-bad: #9c2a2a;
+  --ol-bad-soft: #fbecec;
+  --ol-neutral: #5a4632;
+  --ol-neutral-soft: #f7f1e6;
+  --ol-radius: 16px;
+  --ol-shadow: 0 10px 24px rgba(36, 29, 63, 0.09);
+  /* ورق المختبر: شبكة خفيفة تُذكّر بورق التجارب */
+  --ol-grid: repeating-linear-gradient(
+    to left,
+    rgba(122, 59, 46, 0.06) 0,
+    rgba(122, 59, 46, 0.06) 1px,
+    transparent 1px,
+    transparent 22px
+  );
+
+  color: var(--ol-ink);
+  font-size: 1.02rem;
+  line-height: 1.95;
+  min-width: 0;
+}
+
+/* الكلمات المشكّلة تحتاج خطًا يتّسع للحركات */
+.omit-add-lesson bdi,
+.omit-add-lesson .ol-hero-word,
+.omit-add-lesson .ol-word,
+.omit-add-lesson .ol-transform__result,
+.omit-add-lesson .ol-ibn__text {
+  font-family: 'Traditional Arabic', 'Amiri', 'Scheherazade New', 'Noto Naskh Arabic',
+    serif;
+  line-height: 1.95;
+}
+
+.omit-add-lesson * {
+  box-sizing: border-box;
+}
+
+/* ------------------------------------------------------------------ */
+/* البنية العامة: بطاقات وصناديق                                    */
+/* ------------------------------------------------------------------ */
+
+.ol-stack {
+  display: grid;
+  gap: 1.1rem;
+}
+
+.ol-hero {
+  background: var(--ol-grid), var(--ol-panel);
+  border: 1px solid var(--ol-line);
+  border-inline-start: 6px solid var(--ol-accent);
+  border-radius: var(--ol-radius);
+  box-shadow: var(--ol-shadow);
+  padding: 1.4rem 1.5rem;
+}
+
+.ol-hero h3 {
+  font-size: clamp(1.4rem, 2.4vw + 1rem, 1.9rem);
+  line-height: 1.6;
+  margin-block: 0.4rem 0.2rem;
+}
+
+.ol-hero p {
+  margin-block: 0.3rem;
+}
+
+.ol-hero__lead {
+  color: var(--ol-ink-soft);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.ol-card {
+  background: var(--ol-panel);
+  border: 1px solid var(--ol-line);
+  border-radius: var(--ol-radius);
+  box-shadow: var(--ol-shadow);
+  padding: 1.1rem 1.2rem;
+}
+
+.ol-card h4 {
+  margin-block: 0 0.5rem;
+}
+
+.ol-note {
+  background: var(--ol-neutral-soft);
+  border: 1px solid var(--ol-line);
+  border-inline-start: 5px solid var(--ol-neutral);
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+}
+
+.ol-note h4 {
+  margin-block: 0 0.4rem;
+}
+
+.ol-note p,
+.ol-note li {
+  margin-block: 0.25rem;
+}
+
+.ol-hint {
+  color: var(--ol-ink-soft);
+  font-size: 0.92rem;
+}
+
+.ol-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-block: 0.6rem;
+}
+
+.ol-callout {
+  border-radius: 12px;
+  padding: 0.9rem 1.1rem;
+}
+
+.ol-callout h4 {
+  margin-block: 0 0.4rem;
+}
+
+.ol-callout p {
+  margin-block: 0.2rem;
+}
+
+.ol-callout--rule {
+  background: var(--ol-accent-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-accent) 35%, transparent);
+}
+
+.ol-callout--attention {
+  background: var(--ol-omit-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-omit) 30%, transparent);
+}
+
+.ol-callout--precision {
+  background: var(--ol-add-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-add) 30%, transparent);
+}
+
+.ol-list {
+  margin-block: 0.4rem;
+  padding-inline-start: 1.4rem;
+}
+
+.ol-list li {
+  margin-block: 0.3rem;
+}
+
+.ol-list li::marker {
+  color: var(--ol-accent);
+  font-weight: 700;
+}
+
+.ol-list--solutions li {
+  margin-block: 0.7rem;
+}
+
+.ol-list--sentences li {
+  font-size: 1.08rem;
+  font-weight: 700;
+}
+
+.ol-list--words li {
+  font-size: 1.06rem;
+}
+
+.ol-list__number {
+  color: var(--ol-accent);
+  font-weight: 700;
+}
+
+.ol-word {
+  font-size: 1.12em;
+  font-weight: 700;
+  letter-spacing: 0;
+}
+
+.ol-word--good {
+  color: var(--ol-ok);
+}
+
+.ol-word--bad {
+  color: var(--ol-bad);
+  text-decoration: underline dotted;
+  text-underline-offset: 4px;
+}
+
+.ol-word--add {
+  color: var(--ol-add);
+}
+
+/* ------------------------------------------------------------------ */
+/* شريط كلمات التمهيد                                               */
+/* ------------------------------------------------------------------ */
+
+.ol-words-strip {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 0.8rem;
+}
+
+.ol-hero-word {
+  background: var(--ol-panel);
+  border: 1px solid var(--ol-line-strong);
+  border-radius: 14px;
+  box-shadow: var(--ol-shadow);
+  font-size: clamp(1.5rem, 3vw, 2rem);
+  min-height: 44px;
+  padding: 0.9rem 0.6rem;
+  text-align: center;
+}
+
+/* ------------------------------------------------------------------ */
+/* المفهومان: بطاقتا الحذف والزيادة                                 */
+/* ------------------------------------------------------------------ */
+
+.ol-concepts {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.ol-concept {
+  border-radius: var(--ol-radius);
+  box-shadow: var(--ol-shadow);
+  padding: 1.1rem 1.2rem;
+}
+
+.ol-concept--omit {
+  background: var(--ol-omit-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-omit) 35%, transparent);
+}
+
+.ol-concept--add {
+  background: var(--ol-add-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-add) 35%, transparent);
+}
+
+.ol-concept h4 {
+  margin-block: 0 0.4rem;
+}
+
+.ol-concept__example {
+  background: rgba(255, 255, 255, 0.65);
+  border-radius: 10px;
+  padding: 0.5rem 0.8rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* بطاقات الأصدقاء الخمسة (أداة الحفظ)                              */
+/* ------------------------------------------------------------------ */
+
+.ol-friends {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+  margin-block: 0.6rem;
+}
+
+.ol-friend {
+  background: var(--ol-accent-soft);
+  border: 1px dashed var(--ol-line-strong);
+  border-radius: 12px;
+  padding: 0.7rem 0.5rem;
+  text-align: center;
+}
+
+.ol-friend__word {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin-block: 0;
+}
+
+.ol-friend__wrong {
+  color: var(--ol-bad);
+  font-size: 0.88rem;
+  margin-block: 0.15rem 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* مقارنة «ابن»: حذف × إثبات                                        */
+/* ------------------------------------------------------------------ */
+
+.ol-ibn {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.ol-ibn__row {
+  border-radius: 12px;
+  display: grid;
+  gap: 0.2rem 0.8rem;
+  grid-template-columns: minmax(0, 1.4fr) auto minmax(0, 2fr);
+  padding: 0.8rem 1rem;
+}
+
+.ol-ibn__row--deleted {
+  background: var(--ol-omit-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-omit) 30%, transparent);
+}
+
+.ol-ibn__row--proven {
+  background: var(--ol-ok-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-ok) 30%, transparent);
+}
+
+.ol-ibn__text {
+  font-size: 1.1rem;
+  font-weight: 700;
+  margin-block: 0;
+}
+
+.ol-ibn__tag {
+  margin-block: 0;
+}
+
+.ol-ibn__note {
+  margin-block: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* دخول اللام على «أل»: صفّان مقارنان                              */
+/* ------------------------------------------------------------------ */
+
+.ol-lam {
+  display: grid;
+  gap: 0.7rem;
+}
+
+.ol-lam__row {
+  border-radius: 12px;
+  padding: 0.8rem 1rem;
+}
+
+.ol-lam__row--yes {
+  background: var(--ol-add-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-add) 30%, transparent);
+}
+
+.ol-lam__row--no {
+  background: var(--ol-neutral-soft);
+  border: 1px dashed var(--ol-line-strong);
+}
+
+.ol-lam__split {
+  margin-block: 0;
+}
+
+.ol-lam__joined {
+  font-size: 1.15rem;
+}
+
+.ol-lam__tag {
+  margin-block: 0.2rem;
+}
+
+.ol-lam__note {
+  margin-block: 0.2rem 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* الواو: مقارنة واو الجماعة بالأصلية وبالاسم                       */
+/* ------------------------------------------------------------------ */
+
+.ol-waw {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+}
+
+.ol-waw__card {
+  background: var(--ol-panel);
+  border: 1px solid var(--ol-line);
+  border-radius: 12px;
+  box-shadow: var(--ol-shadow);
+  padding: 0.9rem 1rem;
+}
+
+.ol-waw__word {
+  font-size: 1.35rem;
+  font-weight: 700;
+  margin-block: 0 0.2rem;
+}
+
+.ol-waw__kind {
+  color: var(--ol-accent);
+  font-weight: 700;
+  margin-block: 0 0.3rem;
+}
+
+.ol-waw__note {
+  margin-block: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* تحوّل تنوين النصب: الاسم ← منوّنًا                               */
+/* ------------------------------------------------------------------ */
+
+.ol-transform {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.9rem;
+  justify-content: center;
+}
+
+.ol-transform__row {
+  align-items: center;
+  background: var(--ol-add-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-add) 30%, transparent);
+  border-radius: 12px;
+  display: flex;
+  gap: 0.7rem;
+  padding: 0.6rem 1rem;
+}
+
+.ol-transform__base,
+.ol-transform__result {
+  font-size: 1.3rem;
+  margin-block: 0;
+}
+
+.ol-transform__arrow {
+  color: var(--ol-ink-soft);
+  font-size: 1.2rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* أمثلة «عمرو»                                                      */
+/* ------------------------------------------------------------------ */
+
+.ol-amru {
+  display: grid;
+  gap: 0.8rem;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+}
+
+.ol-amru__card {
+  background: var(--ol-panel);
+  border: 1px solid var(--ol-line);
+  border-inline-start: 5px solid var(--ol-add);
+  border-radius: 12px;
+  box-shadow: var(--ol-shadow);
+  padding: 0.9rem 1rem;
+}
+
+.ol-amru__text {
+  font-size: 1.15rem;
+  font-weight: 700;
+  margin-block: 0 0.3rem;
+}
+
+.ol-amru__note {
+  margin-block: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* منهج الخطوات الثلاث                                              */
+/* ------------------------------------------------------------------ */
+
+.ol-protocol {
+  display: grid;
+  gap: 0.8rem;
+  list-style: none;
+  margin-block: 0.4rem;
+  padding-inline-start: 0;
+}
+
+.ol-protocol__step {
+  align-items: flex-start;
+  background: var(--ol-panel);
+  border: 1px solid var(--ol-line);
+  border-radius: 12px;
+  box-shadow: var(--ol-shadow);
+  display: flex;
+  gap: 0.9rem;
+  padding: 0.8rem 1rem;
+}
+
+.ol-protocol__number {
+  background: var(--ol-accent);
+  border-radius: 50%;
+  color: #fff;
+  flex: 0 0 auto;
+  font-size: 1.05rem;
+  font-weight: 700;
+  min-block-size: 44px;
+  min-inline-size: 44px;
+  display: grid;
+  place-items: center;
+}
+
+.ol-protocol__step p {
+  margin-block: 0.15rem 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* الخلاصة: جانبان الحذف والزيادة                                  */
+/* ------------------------------------------------------------------ */
+
+.ol-summary {
+  display: grid;
+  gap: 1rem;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+}
+
+.ol-summary__side {
+  border-radius: var(--ol-radius);
+  box-shadow: var(--ol-shadow);
+  padding: 1rem 1.1rem;
+}
+
+.ol-summary__side--omit {
+  background: var(--ol-omit-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-omit) 30%, transparent);
+}
+
+.ol-summary__side--add {
+  background: var(--ol-add-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-add) 30%, transparent);
+}
+
+.ol-summary__side h4 {
+  margin-block: 0 0.4rem;
+}
+
+.ol-summary__side p {
+  margin-block: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* الواجب                                                           */
+/* ------------------------------------------------------------------ */
+
+.ol-homework {
+  display: grid;
+  gap: 1rem;
+}
+
+.ol-list--paragraph {
+  background: var(--ol-neutral-soft);
+  border-radius: 12px;
+  padding: 0.8rem 1rem 0.8rem 2.2rem;
+}
+
+.ol-list--paragraph li {
+  margin-block: 0.25rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* الجداول: شفافة الاتجاه وقابلة للقراءة على الهاتف                */
+/* ------------------------------------------------------------------ */
+
+.ol-table-wrap {
+  block-size: max-content;
+  border-radius: 12px;
+  inline-size: 100%;
+  max-inline-size: 100%;
+  overflow-x: auto;
+}
+
+.ol-table {
+  border-collapse: collapse;
+  background: var(--ol-panel);
+  border: 1px solid var(--ol-line);
+  border-radius: 12px;
+  box-shadow: var(--ol-shadow);
+  inline-size: 100%;
+  word-break: normal;
+}
+
+.ol-table caption {
+  caption-side: top;
+  color: var(--ol-ink-soft);
+  font-size: 0.92rem;
+  font-weight: 700;
+  padding-block-end: 0.5rem;
+  text-align: start;
+}
+
+.ol-table th,
+.ol-table td {
+  border: 1px solid var(--ol-line);
+  padding: 0.6rem 0.8rem;
+  text-align: start;
+  vertical-align: top;
+}
+
+.ol-table thead th {
+  background: var(--ol-accent-soft);
+  font-weight: 700;
+}
+
+.ol-table tbody tr:nth-child(even) {
+  background: color-mix(in srgb, var(--ol-accent-soft) 45%, var(--ol-panel));
+}
+
+/* ------------------------------------------------------------------ */
+/* العلامات والوسوم غير اللونية                                    */
+/* ------------------------------------------------------------------ */
+
+.ol-tag {
+  border-radius: 999px;
+  display: inline-block;
+  font-size: 0.85rem;
+  font-weight: 700;
+  padding: 0.1rem 0.7rem;
+}
+
+.ol-tag--omit {
+  background: var(--ol-omit-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-omit) 40%, transparent);
+  color: var(--ol-omit);
+}
+
+.ol-tag--keep {
+  background: var(--ol-ok-soft);
+  border: 1px solid color-mix(in srgb, var(--ol-ok) 40%, transparent);
+  color: var(--ol-ok);
+}
+
+.ol-tag--neutral {
+  background: var(--ol-neutral-soft);
+  border: 1px dashed var(--ol-line-strong);
+  color: var(--ol-neutral);
+}
+
+/* ------------------------------------------------------------------ */
+/* التركيز والأزرار (مشتركة مع منصة الدرس)                         */
+/* ------------------------------------------------------------------ */
+
+.omit-add-lesson button:focus-visible,
+.omit-add-lesson a:focus-visible,
+.omit-add-lesson input:focus-visible,
+.omit-add-lesson select:focus-visible,
+.omit-add-lesson textarea:focus-visible {
+  outline: 3px solid var(--ol-accent);
+  outline-offset: 2px;
+}
+
+.ol-actions .button,
+.test-page .button {
+  min-block-size: 44px;
+}
+
+/* ------------------------------------------------------------------ */
+/* الاستجابة: الهاتف أولًا                                         */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 640px) {
+  .omit-add-lesson {
+    font-size: 0.98rem;
+  }
+
+  .ol-hero {
+    padding: 1rem;
+  }
+
+  .ol-words-strip {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ol-ibn__row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* الجداول تتحوّل إلى بطاقات بيانات موسومة بدل الاقتطاع */
+  .ol-table thead {
+    clip-path: inset(50%);
+    clip: rect(0 0 0 0);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  .ol-table,
+  .ol-table tbody,
+  .ol-table tr,
+  .ol-table td {
+    display: block;
+    inline-size: 100%;
+  }
+
+  .ol-table tr {
+    border: 1px solid var(--ol-line);
+    border-radius: 12px;
+    margin-block-end: 0.7rem;
+    padding-block: 0.3rem;
+  }
+
+  .ol-table td {
+    border: 0;
+    border-block-start: 1px dashed var(--ol-line);
+    padding-block: 0.45rem;
+    padding-inline: 0.9rem;
+    text-align: start;
+  }
+
+  .ol-table td::before {
+    content: attr(data-label);
+    color: var(--ol-accent);
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+    margin-block-end: 0.1rem;
+  }
+
+  .ol-table td:first-child {
+    border-block-start: 0;
+  }
+
+  .ol-transform__row {
+    padding: 0.5rem 0.7rem;
+  }
+
+  .ol-protocol__step {
+    flex-direction: row;
+  }
+}
+
+@media (max-width: 420px) {
+  .ol-words-strip {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .ol-hero-word {
+    font-size: 1.3rem;
+  }
+
+  .ol-friends {
+    grid-template-columns: repeat(2, 1fr);
+  }
+
+  .ol-concept,
+  .ol-card,
+  .ol-note,
+  .ol-callout,
+  .ol-amru__card,
+  .ol-waw__card {
+    padding-inline: 0.9rem;
+  }
+}
+
+/* احترام من يفضّل تقليل الحركة */
+@media (prefers-reduced-motion: reduce) {
+  .omit-add-lesson * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+  }
+}

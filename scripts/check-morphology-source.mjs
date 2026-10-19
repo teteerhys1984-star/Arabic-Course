@@ -349,9 +349,9 @@ eq('Challenge note', C.challengeNote, L.find((l) => l.includes('تنبيه لل�
 // ================================================================
 const count = (text, needle) => text.split(needle).length - 1
 if (count(registry, "id: 'morphology-lesson-01'") !== 1) fail('morphology-lesson-01 must be registered exactly once')
-// نطاق الصرف بعد إضافة الدرس ١٢؛ الحارس المشترك يمنع الدرس ١٣ واختبار الوحدة.
+// نطاق الصرف يحوي الدروس ١–١٣؛ الحارس يمنع التكرار واختبار الوحدة.
 failures.push(...morphologyScopeIssues(registry, read('src/app/App.tsx')))
-if (count(registry, "sectionId: 'morphology'") !== 12) fail('Section «morphology» must contain exactly twelve lessons (١–١٢)')
+if (count(registry, "sectionId: 'morphology'") !== 13) fail('Section «morphology» must contain exactly thirteen lessons (١–١٣)')
 // Adding grammar lesson 12 then lesson 13 changes this section count only; preserve the earlier ids in order.
 const basicsIds = [...registry.matchAll(/\{\s*id: '(lesson-\d+)',[\s\S]*?sectionId: 'basics-grammar'/g)].map((match) => match[1])
 const expectedBasicsIds = Array.from({ length: 13 }, (_, index) => `lesson-${index + 1}`)
@@ -550,5 +550,5 @@ if (failures.length) {
 console.log(
   `Morphology source audit passed against ${srcPath}: 12 objectives, 8 worked examples, 15 activity words, ` +
     '3 family lists, 8 mind-map nodes, 9 golden rules, 6 tools, 45 questions in source order with prompts/options/groups, ' +
-    'answer keys 1–40, 5 teacher mistakes, 11 review rows, remediation and challenge, one Lesson 1 registration, thirteen basics lessons (original 1–12 unchanged), exactly twelve lessons in الصرف (١–١٢), no morphology lesson 13 or unit assessment.',
+    'answer keys 1–40, 5 teacher mistakes, 11 review rows, remediation and challenge, one Lesson 1 registration, thirteen basics lessons (original 1–12 unchanged), exactly thirteen lessons in الصرف (١–١٣), no duplicate registration or morphology unit assessment.',
 )

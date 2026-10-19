@@ -45,14 +45,14 @@ describe('lesson 11 — registration and audited source coverage', () => {
     expect(basics[9]).toMatchObject({ id: 'lesson-10', title: 'إنَّ وأخواتها', available: true })
     expect(basics[10]).toMatchObject({ sectionId: 'basics-grammar', number: '١١', eyebrow: 'علامات الإعراب الأصلية', available: true })
     expect(getSectionLessons('spelling')).toHaveLength(12)
-    expect(getSectionLessons('morphology')).toHaveLength(12)
+    expect(getSectionLessons('morphology')).toHaveLength(13)
     expect(getSectionLessons('rhetoric')).toHaveLength(0)
     expect(getSectionLessons('reading-expression')).toHaveLength(0)
-    expect(lessonRegistry).toHaveLength(37)
-    expect(new Set(lessonRegistry.map((entry) => entry.id)).size).toBe(37)
-    // lesson-13 (basics) is a later, independent lesson; the other sections' lesson 13 and
-    // every unit assessment remain forbidden.
-    expect(lessonRegistry.some((entry) => ['morphology-lesson-13', 'spelling-lesson-13'].includes(entry.id) || /unit/i.test(entry.id))).toBe(false)
+    expect(lessonRegistry).toHaveLength(38)
+    expect(new Set(lessonRegistry.map((entry) => entry.id)).size).toBe(38)
+    // The morphology lesson 13 is section-local; basics lesson 13 remains independent,
+    // and spelling lesson 13 plus every unit assessment remain out of scope.
+    expect(lessonRegistry.some((entry) => ['spelling-lesson-13'].includes(entry.id) || /unit/i.test(entry.id))).toBe(false)
   })
 
   it('retains the five objectives, four original signs and each worked example group', () => {

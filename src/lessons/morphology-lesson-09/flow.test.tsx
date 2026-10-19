@@ -54,7 +54,7 @@ describe('morphology 09 — المسار والتسجيل وعرض المصدر'
     render(<App />)
     const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
     expect(links.map((link) => link.getAttribute('href'))).toEqual(
-      Array.from({ length: 12 }, (_, index) => `#/lesson/morphology-lesson-${String(index + 1).padStart(2, '0')}`),
+      Array.from({ length: 13 }, (_, index) => `#/lesson/morphology-lesson-${String(index + 1).padStart(2, '0')}`),
     )
     await user.click(screen.getByRole('link', { name: C.lessonTitle }))
     expect(await screen.findByRole('heading', { name: S.header.firstTitle, level: 2 })).toBeInTheDocument()

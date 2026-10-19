@@ -19,7 +19,8 @@ describe('lesson 13 — registration and audited source', () => {
     expect(getSectionLessons('basics-grammar').map((l) => l.id)).toEqual(Array.from({ length: 13 }, (_, i) => `lesson-${i + 1}`))
     // No unit test, and no lesson outside this task's scope (lesson 14 / other sections' 13).
     expect(lessonRegistry.some((l) => l.id === 'lesson-14' || /unit.*test/.test(l.id))).toBe(false)
-    expect(lessonRegistry.some((l) => ['morphology-lesson-13', 'spelling-lesson-13'].includes(l.id))).toBe(false)
+    expect(lessonRegistry.some((l) => l.id === 'spelling-lesson-13')).toBe(false)
+    expect(getSectionLessons('morphology').filter((l) => l.id === 'morphology-lesson-13')).toHaveLength(1)
     const current = readFileSync('src/lessons/registry.ts', 'utf8')
     const inventory = JSON.parse(readFileSync('docs/lesson-12-source-inventory.json', 'utf8')) as {
       registrySha256: string
@@ -28,9 +29,14 @@ describe('lesson 13 — registration and audited source', () => {
     const hash = (text: string) => createHash('sha256').update(text).digest('hex')
     const previousEntry = current.match(/ {2}\{\n {4}id: 'lesson-12',[\s\S]*?\n {2}\},\n/)
     const added = current.match(/ {2}\{\n {4}id: 'lesson-13',[\s\S]*?\n {2}\},\n/)
+    const morphologyEntry = current.match(/ {2}\{\n {4}id: 'morphology-lesson-13',[\s\S]*?\n {2}\},\n/)
     expect(previousEntry).not.toBeNull()
     expect(added).not.toBeNull()
-    expect(hash(current.replace(previousEntry![0], '').replace(added![0], ''))).toBe(inventory.registrySha256)
+    expect(morphologyEntry).not.toBeNull()
+    // Preserve the frozen basics registry baseline while excluding this lesson and the
+    // independently registered morphology lesson 13 added alongside it.
+    const baseline = current.replace(previousEntry![0], '').replace(added![0], '').replace(morphologyEntry![0], '')
+    expect(hash(baseline)).toBe(inventory.registrySha256)
     expect(Object.keys(inventory.previousRuntimeSha256).length).toBeGreaterThan(100)
     for (const [path, digest] of Object.entries(inventory.previousRuntimeSha256)) {
       expect(hash(readFileSync(path, 'utf8')), path).toBe(digest)

@@ -159,8 +159,8 @@ assert(readFileSync('src/app/App.tsx', 'utf8').includes('<LessonThirteen onFinis
 
 // ---------------------------------------------------------------------------
 // Scope guard against the lesson-12 inventory: no previous lesson content, shared
-// runtime, or registry entry may silently change. Both this lesson's entry and the
-// lesson-12 entry are removed before hashing (see docs/lesson-13 audit, section 5).
+// runtime, or unrelated registry entry may silently change. Later independent lesson
+// registrations are removed before hashing (see the lesson-13 audit, section 5).
 // ---------------------------------------------------------------------------
 const inventory = JSON.parse(readFileSync('docs/lesson-12-source-inventory.json', 'utf8'))
 const hash = (text) => createHash('sha256').update(text).digest('hex')
@@ -168,6 +168,7 @@ const registry = readFileSync('src/lessons/registry.ts', 'utf8')
 const withoutEntries = registry
   .replace(/  \{\n    id: 'lesson-12',[\s\S]*?\n  \},\n/, '')
   .replace(/  \{\n    id: 'lesson-13',[\s\S]*?\n  \},\n/, '')
+  .replace(/  \{\n    id: 'morphology-lesson-13',[\s\S]*?\n  \},\n/, '')
 assert.equal(hash(withoutEntries), inventory.registrySha256)
 assert(Object.keys(inventory.previousRuntimeSha256).length > 100)
 for (const [file, digest] of Object.entries(inventory.previousRuntimeSha256)) {

@@ -549,6 +549,19 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['من الثلاثي', 'من غير الثلاثي', 'الأفعال المعتلّة', 'التحليل والمقارنة'],
   },
+  {
+    id: 'morphology-lesson-13',
+    sectionId: 'morphology',
+    number: '١٣',
+    eyebrow: 'المشتقات والأوزان',
+    title: 'صِيَغُ المبالغة',
+    documentTitle: 'الدرس الثالث عشر من قسم الصرف: صِيَغُ المبالغة',
+    summary: 'اكتشف أشهر أوزان صيغ المبالغة، وميّزها من اسم الفاعل واسم المفعول في محطات تفاعلية وورشة وزن وتدريب من ٨ أسئلة واختبار مستقل من ١٥ درجة.',
+    duration: '٨٠',
+    strand: 'الصرف',
+    available: true,
+    parts: ['الأوزان الخمسة', 'مختبر الميزان', 'المقارنة والاشتقاق'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

@@ -2171,7 +2171,7 @@ describe('Lesson 10 as a native multi-step lesson (إنَّ وأخواتها)', 
 describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف', () => {
   const morphTitle = 'الدرس الأول: مدخل إلى علم الصرف'
 
-  it('shows the twelve lesson cards under الصرف, each linking to its own route', () => {
+  it('shows the thirteen lesson cards under الصرف, each linking to its own route', () => {
     window.location.hash = '#/sections/morphology'
     render(<App />)
 
@@ -2190,6 +2190,7 @@ describe('Section 2 (الصرف) — Lesson 1: مدخل إلى علم الصرف
       '#/lesson/morphology-lesson-10',
       '#/lesson/morphology-lesson-11',
       '#/lesson/morphology-lesson-12',
+      '#/lesson/morphology-lesson-13',
     ])
     expect(screen.getByRole('link', { name: 'مدخل إلى علم الصرف' })).toHaveAttribute(
       'href',

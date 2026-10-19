@@ -53,6 +53,8 @@ export interface TestQuestion {
   id: string
   /** Official question number shown to the student. */
   number: number
+  /** Mark weight for this question; omitted means one mark. */
+  points?: number
   /** The question text (concise reference in the solutions area). */
   prompt: string
   /** Optional supporting sentence shown under the prompt. */

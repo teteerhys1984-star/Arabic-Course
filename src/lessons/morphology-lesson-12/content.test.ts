@@ -26,7 +26,7 @@ describe('morphology lesson 12 — content and tashkeel audit', () => {
     expect(C.lessonTitle).toBe('اسم المفعول: كيف نعرف مَن وقع عليه الفعل؟')
     expect(C.objectives).toHaveLength(6)
     expect(C.objectives.join(' ')).toContain('اسم الفاعل والمصدر')
-    expect(C.nextLessonNote).toContain('لا تُنشأ هنا صفحة أو أسئلة للدرس الثالث عشر')
+    expect(C.nextLessonNote).toContain('الدرس الثالث عشر: صِيَغُ المبالغة')
   })
 
   it('preserves all ten supplied triliteral examples with a stable root and correctly formed participles', () => {

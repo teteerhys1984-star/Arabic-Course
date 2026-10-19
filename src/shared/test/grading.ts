@@ -175,29 +175,32 @@ export function gradeQuestions(
 
   for (const question of questions) {
     const status = questionStatus(question, answers, matching)
+    const points = question.points ?? 1
     statuses[question.id] = status
     if (hasManualPart(question)) {
       manualIds.push(question.id)
       // Only an ANSWERED manual part awaits review; unanswered ones are counted
-      // as unanswered so the two counts never overlap confusingly.
-      if (status !== 'unanswered') manual += 1
+      // as unanswered so the two counts never overlap confusingly. For weighted
+      // questions the pending manual score is expressed in marks, not question count.
+      if (status !== 'unanswered') manual += points
     }
     const group = groupKey(question)
     byGroup[group] ??= { total: 0, correct: 0 }
-    byGroup[group].total += 1
+    byGroup[group].total += points
     if (status === 'correct') {
-      correct += 1
-      byGroup[group].correct += 1
+      correct += points
+      byGroup[group].correct += points
     } else if (status === 'wrong') {
-      wrong += 1
+      wrong += points
     } else if (status === 'manual') {
       // Essay-only, answered: counted separately, never as correct/wrong.
     } else {
-      unanswered += 1
+      unanswered += points
     }
   }
 
-  return { total: questions.length, correct, wrong, unanswered, manual, statuses, manualIds, byGroup }
+  const total = questions.reduce((sum, question) => sum + (question.points ?? 1), 0)
+  return { total, correct, wrong, unanswered, manual, statuses, manualIds, byGroup }
 }
 
 /** Grades exactly ONE page — the unit of page-level checking. */

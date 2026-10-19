@@ -102,11 +102,11 @@
     "src/shared/teacher/TeacherSpace.tsx": "77258606297df27148a069cee6775eec2f32f968af3ca8e5e337d4e6d9291cdc",
     "src/shared/teacher/teacherPassword.ts": "e3c118fc6589852ab415b2681f63afe87f7980c8d62a5a5ee9fb1e1bfb80a67c",
     "src/shared/test/components/SolutionsArea.tsx": "6f00eed6c932f799226043170bd7f21dbfec24552785af6038511e5ec596d09a",
-    "src/shared/test/components/TestPageView.tsx": "2912f2367a8b16137dca5909ee92d19044838780dd1360e4c7fad4ac2b9cb047",
+    "src/shared/test/components/TestPageView.tsx": "8887f9daeb31b8af4a4faa93c5f0237819f5c871d2109a1a80c6a3d178b1b25e",
     "src/shared/test/components/TestRunner.tsx": "74d1f0309f3ca519f74a02a989eb6cc64009632e22789347a8935d3dc749aa37",
-    "src/shared/test/grading.ts": "55dc1a675c5bc05bba86f0115e0ac1dbc10f6843de70187fc01936ae9e873db2",
+    "src/shared/test/grading.ts": "513859ae8403a207e4cf4f05fb6c7adf5484fe7e168648cde399d39a624576fa",
     "src/shared/test/index.ts": "e0ddb16911973b0203b7d6a08346bf1a31d109954226897829f9201750e96439",
-    "src/shared/test/types.ts": "dd82354a72a592f9d1e74e2080966e86f8ed1f96808418f9c65e6a21bdc93328",
+    "src/shared/test/types.ts": "ee0f3c11e10544af11d4ecdd81955d4dbdc011d50eb972e4a67014d6b561988e",
     "src/shared/test/useTestEngine.ts": "c1baaf2a704e314ed99bb70db1989679f21bf4b47c97ce2334dfd40ecaa4aee5"
   }
 }

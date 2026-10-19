@@ -51,12 +51,13 @@ assert(readFileSync('src/app/App.tsx', 'utf8').includes('<LessonTwelve onFinish=
 const inventory = JSON.parse(readFileSync('docs/lesson-12-source-inventory.json', 'utf8'))
 const hash = (text) => createHash('sha256').update(text).digest('hex')
 const registry = readFileSync('src/lessons/registry.ts', 'utf8')
-// The inventory hash covers the registry with this lesson's entry removed. The later
-// lesson-13 entry is the added task's own registration, so it is removed too before
-// hashing — every other registry entry must remain byte-identical.
+// The inventory hash covers the registry with this lesson's entry removed. Later
+// independent lesson registrations are removed before hashing as well; all other
+// registry entries must remain byte-identical.
 const withoutEntries = registry
   .replace(/  \{\n    id: 'lesson-12',[\s\S]*?\n  \},\n/, '')
   .replace(/  \{\n    id: 'lesson-13',[\s\S]*?\n  \},\n/, '')
+  .replace(/  \{\n    id: 'morphology-lesson-13',[\s\S]*?\n  \},\n/, '')
 assert.equal(hash(withoutEntries), inventory.registrySha256)
 assert(Object.keys(inventory.previousRuntimeSha256).length > 100)
 for (const [file, digest] of Object.entries(inventory.previousRuntimeSha256)) {

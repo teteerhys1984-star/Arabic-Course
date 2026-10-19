@@ -172,6 +172,7 @@ function QuestionView({
         <span className="question-number">
           السؤال <bdi>{question.number}</bdi>
         </span>{' '}
+        {question.points && question.points > 1 && <span className="test-question__type">{question.points} درجات</span>}
         {question.type && <span className="test-question__type">{question.type}</span>}
         {question.level && <span className="test-question__level">{question.level}</span>}
         <span className="test-question__prompt question-text">

@@ -52,10 +52,10 @@ const count = (text, needle) => text.split(needle).length - 1
 if (count(registry, "id: 'morphology-lesson-02'") !== 1) {
   failures.push('morphology-lesson-02 must be registered exactly once.')
 }
-// الحارس المشترك يسمح الآن بدروس الصرف ١–١٢ فقط، من دون درس ثالث عشر أو اختبار وحدة.
+// الحارس المشترك يسمح الآن بدروس الصرف ١–١٣، مع منع التكرار واختبار الوحدة.
 failures.push(...morphologyScopeIssues(registry, app))
-if (count(registry, "sectionId: 'morphology'") !== 12) {
-  failures.push('Section «morphology» must contain exactly twelve lessons (١–١٢).')
+if (count(registry, "sectionId: 'morphology'") !== 13) {
+  failures.push('Section «morphology» must contain exactly thirteen lessons (١–١٣).')
 }
 // شرط مستقل عن شرط العدّ أعلاه: ملفات الدرس الثاني لا تشير إلى الدرس الحادي عشر فما بعده.
 if (/morphology-lesson-11|morphology-lesson-[2-9]\d/.test(lesson + content)) {
@@ -703,7 +703,7 @@ if (failures.length) {
   process.exit(1)
 }
 console.log(
-  `Morphology lesson 2 check passed: registered in الصرف as lesson ٢ (twelve lessons ١–١٢, no thirteenth), ` +
+  `Morphology lesson 2 check passed: registered in الصرف as lesson ٢ (thirteen lessons ١–١٣, no unit test), ` +
     `34 flow steps (30 explicit + 4 test pages), eight source objectives, twelve source sections, ` +
     `five trainings (15/10/5/6/8) with complete keys, a 26-question / 30-mark test in four pages ` +
     `(26 automatic + 4 manual, first five of eight counted), the four approved corrections applied and ` +

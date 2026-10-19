@@ -159,6 +159,25 @@ describe('page-level grading', () => {
     expect(result.manualIds.sort()).toEqual(['q5', 'q6'])
   })
 
+  it('uses optional question points for weighted marking while preserving one point by default', () => {
+    const weightedPage = {
+      id: 'weighted',
+      title: 'اختبار موزون',
+      questions: [
+        { ...choiceQ, id: 'weighted-choice', points: 4 },
+        { ...essayQ, id: 'weighted-essay', points: 3 },
+      ],
+    }
+    const result = gradePage(weightedPage, {
+      [answerKey('weighted-choice', 0)]: ['ب'],
+      [answerKey('weighted-essay', 0)]: ['إجابة مكتوبة'],
+    })
+    expect(result.total).toBe(7)
+    expect(result.correct).toBe(4)
+    expect(result.manual).toBe(3)
+    expect(result.byGroup['الكل']).toEqual({ total: 7, correct: 4 })
+  })
+
   it('answeredCount requires every field (auto and manual) to be answered', () => {
     expect(answeredCount(pageTwo.questions, { [answerKey('q5', 0)]: ['نص'] })).toBe(1)
     expect(

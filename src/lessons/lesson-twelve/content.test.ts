@@ -20,11 +20,12 @@ describe('lesson 12 — audited source, registration and scope', () => {
     const hash = (text: string) => createHash('sha256').update(text).digest('hex')
     const added = current.match(/ {2}\{\n {4}id: 'lesson-12',[\s\S]*?\n {2}\},\n/)
     expect(added).not.toBeNull()
-    const laterEntry = current.match(/ {2}\{\n {4}id: 'lesson-13',[\s\S]*?\n {2}\},\n/)
-    expect(laterEntry).not.toBeNull()
-    // The inventory hash covers the registry minus this lesson's entry; the later lesson-13
-    // registration is removed too — every other entry must remain byte-identical.
-    expect(hash(current.replace(added![0], '').replace(laterEntry![0], ''))).toBe(inventory.registrySha256)
+    const laterEntries = current.match(/ {2}\{\n {4}id: '(?:lesson-13|morphology-lesson-13)',[\s\S]*?\n {2}\},\n/g)
+    expect(laterEntries).toHaveLength(2)
+    // The inventory hash covers the registry minus this lesson and the two independent
+    // lesson-13 registrations added later (basics and morphology).
+    const baseline = laterEntries!.reduce((text, entry) => text.replace(entry, ''), current.replace(added![0], ''))
+    expect(hash(baseline)).toBe(inventory.registrySha256)
     // Frozen base digests also work in CI's depth-one checkout without Git history.
     expect(Object.keys(inventory.previousRuntimeSha256).length).toBeGreaterThan(100)
     for (const [path, digest] of Object.entries(inventory.previousRuntimeSha256)) {

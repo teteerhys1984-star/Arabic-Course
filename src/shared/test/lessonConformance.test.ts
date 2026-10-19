@@ -56,6 +56,7 @@ import { testDefinition as morphologyNineTest } from '../../lessons/LessonMorpho
 import { testDefinition as morphologyTenTest } from '../../lessons/LessonMorphologyTen'
 import { testDefinition as morphologyElevenTest } from '../../lessons/LessonMorphologyEleven'
 import { testDefinition as morphologyTwelveTest } from '../../lessons/LessonMorphologyTwelve'
+import { testDefinition as morphologyThirteenTest } from '../../lessons/LessonMorphologyThirteen'
 import { testDefinition as spellingOneTest } from '../../lessons/LessonSpellingOne'
 import { testDefinition as spellingTwoTest } from '../../lessons/LessonSpellingTwo'
 import { testDefinition as spellingThreeTest } from '../../lessons/LessonSpellingThree'
@@ -92,6 +93,7 @@ const lessonTests: Array<{ lesson: string; test: TestDefinition; expectedQuestio
   { lesson: 'morphology-lesson-10', test: morphologyTenTest, expectedQuestions: 20 },
   { lesson: 'morphology-lesson-11', test: morphologyElevenTest, expectedQuestions: 20 },
   { lesson: 'morphology-lesson-12', test: morphologyTwelveTest, expectedQuestions: 15 },
+  { lesson: 'morphology-lesson-13', test: morphologyThirteenTest, expectedQuestions: 12 },
   { lesson: 'spelling-lesson-01', test: spellingOneTest, expectedQuestions: 30 },
   { lesson: 'spelling-lesson-02', test: spellingTwoTest, expectedQuestions: 25 },
   { lesson: 'spelling-lesson-03', test: spellingThreeTest, expectedQuestions: 26 },
@@ -109,8 +111,8 @@ const lessonTests: Array<{ lesson: string; test: TestDefinition; expectedQuestio
 describe('lesson test conformance — the shared platform schema', () => {
   it('covers every registered lesson (37 lessons)', () => {
     expect(lessonTests.map((entry) => entry.lesson).sort()).toEqual(lessonRegistry.filter((entry) => entry.available).map((entry) => entry.id).sort())
-    expect(lessonTests).toHaveLength(37)
-    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(37)
+    expect(lessonTests).toHaveLength(38)
+    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(38)
   })
 
   it.each(lessonTests.map((entry) => [entry.lesson, entry] as const))(
@@ -140,6 +142,8 @@ describe('lesson test conformance — the shared platform schema', () => {
           expect(questionNumbers.has(question.number), `duplicate question number ${question.number}`).toBe(false)
           questionNumbers.add(question.number)
           expect(question.prompt.trim(), `question ${question.id} must have a prompt`).not.toBe('')
+          expect(question.points ?? 1, `question ${question.id} points must be a positive integer`).toEqual(expect.any(Number))
+          expect(Number.isInteger(question.points ?? 1) && (question.points ?? 1) > 0, `question ${question.id} points must be positive`).toBe(true)
           expect(question.fields.length, `question ${question.id} must have at least one field`).toBeGreaterThan(0)
 
           for (const field of question.fields) {
@@ -204,7 +208,7 @@ describe('lesson test conformance — the shared platform schema', () => {
         test.pages.map((page) => [page.id, gradePage(page, {}, test.matching)]),
       )
       const combined = combinePageResults(test, { ...pageResults, ...again })
-      const expectedTotal = test.pages.reduce((sum, page) => sum + page.questions.length, 0)
+      const expectedTotal = test.pages.reduce((sum, page) => sum + page.questions.reduce((pageSum, question) => pageSum + (question.points ?? 1), 0), 0)
       expect(combined.total).toBe(expectedTotal)
       expect(combined.complete).toBe(true)
       expect(combined.unanswered).toBe(expectedTotal)

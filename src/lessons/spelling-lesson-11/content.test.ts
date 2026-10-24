@@ -38,6 +38,7 @@ const spellingLessonIds = [
       'spelling-lesson-10',
       'spelling-lesson-11',
       'spelling-lesson-12',
+      'spelling-lesson-13',
 ]
 
 /** مفاتيح الاختبار المستقل العشرين بعد مراجعة كل سؤال على حدة. */
@@ -77,7 +78,7 @@ describe('spelling lesson 11 — content, source coverage, and reviewed keys', (
       title: 'التنوين وأنواعه وكيفية كتابته',
     })
     expect(
-      lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-13' || lesson.id.includes('unit')),
+      lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-14' || lesson.id.includes('unit')),
     ).toBe(false)
   })
 

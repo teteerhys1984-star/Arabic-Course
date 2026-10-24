@@ -40,6 +40,7 @@ const spellingLessonIds = [
   'spelling-lesson-10',
   'spelling-lesson-11',
   'spelling-lesson-12',
+  'spelling-lesson-13',
 ]
 
 /** توزيع أسئلة الاختبار المستقل: ٥ تصحيح + ٤ اختيار + ٣ إكمال + ٣ تطبيق. */
@@ -74,7 +75,7 @@ describe('spelling lesson 12 — content, source coverage, and reviewed keys', (
       title: 'علامات الحذف والزيادة في الكلمات',
     })
     expect(
-      lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-13' || lesson.id.includes('unit')),
+      lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-14' || lesson.id.includes('unit')),
     ).toBe(false)
   })
 

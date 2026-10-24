@@ -3,6 +3,7 @@ import { testDefinition as lessonThirteenTest } from '../../lessons/LessonThirte
 import { testDefinition as spellingTenTest } from '../../lessons/LessonSpellingTen'
 import { testDefinition as spellingElevenTest } from '../../lessons/LessonSpellingEleven'
 import { testDefinition as spellingTwelveTest } from '../../lessons/LessonSpellingTwelve'
+import { testDefinition as spellingThirteenTest } from '../../lessons/LessonSpellingThirteen'
 import { testDefinition as spellingNineTest } from '../../lessons/LessonSpellingNine'
 /**
  * Platform-wide conformance test for every lesson's test definition.
@@ -106,13 +107,14 @@ const lessonTests: Array<{ lesson: string; test: TestDefinition; expectedQuestio
   { lesson: 'spelling-lesson-10', test: spellingTenTest, expectedQuestions: 20 },
   { lesson: 'spelling-lesson-11', test: spellingElevenTest, expectedQuestions: 20 },
   { lesson: 'spelling-lesson-12', test: spellingTwelveTest, expectedQuestions: 15 },
+  { lesson: 'spelling-lesson-13', test: spellingThirteenTest, expectedQuestions: 20 },
 ]
 
 describe('lesson test conformance — the shared platform schema', () => {
-  it('covers every registered lesson (37 lessons)', () => {
+  it('covers every registered lesson (39 lessons)', () => {
     expect(lessonTests.map((entry) => entry.lesson).sort()).toEqual(lessonRegistry.filter((entry) => entry.available).map((entry) => entry.id).sort())
-    expect(lessonTests).toHaveLength(38)
-    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(38)
+    expect(lessonTests).toHaveLength(39)
+    expect(new Set(lessonTests.map((entry) => entry.lesson)).size).toBe(39)
   })
 
   it.each(lessonTests.map((entry) => [entry.lesson, entry] as const))(

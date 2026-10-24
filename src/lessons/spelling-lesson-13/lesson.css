@@ -1,0 +1,666 @@
+/* ==========================================================================
+   الدرس الثالث عشر: «الوصل والفصل في الكتابة»
+   الهوية البصرية: «ميزان الوصل والفصل».
+
+   فكرة الميزان: لونان ثابتان في كل الدرس يميّزان الظاهرتين
+     الوصل  → الأزرق العميق (wasl)
+     الفصل  → الكهرماني (fasl)
+   والبنية مستقلة عن الدروس السابقة: بطل تعريفي، شريط الكلمات الست،
+   بطاقات المفهوم (وصل/فصل بعلامتين ✓ و✗ لا باللون وحده)،
+   بطاقات التراكيب الخمسة، بطاقات المقابلة (استفهام × موصول)،
+   جدول الحفظ، منهج الخطوات الأربع المرقّم، وخلاصة القواعد الخمس.
+
+   ملاحظات إتاحة مطبقة هنا:
+     • لا اتجاهات فيزيائية في الأنماط: start/end فقط.
+     • ارتفاع أسطر سخيّ (1.9–1.95) حتى لا تُقصّ الحركات المشكّلة.
+     • أهداف اللمس ≥ 44px وحدود تركيز واضحة، مع احترام تقليل الحركة.
+     • الجداول تتحوّل إلى بطاقات بيانات على الشاشات الصغيرة
+       (attr(data-label)) فلا يُقتطع نص ولا يلزم تمرير أفقي.
+   ========================================================================== */
+
+.wasl-fasl-lesson {
+  --wf-ink: #2b2540;
+  --wf-ink-soft: #5a5478;
+  --wf-accent: #4a3d8f;
+  --wf-accent-soft: #eeebfa;
+  --wf-paper: #fffdf8;
+  --wf-panel: #ffffff;
+  --wf-line: #e3ddcf;
+  --wf-line-strong: #c6bba3;
+  --wf-wasl: #1d5fa8;
+  --wf-wasl-soft: #e3effb;
+  --wf-fasl: #8a5a1b;
+  --wf-fasl-soft: #f8efdc;
+  --wf-ok: #14603f;
+  --wf-ok-soft: #e7f5ee;
+  --wf-bad: #9c2a2a;
+  --wf-bad-soft: #fbecec;
+  --wf-neutral: #4d5a6e;
+  --wf-neutral-soft: #edf1f6;
+  --wf-radius: 16px;
+  --wf-shadow: 0 10px 24px rgba(43, 37, 64, 0.09);
+  /* ورق الميزان: خطوط أفقية خفيفة تُذكّر بدفتر القواعد */
+  --wf-grid: repeating-linear-gradient(
+    to bottom,
+    rgba(74, 61, 143, 0.055) 0,
+    rgba(74, 61, 143, 0.055) 1px,
+    transparent 1px,
+    transparent 26px
+  );
+
+  color: var(--wf-ink);
+  font-size: 1.02rem;
+  line-height: 1.95;
+  min-width: 0;
+}
+
+/* الكلمات المشكّلة تحتاج خطًا يتّسع للحركات */
+.wasl-fasl-lesson bdi,
+.wasl-fasl-lesson .wf-hero-word,
+.wasl-fasl-lesson .wf-word,
+.wasl-fasl-lesson .wf-rule__form,
+.wasl-fasl-lesson .wf-pair__text {
+  line-height: 1.95;
+}
+
+.wasl-fasl-lesson :focus-visible {
+  outline: 3px solid var(--wf-accent);
+  outline-offset: 3px;
+  border-radius: 6px;
+}
+
+/* تكديس عمودي سخيّ بين عناصر الخطوة */
+.wasl-fasl-lesson .wf-stack > * + * {
+  margin-block-start: 1.1rem;
+}
+
+.wasl-fasl-lesson .wf-stack > p {
+  margin-inline: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* البطل التعريفي وشريط الكلمات                                       */
+/* ------------------------------------------------------------------ */
+
+.wasl-fasl-lesson .wf-hero {
+  background:
+    var(--wf-grid),
+    linear-gradient(180deg, var(--wf-accent-soft), var(--wf-paper));
+  border: 1px solid var(--wf-line);
+  border-inline-start: 6px solid var(--wf-accent);
+  border-radius: var(--wf-radius);
+  box-shadow: var(--wf-shadow);
+  padding: 1.4rem 1.5rem;
+}
+
+.wasl-fasl-lesson .wf-hero h3 {
+  font-size: 1.5rem;
+  margin-block: 0.4rem 0.2rem;
+}
+
+.wasl-fasl-lesson .wf-hero__lead {
+  color: var(--wf-accent);
+  font-weight: 700;
+  margin-block: 0;
+}
+
+.wasl-fasl-lesson .wf-words-strip {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.wasl-fasl-lesson .wf-hero-word {
+  background: var(--wf-panel);
+  border: 1px solid var(--wf-line);
+  border-block-start: 4px solid var(--wf-wasl);
+  border-radius: var(--wf-radius);
+  box-shadow: var(--wf-shadow);
+  font-size: 1.25rem;
+  font-weight: 800;
+  padding: 0.8rem 0.5rem;
+  text-align: center;
+}
+
+.wasl-fasl-lesson .wf-hero-word:nth-child(n + 5) {
+  border-block-start-color: var(--wf-fasl);
+}
+
+/* ------------------------------------------------------------------ */
+/* البطاقات والقوائم والملاحظات                                       */
+/* ------------------------------------------------------------------ */
+
+.wasl-fasl-lesson .wf-card {
+  background: var(--wf-panel);
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  box-shadow: var(--wf-shadow);
+  padding: 1.1rem 1.25rem;
+}
+
+.wasl-fasl-lesson .wf-card h4 {
+  margin-block: 0 0.6rem;
+}
+
+.wasl-fasl-lesson .wf-note {
+  background: var(--wf-neutral-soft);
+  border: 1px dashed var(--wf-line-strong);
+  border-radius: var(--wf-radius);
+  padding: 1rem 1.2rem;
+}
+
+.wasl-fasl-lesson .wf-note h4 {
+  margin-block: 0 0.5rem;
+}
+
+.wasl-fasl-lesson .wf-list {
+  margin: 0;
+  padding-inline-start: 1.4rem;
+}
+
+.wasl-fasl-lesson .wf-list > li + li {
+  margin-block-start: 0.55rem;
+}
+
+.wasl-fasl-lesson .wf-list--sentences {
+  list-style: '◈  ';
+}
+
+.wasl-fasl-lesson .wf-list--words {
+  list-style: none;
+  padding-inline-start: 0;
+}
+
+.wasl-fasl-lesson .wf-list__number {
+  color: var(--wf-accent);
+  font-weight: 800;
+}
+
+.wasl-fasl-lesson .wf-hint {
+  color: var(--wf-ink-soft);
+  font-size: 0.95rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* الشرائط التعليمية (قاعدة / تنبيه / تدقيق)                          */
+/* ------------------------------------------------------------------ */
+
+.wasl-fasl-lesson .wf-callout {
+  border: 1px solid var(--wf-line);
+  border-inline-start-width: 6px;
+  border-radius: var(--wf-radius);
+  padding: 1rem 1.2rem;
+}
+
+.wasl-fasl-lesson .wf-callout h4 {
+  margin-block: 0 0.4rem;
+}
+
+.wasl-fasl-lesson .wf-callout p {
+  margin-block: 0.2rem;
+}
+
+.wasl-fasl-lesson .wf-callout--rule {
+  background: var(--wf-wasl-soft);
+  border-inline-start-color: var(--wf-wasl);
+}
+
+.wasl-fasl-lesson .wf-callout--attention {
+  background: var(--wf-fasl-soft);
+  border-inline-start-color: var(--wf-fasl);
+}
+
+.wasl-fasl-lesson .wf-callout--precision {
+  background: var(--wf-accent-soft);
+  border-inline-start-color: var(--wf-accent);
+}
+
+/* ------------------------------------------------------------------ */
+/* بطاقات المفهوم: الوصل × الفصل                                      */
+/* ------------------------------------------------------------------ */
+
+.wasl-fasl-lesson .wf-concepts {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.wasl-fasl-lesson .wf-concept {
+  background: var(--wf-panel);
+  border: 1px solid var(--wf-line);
+  border-block-start-width: 6px;
+  border-radius: var(--wf-radius);
+  box-shadow: var(--wf-shadow);
+  padding: 1rem 1.2rem;
+}
+
+.wasl-fasl-lesson .wf-concept--wasl {
+  border-block-start-color: var(--wf-wasl);
+}
+
+.wasl-fasl-lesson .wf-concept--fasl {
+  border-block-start-color: var(--wf-fasl);
+}
+
+.wasl-fasl-lesson .wf-concept h4 {
+  margin-block: 0 0.4rem;
+}
+
+.wasl-fasl-lesson .wf-concept__example {
+  background: var(--wf-neutral-soft);
+  border-radius: 10px;
+  padding: 0.5rem 0.8rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* الجداول (تتحوّل إلى بطاقات موسومة على الهاتف)                      */
+/* ------------------------------------------------------------------ */
+
+.wasl-fasl-lesson .wf-table-wrap {
+  overflow-x: auto;
+}
+
+.wasl-fasl-lesson .wf-table {
+  border-collapse: collapse;
+  inline-size: 100%;
+}
+
+.wasl-fasl-lesson .wf-table caption {
+  color: var(--wf-ink-soft);
+  font-weight: 700;
+  padding-block: 0.6rem;
+}
+
+.wasl-fasl-lesson .wf-table th,
+.wasl-fasl-lesson .wf-table td {
+  border: 1px solid var(--wf-line);
+  padding: 0.65rem 0.8rem;
+  vertical-align: top;
+}
+
+.wasl-fasl-lesson .wf-table thead th {
+  background: var(--wf-accent-soft);
+  color: var(--wf-ink);
+}
+
+.wasl-fasl-lesson .wf-table tbody tr:nth-child(even) {
+  background: rgba(74, 61, 143, 0.035);
+}
+
+.wasl-fasl-lesson .wf-word--good {
+  color: var(--wf-ok);
+}
+
+.wasl-fasl-lesson .wf-word--bad {
+  color: var(--wf-bad);
+}
+
+.wasl-fasl-lesson .wf-word--wasl {
+  color: var(--wf-wasl);
+}
+
+.wasl-fasl-lesson .wf-word--fasl {
+  color: var(--wf-fasl);
+}
+
+/* ------------------------------------------------------------------ */
+/* بطاقات التراكيب الخمسة                                             */
+/* ------------------------------------------------------------------ */
+
+.wasl-fasl-lesson .wf-rules {
+  display: grid;
+  gap: 0.9rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.wasl-fasl-lesson .wf-rule {
+  background: var(--wf-panel);
+  border: 1px solid var(--wf-line);
+  border-inline-start: 6px solid var(--wf-wasl);
+  border-radius: var(--wf-radius);
+  box-shadow: var(--wf-shadow);
+  padding: 1rem 1.2rem;
+}
+
+.wasl-fasl-lesson .wf-rule__form {
+  font-size: 1.6rem;
+  font-weight: 900;
+  margin-block: 0 0.2rem;
+}
+
+.wasl-fasl-lesson .wf-rule__origin {
+  color: var(--wf-ink-soft);
+  margin-block: 0 0.4rem;
+}
+
+.wasl-fasl-lesson .wf-rule__main {
+  background: var(--wf-wasl-soft);
+  border-radius: 10px;
+  font-weight: 700;
+  padding: 0.5rem 0.8rem;
+}
+
+.wasl-fasl-lesson .wf-rule__more {
+  margin-block-start: 0.5rem;
+}
+
+/* ------------------------------------------------------------------ */
+/* بطاقات المقابلة: استفهام × موصول                                  */
+/* ------------------------------------------------------------------ */
+
+.wasl-fasl-lesson .wf-pairs {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.wasl-fasl-lesson .wf-pair {
+  background: var(--wf-panel);
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  box-shadow: var(--wf-shadow);
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  padding: 1rem 1.2rem;
+}
+
+.wasl-fasl-lesson .wf-pair__side {
+  border: 1px dashed var(--wf-line-strong);
+  border-radius: 12px;
+  padding: 0.7rem 0.9rem;
+}
+
+.wasl-fasl-lesson .wf-pair__side--ask {
+  background: var(--wf-wasl-soft);
+}
+
+.wasl-fasl-lesson .wf-pair__side--tell {
+  background: var(--wf-fasl-soft);
+}
+
+.wasl-fasl-lesson .wf-pair__text {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-block: 0 0.3rem;
+}
+
+.wasl-fasl-lesson .wf-pair__note {
+  margin-block: 0;
+}
+
+.wasl-fasl-lesson .wf-tag {
+  border-radius: 999px;
+  display: inline-block;
+  font-size: 0.88rem;
+  font-weight: 800;
+  padding: 0.15rem 0.8rem;
+}
+
+.wasl-fasl-lesson .wf-tag--ask {
+  background: var(--wf-wasl);
+  color: #ffffff;
+}
+
+.wasl-fasl-lesson .wf-tag--tell {
+  background: var(--wf-fasl);
+  color: #ffffff;
+}
+
+.wasl-fasl-lesson .wf-tag--wasl {
+  background: var(--wf-wasl-soft);
+  border: 1px solid var(--wf-wasl);
+  color: var(--wf-wasl);
+}
+
+.wasl-fasl-lesson .wf-tag--fasl {
+  background: var(--wf-fasl-soft);
+  border: 1px solid var(--wf-fasl);
+  color: var(--wf-fasl);
+}
+
+/* ------------------------------------------------------------------ */
+/* التحليل والتفكيك (إن شاء الله)                                    */
+/* ------------------------------------------------------------------ */
+
+.wasl-fasl-lesson .wf-analysis {
+  display: grid;
+  gap: 0.7rem;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
+.wasl-fasl-lesson .wf-analysis__word {
+  background: var(--wf-panel);
+  border: 1px solid var(--wf-line);
+  border-block-start: 4px solid var(--wf-fasl);
+  border-radius: var(--wf-radius);
+  box-shadow: var(--wf-shadow);
+  padding: 0.8rem 0.9rem;
+  text-align: center;
+}
+
+.wasl-fasl-lesson .wf-analysis__form {
+  font-size: 1.4rem;
+  font-weight: 900;
+  margin-block: 0 0.2rem;
+}
+
+.wasl-fasl-lesson .wf-analysis__role {
+  color: var(--wf-ink-soft);
+  margin-block: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* منهج الخطوات الأربع                                                */
+/* ------------------------------------------------------------------ */
+
+.wasl-fasl-lesson .wf-protocol {
+  display: grid;
+  gap: 0.8rem;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.wasl-fasl-lesson .wf-protocol__step {
+  align-items: flex-start;
+  background: var(--wf-panel);
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  box-shadow: var(--wf-shadow);
+  display: flex;
+  gap: 0.9rem;
+  padding: 0.9rem 1.1rem;
+}
+
+.wasl-fasl-lesson .wf-protocol__number {
+  align-items: center;
+  background: var(--wf-accent);
+  border-radius: 50%;
+  color: #ffffff;
+  display: inline-flex;
+  flex: none;
+  font-weight: 900;
+  justify-content: center;
+  min-block-size: 44px;
+  min-inline-size: 44px;
+}
+
+.wasl-fasl-lesson .wf-protocol__step p {
+  margin-block: 0.2rem 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* الخلاصة والواجب والممارسة                                         */
+/* ------------------------------------------------------------------ */
+
+.wasl-fasl-lesson .wf-summary {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.wasl-fasl-lesson .wf-summary__rule {
+  background: var(--wf-panel);
+  border: 1px solid var(--wf-line);
+  border-inline-start: 6px solid var(--wf-accent);
+  border-radius: var(--wf-radius);
+  box-shadow: var(--wf-shadow);
+  padding: 0.9rem 1.2rem;
+}
+
+.wasl-fasl-lesson .wf-summary__rule h4 {
+  margin-block: 0 0.3rem;
+}
+
+.wasl-fasl-lesson .wf-summary__rule p {
+  margin-block: 0.2rem;
+}
+
+.wasl-fasl-lesson .wf-homework {
+  display: grid;
+  gap: 0.9rem;
+}
+
+.wasl-fasl-lesson .wf-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+}
+
+.wasl-fasl-lesson .wf-selfcheck {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.wasl-fasl-lesson .wf-selfcheck__item {
+  background: var(--wf-panel);
+  border: 1px solid var(--wf-line);
+  border-radius: var(--wf-radius);
+  box-shadow: var(--wf-shadow);
+  padding: 0.9rem 1.2rem;
+}
+
+.wasl-fasl-lesson .wf-selfcheck__pair {
+  font-size: 1.15rem;
+  font-weight: 800;
+  margin-block: 0 0.3rem;
+}
+
+.wasl-fasl-lesson .wf-selfcheck__hint {
+  color: var(--wf-ink-soft);
+  margin-block: 0;
+}
+
+/* ------------------------------------------------------------------ */
+/* الاستجابة: الهواتف                                                */
+/* ------------------------------------------------------------------ */
+
+@media (max-width: 640px) {
+  .wasl-fasl-lesson {
+    font-size: 1rem;
+  }
+
+  .wasl-fasl-lesson .wf-words-strip {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .wasl-fasl-lesson .wf-concepts,
+  .wasl-fasl-lesson .wf-rules,
+  .wasl-fasl-lesson .wf-pair {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .wasl-fasl-lesson .wf-analysis {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* الجداول تتحوّل إلى بطاقات بيانات موسومة بدل الاقتطاع */
+  .wasl-fasl-lesson .wf-table-wrap {
+    overflow-x: visible;
+  }
+
+  .wasl-fasl-lesson .wf-table thead {
+    border: 0;
+    clip-path: inset(50%);
+    height: 1px;
+    overflow: hidden;
+    position: absolute;
+    white-space: nowrap;
+    width: 1px;
+  }
+
+  .wasl-fasl-lesson .wf-table,
+  .wasl-fasl-lesson .wf-table tbody,
+  .wasl-fasl-lesson .wf-table tr,
+  .wasl-fasl-lesson .wf-table td {
+    display: block;
+    inline-size: 100%;
+  }
+
+  .wasl-fasl-lesson .wf-table tbody tr {
+    background: var(--wf-panel);
+    border: 1px solid var(--wf-line);
+    border-radius: var(--wf-radius);
+    box-shadow: var(--wf-shadow);
+    margin-block-end: 0.8rem;
+    padding: 0.4rem 0;
+  }
+
+  .wasl-fasl-lesson .wf-table tbody tr:nth-child(even) {
+    background: var(--wf-panel);
+  }
+
+  .wasl-fasl-lesson .wf-table td {
+    border: 0;
+    border-block-end: 1px dashed var(--wf-line);
+    padding: 0.6rem 1rem;
+  }
+
+  .wasl-fasl-lesson .wf-table td:last-child {
+    border-block-end: 0;
+  }
+
+  .wasl-fasl-lesson .wf-table td::before {
+    color: var(--wf-ink-soft);
+    content: attr(data-label);
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 700;
+  }
+}
+
+@media (max-width: 420px) {
+  .wasl-fasl-lesson .wf-hero {
+    padding: 1.1rem 1rem;
+  }
+
+  .wasl-fasl-lesson .wf-hero h3 {
+    font-size: 1.3rem;
+  }
+
+  .wasl-fasl-lesson .wf-hero-word {
+    font-size: 1.1rem;
+    padding: 0.7rem 0.4rem;
+  }
+
+  .wasl-fasl-lesson .wf-card,
+  .wasl-fasl-lesson .wf-concept,
+  .wasl-fasl-lesson .wf-rule,
+  .wasl-fasl-lesson .wf-pair,
+  .wasl-fasl-lesson .wf-summary__rule {
+    padding: 0.9rem 1rem;
+  }
+
+  .wasl-fasl-lesson .wf-table {
+    border-collapse: collapse;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .wasl-fasl-lesson *,
+  .wasl-fasl-lesson *::before,
+  .wasl-fasl-lesson *::after {
+    animation: none !important;
+    scroll-behavior: auto !important;
+    transition: none !important;
+  }
+}

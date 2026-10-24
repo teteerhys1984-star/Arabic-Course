@@ -35,6 +35,7 @@ describe('spelling lesson 08 — interactive flow, independent test, solutions, 
       '#/lesson/spelling-lesson-10',
       '#/lesson/spelling-lesson-11',
       '#/lesson/spelling-lesson-12',
+      '#/lesson/spelling-lesson-13',
     ])
 
     await user.click(links[7])

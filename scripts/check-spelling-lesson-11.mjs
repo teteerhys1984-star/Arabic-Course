@@ -45,17 +45,18 @@ assert(
   'App route dispatch and Arabic-Indic lesson number',
 )
 assert(
-  !registry.includes("id: 'spelling-lesson-13'") &&
-    !existsSync('src/lessons/LessonSpellingThirteen.tsx') &&
-    !existsSync('src/lessons/spelling-lesson-13'),
-  'no thirteenth spelling lesson',
+  registry.includes("id: 'spelling-lesson-13'") &&
+    !registry.includes("id: 'spelling-lesson-14'") &&
+    !existsSync('src/lessons/LessonSpellingFourteen.tsx') &&
+    !existsSync('src/lessons/spelling-lesson-14'),
+  'thirteenth registered; no fourteenth spelling lesson',
 )
-assert(!registry.includes("id: 'spelling-unit'") && !lesson.includes('href="#/lesson/spelling-lesson-13'), 'no unit test or broken next link')
+assert(!registry.includes("id: 'spelling-unit'") && !lesson.includes('href="#/lesson/spelling-lesson-14'), 'no unit test or broken next link')
 const spellingIds = [...registry.matchAll(/id: '(spelling-lesson-\d+)'/g)].map((match) => match[1])
 assert(
   JSON.stringify(spellingIds) ===
-    JSON.stringify(Array.from({ length: 12 }, (_, index) => `spelling-lesson-${String(index + 1).padStart(2, '0')}`)),
-  'exactly twelve spelling lessons in order',
+    JSON.stringify(Array.from({ length: 13 }, (_, index) => `spelling-lesson-${String(index + 1).padStart(2, '0')}`)),
+  'exactly thirteen spelling lessons in order',
 )
 
 // ٣. المحتوى التعليمي: الأقسام والجداول والنشاطات.
@@ -193,5 +194,5 @@ assert(read('package.json').includes('check:spelling-lesson-11'), 'registered va
 console.log(
   `Spelling 11 passed: 27 steps, 9 groups, 11 teaching sections, 3 labs, 8 practice, 10 quiz (7 written + 3 essays), ` +
     `20 independent questions (4x5) with reviewed keys; ${Object.keys(inventory.previousContentSha256).length} ` +
-    'previous teaching files byte-identical. No unit test and no thirteenth lesson.',
+    'previous teaching files byte-identical. No unit test and no fourteenth lesson.',
 )

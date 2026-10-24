@@ -55,6 +55,7 @@ describe('spelling lesson 08 — content, source audit, and registration', () =>
       'spelling-lesson-10',
       'spelling-lesson-11',
       'spelling-lesson-12',
+      'spelling-lesson-13',
     ])
     expect(spellingLessons[7]).toMatchObject({
       id: 'spelling-lesson-08',
@@ -67,7 +68,8 @@ describe('spelling lesson 08 — content, source audit, and registration', () =>
     expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-10')).toBe(true)
     expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-11')).toBe(true)
     expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-12')).toBe(true)
-    expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-13')).toBe(false)
+    expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-13')).toBe(true)
+    expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-14')).toBe(false)
     expect(lessonRegistry.some((lesson) => lesson.id.includes('unit'))).toBe(false)
   })
 

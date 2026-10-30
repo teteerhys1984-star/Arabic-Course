@@ -1,6 +1,6 @@
 import { readFileSync } from 'node:fs'
 
-const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx', 'LessonEight.tsx', 'LessonNine.tsx', 'LessonTen.tsx', 'lesson-ten/content.ts', 'LessonEleven.tsx', 'lesson-eleven/content.ts', 'lesson-thirteen/content.ts'].map((name) => `src/lessons/${name}`)
+const lessonPaths = ['LessonOne.tsx', 'LessonTwo.tsx', 'LessonThree.tsx', 'LessonSix.tsx', 'LessonSeven.tsx', 'LessonEight.tsx', 'LessonNine.tsx', 'LessonTen.tsx', 'lesson-ten/content.ts', 'LessonEleven.tsx', 'lesson-eleven/content.ts', 'lesson-thirteen/content.ts', 'basics-lesson-14/content.ts'].map((name) => `src/lessons/${name}`)
 const sources = Object.fromEntries(lessonPaths.map((path) => [path, readFileSync(path, 'utf8')]))
 const failures = []
 
@@ -77,6 +77,14 @@ requirePhrase('src/lessons/LessonNine.tsx', 'مجتهدَينِ: خبر كان �
 requirePhrase('src/lessons/LessonNine.tsx', 'المعلمونَ: اسم كان مرفوع، وعلامة رفعه الواو لأنه جمع مذكر سالم.')
 requirePhrase('src/lessons/LessonNine.tsx', 'حاضرينَ: خبر كان منصوب، وعلامة نصبه الياء لأنه جمع مذكر سالم.')
 requirePhrase('src/lessons/LessonNine.tsx', 'الطالباتُ: اسم كان مرفوع، وعلامة رفعه الضمة الظاهرة على آخره.')
+// Lesson 14 teaches the five nouns: the letters replace the harakat, so every parsing
+// must name the role, the state, the letter, its reason, and the attached pronoun.
+requirePhrase('src/lessons/basics-lesson-14/content.ts', 'والكاف ضمير متصل مبني على الفتح في محل جر مضاف إليه.')
+requirePhrase('src/lessons/basics-lesson-14/content.ts', 'وياء المتكلم ضمير متصل مبني على السكون في محل جر مضاف إليه.')
+requirePhrase('src/lessons/basics-lesson-14/content.ts', 'علامة رفعه الضمة المقدرة على ما قبل ياء المتكلم، منع من ظهورها اشتغال المحل بحركة المناسبة')
+requirePhrase('src/lessons/basics-lesson-14/content.ts', 'ذي: نعت مجرور وعلامة جرّه الياء؛ لأنه من الأسماء الخمسة، وهو مضاف.')
+requirePhrase('src/lessons/basics-lesson-14/content.ts', 'معَ: ظرف منصوب وعلامة نصبه الفتحة الظاهرة على آخره، وهو مضاف؛ «مع» هنا ليست حرف جر.')
+
 requirePhrase('src/lessons/LessonNine.tsx', 'مجتهداتٍ: خبر كان منصوب، وعلامة نصبه الكسرة نيابة عن الفتحة لأنه جمع مؤنث سالم.')
 
 // Lesson 10 (إنَّ وأخواتها): every displayed parsing names the role, the state, the sign and

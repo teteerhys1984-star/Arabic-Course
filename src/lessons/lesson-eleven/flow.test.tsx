@@ -26,7 +26,7 @@ describe('lesson 11 — RTL sequential flow, complete source, independent test a
     window.location.hash = '#/sections/basics-grammar'
     render(<App />)
     const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
-    expect(links).toHaveLength(13)
+    expect(links).toHaveLength(14)
     expect(links.slice(0, 10).map((link) => link.getAttribute('href'))).toEqual(
       Array.from({ length: 10 }, (_, index) => `#/lesson/lesson-${index + 1}`),
     )
@@ -66,7 +66,7 @@ describe('lesson 11 — RTL sequential flow, complete source, independent test a
     await user.click(jump('منطقة المعلم'))
     await user.click(screen.getByRole('button', { name: 'إتمام الدرس' }))
     expect(window.location.hash).toBe('#/sections/basics-grammar')
-    expect(within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')).toHaveLength(13)
+    expect(within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')).toHaveLength(14)
   })
 
   it('actually renders every reviewed sentence and both jussive comparisons in the relevant teaching step', async () => {

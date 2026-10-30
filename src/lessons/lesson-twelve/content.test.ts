@@ -12,7 +12,7 @@ const examOracle = ['مثنّى', 'جمع مذكر سالم', 'جمع مؤنث �
 describe('lesson 12 — audited source, registration and scope', () => {
   it('registers once after lesson 11 in basics only; retains every previous registry entry verbatim', () => {
     expect(lessonRegistry.filter((l) => l.id === 'lesson-12')).toEqual([expect.objectContaining({ number: '١٢', sectionId: 'basics-grammar', available: true })])
-    expect(getSectionLessons('basics-grammar').map((l) => l.id)).toEqual(Array.from({ length: 13 }, (_, i) => `lesson-${i + 1}`))
+    expect(getSectionLessons('basics-grammar').map((l) => l.id)).toEqual([...Array.from({ length: 13 }, (_, i) => `lesson-${i + 1}`), 'basics-lesson-14'])
     // lesson-13 is a later, independent basics lesson; unit tests stay forbidden everywhere.
     expect(lessonRegistry.some((l) => /unit.*test/.test(l.id))).toBe(false)
     const current = readFileSync('src/lessons/registry.ts', 'utf8')
@@ -20,10 +20,10 @@ describe('lesson 12 — audited source, registration and scope', () => {
     const hash = (text: string) => createHash('sha256').update(text).digest('hex')
     const added = current.match(/ {2}\{\n {4}id: 'lesson-12',[\s\S]*?\n {2}\},\n/)
     expect(added).not.toBeNull()
-    const laterEntries = current.match(/ {2}\{\n {4}id: '(?:lesson-13|morphology-lesson-13|spelling-lesson-13)',[\s\S]*?\n {2}\},\n/g)
-    expect(laterEntries).toHaveLength(3)
-    // The inventory hash covers the registry minus this lesson and the three independent
-    // lesson-13 registrations added later (basics, morphology, and spelling).
+    const laterEntries = current.match(/ {2}\{\n {4}id: '(?:lesson-13|morphology-lesson-13|spelling-lesson-13|basics-lesson-14)',[\s\S]*?\n {2}\},\n/g)
+    expect(laterEntries).toHaveLength(4)
+    // The inventory hash covers the registry minus this lesson and the independent
+    // registrations added later (basics/morphology/spelling lesson 13, and lesson 14).
     const baseline = laterEntries!.reduce((text, entry) => text.replace(entry, ''), current.replace(added![0], ''))
     expect(hash(baseline)).toBe(inventory.registrySha256)
     // Frozen base digests also work in CI's depth-one checkout without Git history.

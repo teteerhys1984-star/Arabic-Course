@@ -353,10 +353,10 @@ if (count(registry, "id: 'morphology-lesson-01'") !== 1) fail('morphology-lesson
 failures.push(...morphologyScopeIssues(registry, read('src/app/App.tsx')))
 if (count(registry, "sectionId: 'morphology'") !== 13) fail('Section «morphology» must contain exactly thirteen lessons (١–١٣)')
 // Adding grammar lesson 12 then lesson 13 changes this section count only; preserve the earlier ids in order.
-const basicsIds = [...registry.matchAll(/\{\s*id: '(lesson-\d+)',[\s\S]*?sectionId: 'basics-grammar'/g)].map((match) => match[1])
-const expectedBasicsIds = Array.from({ length: 13 }, (_, index) => `lesson-${index + 1}`)
-if (JSON.stringify(basicsIds) !== JSON.stringify(expectedBasicsIds) || count(registry, "sectionId: 'basics-grammar'") !== 13) {
-  fail('Section «basics-grammar» must keep lessons 1–12 in order and add lesson 13 exactly once after them')
+const basicsIds = [...registry.matchAll(/\{\s*id: '((?:lesson|basics-lesson)-\d+)',[\s\S]*?sectionId: 'basics-grammar'/g)].map((match) => match[1])
+const expectedBasicsIds = [...Array.from({ length: 13 }, (_, index) => `lesson-${index + 1}`), 'basics-lesson-14']
+if (JSON.stringify(basicsIds) !== JSON.stringify(expectedBasicsIds) || count(registry, "sectionId: 'basics-grammar'") !== 14) {
+  fail('Section «basics-grammar» must keep lessons 1–13 in order and add lesson 14 exactly once after them')
 }
 const morphEntry = registry.slice(registry.indexOf("id: 'morphology-lesson-01'"), registry.indexOf("id: 'morphology-lesson-01'") + 500)
 if (!/number: '١'/.test(morphEntry) || !/title: 'مدخل إلى علم الصرف'/.test(morphEntry)) fail('Lesson 1 must be numbered ١ with the source title')

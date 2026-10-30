@@ -1,0 +1,75 @@
+.fourteen-lesson { color: #203b36; font-size: 1.08rem; line-height: 2; overflow-wrap: anywhere; }
+.fourteen-lesson *, .fourteen-stack, .fourteen-examples { min-width: 0; }
+.fourteen-lesson h3, .fourteen-lesson h4 { line-height: 1.8; }
+.fourteen-lesson h4 { font-size: 1.2rem; }
+.fourteen-stack { display: grid; gap: 1.2rem; }
+.fourteen-hero { padding: clamp(1.1rem, 4vw, 2rem); border-radius: 1.3rem; background: #163f3b; color: #fffaf0; border: 1px solid #163f3b; }
+.fourteen-hero h3 { color: #fffaf0; font-size: clamp(1.5rem, 3vw, 2rem); }
+.fourteen-hero p:first-child { color: #f6dea7; }
+.fourteen-subtitle { font-size: 1.15rem; color: #f6dea7; }
+.fourteen-next-link { display: inline-block; text-decoration: none; }
+.fourteen-visual { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .8rem; margin-block: 1.2rem; }
+.fourteen-card { background: #fffefa; border: 1px solid #c9d9d3; border-radius: 1rem; padding: clamp(.9rem, 3vw, 1.5rem); }
+.fourteen-card h4 { margin-block: .3rem .8rem; }
+.fourteen-card li + li { margin-block-start: .55rem; }
+.fourteen-visual .fourteen-card { text-align: center; }
+.fourteen-visual svg { width: 100%; height: auto; max-height: 110px; }
+.fourteen-visual h4 { font-size: clamp(1.3rem, 4vw, 1.8rem); margin: 0; }
+.fourteen-visual p { margin: 0; }
+.fourteen-neutral { --fourteen-accent: #5b502c; --fourteen-tint: #fbf7ec; }
+.fourteen-raised { --fourteen-accent: #356044; --fourteen-tint: #f0f7ec; }
+.fourteen-accused { --fourteen-accent: #215a77; --fourteen-tint: #eef7fb; }
+.fourteen-genitive { --fourteen-accent: #764875; --fourteen-tint: #faf1f8; }
+.fourteen-dual { --fourteen-accent: #215a77; --fourteen-tint: #eef7fb; }
+.fourteen-masculine { --fourteen-accent: #356044; --fourteen-tint: #f0f7ec; }
+.fourteen-feminine { --fourteen-accent: #764875; --fourteen-tint: #faf1f8; }
+.fourteen-five { --fourteen-accent: #8c6425; --fourteen-tint: #fcf5df; }
+.fourteen-visual .fourteen-card { color: var(--fourteen-accent, #215345); background: var(--fourteen-tint, #f4f7f2); border-block-start: .3rem solid var(--fourteen-accent, #215345); }
+.fourteen-rule { font-weight: 700; font-size: 1.1rem; padding: .85rem 1rem; border-radius: .6rem; background: #163f3b; color: #fffaf0; }
+.fourteen-note { background: #fcf5df; color: #53401d; border: 1px solid #c9ae6e; border-inline-start: .3rem solid #8c6425; border-radius: .75rem; padding: 1rem; margin-block: 1rem; }
+.fourteen-examples { display: grid; gap: 1rem; }
+.fourteen-examples h4 { color: var(--fourteen-accent, #215345); font-size: 1.45rem; }
+.fourteen-focus { font-size: 1.02rem; color: #2c4a41; }
+.fourteen-wrong { color: #8a2f2f; font-size: 1.2rem; margin-block: .2rem; }
+.fourteen-right { color: #1f5b34; font-size: 1.2rem; margin-block: .2rem; }
+.fourteen-errors { display: grid; gap: 1rem; }
+.fourteen-conditions { display: grid; gap: .7rem; padding-inline-start: 1.4rem; }
+.fourteen-conditions strong { display: block; color: #254c41; }
+.fourteen-conditions span { display: block; }
+.fourteen-table-wrap { max-width: 100%; margin-block: 1rem; }
+.fourteen-table { width: 100%; border-collapse: separate; border-spacing: 0; table-layout: fixed; border: 1px solid #c3d2cd; border-radius: .8rem; overflow: hidden; font-size: 1rem; }
+.fourteen-table caption { text-align: start; font-weight: 700; padding-block-end: .8rem; }
+.fourteen-table th, .fourteen-table td { text-align: start; vertical-align: top; padding: .85rem; border-block-end: 1px solid #c3d2cd; }
+.fourteen-table thead th { background: #204e43; color: #fff; }
+.fourteen-table tbody th { color: var(--fourteen-accent, #254c41); background: var(--fourteen-tint, #f1f5ef); }
+.fourteen-table td { background: #fffefa; }
+.fourteen-table td bdi, .fourteen-table th small { display: block; margin-block-start: .45rem; }
+.fourteen-table th small { font-weight: 400; font-size: .9rem; color: #344a43; }
+.fourteen-table td bdi { font-size: 1.18rem; }
+.fourteen-mindmap { display: grid; gap: .8rem; padding: 1rem; border: 1px solid #c3d2cd; border-radius: 1rem; background: #f7faf7; }
+.fourteen-mindmap__head { margin: 0; text-align: center; font-weight: 700; font-size: 1.25rem; color: #fffaf0; background: #163f3b; border-radius: .7rem; padding: .7rem 1rem; }
+.fourteen-mindmap__branch { background: #fffefa; border: 1px solid #c9d9d3; border-inline-start: .3rem solid #204e43; border-radius: .8rem; padding: .8rem 1rem; }
+.fourteen-mindmap__branch h4 { margin-block: 0 .4rem; }
+.fourteen-mindmap__branch ul { margin: 0; padding-inline-start: 1.3rem; }
+.fourteen-actions { display: flex; flex-wrap: wrap; gap: .5rem; margin-block: .8rem; }
+.fourteen-lesson .button { margin-block: .5rem; margin-inline-end: .5rem; white-space: normal; min-height: 48px; }
+.fourteen-lesson :is(button, input, textarea):focus-visible { outline: 3px solid #215a77; outline-offset: 4px; }
+.fourteen-lesson .test-field--choice label { min-height: 48px; align-items: center; }
+@media (max-width: 600px) {
+  .fourteen-lesson { font-size: 1.04rem; }
+  .fourteen-visual { grid-template-columns: 1fr; }
+  .fourteen-visual .fourteen-card { display: grid; grid-template-columns: 1fr 1fr; align-items: center; gap: .3rem; }
+  .fourteen-visual svg { grid-row: span 2; }
+  .fourteen-table, .fourteen-table tbody, .fourteen-table tr { display: block; width: 100%; }
+  .fourteen-table caption { display: block; width: 100%; box-sizing: border-box; padding: .8rem; }
+  .fourteen-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+  .fourteen-table th, .fourteen-table td { display: block; width: 100%; box-sizing: border-box; }
+  .fourteen-table td::before { content: attr(data-label) " — "; font-weight: 700; color: #344a43; }
+  .fourteen-table tbody tr + tr { border-block-start: 3px solid #829f94; }
+  .fourteen-table td bdi { display: inline; margin-inline-start: .5rem; }
+  .fourteen-examples ol, .fourteen-table ol { padding-inline-start: 1.3rem; }
+}
+/* Scope readable shared-test metadata to this lesson; shared CSS is unchanged. */
+.fourteen-lesson .test-page__hint,
+.fourteen-lesson .test-question__type,
+.fourteen-lesson .test-question__level { color: #40594f; }

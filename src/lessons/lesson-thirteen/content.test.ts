@@ -16,7 +16,7 @@ describe('lesson 13 — registration and audited source', () => {
     expect(lessonRegistry.filter((l) => l.id === 'lesson-13')).toEqual([
       expect.objectContaining({ number: '١٣', sectionId: 'basics-grammar', available: true, title: 'علامات الإعراب الفرعية' }),
     ])
-    expect(getSectionLessons('basics-grammar').map((l) => l.id)).toEqual(Array.from({ length: 13 }, (_, i) => `lesson-${i + 1}`))
+    expect(getSectionLessons('basics-grammar').map((l) => l.id)).toEqual([...Array.from({ length: 13 }, (_, i) => `lesson-${i + 1}`), 'basics-lesson-14'])
     // No unit test, and no lesson outside this task's scope (lesson 14 / a further spelling lesson).
     expect(lessonRegistry.some((l) => l.id === 'lesson-14' || /unit.*test/.test(l.id))).toBe(false)
     expect(lessonRegistry.some((l) => l.id === 'spelling-lesson-14')).toBe(false)
@@ -31,13 +31,16 @@ describe('lesson 13 — registration and audited source', () => {
     const added = current.match(/ {2}\{\n {4}id: 'lesson-13',[\s\S]*?\n {2}\},\n/)
     const morphologyEntry = current.match(/ {2}\{\n {4}id: 'morphology-lesson-13',[\s\S]*?\n {2}\},\n/)
     const spellingEntry = current.match(/ {2}\{\n {4}id: 'spelling-lesson-13',[\s\S]*?\n {2}\},\n/)
+    const nextLessonEntry = current.match(/ {2}\{\n {4}id: 'basics-lesson-14',[\s\S]*?\n {2}\},\n/)
     expect(previousEntry).not.toBeNull()
     expect(added).not.toBeNull()
     expect(morphologyEntry).not.toBeNull()
     expect(spellingEntry).not.toBeNull()
-    // Preserve the frozen basics registry baseline while excluding this lesson and the
-    // independently registered morphology and spelling lesson 13s added alongside it.
-    const baseline = current.replace(previousEntry![0], '').replace(added![0], '').replace(morphologyEntry![0], '').replace(spellingEntry![0], '')
+    expect(nextLessonEntry).not.toBeNull()
+    // Preserve the frozen basics registry baseline while excluding this lesson, the
+    // independently registered morphology and spelling lesson 13s added alongside it,
+    // and the later independent basics lesson 14 registration.
+    const baseline = current.replace(previousEntry![0], '').replace(added![0], '').replace(morphologyEntry![0], '').replace(spellingEntry![0], '').replace(nextLessonEntry![0], '')
     expect(hash(baseline)).toBe(inventory.registrySha256)
     expect(Object.keys(inventory.previousRuntimeSha256).length).toBeGreaterThan(100)
     for (const [path, digest] of Object.entries(inventory.previousRuntimeSha256)) {

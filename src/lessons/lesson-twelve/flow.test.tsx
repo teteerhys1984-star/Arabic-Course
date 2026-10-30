@@ -17,8 +17,8 @@ describe('lesson 12 — sequential accessible UI and latest valid attempt', () =
     window.location.hash = '#/sections/basics-grammar'
     render(<App />)
     const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
-    expect(links).toHaveLength(13)
-    expect(links.map((l) => l.getAttribute('href'))).toEqual(Array.from({ length: 13 }, (_, i) => `#/lesson/lesson-${i + 1}`))
+    expect(links).toHaveLength(14)
+    expect(links.map((l) => l.getAttribute('href'))).toEqual([...Array.from({ length: 13 }, (_, i) => `#/lesson/lesson-${i + 1}`), '#/lesson/basics-lesson-14'])
     await user.click(links[11])
     expect(document.querySelector('.twelve-lesson')).toHaveAttribute('dir', 'rtl')
     expect(screen.getAllByRole('img')).toHaveLength(3)

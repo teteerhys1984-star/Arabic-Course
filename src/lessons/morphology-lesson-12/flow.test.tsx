@@ -80,7 +80,7 @@ describe('morphology lesson 12 — registration, routing and lesson-flow navigat
     window.location.hash = '#/sections/basics-grammar'
     render(<App />)
     const basicsLinks = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
-    expect(basicsLinks).toHaveLength(13)
+    expect(basicsLinks).toHaveLength(14)
     expect(basicsLinks[11]).toHaveAttribute('href', '#/lesson/lesson-12')
     expect(basicsLinks.some((link) => link.getAttribute('href') === '#/lesson/morphology-lesson-12')).toBe(false)
   })

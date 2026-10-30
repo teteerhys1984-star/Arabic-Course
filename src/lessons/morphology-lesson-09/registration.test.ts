@@ -60,9 +60,10 @@ describe('morphology 09 — التسجيل وحدود النطاق بعد إضا
     })
     // الدرس الثامن لم يتغير تسجيله.
     expect(getSectionLessons('morphology')[7]).toMatchObject({ title: 'تصريف الأفعال والإسناد إلى الضمائر', available: true })
-    expect(getSectionLessons('basics-grammar').map((lesson) => lesson.id)).toEqual(
-      Array.from({ length: 13 }, (_, index) => `lesson-${index + 1}`),
-    )
+    expect(getSectionLessons('basics-grammar').map((lesson) => lesson.id)).toEqual([
+      ...Array.from({ length: 13 }, (_, index) => `lesson-${index + 1}`),
+      'basics-lesson-14',
+    ])
     expect(sectionRegistry.map((section) => section.id)).toEqual([
       'basics-grammar',
       'morphology',

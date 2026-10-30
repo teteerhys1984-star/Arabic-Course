@@ -40,7 +40,7 @@ function canonical(text: string) {
 describe('lesson 11 — registration and audited source coverage', () => {
   it('registers after exactly the original ten basics lessons, without touching the other sections', () => {
     const basics = getSectionLessons('basics-grammar')
-    expect(basics.map((entry) => entry.id)).toEqual(Array.from({ length: 13 }, (_, index) => `lesson-${index + 1}`))
+    expect(basics.map((entry) => entry.id)).toEqual([...Array.from({ length: 13 }, (_, index) => `lesson-${index + 1}`), 'basics-lesson-14'])
     expect(basics.slice(0, 10).map((entry) => entry.number)).toEqual(['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '١٠'])
     expect(basics[9]).toMatchObject({ id: 'lesson-10', title: 'إنَّ وأخواتها', available: true })
     expect(basics[10]).toMatchObject({ sectionId: 'basics-grammar', number: '١١', eyebrow: 'علامات الإعراب الأصلية', available: true })
@@ -48,8 +48,8 @@ describe('lesson 11 — registration and audited source coverage', () => {
     expect(getSectionLessons('morphology')).toHaveLength(13)
     expect(getSectionLessons('rhetoric')).toHaveLength(0)
     expect(getSectionLessons('reading-expression')).toHaveLength(0)
-    expect(lessonRegistry).toHaveLength(39)
-    expect(new Set(lessonRegistry.map((entry) => entry.id)).size).toBe(39)
+    expect(lessonRegistry).toHaveLength(40)
+    expect(new Set(lessonRegistry.map((entry) => entry.id)).size).toBe(40)
     // The morphology and spelling lesson 13s are section-local; basics lesson 13
     // remains independent, and spelling lesson 14 plus every unit assessment remain out of scope.
     expect(lessonRegistry.some((entry) => ['spelling-lesson-14'].includes(entry.id) || /unit/i.test(entry.id))).toBe(false)

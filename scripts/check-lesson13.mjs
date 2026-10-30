@@ -18,7 +18,7 @@ assert.equal(registered[0].available, true)
 assert.equal(registered[0].title, 'علامات الإعراب الفرعية')
 assert.deepEqual(
   lessonRegistry.filter((l) => l.sectionId === 'basics-grammar').map((l) => l.id),
-  Array.from({ length: 13 }, (_, i) => `lesson-${i + 1}`),
+  [...Array.from({ length: 13 }, (_, i) => `lesson-${i + 1}`), 'basics-lesson-14'],
 )
 assert(!lessonRegistry.some((l) => l.id === 'lesson-14' || /unit.*test/.test(l.id)))
 assert(!existsSync('src/lessons/LessonFourteen.tsx'))
@@ -170,6 +170,7 @@ const withoutEntries = registry
   .replace(/  \{\n    id: 'lesson-13',[\s\S]*?\n  \},\n/, '')
   .replace(/  \{\n    id: 'morphology-lesson-13',[\s\S]*?\n  \},\n/, '')
   .replace(/  \{\n    id: 'spelling-lesson-13',[\s\S]*?\n  \},\n/, '')
+  .replace(/  \{\n    id: 'basics-lesson-14',[\s\S]*?\n  \},\n/, '')
 assert.equal(hash(withoutEntries), inventory.registrySha256)
 assert(Object.keys(inventory.previousRuntimeSha256).length > 100)
 for (const [file, digest] of Object.entries(inventory.previousRuntimeSha256)) {
@@ -180,5 +181,5 @@ console.log(
   'Lesson 13 structural audit passed: single basics registration after lesson 12, verbatim source hash, ' +
     '5 documented corrections applied, 20 axes, 8 challenge keys, 20 exam questions (5/5/6/4 = 20 points), ' +
     '6 manual parsings with the four elements, 3 homework models, teacher guide, disclosure gates, ' +
-    'previous source unchanged, no lesson 14 and no unit test.',
+    'previous source unchanged, no lesson-14 id in this lesson and no unit test.',
 )

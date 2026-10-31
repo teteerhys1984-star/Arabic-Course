@@ -36,7 +36,7 @@ describe('Morphology Lesson 07 — Interactive Flow & Navigation', () => {
       'href',
       '#/lesson/morphology-lesson-07',
     )
-    // ترتيب التسجيل الحالي: الصرف ١–١٣، والسابع بعد السادس مباشرة.
+    // ترتيب التسجيل الحالي: الصرف ١–١٤، والسابع بعد السادس مباشرة.
     const links = within(screen.getByRole('list', { name: 'دروس القسم' })).getAllByRole('link')
     expect(links.map((link) => link.getAttribute('href'))).toEqual([
       '#/lesson/morphology-lesson-01',
@@ -52,6 +52,7 @@ describe('Morphology Lesson 07 — Interactive Flow & Navigation', () => {
       '#/lesson/morphology-lesson-11',
       '#/lesson/morphology-lesson-12',
       '#/lesson/morphology-lesson-13',
+      '#/lesson/morphology-lesson-14',
     ])
     section.unmount()
 

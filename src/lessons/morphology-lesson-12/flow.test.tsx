@@ -49,10 +49,11 @@ describe('morphology lesson 12 — registration, routing and lesson-flow navigat
     render(<App />)
     const section = within(screen.getByRole('list', { name: 'دروس القسم' }))
     const links = section.getAllByRole('link')
-    expect(links).toHaveLength(13)
+    expect(links).toHaveLength(14)
     expect(links[10]).toHaveAttribute('href', '#/lesson/morphology-lesson-11')
     expect(links[11]).toHaveAttribute('href', '#/lesson/morphology-lesson-12')
     expect(links[12]).toHaveAttribute('href', '#/lesson/morphology-lesson-13')
+    expect(links[13]).toHaveAttribute('href', '#/lesson/morphology-lesson-14')
     expect(screen.getByRole('link', { name: (name) => name.includes(C.lessonTitle) })).toHaveAttribute('href', '#/lesson/morphology-lesson-12')
 
     await user.click(screen.getByRole('link', { name: (name) => name.includes(C.lessonTitle) }))

@@ -8,7 +8,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { lessonRegistry } from '../registry'
 import { getSectionLessons, sectionRegistry } from '../../sections/sectionRegistry'
 
-const expectedIds = Array.from({ length: 13 }, (_, index) => `morphology-lesson-${String(index + 1).padStart(2, '0')}`)
+const expectedIds = Array.from({ length: 14 }, (_, index) => `morphology-lesson-${String(index + 1).padStart(2, '0')}`)
 const guards = ['check-morphology-lesson-01.mjs', 'check-morphology-lesson-02.mjs', 'check-morphology-source.mjs']
 const root = resolve('.')
 let sandbox: string
@@ -43,10 +43,10 @@ describe('morphology 09 — التسجيل وحدود النطاق بعد إضا
   })
   afterAll(() => rmSync(sandbox, { recursive: true, force: true }))
 
-  it('يسجّل ١–١٣ مرة واحدة بالترتيب، دون درس رابع عشر أو اختبار وحدة', () => {
+  it('يسجّل ١–١٤ مرة واحدة بالترتيب، دون درس خامس عشر أو اختبار وحدة', () => {
     expect(getSectionLessons('morphology').map((lesson) => lesson.id)).toEqual(expectedIds)
     expect(new Set(lessonRegistry.map((lesson) => lesson.id)).size).toBe(lessonRegistry.length)
-    expect(getSectionLessons('morphology').map((lesson) => lesson.number)).toEqual(['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '١٠', '١١', '١٢', '١٣'])
+    expect(getSectionLessons('morphology').map((lesson) => lesson.number)).toEqual(['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '١٠', '١١', '١٢', '١٣', '١٤'])
     expect(getSectionLessons('morphology')[11].id).toBe('morphology-lesson-12')
     expect(getSectionLessons('morphology')[8]).toMatchObject({
       title: 'المصدر — تعريفه وأوزانه الأساسية',
@@ -102,7 +102,7 @@ describe('morphology 09 — التسجيل وحدود النطاق بعد إضا
     } finally {
       writeFileSync(join(sandbox, 'src/app/App.tsx'), appSource)
     }
-    const path = join(sandbox, 'src/lessons/LessonMorphologyFourteen.tsx')
+    const path = join(sandbox, 'src/lessons/LessonMorphologyFifteen.tsx')
     try {
       writeFileSync(path, '// forbidden future lesson fixture\n')
       expectRejected()

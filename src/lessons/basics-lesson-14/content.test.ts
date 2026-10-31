@@ -37,7 +37,7 @@ describe('basics lesson 14 — registration and audited source', () => {
     expect(new Set(lessonRegistry.map((lesson) => lesson.id)).size).toBe(lessonRegistry.length)
     // The spelling and morphology lesson 14 slots stay unused, and no unit assessment appears.
     expect(lessonRegistry.some((lesson) => lesson.id === 'spelling-lesson-14')).toBe(false)
-    expect(lessonRegistry.some((lesson) => lesson.id === 'morphology-lesson-14')).toBe(false)
+    expect(lessonRegistry.filter((lesson) => lesson.id === 'morphology-lesson-14')).toEqual([expect.objectContaining({ sectionId: 'morphology', number: '١٤' })])
     expect(lessonRegistry.some((lesson) => /unit.*test/.test(lesson.id))).toBe(false)
     // The pre-existing lesson 8 keeps its own id, title and position: nothing was replaced.
     expect(lessonRegistry.filter((lesson) => lesson.id === 'lesson-8')).toEqual([
@@ -56,6 +56,7 @@ describe('basics lesson 14 — registration and audited source', () => {
       .replace(/ {2}\{\n {4}id: 'lesson-12',[\s\S]*?\n {2}\},\n/, '')
       .replace(/ {2}\{\n {4}id: 'lesson-13',[\s\S]*?\n {2}\},\n/, '')
       .replace(/ {2}\{\n {4}id: 'morphology-lesson-13',[\s\S]*?\n {2}\},\n/, '')
+      .replace(/ {2}\{\n {4}id: 'morphology-lesson-14',[\s\S]*?\n {2}\},\n/, '')
       .replace(/ {2}\{\n {4}id: 'spelling-lesson-13',[\s\S]*?\n {2}\},\n/, '')
       .replace(/ {2}\{\n {4}id: 'basics-lesson-14',[\s\S]*?\n {2}\},\n/, '')
     expect(hash(stripped)).toBe(inventory.registrySha256)

@@ -41,7 +41,7 @@ if (!/sectionId: 'morphology'/.test(entry)) failures.push('morphology-lesson-01 
 if (!/number: '١'/.test(entry)) failures.push('morphology-lesson-01 must be numbered ١ inside its section.')
 if (!/title: 'مدخل إلى علم الصرف'/.test(entry)) failures.push('morphology-lesson-01 title must be «مدخل إلى علم الصرف».')
 if (!/available: true/.test(entry)) failures.push('morphology-lesson-01 must be available.')
-// نطاق الصرف: الدروس ١–١٣، مع الحفاظ على محتوى الدرس الأول واختبارات الصرف القائمة.
+// نطاق الصرف: الدروس ١–١٤، مع الحفاظ على محتوى الدرس الأول واختبارات الصرف القائمة.
 // بقية حراس محتوى الدرس الأول مستقلة عن هذا التسجيل.
 failures.push(...morphologyScopeIssues(registry, app))
 if (/morphology-lesson-11|morphology-lesson-[2-9]\d/.test(content + lesson)) {

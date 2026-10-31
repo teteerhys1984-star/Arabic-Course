@@ -8,7 +8,7 @@ import { afterAll, beforeAll, describe, expect, it } from 'vitest'
 import { lessonRegistry } from '../registry'
 import { getSectionLessons, sectionRegistry } from '../../sections/sectionRegistry'
 
-const expectedIds = Array.from({ length: 13 }, (_, index) => `morphology-lesson-${String(index + 1).padStart(2, '0')}`)
+const expectedIds = Array.from({ length: 14 }, (_, index) => `morphology-lesson-${String(index + 1).padStart(2, '0')}`)
 const guards = ['check-morphology-lesson-01.mjs', 'check-morphology-lesson-02.mjs', 'check-morphology-source.mjs']
 const root = resolve('.')
 let sandbox: string
@@ -30,7 +30,7 @@ function expectRejected() {
   }
 }
 
-describe('morphology registration — the thirteen section-local lesson ids', () => {
+describe('morphology registration — the fourteen section-local lesson ids', () => {
   beforeAll(() => {
     sandbox = mkdtempSync(join(tmpdir(), 'arabic-morph12-guards-'))
     for (const directory of ['src', 'docs', 'scripts']) cpSync(join(root, directory), join(sandbox, directory), { recursive: true })
@@ -40,10 +40,10 @@ describe('morphology registration — the thirteen section-local lesson ids', ()
   })
   afterAll(() => rmSync(sandbox, { recursive: true, force: true }))
 
-  it('registers 01–13 once, in order, inside morphology, while preserving the separate basics lesson 12', () => {
+  it('registers 01–14 once, in order, inside morphology, while preserving the separate basics lesson 12', () => {
     expect(getSectionLessons('morphology').map((lesson) => lesson.id)).toEqual(expectedIds)
     expect(new Set(lessonRegistry.map((lesson) => lesson.id)).size).toBe(lessonRegistry.length)
-    expect(getSectionLessons('morphology').map((lesson) => lesson.number)).toEqual(['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '١٠', '١١', '١٢', '١٣'])
+    expect(getSectionLessons('morphology').map((lesson) => lesson.number)).toEqual(['١', '٢', '٣', '٤', '٥', '٦', '٧', '٨', '٩', '١٠', '١١', '١٢', '١٣', '١٤'])
     expect(getSectionLessons('morphology')[10]).toMatchObject({
       id: 'morphology-lesson-11',
       title: 'اسم الفاعل: كيف نعرف مَن قام بالفعل؟',
@@ -74,7 +74,7 @@ describe('morphology registration — the thirteen section-local lesson ids', ()
     expect(lessonRegistry.some((lesson) => lesson.id === 'morphology-lesson-13')).toBe(true)
   })
 
-  it('keeps the prior morphology guards valid with exactly thirteen lessons', () => {
+  it('keeps the prior morphology guards valid with exactly fourteen lessons', () => {
     for (const result of runGuards(sandbox)) expect(result.status, `${result.guard}: ${result.stderr}`).toBe(0)
   })
 
@@ -87,7 +87,7 @@ describe('morphology registration — the thirteen section-local lesson ids', ()
     }
   })
 
-  it('rejects a duplicate lesson 11 with lesson 10 dropped, even when the count remains thirteen', () => {
+  it('rejects a duplicate lesson 11 with lesson 10 dropped, even when the count remains fourteen', () => {
     try {
       writeFileSync(join(sandbox, 'src/lessons/registry.ts'), registrySource.replace("id: 'morphology-lesson-10'", "id: 'morphology-lesson-11'"))
       expectRejected()
@@ -103,7 +103,7 @@ describe('morphology registration — the thirteen section-local lesson ids', ()
     } finally {
       writeFileSync(join(sandbox, 'src/app/App.tsx'), appSource)
     }
-    const path = join(sandbox, 'src/lessons/LessonMorphologyFourteen.tsx')
+    const path = join(sandbox, 'src/lessons/LessonMorphologyFifteen.tsx')
     try {
       writeFileSync(path, '// forbidden future lesson fixture\n')
       expectRejected()

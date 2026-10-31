@@ -17,6 +17,8 @@ describe('morphology lesson 14 — audited content and structure', () => {
   it('covers 7 conditions, examples, 4 situations, 3 analyses, and all homework activities', () => {
     expect(conditions).toHaveLength(7)
     for (const condition of conditions) expect(condition.explanation.length).toBeGreaterThan(40)
+    expect(conditions[6].example).toContain('أكحل كحلاء')
+    expect(conditions[6].title).toContain('حِلْية')
     expect(verbExamples.map((item) => item.verb)).toContain('سَرُعَ')
     expect(indirectForms.map((item) => item.verb)).toEqual(['احمرَّ', 'ازدهرَ', 'استخرجَ', 'تعاونَ', 'أفادَ'])
     expect(situations).toHaveLength(4)

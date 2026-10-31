@@ -30,17 +30,19 @@ describe('lesson 13 — registration and audited source', () => {
     const previousEntry = current.match(/ {2}\{\n {4}id: 'lesson-12',[\s\S]*?\n {2}\},\n/)
     const added = current.match(/ {2}\{\n {4}id: 'lesson-13',[\s\S]*?\n {2}\},\n/)
     const morphologyEntry = current.match(/ {2}\{\n {4}id: 'morphology-lesson-13',[\s\S]*?\n {2}\},\n/)
+    const morphologyFourteenEntry = current.match(/ {2}\{\n {4}id: 'morphology-lesson-14',[\s\S]*?\n {2}\},\n/)
     const spellingEntry = current.match(/ {2}\{\n {4}id: 'spelling-lesson-13',[\s\S]*?\n {2}\},\n/)
     const nextLessonEntry = current.match(/ {2}\{\n {4}id: 'basics-lesson-14',[\s\S]*?\n {2}\},\n/)
     expect(previousEntry).not.toBeNull()
     expect(added).not.toBeNull()
     expect(morphologyEntry).not.toBeNull()
+    expect(morphologyFourteenEntry).not.toBeNull()
     expect(spellingEntry).not.toBeNull()
     expect(nextLessonEntry).not.toBeNull()
     // Preserve the frozen basics registry baseline while excluding this lesson, the
     // independently registered morphology and spelling lesson 13s added alongside it,
     // and the later independent basics lesson 14 registration.
-    const baseline = current.replace(previousEntry![0], '').replace(added![0], '').replace(morphologyEntry![0], '').replace(spellingEntry![0], '').replace(nextLessonEntry![0], '')
+    const baseline = current.replace(previousEntry![0], '').replace(added![0], '').replace(morphologyEntry![0], '').replace(spellingEntry![0], '').replace(nextLessonEntry![0], '').replace(morphologyFourteenEntry![0], '')
     expect(hash(baseline)).toBe(inventory.registrySha256)
     expect(Object.keys(inventory.previousRuntimeSha256).length).toBeGreaterThan(100)
     for (const [path, digest] of Object.entries(inventory.previousRuntimeSha256)) {

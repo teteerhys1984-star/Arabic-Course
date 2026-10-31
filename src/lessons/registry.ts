@@ -585,6 +585,19 @@ export const lessonRegistry: LessonMeta[] = [
     available: true,
     parts: ['الأوزان الخمسة', 'مختبر الميزان', 'المقارنة والاشتقاق'],
   },
+  {
+    id: 'morphology-lesson-14',
+    sectionId: 'morphology',
+    number: '١٤',
+    eyebrow: 'اسم التفضيل',
+    title: 'اسم التفضيل: كيف نقارن بين الأشياء في صفة مشتركة؟',
+    documentTitle: 'الدرس الرابع عشر من قسم الصرف: اسم التفضيل',
+    summary: 'تعلم معنى اسم التفضيل ووزنه وشروط صياغته، والحالات الأربع، والتحليل الصرفي والإعراب، مع أربعة تدريبات تفاعلية واختبار مستقل من ٢٠ درجة.',
+    duration: '٩٠',
+    strand: 'الصرف',
+    available: true,
+    parts: ['المعنى والوزن والشروط', 'الحالات الأربع', 'التحليل والتدريب والاختبار'],
+  },
 ]
 
 export function getLesson(id: string): LessonMeta | undefined {

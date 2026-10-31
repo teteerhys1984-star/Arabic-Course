@@ -20,8 +20,8 @@ describe('lesson 12 — audited source, registration and scope', () => {
     const hash = (text: string) => createHash('sha256').update(text).digest('hex')
     const added = current.match(/ {2}\{\n {4}id: 'lesson-12',[\s\S]*?\n {2}\},\n/)
     expect(added).not.toBeNull()
-    const laterEntries = current.match(/ {2}\{\n {4}id: '(?:lesson-13|morphology-lesson-13|spelling-lesson-13|basics-lesson-14)',[\s\S]*?\n {2}\},\n/g)
-    expect(laterEntries).toHaveLength(4)
+    const laterEntries = current.match(/ {2}\{\n {4}id: '(?:lesson-13|morphology-lesson-13|morphology-lesson-14|spelling-lesson-13|basics-lesson-14)',[\s\S]*?\n {2}\},\n/g)
+    expect(laterEntries).toHaveLength(5)
     // The inventory hash covers the registry minus this lesson and the independent
     // registrations added later (basics/morphology/spelling lesson 13, and lesson 14).
     const baseline = laterEntries!.reduce((text, entry) => text.replace(entry, ''), current.replace(added![0], ''))

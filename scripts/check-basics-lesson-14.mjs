@@ -28,7 +28,7 @@ const basics = lessonRegistry.filter((l) => l.sectionId === 'basics-grammar')
 assert.equal(basics[basics.length - 1].id, 'basics-lesson-14', 'lesson 14 is last in the basics sequence')
 assert.equal(new Set(lessonRegistry.map((l) => l.id)).size, lessonRegistry.length, 'lesson ids are unique')
 assert(!lessonRegistry.some((l) => l.id === 'spelling-lesson-14'), 'no spelling lesson 14 was created')
-assert(!lessonRegistry.some((l) => l.id === 'morphology-lesson-14'), 'no morphology lesson 14 was created')
+assert.equal(lessonRegistry.filter((l) => l.id === 'morphology-lesson-14').length, 1, 'morphology lesson 14 remains a distinct section-local id')
 assert(!lessonRegistry.some((l) => /unit.*test/.test(l.id)), 'no unit assessment')
 assert(!existsSync('src/lessons/LessonFourteen.tsx'), 'the lesson-14 component name is not reused')
 assert(existsSync('src/lessons/LessonBasicsFourteen.tsx'))
@@ -211,6 +211,7 @@ const withoutEntries = registry
   .replace(/  \{\n    id: 'lesson-12',[\s\S]*?\n  \},\n/, '')
   .replace(/  \{\n    id: 'lesson-13',[\s\S]*?\n  \},\n/, '')
   .replace(/  \{\n    id: 'morphology-lesson-13',[\s\S]*?\n  \},\n/, '')
+  .replace(/  \{\n    id: 'morphology-lesson-14',[\s\S]*?\n  \},\n/, '')
   .replace(/  \{\n    id: 'spelling-lesson-13',[\s\S]*?\n  \},\n/, '')
   .replace(/  \{\n    id: 'basics-lesson-14',[\s\S]*?\n  \},\n/, '')
 assert.equal(hash(withoutEntries), inventory.registrySha256)
@@ -224,5 +225,5 @@ console.log(
     '7 objectives, 20 audited axes mapped to real steps, 5 names, 3 signs, 5 conditions, 20 comparison rows/5 types, ' +
     '5 common errors, 8 challenge keys, 20 exam questions (5/4/6/5 = 20 points), 6 manual parsings with the four elements, ' +
     '3 homework activities with criteria, mind map, summary, mastery challenge, teacher guide, disclosure gates, ' +
-    'previous source unchanged, no spelling/morphology lesson 14 and no unit test.',
+    'previous source unchanged, no spelling lesson 14 and no unit test.',
 )

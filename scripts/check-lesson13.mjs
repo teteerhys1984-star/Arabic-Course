@@ -169,6 +169,7 @@ const withoutEntries = registry
   .replace(/  \{\n    id: 'lesson-12',[\s\S]*?\n  \},\n/, '')
   .replace(/  \{\n    id: 'lesson-13',[\s\S]*?\n  \},\n/, '')
   .replace(/  \{\n    id: 'morphology-lesson-13',[\s\S]*?\n  \},\n/, '')
+  .replace(/  \{\n    id: 'morphology-lesson-14',[\s\S]*?\n  \},\n/, '')
   .replace(/  \{\n    id: 'spelling-lesson-13',[\s\S]*?\n  \},\n/, '')
   .replace(/  \{\n    id: 'basics-lesson-14',[\s\S]*?\n  \},\n/, '')
 assert.equal(hash(withoutEntries), inventory.registrySha256)

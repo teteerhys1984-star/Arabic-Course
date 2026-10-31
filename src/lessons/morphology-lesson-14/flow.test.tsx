@@ -38,7 +38,9 @@ describe('morphology lesson 14 — routing and flow', () => {
     window.location.hash = '#/lesson/morphology-lesson-14'
     render(<App />)
     await navigateTo(user, 'شروط الصياغة المباشرة')
-    expect(activeStep()).toHaveTextContent('ثلاثيّ')
+    expect(activeStep()).toHaveTextContent('ثلاثيّ مجرّد')
+    expect(activeStep()).toHaveTextContent('لا يكون المانع مجرد دلالة الفعل على الباب')
+    expect(activeStep()).toHaveTextContent('أحمر/حمراء')
     await navigateTo(user, 'حالات اسم التفضيل الأربع')
     expect(activeStep()).toHaveTextContent('الأفضلان')
     await navigateTo(user, 'الدرس القادم: اسم الزمان واسم المكان')
